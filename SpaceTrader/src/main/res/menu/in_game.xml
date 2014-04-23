@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="de.anderdonau.spacetrader.WelcomeScreen">
+	<item
+			android:id="@+id/hotkey1"
+			android:title="1"
+			android:showAsAction="always"/>
+	<item
+			android:id="@+id/hotkey2"
+			android:title="2"
+			android:showAsAction="always"/>
+	<item
+			android:id="@+id/hotkey3"
+			android:title="3"
+			android:showAsAction="always"/>
+	<item
+			android:id="@+id/hotkey4"
+			android:title="4"
+			android:showAsAction="always"/>
+</menu>

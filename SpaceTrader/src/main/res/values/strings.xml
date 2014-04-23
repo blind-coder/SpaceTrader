@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<resources>
+
+	<string name="app_name">SpaceTrader</string>
+	<string name="title_section1">Section 1</string>
+	<string name="title_section2">Section 2</string>
+	<string name="title_section3">Section 3</string>
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+	<string name="action_example">Example action</string>
+	<string name="action_settings">Settings</string>
+	<string name="wScrStartNewGame">Start new game</string>
+
+</resources>
