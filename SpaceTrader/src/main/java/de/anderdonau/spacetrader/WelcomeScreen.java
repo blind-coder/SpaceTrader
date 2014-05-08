@@ -18,14 +18,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.Politics;
+import de.anderdonau.spacetrader.DataTypes.SolarSystem;
+
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-	/**
-	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 
 	private static String mCurrentState = "startup";
@@ -38,7 +39,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		super.onCreate(savedInstanceState);
 		WelcomeScreen.mContext = getApplicationContext();
 		assert WelcomeScreen.mContext != null;
-		mGameState = new GameState();
 
 		/*
 		mGameState = new GameState();
@@ -120,10 +120,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 */
 
 	public void btnLoadOrStartGame(View view) {
-		mGameState = new GameState();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
 		mCurrentState = "StartNewGame";
+	}
+	public void btnStartNewGame(View view){
+		EditText t = (EditText) findViewById(R.id.strNameCommander);
+		mGameState = new GameState(t.getText().toString());
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
+		mCurrentState = "SystemInformation";
 	}
 /*
 	@Override
@@ -152,9 +158,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 */
 
-	/**
-	 * Fragment showing game in progress and highscore.
-	 */
 	public static class WelcomeScreenFragment extends Fragment {
 		public WelcomeScreenFragment() {
 		}
@@ -169,7 +172,32 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return rootView;
 		}
 	}
+	public static class SystemInformationFragment extends Fragment {
+		public SystemInformationFragment() { }
 
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
+			SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
+			TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
+			textView.setText(mGameState.SolarSystemName[CURSYSTEM.nameIndex]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
+			textView.setText(mGameState.SystemSize[CURSYSTEM.size]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoTechLevel);
+			textView.setText(mGameState.techLevel[CURSYSTEM.techLevel]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoGovernment);
+			textView.setText(Politics.mPolitics[CURSYSTEM.politics].name);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoResources);
+			textView.setText(mGameState.SpecialResources[CURSYSTEM.specialResources]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
+			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
+			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
+			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
+			textView.setText(mGameState.Status[CURSYSTEM.status]);
+			return rootView;
+		}
+	}
 	public static class StartNewGameFragment extends Fragment {
 		public StartNewGameFragment() { }
 
@@ -177,6 +205,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);
 			TextView textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
+			mGameState = new GameState("Jameson");
 			textView.setText(String.format("%d", mGameState.SkillPointsLeft));
 
 			SeekBar.OnSeekBarChangeListener skillChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -212,6 +241,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					int sum = skillEngineer + skillFighter + skillPilot + skillTrader;
 					if (sum > mGameState.SkillPointsLeft) {
 						seekBar.setProgress(seekBar.getProgress() - (sum - mGameState.SkillPointsLeft));
+						sum = mGameState.SkillPointsLeft;
 					}
 					Button btn = (Button) (rootView.findViewById(R.id.btnStartGame));
 					btn.setEnabled(sum == mGameState.SkillPointsLeft);

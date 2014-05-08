@@ -126,11 +126,11 @@
 			android:layout_below="@+id/skillPointsLeft"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"
-			android:layout_alignLeft="@+id/skillPointsLeft"
-			android:layout_alignStart="@+id/skillPointsLeft"
 			android:max="9"
 			android:indeterminate="false"
-			android:progress="0"/>
+			android:progress="0"
+			android:layout_alignLeft="@+id/skillPointsLeft"
+			android:layout_alignStart="@+id/skillPointsLeft"/>
 
 	<SeekBar
 			android:layout_width="wrap_content"
@@ -210,7 +210,7 @@
 	<EditText
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/editText"
+			android:id="@+id/strNameCommander"
 			android:layout_below="@+id/textView"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
@@ -226,6 +226,7 @@
 			android:layout_marginTop="45dp"
 			android:layout_below="@+id/numSkillEngineer"
 			android:layout_centerHorizontal="true"
-			android:enabled="false"/>
+			android:enabled="false"
+			android:onClick="btnStartNewGame"/>
 
 </RelativeLayout>
