@@ -805,7 +805,7 @@ public class GameState implements Serializable {
 			for (j = 0; j < GameState.MAXSOLARSYSTEM; ++j) {
 				if (j == Mercenary[0]/*COMMANDER*/.curSystem)
 					continue;
-				if (SqrDistance(SolarSystem[j], SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/) <= SQR(ShipTypes.ShipType[1].fuelTanks)) {
+				if (SqrDistance(SolarSystem[j], SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/) <= SQR(ShipTypes.ShipTypes[1].fuelTanks)) {
 					++d;
 					if (d >= 3)
 						break;
@@ -831,7 +831,7 @@ public class GameState implements Serializable {
 		ScarabStatus = 0;
 		JaporiDiseaseStatus = 0;
 		MoonBought = false;
-		MonsterHull = ShipTypes.ShipType[SpaceMonster.type].hullStrength;
+		MonsterHull = ShipTypes.ShipTypes[SpaceMonster.type].hullStrength;
 		EscapePod = false;
 		Insurance = false;
 		RemindLoans = true;
@@ -876,7 +876,7 @@ public class GameState implements Serializable {
 			Ship.crew[i] = -1;
 		}
 		Ship.fuel = GetFuelTanks();
-		Ship.hull = ShipTypes.ShipType[Ship.type].hullStrength;
+		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
 		Ship.tribbles = 0;
 
 		SkillPointsLeft = 16;
@@ -1057,11 +1057,9 @@ public class GameState implements Serializable {
 	public int GetRandom(int a) {
 		return (rand.nextInt(a));
 	}
-
 	public int SQR(int a) {
 		return (a * a);
 	}
-
 	public double SqrDistance(SolarSystem a, SolarSystem b) {
 		return (SQR(a.x - b.x) + SQR(a.y - b.y));
 	}
@@ -1090,19 +1088,15 @@ public class GameState implements Serializable {
 		}
 		return false;
 	}
-
 	public int RealDistance( SolarSystem a, SolarSystem b ){
 		return (int) Math.sqrt(SqrDistance(a, b));
 	}
-
 	public int RandomSkill() {
 		return 1 + GetRandom( 5 ) + GetRandom( 6 );
 	}
-
 	int GetFuelTanks() {
-		return (HasGadget( this.Ship, FUELCOMPACTOR ) ? 18 : ShipTypes.ShipType[Ship.type].fuelTanks);
+		return (HasGadget( this.Ship, FUELCOMPACTOR ) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
 	}
-
 	boolean HasGadget( Ship sh, int Gg ) {
 		int i;
 
@@ -1116,8 +1110,35 @@ public class GameState implements Serializable {
 
 		return false;
 	}
-
 	void resetNewsEvents(){
 		NewsSpecialEventCount = 0;
+	}
+	int GetForHire(){
+		int ForHire = -1;
+		int i;
+
+		for (i=1; i<MAXCREWMEMBER; ++i)
+		{
+			if (i == Ship.crew[1] || i == Ship.crew[2])
+				continue;
+			if (Mercenary[i].curSystem == Mercenary[0].curSystem)
+			{
+				ForHire = i;
+				break;
+			}
+		}
+		return ForHire;
+	}
+	public int AvailableQuarters() {
+		return ShipTypes.ShipTypes[Ship.type].crewQuarters - (JarekStatus == 1 ? 1 : 0) - (WildStatus == 1 ? 1 : 0);
+	}
+	public int MercenaryPriceHire(int idx){
+		int price;
+		if (idx < 0 || (idx >= MAXCREWMEMBER && WildStatus == 2)){
+			price = 0; // This would be Zeethibal, who joins for free after Wild's quest.
+		} else {
+			price = ((Mercenary[idx].pilot + Mercenary[idx].fighter + Mercenary[idx].trader + Mercenary[idx].engineer) * 3);
+		}
+		return price;
 	}
 }

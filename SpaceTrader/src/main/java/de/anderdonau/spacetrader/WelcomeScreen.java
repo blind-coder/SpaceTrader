@@ -8,18 +8,24 @@
 
 package de.anderdonau.spacetrader;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.FileInputStream;
@@ -28,8 +34,10 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
+import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -48,19 +56,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		WelcomeScreen.mContext = getApplicationContext();
 		assert WelcomeScreen.mContext != null;
 
-		/*
-		mGameState = new GameState();
-		*/
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
 		mCurrentState = "WelcomeScreen";
 
-		//mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
 		// Set up the drawer.
-		//mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-		//mNavigationDrawerFragment.setMenuVisibility(false);
+		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mNavigationDrawerFragment = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
+		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 	}
 
 	@Override
@@ -87,37 +92,47 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// update the main content by replacing fragments
 		//FragmentManager fragmentManager = getFragmentManager();
 		//fragmentManager.beginTransaction().replace(R.id.container, WelcomeScreenFragment.newInstance(position + 1)).commit();
-	}
-/*
-	public void onSectionAttached(int number) {
-		switch (number) {
-			case 1:
-				mTitle = getString(R.string.title_section1);
+		switch (position){
+			case 0: //"Buy Cargo"
 				break;
-			case 2:
-				mTitle = getString(R.string.title_section2);
+			case 1: //"Sell Cargo"
 				break;
-			case 3:
-				mTitle = getString(R.string.title_section3);
+			case 2: // "Shipyard"
+				break;
+			case 3: // "Buy Equipment"
+				break;
+			case 4: // "Sell Equipment"
+				break;
+			case 5: // "Personnel Roster"
+				btnPersonnelRoster(null);
+				break;
+			case 6: // "Bank"
+				break;
+			case 7: // "System Information"
+				btnSystemInformation(null);
+				break;
+			case 8: // "Commander Status"
+				break;
+			case 9: // "Galactic Chart"
+				break;
+			case 10: // "Short Range Chart"
 				break;
 		}
 	}
 
 	public void restoreActionBar() {
 		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle(getString(R.string.app_name));
+		actionBar.setTitle(mCurrentState);
 	}
-*/
 
 	public void btnLoadOrStartGame(View view) {
+		FragmentManager fragmentManager = getFragmentManager();
 		if (foundSaveGame){
-			FragmentManager fragmentManager = getFragmentManager();
-				fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
-			mCurrentState = "SystemInformation";
+			btnSystemInformation(null);
+			fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
 		} else {
-			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
 			mCurrentState = "StartNewGame";
 		}
@@ -126,9 +141,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		mGameState = new GameState(t.getText().toString());
 		this.saveGame();
+		btnSystemInformation(view);
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
+	}
+	public void btnSystemInformation(View view){
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
 		mCurrentState = "SystemInformation";
+	}
+	public void btnPersonnelRoster(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new PersonnelRosterFragment()).commit();
+		mCurrentState = "PersonnelRoster";
 	}
 
 	public void saveGame(){
@@ -152,16 +177,35 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 	}
-/*
+
+	@Override
+	public boolean onPrepareOptionsMenu (Menu menu){
+		try {
+			menu.findItem(R.id.hotkey1).setTitle(mGameState.Shortcuts[mGameState.Shortcut1][0]);
+			menu.findItem(R.id.hotkey2).setTitle(mGameState.Shortcuts[mGameState.Shortcut2][0]);
+			menu.findItem(R.id.hotkey3).setTitle(mGameState.Shortcuts[mGameState.Shortcut3][0]);
+			menu.findItem(R.id.hotkey4).setTitle(mGameState.Shortcuts[mGameState.Shortcut4][0]);
+		} catch (Exception e){
+			return false;
+		}
+		return true;
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			// Only show items in the action bar relevant to this screen
-			// if the drawer is not showing. Otherwise, let the drawer
-			// decide what to show in the action bar.
-			// getMenuInflater().inflate(R.menu.welcome_screen, menu);
-			restoreActionBar();
-			return true;
+		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")){
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.in_game, menu);
+
+		}
+		if (mNavigationDrawerFragment != null){
+			if (!mNavigationDrawerFragment.isDrawerOpen()) {
+				// Only show items in the action bar relevant to this screen
+				// if the drawer is not showing. Otherwise, let the drawer
+				// decide what to show in the action bar.
+				// getMenuInflater().inflate(R.menu.welcome_screen, menu);
+				restoreActionBar();
+				return true;
+			}
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -172,12 +216,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		/*if (id == R.id.action_settings) {
 			return true;
 		}
+		*/
 		return super.onOptionsItemSelected(item);
 	}
-*/
 
 	public static class WelcomeScreenFragment extends Fragment {
 		public WelcomeScreenFragment() {
@@ -312,8 +356,142 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates ]);
 			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
 			textView.setText(mGameState.Status[CURSYSTEM.status]);
+
+			Button btn = (Button) rootView.findViewById(R.id.btnSpecialEvent);
+			if (CURSYSTEM.special > 0){
+				btn.setVisibility(View.VISIBLE);
+			} else {
+				btn.setVisibility(View.INVISIBLE);
+			}
+			btn = (Button) rootView.findViewById(R.id.btnMercenaryForHire);
+			if (mGameState.GetForHire() > -1){
+				btn.setVisibility(View.VISIBLE);
+			} else {
+				btn.setVisibility(View.INVISIBLE);
+			}
 			return rootView;
 		}
 	}
+	public static class PersonnelRosterFragment extends Fragment {
+		View rootView;
+		public PersonnelRosterFragment() { }
 
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			int i;
+			TableLayout tl;
+			TextView tv;
+			Button btn;
+			rootView = inflater.inflate(R.layout.fragment_personnel_roster, container, false);
+
+			for (i=0; i<2; ++i) {
+				if ((mGameState.JarekStatus == 1 || mGameState.WildStatus == 1) && i < 2){
+					if (mGameState.JarekStatus == 1 && i == 0){ /* Jarek is always in 1st crew slot */
+						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
+						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
+						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
+						tl.setVisibility(View.INVISIBLE);
+						tv.setText("Jarek's quarters");
+						btn.setVisibility(View.INVISIBLE);
+						continue;
+					} else if (mGameState.JarekStatus == 1 && mGameState.WildStatus == 1 && i == 1){ /* Wild is in 2nd crew slot if Jarek is here, too */
+						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
+						tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
+						btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
+						tl.setVisibility(View.INVISIBLE);
+						tv.setText("Wild's quarters");
+						btn.setVisibility(View.INVISIBLE);
+						continue;
+					} else if (mGameState.WildStatus == 1 && i == 0){/* Wild is in 1st crew slot if Jarek is not here */
+						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
+						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
+						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
+						tl.setVisibility(View.INVISIBLE);
+						tv.setText("Wild's quarters");
+						btn.setVisibility(View.INVISIBLE);
+						continue;
+					}
+					Log.e("PersonnelRoster", String.format("Impossible Error: Jarek is %d, Wild is %d, here anyway...", mGameState.JarekStatus, mGameState.WildStatus));
+				}
+
+				if (i == 0) {
+					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
+					tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
+					btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
+				}	else {
+					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
+					tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
+					btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
+				}
+				ShipTypes.ShipType Ship = mGameState.ShipTypes.ShipTypes[mGameState.Ship.type];
+				if (Ship.crewQuarters <= i+1) {
+					tl.setVisibility(View.INVISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					tv.setText("No quarters available");
+					continue;
+				}
+
+				if (mGameState.Ship.crew[i+1] < 0) {
+					tl.setVisibility(View.INVISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					tv.setText("Vacancy");
+					continue;
+				}
+
+				tl.setVisibility(View.VISIBLE);
+				btn.setVisibility(View.VISIBLE);
+				DrawMercenary(i, mGameState.Ship.crew[i+1]); /* Crew Idx 0 is the player */
+			}
+
+			int ForHire = mGameState.GetForHire();
+			tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrewNew);
+			tv = (TextView) rootView.findViewById(R.id.txtNameCrewNew);
+			btn = (Button) rootView.findViewById(R.id.btnHireCrewNew);
+			if (ForHire < 0) {
+				tl.setVisibility(View.INVISIBLE);
+				tv.setText("No one for hire");
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				tl.setVisibility(View.VISIBLE);
+				btn.setVisibility(View.VISIBLE);
+				DrawMercenary(2, ForHire);
+			}
+
+			return rootView;
+		}
+		public void DrawMercenary(int i, int idxCrewMember){
+			TextView txtPilot;
+			TextView txtEngineer;
+			TextView txtTrader;
+			TextView txtFighter;
+			TextView txtName;
+
+			CrewMember c = mGameState.Mercenary[idxCrewMember];
+
+			if (i == 0){
+				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew1);
+				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew1);
+				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew1);
+				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew1);
+				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew1);
+			} else if (i == 1){
+				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew2);
+				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew2);
+				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew2);
+				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew2);
+				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew2);
+			} else /* if (i == 2) */{
+				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrewNew);
+				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrewNew);
+				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrewNew);
+				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrewNew);
+				txtName = (TextView) rootView.findViewById(R.id.txtNameCrewNew);
+			}
+			txtPilot.setText(String.format("%d", c.pilot));
+			txtFighter.setText(String.format("%d",c.fighter));
+			txtEngineer.setText(String.format("%d",c.engineer));
+			txtTrader.setText(String.format("%d",c.trader));
+			txtName.setText(mGameState.MercenaryName[c.nameIndex]);
+		}
+	}
 }
