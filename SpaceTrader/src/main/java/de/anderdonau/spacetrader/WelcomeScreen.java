@@ -85,6 +85,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 		Log.d("onBackPressed", "unhandled state: " + mCurrentState);
+		saveGame();
+		finish();
 	}
 
 	@Override
