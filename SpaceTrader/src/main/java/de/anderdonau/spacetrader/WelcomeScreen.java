@@ -22,7 +22,14 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import de.anderdonau.spacetrader.DataTypes.Politics;
+import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -33,6 +40,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	private static Context mContext;
 	static GameState mGameState;
 
+	private static boolean foundSaveGame = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +50,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		/*
 		mGameState = new GameState();
-		FileOutputStream fos = null;
-		try {
-			fos = mContext.openFileOutput("savegame.txt", Context.MODE_PRIVATE);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} if (fos != null){
-			ObjectOutputStream oos = null;
-			try {
-				oos = new ObjectOutputStream(fos);
-				oos.writeObject(mGameState);
-				oos.close();
-				fos.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		*/
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
@@ -120,16 +112,45 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 */
 
 	public void btnLoadOrStartGame(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
-		mCurrentState = "StartNewGame";
+		if (foundSaveGame){
+			FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
+			mCurrentState = "SystemInformation";
+		} else {
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
+			mCurrentState = "StartNewGame";
+		}
 	}
 	public void btnStartNewGame(View view){
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		mGameState = new GameState(t.getText().toString());
+		this.saveGame();
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
 		mCurrentState = "SystemInformation";
+	}
+
+	public void saveGame(){
+		SaveGame s = new SaveGame(mGameState);
+
+		FileOutputStream fos = null;
+		try {
+			fos = mContext.openFileOutput("savegame.txt", Context.MODE_PRIVATE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (fos != null){
+			ObjectOutputStream oos = null;
+			try {
+				oos = new ObjectOutputStream(fos);
+				oos.writeObject(s);
+				oos.close();
+				fos.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 /*
 	@Override
@@ -168,33 +189,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Button btn = (Button) rootView.findViewById(R.id.btnLoadOrStartGame);
 			btn.setText(getString(R.string.wScrStartNewGame));
 
-			// TODO: check for saved game
-			return rootView;
-		}
-	}
-	public static class SystemInformationFragment extends Fragment {
-		public SystemInformationFragment() { }
+			FileInputStream fis = null;
+			try {
+				fis = mContext.openFileInput("savegame.txt");
+				foundSaveGame = true;
+			} catch (FileNotFoundException e) {
+				foundSaveGame = false;
+			}
+			if (foundSaveGame){
+				ObjectInputStream ois = null;
+				try {
+					ois = new ObjectInputStream(fis);
+					SaveGame s = (SaveGame) ois.readObject();
+					mGameState = new GameState(s);
+					ois.close();
+					fis.close();
+					btn.setText(mGameState.NameCommander);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
-			SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
-			TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
-			textView.setText(mGameState.SolarSystemName[CURSYSTEM.nameIndex]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
-			textView.setText(mGameState.SystemSize[CURSYSTEM.size]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoTechLevel);
-			textView.setText(mGameState.techLevel[CURSYSTEM.techLevel]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoGovernment);
-			textView.setText(Politics.mPolitics[CURSYSTEM.politics].name);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoResources);
-			textView.setText(mGameState.SpecialResources[CURSYSTEM.specialResources]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
-			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
-			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
-			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
-			textView.setText(mGameState.Status[CURSYSTEM.status]);
 			return rootView;
 		}
 	}
@@ -271,6 +286,32 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			((SeekBar) rootView.findViewById(R.id.skillTrader)).setOnSeekBarChangeListener(skillChangeListener);
 			((SeekBar) rootView.findViewById(R.id.levelBar)).setOnSeekBarChangeListener(levelChangeListener);
 
+			return rootView;
+		}
+	}
+	public static class SystemInformationFragment extends Fragment {
+		public SystemInformationFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
+			SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
+			TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
+			textView.setText(mGameState.SolarSystemName[CURSYSTEM.nameIndex]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
+			textView.setText(mGameState.SystemSize[CURSYSTEM.size]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoTechLevel);
+			textView.setText(mGameState.techLevel[CURSYSTEM.techLevel]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoGovernment);
+			textView.setText(Politics.mPolitics[CURSYSTEM.politics].name);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoResources);
+			textView.setText(mGameState.SpecialResources[CURSYSTEM.specialResources]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
+			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
+			textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
+			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates ]);
+			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
+			textView.setText(mGameState.Status[CURSYSTEM.status]);
 			return rootView;
 		}
 	}

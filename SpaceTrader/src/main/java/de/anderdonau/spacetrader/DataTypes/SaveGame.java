@@ -14,432 +14,172 @@ import java.util.Random;
 import de.anderdonau.spacetrader.GameState;
 
 public class SaveGame implements Serializable {
-	double Credits;
-	double Debt;
-	int Days;
-	int WarpSystem;
-	int SelectedShipType;
-	double[] BuyPrice = new double[GameState.MAXTRADEITEM];
-	double[] SellPrice = new double[GameState.MAXTRADEITEM];
-	double[] ShipPrice = new double[GameState.MAXSHIPTYPE];
-	int GalacticChartSystem;
-	double PoliceKills;
-	double TraderKills;
-	double PirateKills;
-	double PoliceRecordScore;
-	double ReputationScore;
-	boolean AutoFuel;
-	boolean AutoRepair;
-	int Clicks;
-	int EncounterType;
-	boolean Raided;
-	int MonsterStatus;
-	int DragonflyStatus;
-	int JaporiDiseaseStatus;
-	boolean MoonBought;
-	double MonsterHull;
-	String NameCommander;
-	int CurForm;
-	Ship Ship;
-	Ship Opponent;
-	CrewMember[] Mercenary = new CrewMember[GameState.MAXCREWMEMBER + 1];
-	SolarSystem[] SolarSystem = new SolarSystem[GameState.MAXSOLARSYSTEM];
-	boolean EscapePod;
-	boolean Insurance;
-	int NoClaim;
-	boolean Inspected;
-	boolean AlwaysIgnoreTraders;
-	int[] Wormhole = new int[GameState.MAXWORMHOLE];
+	public CrewMember[] Mercenary = new CrewMember[GameState.MAXCREWMEMBER + 1];
+	public Ship Opponent;
+	public Ship Ship;
+	public SolarSystem[] SolarSystem = new SolarSystem[GameState.MAXSOLARSYSTEM];
+	public String NameCommander;
+	public boolean AlreadyPaidForNewspaper;
+	public boolean AlwaysIgnorePirates;
+	public boolean AlwaysIgnorePolice;
+	public boolean AlwaysIgnoreTradeInOrbit;
+	public boolean AlwaysIgnoreTraders;
+	public boolean AlwaysInfo;
+	public boolean ArrivedViaWormhole;
+	public boolean ArtifactOnBoard;
+	public boolean AttackFleeing;
+	public boolean AutoFuel;
+	public boolean AutoRepair;
+	public boolean CanSuperWarp;
+	public boolean Continuous;
+	public boolean EscapePod;
+	public boolean GameLoaded;
+	public boolean IdentifyStartup;
+	public boolean Inspected;
+	public boolean Insurance;
+	public boolean JustLootedMarie;
+	public boolean LitterWarning;
+	public boolean MoonBought;
+	public boolean NewsAutoPay;
+	public boolean PriceDifferences;
+	public boolean Raided;
+	public boolean RemindLoans;
+	public boolean ReserveMoney;
+	public boolean SaveOnArrival;
+	public boolean SharePreferences;
+	public boolean ShowTrackedRange;
+	public boolean TextualEncounters;
+	public boolean TrackAutoOff;
+	public boolean TribbleMessage;
+	public int Credits;
+	public int Debt;
+	public int MonsterHull;
+	public int PirateKills;
+	public int PoliceKills;
+	public int PoliceRecordScore;
+	public int ReputationScore;
+	public int TraderKills;
+	public int[] BuyPrice = new int[GameState.MAXTRADEITEM];
+	public int[] BuyingPrice = new int[GameState.MAXTRADEITEM];
+	public int[] SellPrice = new int[GameState.MAXTRADEITEM];
+	public int[] ShipPrice = new int[GameState.MAXSHIPTYPE];
+	public int Clicks;
+	public int CurForm;
+	public int Days;
+	public int DragonflyStatus;
+	public int EncounterType;
+	public int ExperimentStatus;
+	public int FabricRipProbability;
+	public int GalacticChartSystem;
+	public int InvasionStatus;
+	public int JaporiDiseaseStatus;
+	public int JarekStatus;
+	public int LeaveEmpty;
+	public int MonsterStatus;
+	public int NoClaim;
+	public int ReactorStatus;
+	public int SelectedShipType;
+	public int Shortcut1;
+	public int Shortcut2;
+	public int Shortcut3;
+	public int Shortcut4;
+	public int TrackedSystem;
+	public int VeryRareEncounter;
+	public int WarpSystem;
+	public int WildStatus;
+	public int[] Wormhole = new int[GameState.MAXWORMHOLE];
 	public static int Difficulty;
-	int VersionMajor;
-	int VersionMinor;
-	double[] BuyingPrice = new double[GameState.MAXTRADEITEM];
-	boolean ArtifactOnBoard;
-	boolean ReserveMoney;
-	boolean PriceDifferences;
-	boolean APLscreen;
-	int LeaveEmpty;
-	boolean TribbleMessage;
-	boolean AlwaysInfo;
-	boolean AlwaysIgnorePolice;
-	boolean AlwaysIgnorePirates;
-	boolean TextualEncounters;
-	int JarekStatus;
-	int InvasionStatus;
-	boolean Continuous;
-	boolean AttackFleeing;
-	int ExperimentStatus;
-	int WildStatus;
-	int FabricRipProbability;
-	int VeryRareEncounter;
-	int booleanCollection;
-	int ReactorStatus;
-	int TrackedSystem;
-	int ScarabStatus;
-	boolean AlwaysIgnoreTradeInOrbit;
-	boolean AlreadyPaidForNewspaper;
-	boolean GameLoaded;
-	boolean NewsAutoPay;
-	boolean ShowTrackedRange;
-	boolean JustLootedMarie;
-	boolean ArrivedViaWormhole;
-	boolean TrackAutoOff;
-	boolean RemindLoans;
-	boolean CanSuperWarp;
-	boolean SaveOnArrival;
-	int Shortcut1;
-	int Shortcut2;
-	int Shortcut3;
-	int Shortcut4;
-	boolean LitterWarning;
-	boolean SharePreferences;
-	boolean IdentifyStartup;
-	boolean RectangularButtonsOn;
-	Random rand = new Random();
+	public int ScarabStatus;
 
-	public SaveGame(String NameCommander) {
-		/*
-		int i, j, k, d, x, y;
-		Boolean Redo, CloseFound, FreeWormhole;
-
-		if (NameCommander.length() == 0) {
-			this.NameCommander = "Shelby";
-		} else {
-			this.NameCommander = NameCommander;
+	public SaveGame(GameState g) {
+		int i;
+		for (i=0; i<GameState.MAXCREWMEMBER; i++) {
+			this.Mercenary[i] = g.Mercenary[i];
 		}
-
-		// Initialize Galaxy
-		i = 0;
-		Random rand = new Random();
-		while (i < GameState.MAXSOLARSYSTEM) {
-			if (i < GameState.MAXWORMHOLE) {
-				// Place the first system somewhere in the centre
-				this.SolarSystem[i].x = (((GameState.CLOSEDISTANCE >> 1) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
-				this.SolarSystem[i].y = (((GameState.CLOSEDISTANCE >> 1) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYHEIGHT * (i < 3 ? 1 : 3)) / 4));
-				Wormhole[i] = i;
-			} else {
-				SolarSystem[i].x = (1 + GetRandom(GameState.GALAXYWIDTH - 2));
-				SolarSystem[i].y = (1 + GetRandom(GameState.GALAXYHEIGHT - 2));
-			}
-
-			CloseFound = false;
-			Redo = false;
-			if (i >= GameState.MAXWORMHOLE) {
-				for (j = 0; j < i; ++j) {
-					//  Minimum distance between any two systems not to be accepted
-					if (SqrDistance(SolarSystem[j], SolarSystem[i]) <= SQR(GameState.MINDISTANCE + 1)) {
-						Redo = true;
-						break;
-					}
-
-					// There should be at least one system which is closeby enough
-					if (SqrDistance(SolarSystem[j], SolarSystem[i]) < SQR(GameState.CLOSEDISTANCE))
-						CloseFound = true;
-				}
-			}
-			if (Redo)
-				continue;
-			if ((i >= GameState.MAXWORMHOLE) && !CloseFound)
-				continue;
-
-			SolarSystem[i].techLevel = (char) (GetRandom(GameState.MAXTECHLEVEL));
-			SolarSystem[i].politics = (char) (GetRandom(GameState.MAXPOLITICS));
-			if (GameState.Politics.mPolitics[SolarSystem[i].politics].minTechLevel > SolarSystem[i].techLevel)
-				continue;
-			if (GameState.Politics.mPolitics[SolarSystem[i].politics].maxTechLevel < SolarSystem[i].techLevel)
-				continue;
-
-			if (GetRandom(5) >= 3)
-				SolarSystem[i].specialResources = (char) (1 + GetRandom(GameState.MAXRESOURCES - 1));
-			else
-				SolarSystem[i].specialResources = 0;
-
-			SolarSystem[i].size = (char) (GetRandom(GameState.MAXSIZE));
-
-			if (GetRandom(100) < 15)
-				SolarSystem[i].status = 1 + GetRandom(GameState.MAXSTATUS - 1);
-			else
-				SolarSystem[i].status = GameState.UNEVENTFUL;
-
-			SolarSystem[i].nameIndex = i;
-			SolarSystem[i].special = -1;
-			SolarSystem[i].countDown = 0;
-			SolarSystem[i].visited = false;
-
-			SolarSystem[i].initializeTradeitems();
-
-			++i;
+		this.Opponent = g.Opponent;
+		this.Ship = g.Ship;
+		for (i=0; i<GameState.MAXSOLARSYSTEM; i++){
+			this.SolarSystem[i] = g.SolarSystem[i];
 		}
+		this.NameCommander = g.NameCommander;
+		this.AlreadyPaidForNewspaper = g.AlreadyPaidForNewspaper;
+		this.AlwaysIgnorePirates = g.AlwaysIgnorePirates;
+		this.AlwaysIgnorePolice = g.AlwaysIgnorePolice;
+		this.AlwaysIgnoreTradeInOrbit = g.AlwaysIgnoreTradeInOrbit;
+		this.AlwaysIgnoreTraders = g.AlwaysIgnoreTraders;
+		this.AlwaysInfo = g.AlwaysInfo;
+		this.ArrivedViaWormhole = g.ArrivedViaWormhole;
+		this.ArtifactOnBoard = g.ArtifactOnBoard;
+		this.AttackFleeing = g.AttackFleeing;
+		this.AutoFuel = g.AutoFuel;
+		this.AutoRepair = g.AutoRepair;
+		this.CanSuperWarp = g.CanSuperWarp;
+		this.Continuous = g.Continuous;
+		this.EscapePod = g.EscapePod;
+		this.GameLoaded = g.GameLoaded;
+		this.IdentifyStartup = g.IdentifyStartup;
+		this.Inspected = g.Inspected;
+		this.Insurance = g.Insurance;
+		this.JustLootedMarie = g.JustLootedMarie;
+		this.LitterWarning = g.LitterWarning;
+		this.MoonBought = g.MoonBought;
+		this.NewsAutoPay = g.NewsAutoPay;
+		this.PriceDifferences = g.PriceDifferences;
+		this.Raided = g.Raided;
+		this.RemindLoans = g.RemindLoans;
+		this.ReserveMoney = g.ReserveMoney;
+		this.SaveOnArrival = g.SaveOnArrival;
+		this.SharePreferences = g.SharePreferences;
+		this.ShowTrackedRange = g.ShowTrackedRange;
+		this.TextualEncounters = g.TextualEncounters;
+		this.TrackAutoOff = g.TrackAutoOff;
+		this.TribbleMessage = g.TribbleMessage;
+		this.Credits = g.Credits;
+		this.Debt = g.Debt;
+		this.MonsterHull = g.MonsterHull;
+		this.PirateKills = g.PirateKills;
+		this.PoliceKills = g.PoliceKills;
+		this.PoliceRecordScore = g.PoliceRecordScore;
+		this.ReputationScore = g.ReputationScore;
+		this.TraderKills = g.TraderKills;
 
-		// Randomize the system locations a bit more, otherwise the systems with the first
-		// names in the alphabet are all in the centre
-		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
-			d = 0;
-			while (d < GameState.MAXWORMHOLE) {
-				if (Wormhole[d] == i)
-					break;
-				++d;
-			}
-			j = GetRandom(GameState.MAXSOLARSYSTEM);
-			if (WormholeExists(j, -1))
-				continue;
-			x = SolarSystem[i].x;
-			y = SolarSystem[i].y;
-			SolarSystem[i].x = SolarSystem[j].x;
-			SolarSystem[i].y = SolarSystem[j].y;
-			SolarSystem[j].x = x;
-			SolarSystem[j].y = y;
-			if (d < GameState.MAXWORMHOLE)
-				Wormhole[d] = j;
+		this.Clicks = g.Clicks;
+		this.CurForm = g.CurForm;
+		this.Days = g.Days;
+		this.DragonflyStatus = g.DragonflyStatus;
+		this.EncounterType = g.EncounterType;
+		this.ExperimentStatus = g.ExperimentStatus;
+		this.FabricRipProbability = g.FabricRipProbability;
+		this.GalacticChartSystem = g.GalacticChartSystem;
+		this.InvasionStatus = g.InvasionStatus;
+		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
+		this.JarekStatus = g.JarekStatus;
+		this.LeaveEmpty = g.LeaveEmpty;
+		this.MonsterStatus = g.MonsterStatus;
+		this.NoClaim = g.NoClaim;
+		this.ReactorStatus = g.ReactorStatus;
+		this.ScarabStatus = g.ScarabStatus;
+		this.SelectedShipType = g.SelectedShipType;
+		this.Shortcut1 = g.Shortcut1;
+		this.Shortcut2 = g.Shortcut2;
+		this.Shortcut3 = g.Shortcut3;
+		this.Shortcut4 = g.Shortcut4;
+		this.TrackedSystem = g.TrackedSystem;
+		this.VeryRareEncounter = g.VeryRareEncounter;
+		this.WarpSystem = g.WarpSystem;
+		this.WildStatus = g.WildStatus;
+		this.Difficulty = g.Difficulty;
+
+		for (i=0; i<GameState.MAXWORMHOLE; i++){
+			this.Wormhole[i] = g.Wormhole[i];
 		}
-
-		// Randomize wormhole order
-		for (i = 0; i < GameState.MAXWORMHOLE; ++i) {
-			j = GetRandom(GameState.MAXWORMHOLE);
-			x = Wormhole[i];
-			Wormhole[i] = Wormhole[j];
-			Wormhole[j] = x;
+		for (i=0; i<GameState.MAXTRADEITEM; i++){
+			this.BuyPrice[i] = g.BuyPrice[i];
+			this.BuyingPrice[i] = g.BuyingPrice[i];
+			this.SellPrice[i] = g.SellPrice[i];
 		}
-
-		// Initialize mercenary list
-		Mercenary[0].nameIndex = 0;
-		Mercenary[0].pilot = 1;
-		Mercenary[0].fighter = 1;
-		Mercenary[0].trader = 1;
-		Mercenary[0].engineer = 1;
-
-		i = 1;
-		while (i <= GameState.MAXCREWMEMBER) {
-			Mercenary[i].curSystem = GetRandom(GameState.MAXSOLARSYSTEM);
-
-			Redo = false;
-			for (j = 1; j < i; ++j) {
-				// Not more than one mercenary per system
-				if (Mercenary[j].curSystem == Mercenary[i].curSystem) {
-					Redo = true;
-					break;
-				}
-			}
-			// can't have another mercenary on Kravat, since Zeethibal could be there
-			if (Mercenary[i].curSystem == GameState.KRAVATSYSTEM)
-				Redo = true;
-			if (Redo)
-				continue;
-
-			Mercenary[i].nameIndex = i;
-			Mercenary[i].pilot = RandomSkill();
-			Mercenary[i].fighter = RandomSkill();
-			Mercenary[i].trader = RandomSkill();
-			Mercenary[i].engineer = RandomSkill();
-
-			++i;
+		for (i=0; i<GameState.MAXSHIPTYPE; i++){
+			this.ShipPrice[i] = g.ShipPrice[i];
 		}
-
-		// special individuals: Zeethibal, Jonathan Wild's Nephew
-		Mercenary[GameState.MAXCREWMEMBER - 1].curSystem = 255;
-
-		// Place special events
-		SolarSystem[GameState.ACAMARSYSTEM].special = GameState.MONSTERKILLED;
-		SolarSystem[GameState.BARATASSYSTEM].special = GameState.FLYBARATAS;
-		SolarSystem[GameState.MELINASYSTEM].special = GameState.FLYMELINA;
-		SolarSystem[GameState.REGULASSYSTEM].special = GameState.FLYREGULAS;
-		SolarSystem[GameState.ZALKONSYSTEM].special = GameState.DRAGONFLYDESTROYED;
-		SolarSystem[GameState.JAPORISYSTEM].special = GameState.MEDICINEDELIVERY;
-		SolarSystem[GameState.UTOPIASYSTEM].special = GameState.MOONBOUGHT;
-		SolarSystem[GameState.DEVIDIASYSTEM].special = GameState.JAREKGETSOUT;
-		SolarSystem[GameState.KRAVATSYSTEM].special = GameState.WILDGETSOUT;
-
-		// Assign a wormhole location endpoint for the Scarab.
-		// It's possible that ALL wormhole destinations are already
-		// taken. In that case, we don't offer the Scarab quest.
-		FreeWormhole = false;
-		k = 0;
-		j = GetRandom(GameState.MAXWORMHOLE);
-		while (SolarSystem[Wormhole[j]].special != -1 &&
-						       Wormhole[j] != GameState.GEMULONSYSTEM && Wormhole[j] != GameState.DALEDSYSTEM && Wormhole[j] != GameState.NIXSYSTEM && k < 20) {
-			j = GetRandom(GameState.MAXWORMHOLE);
-			k++;
-		}
-		if (k < 20) {
-			FreeWormhole = true;
-			SolarSystem[Wormhole[j]].special = GameState.SCARABDESTROYED;
-		}
-
-		d = 999;
-		k = -1;
-		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
-			j = RealDistance(SolarSystem[GameState.NIXSYSTEM], SolarSystem[i]);
-			if (j >= 70 && j < d && SolarSystem[i].special < 0 &&
-							    d != GameState.GEMULONSYSTEM && d != GameState.DALEDSYSTEM) {
-				k = i;
-				d = j;
-			}
-		}
-		if (k >= 0) {
-			SolarSystem[k].special = GameState.GETREACTOR;
-			SolarSystem[GameState.NIXSYSTEM].Special = GameState.REACTORDELIVERED;
-		}
-
-
-		i = 0;
-		while (i < GameState.MAXSOLARSYSTEM) {
-			d = 1 + (GetRandom(GameState.MAXSOLARSYSTEM - 1));
-			if (SolarSystem[d].special < 0 && SolarSystem[d].techLevel >= GameState.MAXTECHLEVEL - 1 &&
-							    d != GameState.GEMULONSYSTEM && d != GameState.DALEDSYSTEM) {
-				SolarSystem[d].special = GameState.ARTIFACTDELIVERY;
-				break;
-			}
-			++i;
-		}
-		if (i >= GameState.MAXSOLARSYSTEM)
-			SpecialEvent[GameState.ALIENARTIFACT].Occurrence = 0;
-
-
-		d = 999;
-		k = -1;
-		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
-			j = RealDistance(SolarSystem[GameState.GEMULONSYSTEM], SolarSystem[i]);
-			if (j >= 70 && j < d && SolarSystem[i].special < 0 &&
-							    k != GameState.DALEDSYSTEM && k != GameState.GEMULONSYSTEM) {
-				k = i;
-				d = j;
-			}
-		}
-		if (k >= 0) {
-			SolarSystem[k].special = GameState.ALIENINVASION;
-			SolarSystem[GameState.GEMULONSYSTEM].Special = GameState.GEMULONRESCUED;
-		}
-
-		d = 999;
-		k = -1;
-		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
-			j = RealDistance(SolarSystem[GameState.DALEDSYSTEM], SolarSystem[i]);
-			if (j >= 70 && j < d && SolarSystem[i].special < 0) {
-				k = i;
-				d = j;
-			}
-		}
-		if (k >= 0) {
-			SolarSystem[k].special = GameState.EXPERIMENT;
-			SolarSystem[GameState.DALEDSYSTEM].special = GameState.EXPERIMENTSTOPPED;
-		}
-
-
-		for (i = GameState.MOONFORSALE; i < GameState.MAXSPECIALEVENT - GameState.ENDFIXED; ++i) {
-			for (j = 0; j < SpecialEvent[i].Occurrence; ++j) {
-				Redo = true;
-				while (Redo) {
-					d = 1 + GetRandom(GameState.MAXSOLARSYSTEM - 1);
-					if (SolarSystem[d].special < 0) {
-						if (FreeWormhole || i != GameState.SCARAB)
-							SolarSystem[d].special = i;
-						Redo = false;
-					}
-				}
-			}
-		}
-
-		// Initialize Commander
-		for (i = 0; i < 200; ++i) {
-			COMMANDER.CurSystem = GetRandom(GameState.MAXSOLARSYSTEM);
-			if (CURSYSTEM.Special >= 0)
-				continue;
-
-			// Seek at least an agricultural planet as startplanet (but not too hi-tech)
-			if ((i < 100) && ((CURSYSTEM.TechLevel <= 0) || (CURSYSTEM.TechLevel >= 6)))
-				continue;
-
-			// Make sure at least three other systems can be reached
-			d = 0;
-			for (j = 0; j < GameState.MAXSOLARSYSTEM; ++j) {
-				if (j == COMMANDER.CurSystem)
-					continue;
-				if (SqrDistance(SolarSystem[j], CURSYSTEM) <= SQR(Shiptype[1].FuelTanks)) {
-					++d;
-					if (d >= 3)
-						break;
-				}
-			}
-			if (d < 3)
-				continue;
-
-			break;
-		}
-
-		Credits = 1000;
-		Debt = 0;
-		Days = 0;
-		WarpSystem = COMMANDER.CurSystem;
-		PoliceKills = 0;
-		TraderKills = 0;
-		PirateKills = 0;
-		PoliceRecordScore = 0;
-		ReputationScore = 0;
-		MonsterStatus = 0;
-		DragonflyStatus = 0;
-		ScarabStatus = 0;
-		JaporiDiseaseStatus = 0;
-		MoonBought = false;
-		MonsterHull = Shiptype[SpaceMonster.Type].HullStrength;
-		EscapePod = false;
-		Insurance = false;
-		RemindLoans = true;
-		NoClaim = 0;
-		ArtifactOnBoard = false;
-		for (i = 0; i < GameState.MAXTRADEITEM; ++i)
-			BuyingPrice[i] = 0;
-		TribbleMessage = false;
-		JarekStatus = 0;
-		InvasionStatus = 0;
-		ExperimentStatus = 0;
-		FabricRipProbability = 0;
-		PossibleToGoThroughRip = false;
-		ArrivedViaWormhole = false;
-		VeryRareEncounter = 0;
-		resetNewsEvents();
-		WildStatus = 0;
-		ReactorStatus = 0;
-		TrackedSystem = -1;
-		ShowTrackedRange = true;
-		JustLootedMarie = false;
-		ChanceOfVeryRareEncounter = GameState.CHANCEOFVERYRAREENCOUNTER;
-		AlreadyPaidForNewspaper = false;
-		CanSuperWarp = false;
-		GameLoaded = false;
-
-		// Initialize Ship
-		Ship.type = 1;
-		for (i = 0; i < GameState.MAXTRADEITEM; ++i)
-			Ship.cargo[i] = 0;
-		Ship.weapon[0] = 0;
-		for (i = 1; i < GameState.MAXWEAPON; ++i)
-			Ship.weapon[i] = -1;
-		for (i = 0; i < GameState.MAXSHIELD; ++i) {
-			Ship.shield[i] = -1;
-			Ship.shieldStrength[i] = 0;
-		}
-		for (i = 0; i < GameState.MAXGADGET; ++i)
-			Ship.gadget[i] = -1;
-		Ship.crew[0] = 0;
-		for (i = 1; i < GameState.MAXCREW; ++i)
-			Ship.crew[i] = -1;
-		Ship.fuel = GetFuelTanks();
-		Ship.hull = Shiptype[Ship.type].HullStrength;
-		Ship.tribbles = 0;
-
-		SkillPointsLeft = 16;
-		*/
-	}
-
-	public int GetRandom(int a) {
-		return (rand.nextInt() % (a));
-	}
-
-	public int SQR(int a) {
-		return (a * a);
-	}
-
-	public double SqrDistance(SolarSystem a, SolarSystem b) {
-		return (SQR(a.x - b.x) + SQR(a.y - b.y));
 	}
 }

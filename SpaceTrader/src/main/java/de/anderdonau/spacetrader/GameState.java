@@ -17,6 +17,7 @@ import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Reputation;
+import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -377,7 +378,7 @@ public class GameState implements Serializable {
 	ShipTypes ShipTypes = new ShipTypes();
 	Weapons Weapons = new Weapons();
 	Shields Shields = new Shields();
-	SolarSystem[] SolarSystem = new SolarSystem[MAXSOLARSYSTEM];
+	public SolarSystem[] SolarSystem = new SolarSystem[MAXSOLARSYSTEM];
 	final SpecialEvents SpecialEvents = new SpecialEvents();
 	final String[] SystemSize = {"Tiny", "Small", "Medium", "Large", "Huge"};
 	final String[] techLevel = {"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial", "Industrial", "Post-industrial", "Hi-tech"};
@@ -467,7 +468,7 @@ public class GameState implements Serializable {
 	public int ChanceOfVeryRareEncounter = CHANCEOFVERYRAREENCOUNTER;
 	public int ChanceOfTradeInOrbit = CHANCEOFTRADEINORBIT;
 	public int Clicks = 0;                      // Distance from target system,= 0;= arrived
-	public int Difficulty = NORMAL;     // Difficulty level
+	public static int Difficulty = NORMAL;     // Difficulty level
 	public int DragonflyStatus = 0;     //= 0;= Dragonfly not available,= 1;= Go to Baratas,= 2;= Go to Melina,= 3;= Go to Regulas,= 4;= Go to Zalkon,= 5;= Dragonfly destroyed
 	public int ExperimentStatus = 0;    // Experiment;= 0;not given yet,1-11 days from start;= 12;performed,= 13;cancelled
 	public int FabricRipProbability = 0; // if Experiment == 8; this is the probability of being warped to a random planet.
@@ -516,11 +517,11 @@ public class GameState implements Serializable {
 	public boolean TrackAutoOff = true;    // Automatically stop tracking a system when you get to it?
 	public boolean TribbleMessage = false;      // Is true if the Ship Yard on the current system informed you about the tribbles
 	public boolean UseHWButtons = false;   // by default, don't use Hardware W buttons
-	int[] Wormhole = new int[GameState.MAXWORMHOLE];
+	public int[] Wormhole = new int[GameState.MAXWORMHOLE];
 	CrewMember[] CrewMember;
-	CrewMember[] Mercenary;
-	Ship Ship;
-	Ship Opponent;
+	public CrewMember[] Mercenary;
+	public Ship Ship;
+	public Ship Opponent;
 	Ship SpaceMonster;
 	Ship Scarab;
 	Ship Dragonfly;
@@ -542,7 +543,7 @@ public class GameState implements Serializable {
 					                            {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
 					                            {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
 	String[][] CannedNews = {{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.", "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"}, {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!", "Restrictions on Corporate Freedom Abolished by Courts!"}, {"Party Reports Productivity Increase.", "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!", "Politburo Approves New 5-Year Plan!"}, {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!", "Southern States Resist Federal Taxation for Capital Projects!", "States Request Federal Intervention in Citrus Conflict!"}, {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.", "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."}, {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.", "Storage Banks to be Upgraded!", "System Backup Rescheduled."}, {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!", "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."}, {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!", "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"}, {"Drug Smugglers Sentenced to Death!", "Aliens Required to Carry Visible Identification at All Times!", "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."}, {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!", "Baron Ignores Ultimatum!", "War of Succession Threatens!"}, {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?", "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"}, {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!", "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"}, {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?", "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "}, {"Government Promises Increased Welfare Benefits!", "State Denies Food Rationing Required to Prevent Famine.", "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"}, {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."}, {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.", "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."}, {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.", "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
-	String NameCommander;
+	public String NameCommander;
 	Random rand = new Random();
 
 	public GameState(String NameCommander) {
@@ -560,7 +561,6 @@ public class GameState implements Serializable {
 		// Initialize Galaxy
 		i = 0;
 		while (i < GameState.MAXSOLARSYSTEM) {
-			SolarSystem[i] = new SolarSystem();
 			if (i < GameState.MAXWORMHOLE) {
 				// Place the first system somewhere in the centre
 				Log.d("gamestateinit", String.format("SolarSystem[%d].x = ((%d / 2) - GetRandom(%d)) + ((%d * (1 + 2 * (%d %% 3))) / 6))", i, GameState.CLOSEDISTANCE, GameState.CLOSEDISTANCE, GameState.GALAXYWIDTH, i));
@@ -653,7 +653,6 @@ public class GameState implements Serializable {
 		}
 
 		// Initialize mercenary list
-		Mercenary[0] = new CrewMember();
 		Mercenary[0].nameIndex = 0;
 		Mercenary[0].pilot = 1;
 		Mercenary[0].fighter = 1;
@@ -662,7 +661,6 @@ public class GameState implements Serializable {
 
 		i = 1;
 		while (i <= GameState.MAXCREWMEMBER) {
-			Mercenary[i] = new CrewMember();
 			Mercenary[i].curSystem = GetRandom(GameState.MAXSOLARSYSTEM);
 
 			Redo = false;
@@ -883,10 +881,19 @@ public class GameState implements Serializable {
 
 		SkillPointsLeft = 16;
 	}
-
 	public void initializeBasic() {
+		int i;
+
 		CrewMember = new CrewMember[GameState.MAXCREW];
 		Mercenary = new CrewMember[GameState.MAXCREWMEMBER + 1];
+		for (i=0; i <= GameState.MAXCREWMEMBER; i++) {
+			Mercenary[i] = new CrewMember();
+		}
+		SolarSystem = new SolarSystem[GameState.MAXSOLARSYSTEM];
+		for (i=0; i < GameState.MAXSOLARSYSTEM; i++){
+			SolarSystem[i] = new SolarSystem();
+		}
+
 
 		final int[] cargo = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		final int[] armament = {-1, -1, -1};
@@ -955,6 +962,98 @@ public class GameState implements Serializable {
 						                    0); // No tribbles on board
 	}
 
+	public GameState(SaveGame g){
+		int i;
+		initializeBasic();
+		for (i=0; i<GameState.MAXCREWMEMBER; i++) {
+			this.Mercenary[i] = g.Mercenary[i];
+		}
+		this.Opponent = g.Opponent;
+		this.Ship = g.Ship;
+		for (i=0; i<GameState.MAXSOLARSYSTEM; i++){
+			this.SolarSystem[i] = g.SolarSystem[i];
+		}
+		this.NameCommander = g.NameCommander;
+		this.AlreadyPaidForNewspaper = g.AlreadyPaidForNewspaper;
+		this.AlwaysIgnorePirates = g.AlwaysIgnorePirates;
+		this.AlwaysIgnorePolice = g.AlwaysIgnorePolice;
+		this.AlwaysIgnoreTradeInOrbit = g.AlwaysIgnoreTradeInOrbit;
+		this.AlwaysIgnoreTraders = g.AlwaysIgnoreTraders;
+		this.AlwaysInfo = g.AlwaysInfo;
+		this.ArrivedViaWormhole = g.ArrivedViaWormhole;
+		this.ArtifactOnBoard = g.ArtifactOnBoard;
+		this.AttackFleeing = g.AttackFleeing;
+		this.AutoFuel = g.AutoFuel;
+		this.AutoRepair = g.AutoRepair;
+		this.CanSuperWarp = g.CanSuperWarp;
+		this.Continuous = g.Continuous;
+		this.EscapePod = g.EscapePod;
+		this.GameLoaded = g.GameLoaded;
+		this.IdentifyStartup = g.IdentifyStartup;
+		this.Inspected = g.Inspected;
+		this.Insurance = g.Insurance;
+		this.JustLootedMarie = g.JustLootedMarie;
+		this.LitterWarning = g.LitterWarning;
+		this.MoonBought = g.MoonBought;
+		this.NewsAutoPay = g.NewsAutoPay;
+		this.PriceDifferences = g.PriceDifferences;
+		this.Raided = g.Raided;
+		this.RemindLoans = g.RemindLoans;
+		this.ReserveMoney = g.ReserveMoney;
+		this.SaveOnArrival = g.SaveOnArrival;
+		this.SharePreferences = g.SharePreferences;
+		this.ShowTrackedRange = g.ShowTrackedRange;
+		this.TextualEncounters = g.TextualEncounters;
+		this.TrackAutoOff = g.TrackAutoOff;
+		this.TribbleMessage = g.TribbleMessage;
+		this.Credits = g.Credits;
+		this.Debt = g.Debt;
+		this.MonsterHull = g.MonsterHull;
+		this.PirateKills = g.PirateKills;
+		this.PoliceKills = g.PoliceKills;
+		this.PoliceRecordScore = g.PoliceRecordScore;
+		this.ReputationScore = g.ReputationScore;
+		this.TraderKills = g.TraderKills;
+
+		this.Clicks = g.Clicks;
+		this.CurForm = g.CurForm;
+		this.Days = g.Days;
+		this.DragonflyStatus = g.DragonflyStatus;
+		this.EncounterType = g.EncounterType;
+		this.ExperimentStatus = g.ExperimentStatus;
+		this.FabricRipProbability = g.FabricRipProbability;
+		this.GalacticChartSystem = g.GalacticChartSystem;
+		this.InvasionStatus = g.InvasionStatus;
+		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
+		this.JarekStatus = g.JarekStatus;
+		this.LeaveEmpty = g.LeaveEmpty;
+		this.MonsterStatus = g.MonsterStatus;
+		this.NoClaim = g.NoClaim;
+		this.ReactorStatus = g.ReactorStatus;
+		this.ScarabStatus = g.ScarabStatus;
+		this.SelectedShipType = g.SelectedShipType;
+		this.Shortcut1 = g.Shortcut1;
+		this.Shortcut2 = g.Shortcut2;
+		this.Shortcut3 = g.Shortcut3;
+		this.Shortcut4 = g.Shortcut4;
+		this.TrackedSystem = g.TrackedSystem;
+		this.VeryRareEncounter = g.VeryRareEncounter;
+		this.WarpSystem = g.WarpSystem;
+		this.WildStatus = g.WildStatus;
+		this.Difficulty = g.Difficulty;
+
+		for (i=0; i<GameState.MAXWORMHOLE; i++){
+			this.Wormhole[i] = g.Wormhole[i];
+		}
+		for (i=0; i<GameState.MAXTRADEITEM; i++){
+			this.BuyPrice[i] = g.BuyPrice[i];
+			this.BuyingPrice[i] = g.BuyingPrice[i];
+			this.SellPrice[i] = g.SellPrice[i];
+		}
+		for (i=0; i<GameState.MAXSHIPTYPE; i++){
+			this.ShipPrice[i] = g.ShipPrice[i];
+		}
+	}
 	public int GetRandom(int a) {
 		return (rand.nextInt(a));
 	}
