@@ -52,6 +52,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	private static boolean foundSaveGame = false;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 
+	////////////////////////////////////////////////////
+	// Helper functions for Newspaper
+	////////////////////////////////////////////////////
 	public static void addNewsEvent(int eventFlag) {
 		if (mGameState.NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1)
 			mGameState.NewsEvents[mGameState.NewsSpecialEventCount++] = eventFlag;
@@ -87,6 +90,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 
+	////////////////////////////////////////////////////
+	// Overrides and Android UI support functions
+	////////////////////////////////////////////////////
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,7 +110,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
 		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 	}
-
 	@Override
 	public void onBackPressed() {
 		if (mCurrentState.equals("WelcomeScreen")) {
@@ -125,7 +130,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		saveGame();
 		finish();
 	}
-
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
@@ -164,7 +168,53 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle(mCurrentState);
 	}
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		try {
+			menu.findItem(R.id.hotkey1).setTitle(mGameState.Shortcuts[mGameState.Shortcut1][0]);
+			menu.findItem(R.id.hotkey2).setTitle(mGameState.Shortcuts[mGameState.Shortcut2][0]);
+			menu.findItem(R.id.hotkey3).setTitle(mGameState.Shortcuts[mGameState.Shortcut3][0]);
+			menu.findItem(R.id.hotkey4).setTitle(mGameState.Shortcuts[mGameState.Shortcut4][0]);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.in_game, menu);
 
+		}
+		if (mNavigationDrawerFragment != null) {
+			if (!mNavigationDrawerFragment.isDrawerOpen()) {
+				// Only show items in the action bar relevant to this screen
+				// if the drawer is not showing. Otherwise, let the drawer
+				// decide what to show in the action bar.
+				// getMenuInflater().inflate(R.menu.welcome_screen, menu);
+				restoreActionBar();
+				return true;
+			}
+		}
+		return super.onCreateOptionsMenu(menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		/*if (id == R.id.action_settings) {
+			return true;
+		}
+		*/
+		return super.onOptionsItemSelected(item);
+	}
+
+	////////////////////////////////////////////////////
+	// Button Callbacks
+	////////////////////////////////////////////////////
 	public void btnLoadOrStartGame(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
 		if (foundSaveGame) {
@@ -489,52 +539,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		try {
-			menu.findItem(R.id.hotkey1).setTitle(mGameState.Shortcuts[mGameState.Shortcut1][0]);
-			menu.findItem(R.id.hotkey2).setTitle(mGameState.Shortcuts[mGameState.Shortcut2][0]);
-			menu.findItem(R.id.hotkey3).setTitle(mGameState.Shortcuts[mGameState.Shortcut3][0]);
-			menu.findItem(R.id.hotkey4).setTitle(mGameState.Shortcuts[mGameState.Shortcut4][0]);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.in_game, menu);
-
-		}
-		if (mNavigationDrawerFragment != null) {
-			if (!mNavigationDrawerFragment.isDrawerOpen()) {
-				// Only show items in the action bar relevant to this screen
-				// if the drawer is not showing. Otherwise, let the drawer
-				// decide what to show in the action bar.
-				// getMenuInflater().inflate(R.menu.welcome_screen, menu);
-				restoreActionBar();
-				return true;
-			}
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		/*if (id == R.id.action_settings) {
-			return true;
-		}
-		*/
-		return super.onOptionsItemSelected(item);
 	}
 
 	////////////////////////////////////////////////////////////////////////////
