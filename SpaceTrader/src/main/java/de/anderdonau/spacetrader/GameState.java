@@ -1434,5 +1434,38 @@ public class GameState implements Serializable {
 			return Credits;
 		return Math.max(0,  Credits - MercenaryMoney() - InsuranceMoney());
 	}
+	public boolean AnyEmptySlots(Ship ship) {
+		int j;
+
+		for (j=0; j< ShipTypes.ShipTypes[ship.type].weaponSlots; ++j){
+			if (ship.weapon[j] < 0){
+				return true;
+			}
+		}
+		for (j=0; j< ShipTypes.ShipTypes[ship.type].shieldSlots; ++j){
+			if (ship.shield[j] < 0){
+				return true;
+			}
+		}
+		for (j=0; j< ShipTypes.ShipTypes[ship.type].gadgetSlots; ++j){
+			if (ship.gadget[j] < 0){
+				return true;
+			}
+		}
+		return false;
+	}
+	public int GetFirstEmptySlot(int Slots, int[] Item ) {
+		int FirstEmptySlot, j;
+
+		FirstEmptySlot = -1;
+		for (j=0; j<Slots; ++j){
+			if (Item[j] < 0){
+				FirstEmptySlot = j;
+				break;
+			}
+		}
+
+		return FirstEmptySlot;
+	}
 
 }

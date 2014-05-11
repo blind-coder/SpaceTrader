@@ -295,7 +295,8 @@
 			android:id="@+id/btnCommanderStatusQuests"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			android:layout_alignParentStart="true"
+			android:onClick="btnCommanderStatusQuests"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -304,7 +305,8 @@
 			android:id="@+id/btnCommanderStatusSpecialCargo"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentEnd="true"
+			android:onClick="btnCommanderStatusSpecialCargo"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -313,6 +315,7 @@
 			android:id="@+id/btnCommanderStatusShip"
 			android:layout_alignParentBottom="true"
 			android:layout_toRightOf="@+id/btnCommanderStatusQuests"
-			android:layout_toLeftOf="@+id/btnCommanderStatusSpecialCargo"/>
+			android:layout_toLeftOf="@+id/btnCommanderStatusSpecialCargo"
+			android:onClick="btnCommanderStatusShip"/>
 
 </RelativeLayout>

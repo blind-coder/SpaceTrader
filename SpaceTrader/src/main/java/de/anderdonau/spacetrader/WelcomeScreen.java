@@ -525,7 +525,200 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		fragmentManager.beginTransaction().replace(R.id.container, new CommanderStatusFragment()).commit();
 		mCurrentState = "CommanderStatus";
 	}
+	public void btnCommanderStatusQuests(View view){
+		String quests = "";
+		if (mGameState.MonsterStatus == 1) {
+			quests += "Kill the space monster at Acamar.\n";
+		}
 
+		if (mGameState.DragonflyStatus >= 1 && mGameState.DragonflyStatus <= 4) {
+			quests += "Follow the Dragonfly to ";
+			if (mGameState.DragonflyStatus == 1)
+				quests += "Baratas.\n";
+			else if (mGameState.DragonflyStatus == 2)
+				quests += "Melina.\n";
+			else if (mGameState.DragonflyStatus == 3)
+				quests += "Regulas.\n";
+			else if (mGameState.DragonflyStatus == 4)
+				quests += "Zalkon.\n";
+		} else if (mGameState.SolarSystem[GameState.ZALKONSYSTEM].special == GameState.INSTALLLIGHTNINGSHIELD) {
+			quests += "Get your lightning shield at Zalkon.\n";
+		}
+
+		if (mGameState.JaporiDiseaseStatus == 1) {
+			quests += "Deliver antidote to Japori.\n";
+		}
+
+		if (mGameState.ArtifactOnBoard) {
+			quests += "Deliver the alien artifact to professor Berger at some hi-tech system.\n";
+		}
+
+		if (mGameState.WildStatus == 1) {
+			quests += "Smuggle Jonathan Wild to Kravat.\n";
+		}
+
+		if (mGameState.JarekStatus == 1) {
+			quests += "Bring ambassador Jarek to Devidia.\n";
+		}
+
+		// I changed this, and the reused the code in the Experiment quest.
+		// I think it makes more sense to display the time remaining in
+		// this fashion. SjG 10 July 2002
+		if (mGameState.InvasionStatus >= 1 && mGameState.InvasionStatus < 7) {
+			quests += "Inform Gemulon about alien invasion";
+			if (mGameState.InvasionStatus == 6){
+				quests += " by tomorrow";
+			} else {
+				quests += String.format(" within %d days", mGameState.InvasionStatus);
+			}
+			quests += ".\n";
+		} else if (mGameState.SolarSystem[GameState.GEMULONSYSTEM].special == GameState.GETFUELCOMPACTOR) {
+			quests += "Get your fuel compactor at Gemulon.\n";
+		}
+
+		if (mGameState.ExperimentStatus >= 1 && mGameState.ExperimentStatus < 11) {
+			quests += "Stop Dr. Fehler's experiment at Daled ";
+
+			if (mGameState.ExperimentStatus == 10){
+				quests += "by tomorrow";
+			} else {
+				quests += String.format("within %d days", 11 - mGameState.ExperimentStatus);
+			}
+			quests += ".\n";
+		}
+
+		if (mGameState.ReactorStatus >= 1 && mGameState.ReactorStatus < 21) {
+			quests += "Deliver the unstable reactor to Nix ";
+			if (mGameState.ReactorStatus < 2) {
+				quests += "for Henry Morgan.\n";
+			} else {
+				quests += "before it consumes all its fuel.\n";
+			}
+		}
+
+		if (mGameState.SolarSystem[GameState.NIXSYSTEM].special == GameState.GETSPECIALLASER) {
+			quests += "Get your special laser at Nix.\n";
+		}
+
+		if (mGameState.ScarabStatus == 1) {
+			quests += "Find and destroy the Scarab (which is hiding at the exit to a wormhole).\n";
+		}
+
+		if (mGameState.Ship.tribbles > 0) {
+			quests += "Get rid of those pesky tribbles.\n";
+		}
+
+		if (mGameState.MoonBought) {
+			quests += "Claim your moon at Utopia.\n";
+		}
+
+		if (quests.length() == 0)
+			quests = "There are no open quests.\n";
+
+		alertDialog("Open Quests", quests, "");
+	}
+	public void btnCommanderStatusSpecialCargo(View view) {
+		String buf = "";
+		if (mGameState.Ship.tribbles > 0) {
+			if (mGameState.Ship.tribbles >= GameState.MAXTRIBBLES){
+				buf += "An infestation of tribbles.\n";
+			} else {
+				buf += String.format("%d cute furry tribble%s.\n", mGameState.Ship.tribbles, mGameState.Ship.tribbles == 1 ? "" : "s");
+			}
+		}
+
+		if (mGameState.JaporiDiseaseStatus == 1) {
+			buf += "10 bays of antidote.\n";
+		}
+		if (mGameState.ArtifactOnBoard) {
+			buf += "An alien artifact.\n";
+		}
+		if (mGameState.JarekStatus == 2) {
+			buf += "A haggling computer.\n";
+		}
+		if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+			buf += "An unstable reactor taking up 5 bays.\n";
+			buf += String.format("%d bay%s of enriched fuel.\n", 10 - ((mGameState.ReactorStatus - 1) / 2), (10 - ((mGameState.ReactorStatus - 1) / 2)) > 1 ? "s" : "");
+
+		}
+		if (mGameState.CanSuperWarp) {
+			buf += "A Portable Singularity.\n";
+		}
+
+		if (buf.length() == 0){
+			buf = "No special cargo.";
+		}
+
+		alertDialog("Special Cargo", buf, "");
+	}
+	public void btnCommanderStatusShip(View view){
+		int i, j, k, FirstEmptySlot;
+		String buf;
+
+		buf = String.format("Type: %s%s\n", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name, mGameState.ScarabStatus == 3 ? "/hardened hull" : "");
+
+		buf += "Equipment:\n";
+
+		for (i=0; i<GameState.MAXWEAPONTYPE+GameState.EXTRAWEAPONS; ++i) {
+			j = 0;
+			for (k=0; k<GameState.MAXWEAPON; ++k) {
+				if (mGameState.Ship.weapon[k] == i)
+					++j;
+			}
+			if (j > 0) {
+				buf += String.format("%d %s%s\n", j, mGameState.Weapons.mWeapons[i].name, j > 1 ? "s" : "");
+			}
+		}
+
+		for (i=0; i<GameState.MAXSHIELDTYPE+GameState.EXTRASHIELDS; ++i) {
+			j = 0;
+			for (k=0; k<GameState.MAXSHIELD; ++k) {
+				if (mGameState.Ship.shield[k] == i)
+					++j;
+			}
+			if (j > 0) {
+				buf += String.format("%d %s%s\n", j, mGameState.Shields.mShields[i].name, j > 1 ? "s" : "");
+			}
+		}
+		for (i=0; i<GameState.MAXGADGETTYPE+GameState.EXTRAGADGETS; ++i) {
+			j = 0;
+			for (k=0; k<GameState.MAXGADGET; ++k) {
+				if (mGameState.Ship.gadget[k] == i)
+					++j;
+			}
+			if (j > 0) {
+				if (i == GameState.EXTRABAYS) {
+					buf += String.format("%d extra cargo bays\n", j*5);;
+				} else {
+					buf += String.format("%s\n", mGameState.Gadgets.mGadgets[i].name);
+				}
+			}
+		}
+
+		if (mGameState.EscapePod) {
+			buf += "An escape pod\n";
+		}
+
+		if (mGameState.AnyEmptySlots(mGameState.Ship)) {
+			buf += "Unfilled:\n";
+
+			FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots, mGameState.Ship.weapon);
+			if (FirstEmptySlot >= 0) {
+				buf += String.format("%d weapon slot%s\n", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots - FirstEmptySlot, (mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots - FirstEmptySlot) == 1 ? "" : "s");
+			}
+
+			FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots, mGameState.Ship.shield);
+			if (FirstEmptySlot >= 0) {
+				buf += String.format("%d shield slot%s\n", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots - FirstEmptySlot, (mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots - FirstEmptySlot) == 1 ? "" : "s");
+			}
+
+			FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget);
+			if (FirstEmptySlot >= 0) {
+				buf += String.format("%d gadget slot%s\n", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots - FirstEmptySlot, (mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots - FirstEmptySlot) == 1 ? "" : "s");
+			}
+		}
+		alertDialog("Ship Status", buf, "");
+	}
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 

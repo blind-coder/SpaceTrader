@@ -28,7 +28,7 @@ public class Gadgets {
 	}
 
 	public class Gadget {
-		String name;
+		public String name;
 		public int price;
 		int techLevel;
 		int chance; // Chance that this is fitted in a slot

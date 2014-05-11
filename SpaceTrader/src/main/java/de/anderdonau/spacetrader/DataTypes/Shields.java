@@ -23,7 +23,7 @@ public class Shields {
 	}
 
 	public class Shield {
-		String name;
+		public String name;
 		int power;
 		public int price;
 		int techLevel;

@@ -24,7 +24,7 @@ public class Weapons {
 	}
 
 	public class Weapon {
-		String name;
+		public String name;
 		int power;
 		public int price;
 		int techLevel;

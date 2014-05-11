@@ -34,11 +34,11 @@ public class ShipTypes {
 	}
 
 	public class ShipType {
-		String name;
+		public String name;
 		public int cargoBays;   // Number of cargo bays
-		int weaponSlots; // Number of lasers possible
-		int shieldSlots; // Number of shields possible
-		int gadgetSlots; // Number of gadgets possible (e.g. docking computers)
+		public int weaponSlots; // Number of lasers possible
+		public int shieldSlots; // Number of shields possible
+		public int gadgetSlots; // Number of gadgets possible (e.g. docking computers)
 		public int crewQuarters;  // Number of crewmembers possible
 		public int fuelTanks;   // Each tank contains enough fuel to travel 10 parsecs
 		int minTechLevel;  // Minimum tech level needed to build ship
