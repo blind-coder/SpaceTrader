@@ -11,7 +11,7 @@ package de.anderdonau.spacetrader.DataTypes;
 import de.anderdonau.spacetrader.GameState;
 
 public class Shields {
-	Shield[] mShields;
+	public Shield[] mShields;
 
 	public Shields() {
 		mShields = new Shield[GameState.MAXSHIELDTYPE + GameState.EXTRASHIELDS];
@@ -24,12 +24,12 @@ public class Shields {
 
 	public class Shield {
 		String name;
-		double power;
-		double price;
+		int power;
+		public int price;
 		int techLevel;
 		int chance; // Chance that this is fitted in a slot
 
-		public Shield(String name, double power, double price, int techLevel, int chance) {
+		public Shield(String name, int power, int price, int techLevel, int chance) {
 			this.name = name;
 			this.power = power;
 			this.price = price;

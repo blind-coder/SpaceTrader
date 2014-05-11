@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.Gadgets;
 import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Reputation;
@@ -378,6 +379,7 @@ public class GameState implements Serializable {
 	ShipTypes ShipTypes = new ShipTypes();
 	Weapons Weapons = new Weapons();
 	Shields Shields = new Shields();
+	Gadgets Gadgets = new Gadgets();
 	public SolarSystem[] SolarSystem = new SolarSystem[MAXSOLARSYSTEM];
 	final SpecialEvents SpecialEvents = new SpecialEvents();
 	final String[] SystemSize = {"Tiny", "Small", "Medium", "Large", "Huge"};
@@ -518,6 +520,7 @@ public class GameState implements Serializable {
 	public boolean TribbleMessage = false;      // Is true if the Ship Yard on the current system informed you about the tribbles
 	public boolean UseHWButtons = false;   // by default, don't use Hardware W buttons
 	public int[] Wormhole = new int[GameState.MAXWORMHOLE];
+	public int[] NewsEvents = new int[MAXSPECIALNEWSEVENTS]; // Array of news events.
 	CrewMember[] CrewMember;
 	public CrewMember[] Mercenary;
 	public Ship Ship;
@@ -542,7 +545,7 @@ public class GameState implements Serializable {
 					                            {"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
 					                            {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
 					                            {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
-	String[][] CannedNews = {{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.", "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"}, {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!", "Restrictions on Corporate Freedom Abolished by Courts!"}, {"Party Reports Productivity Increase.", "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!", "Politburo Approves New 5-Year Plan!"}, {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!", "Southern States Resist Federal Taxation for Capital Projects!", "States Request Federal Intervention in Citrus Conflict!"}, {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.", "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."}, {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.", "Storage Banks to be Upgraded!", "System Backup Rescheduled."}, {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!", "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."}, {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!", "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"}, {"Drug Smugglers Sentenced to Death!", "Aliens Required to Carry Visible Identification at All Times!", "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."}, {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!", "Baron Ignores Ultimatum!", "War of Succession Threatens!"}, {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?", "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"}, {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!", "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"}, {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?", "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "}, {"Government Promises Increased Welfare Benefits!", "State Denies Food Rationing Required to Prevent Famine.", "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"}, {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."}, {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.", "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."}, {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.", "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
+	static String[][] CannedNews = {{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.", "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"}, {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!", "Restrictions on Corporate Freedom Abolished by Courts!"}, {"Party Reports Productivity Increase.", "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!", "Politburo Approves New 5-Year Plan!"}, {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!", "Southern States Resist Federal Taxation for Capital Projects!", "States Request Federal Intervention in Citrus Conflict!"}, {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.", "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."}, {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.", "Storage Banks to be Upgraded!", "System Backup Rescheduled."}, {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!", "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."}, {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!", "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"}, {"Drug Smugglers Sentenced to Death!", "Aliens Required to Carry Visible Identification at All Times!", "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."}, {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!", "Baron Ignores Ultimatum!", "War of Succession Threatens!"}, {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?", "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"}, {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!", "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"}, {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?", "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "}, {"Government Promises Increased Welfare Benefits!", "State Denies Food Rationing Required to Prevent Famine.", "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"}, {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."}, {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.", "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."}, {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.", "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
 	public String NameCommander;
 	Random rand = new Random();
 
@@ -1094,8 +1097,11 @@ public class GameState implements Serializable {
 	public int RandomSkill() {
 		return 1 + GetRandom( 5 ) + GetRandom( 6 );
 	}
-	int GetFuelTanks() {
-		return (HasGadget( this.Ship, FUELCOMPACTOR ) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
+	public int GetFuelTanks() {
+		// *************************************************************************
+		// Determine size of fueltanks
+		// *************************************************************************
+		return (HasGadget(this.Ship, FUELCOMPACTOR) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
 	}
 	boolean HasGadget( Ship sh, int Gg ) {
 		int i;
@@ -1141,4 +1147,291 @@ public class GameState implements Serializable {
 		}
 		return price;
 	}
+	public int OpenQuests(){
+		int r = 0;
+
+		if (MonsterStatus == 1)
+			++r;
+
+		if (DragonflyStatus >= 1 && DragonflyStatus <= 4)
+			++r;
+		else if (SolarSystem[ZALKONSYSTEM].special == INSTALLLIGHTNINGSHIELD)
+			++r;
+
+		if (JaporiDiseaseStatus == 1)
+			++r;
+
+		if (ArtifactOnBoard)
+			++r;
+
+		if (WildStatus == 1)
+			++r;
+
+		if (JarekStatus == 1)
+			++r;
+
+		if (InvasionStatus >= 1 && InvasionStatus < 7)
+			++r;
+		else if (SolarSystem[GEMULONSYSTEM].special == GETFUELCOMPACTOR)
+			++r;
+
+		if (ExperimentStatus >= 1 && ExperimentStatus < 11)
+			++r;
+
+		if (ReactorStatus >= 1 && ReactorStatus < 21)
+			++r;
+
+		if (SolarSystem[NIXSYSTEM].special == GETSPECIALLASER)
+			++r;
+
+		if (ScarabStatus == 1)
+			++r;
+
+		if (Ship.tribbles > 0)
+			++r;
+
+		if (MoonBought)
+			++r;
+
+		return r;
+	}
+	public int CurrentWorth() {
+		return (CurrentShipPrice( false ) + Credits - Debt + (MoonBought ? COSTMOON : 0));
+	}
+	public int CurrentShipPrice(boolean ForInsurance) {
+		int i;
+		int CurPrice;
+
+		CurPrice = CurrentShipPriceWithoutCargo(ForInsurance);
+		for (i=0; i<MAXTRADEITEM; ++i){
+			CurPrice += BuyingPrice[i];
+		}
+		return CurPrice;
+	}
+	public int CurrentShipPriceWithoutCargo(boolean ForInsurance) {
+		int i;
+		int CurPrice;
+
+		CurPrice =
+						// Trade-in value is three-fourths the original price
+						((ShipTypes.ShipTypes[Ship.type].price * (Ship.tribbles > 0 && !ForInsurance? 1 : 3)) / 4)
+										// subtract repair costs
+										- (GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
+										// subtract costs to fill tank with fuel
+										- (ShipTypes.ShipTypes[Ship.type].fuelTanks - GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel;
+		// Add 2/3 of the price of each item of equipment
+		for (i=0; i<MAXWEAPON; ++i)
+			if (Ship.weapon[i] >= 0)
+				CurPrice += WEAPONSELLPRICE( i );
+		for (i=0; i<MAXSHIELD; ++i)
+			if (Ship.shield[i] >= 0)
+				CurPrice += SHIELDSELLPRICE( i );
+		for (i=0; i<MAXGADGET; ++i)
+			if (Ship.gadget[i] >= 0)
+				CurPrice += GADGETSELLPRICE( i );
+
+		return CurPrice;
+	}
+	public int GetHullStrength() {
+		if (ScarabStatus == 3)
+			return ShipTypes.ShipTypes[Ship.type].hullStrength + UPGRADEDHULL;
+		else
+			return ShipTypes.ShipTypes[Ship.type].hullStrength;
+	}
+	public int GetFuel() {
+		return Math.min(Ship.fuel, GetFuelTanks());
+	}
+	public int WEAPONSELLPRICE( int a ){
+		return (BaseSellPrice(Ship.weapon[a], Weapons.mWeapons[Ship.weapon[a]].price));
+	}
+	public int SHIELDSELLPRICE( int a ){
+		return (BaseSellPrice(Ship.shield[a], Shields.mShields[Ship.shield[a]].price));
+	}
+	public int GADGETSELLPRICE( int a ){
+		return (BaseSellPrice(Ship.gadget[a], Gadgets.mGadgets[Ship.gadget[a]].price));
+	}
+	int BasePrice(int ItemTechLevel, int Price) {
+		// *************************************************************************
+		// Determine base price of item
+		// *************************************************************************
+		SolarSystem CURSYSTEM = SolarSystem[Mercenary[0].curSystem];
+		return ((ItemTechLevel > CURSYSTEM.techLevel) ? 0 :
+						        ((Price * (100 - TraderSkill(Ship))) / 100));
+	}
+	int BaseSellPrice(int Index, int Price) {
+		// *************************************************************************
+		// Determine selling price
+		// *************************************************************************
+		return (Index >= 0 ? ((Price * 3) / 4) : 0);
+	}
+	public int AdaptDifficulty(int Level) {
+		// *************************************************************************
+		// Adapt a skill to the difficulty level
+		// *************************************************************************
+		if (Difficulty == BEGINNER || Difficulty == EASY)
+			return (Level+1);
+		else if (Difficulty == IMPOSSIBLE)
+			return Math.max(1, Level - 1);
+		else
+			return Level;
+	}
+	public int FighterSkill( Ship Sh ) {
+		// *************************************************************************
+		// Fighter skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = Mercenary[Sh.crew[0]].fighter;
+
+		for (i=1; i<MAXCREW; ++i)
+		{
+			if (Sh.crew[i] < 0)
+				break;
+			if (Mercenary[Sh.crew[i]].fighter > MaxSkill)
+				MaxSkill = Mercenary[Sh.crew[i]].fighter;
+		}
+
+		if (HasGadget( Sh, TARGETINGSYSTEM ))
+			MaxSkill += SKILLBONUS;
+
+		return AdaptDifficulty(MaxSkill);
+	}
+
+	public int PilotSkill(Ship Sh) {
+		// *************************************************************************
+		// Pilot skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = Mercenary[Sh.crew[0]].pilot;
+
+		for (i=1; i<MAXCREW; ++i)
+		{
+			if (Sh.crew[i] < 0)
+				break;
+			if (Mercenary[Sh.crew[i]].pilot > MaxSkill)
+				MaxSkill = Mercenary[Sh.crew[i]].pilot;
+		}
+
+		if (HasGadget( Sh, NAVIGATINGSYSTEM ))
+			MaxSkill += SKILLBONUS;
+		if (HasGadget( Sh, CLOAKINGDEVICE ))
+			MaxSkill += CLOAKBONUS;
+
+		return AdaptDifficulty( MaxSkill );
+	}
+	int TraderSkill(Ship Sh) {
+		// *************************************************************************
+		// Trader skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = Mercenary[Sh.crew[0]].trader;
+
+		for (i=1; i<MAXCREW; ++i)
+		{
+			if (Sh.crew[i] < 0)
+				break;
+			if (Mercenary[Sh.crew[i]].trader > MaxSkill)
+				MaxSkill = Mercenary[Sh.crew[i]].trader;
+		}
+
+		if (JarekStatus >= 2)
+			++MaxSkill;
+
+		return AdaptDifficulty(MaxSkill);
+	}
+
+	int EngineerSkill(Ship Sh) {
+		// *************************************************************************
+		// Engineer skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = Mercenary[Sh.crew[0]].engineer;
+
+		for (i=1; i<MAXCREW; ++i)
+		{
+			if (Sh.crew[i] < 0)
+				break;
+			if (Mercenary[Sh.crew[i]].engineer > MaxSkill)
+				MaxSkill = Mercenary[Sh.crew[i]].engineer;
+		}
+
+		if (HasGadget( Sh, AUTOREPAIRSYSTEM ))
+			MaxSkill += SKILLBONUS;
+
+		return AdaptDifficulty(MaxSkill);
+	}
+
+	public void RecalculateSellPrices() {
+		// *************************************************************************
+		// After erasure of police record, selling prices must be recalculated
+		// *************************************************************************
+		int i;
+
+		for (i=0; i<MAXTRADEITEM; ++i)
+			SellPrice[i] = (SellPrice[i] * 100) / 90;
+	}
+	public int TotalCargoBays() {
+		// *************************************************************************
+		// Calculate total cargo bays
+		// *************************************************************************
+		int Bays;
+		int i;
+
+		Bays = ShipTypes.ShipTypes[Ship.type].cargoBays;
+		for (i=0; i<MAXGADGET; ++i)
+			if (Ship.gadget[i] == EXTRABAYS)
+				Bays += 5;
+		if (JaporiDiseaseStatus == 1)
+			Bays -= 10;
+		// since the quest ends when the reactor
+		if (ReactorStatus > 0 && ReactorStatus < 21)
+			Bays -= (5 + 10 - (ReactorStatus - 1)/2);
+
+		return Bays;
+	}
+	public int FilledCargoBays() {
+		// *************************************************************************
+		// Calculate total filled cargo bays
+		// *************************************************************************
+		int sum, i;
+
+		sum = 0;
+		for (i=0; i<MAXTRADEITEM; ++i)
+			sum = sum + Ship.cargo[i];
+
+		return sum;
+	}
+
+	// *************************************************************************
+	// Money available to spend
+	// *************************************************************************
+	public int MercenaryMoney(){
+		int i, ToPay;
+
+		ToPay = 0;
+		for (i=1; i<MAXCREW; ++i)
+			if (Ship.crew[i] >= 0)
+				ToPay += MercenaryPriceHire(Ship.crew[i]);
+
+		return ToPay;
+	}
+	public int InsuranceMoney(){
+		if (!Insurance)
+			return 0;
+		else
+			return (Math.max(1, (((CurrentShipPriceWithoutCargo( true ) * 5) / 2000) * (100 - Math.min( NoClaim, 90 )) / 100) ));
+	}
+	int ToSpend(){
+		if (!ReserveMoney)
+			return Credits;
+		return Math.max(0,  Credits - MercenaryMoney() - InsuranceMoney());
+	}
+
 }

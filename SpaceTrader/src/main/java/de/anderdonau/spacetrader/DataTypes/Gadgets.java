@@ -14,7 +14,7 @@ import de.anderdonau.spacetrader.GameState;
  * Created by blindcoder on 4/24/14.
  */
 public class Gadgets {
-	Gadget[] mGadgets;
+	public Gadget[] mGadgets;
 
 	public Gadgets() {
 		mGadgets = new Gadget[GameState.MAXGADGETTYPE + GameState.EXTRAGADGETS];
@@ -29,10 +29,10 @@ public class Gadgets {
 
 	public class Gadget {
 		String name;
-		double price;
+		public int price;
 		int techLevel;
 		int chance; // Chance that this is fitted in a slot
-		public Gadget(String name, double price, int techLevel, int chance) {
+		public Gadget(String name, int price, int techLevel, int chance) {
 			this.name = name;
 			this.price = price;
 			this.techLevel = techLevel;

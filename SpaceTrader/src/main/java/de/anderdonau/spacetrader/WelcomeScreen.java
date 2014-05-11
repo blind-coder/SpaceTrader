@@ -10,9 +10,11 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -27,12 +29,14 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Politics;
@@ -42,13 +46,46 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-	private NavigationDrawerFragment mNavigationDrawerFragment;
-
+	static GameState mGameState;
 	private static String mCurrentState = "startup";
 	private static Context mContext;
-	static GameState mGameState;
-
 	private static boolean foundSaveGame = false;
+	private NavigationDrawerFragment mNavigationDrawerFragment;
+
+	public static void addNewsEvent(int eventFlag) {
+		if (mGameState.NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1)
+			mGameState.NewsEvents[mGameState.NewsSpecialEventCount++] = eventFlag;
+	}
+	public static boolean isNewsEvent(int eventFlag){
+		int i;
+
+		for (i=0;i<mGameState.NewsSpecialEventCount; i++) {
+			if (mGameState.NewsEvents[i] == eventFlag)
+				return true;
+		}
+		return false;
+	}
+	public static int latestNewsEvent(){
+		if (mGameState.NewsSpecialEventCount == 0)
+			return -1;
+		else
+			return mGameState.NewsEvents[mGameState.NewsSpecialEventCount - 1];
+	}
+	public static void resetNewsEvents(){
+		mGameState.NewsSpecialEventCount = 0;
+	}
+	public static void replaceNewsEvent(int originalEventFlag, int replacementEventFlag){
+		int i;
+
+		if (originalEventFlag == -1) {
+			addNewsEvent(replacementEventFlag);
+		} else {
+			for (i=0;i<mGameState.NewsSpecialEventCount; i++) {
+				if (mGameState.NewsEvents[i] == originalEventFlag)
+					mGameState.NewsEvents[i] = replacementEventFlag;
+			}
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +131,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// update the main content by replacing fragments
 		//FragmentManager fragmentManager = getFragmentManager();
 		//fragmentManager.beginTransaction().replace(R.id.container, WelcomeScreenFragment.newInstance(position + 1)).commit();
-		switch (position){
+		switch (position) {
 			case 0: //"Buy Cargo"
 				break;
 			case 1: //"Sell Cargo"
@@ -121,7 +158,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
-
 	public void restoreActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -131,7 +167,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 	public void btnLoadOrStartGame(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
-		if (foundSaveGame){
+		if (foundSaveGame) {
 			btnSystemInformation(null);
 			fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
 		} else {
@@ -139,26 +175,300 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			mCurrentState = "StartNewGame";
 		}
 	}
-	public void btnStartNewGame(View view){
+	public void btnStartNewGame(View view) {
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
+		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
 		mGameState = new GameState(t.getText().toString());
+		GameState.Difficulty = s.getProgress()+1;
+		s = (SeekBar) findViewById(R.id.skillPilot);
+		mGameState.Mercenary[0].pilot = s.getProgress()+1;
+		s = (SeekBar) findViewById(R.id.skillFighter);
+		mGameState.Mercenary[0].fighter = s.getProgress()+1;
+		s = (SeekBar) findViewById(R.id.skillTrader);
+		mGameState.Mercenary[0].trader = s.getProgress()+1;
+		s = (SeekBar) findViewById(R.id.skillEngineer);
+		mGameState.Mercenary[0].engineer = s.getProgress()+1;
 		this.saveGame();
 		btnSystemInformation(view);
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
 	}
-	public void btnSystemInformation(View view){
+	public void btnSystemInformation(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
 		mCurrentState = "SystemInformation";
 	}
-	public void btnPersonnelRoster(View view){
+	public void btnSystemInformationNewspaper(View view){
+		if (!mGameState.AlreadyPaidForNewspaper && mGameState.ToSpend() < (GameState.Difficulty + 1)){
+			alertDialog("Not enough money!", String.format("A newspaper costs %d credits in this system. You don't have enough money!", GameState.Difficulty + 1), "");
+		} else if (!mGameState.AlreadyPaidForNewspaper){
+			if (!mGameState.NewsAutoPay && !mGameState.AlreadyPaidForNewspaper){
+				ConfirmDialog("Buy newspaper", String.format("The local newspaper costs %d credits. Do you wish to buy a copy?", GameState.Difficulty + 1), "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+          "Yes", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								SystemInformationShowNewspaper();
+							}
+						}, "No", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+
+							}
+						});
+			} else {
+				SystemInformationShowNewspaper();
+			}
+		} else {
+			SystemInformationShowNewspaper();
+		}
+	}
+	public void SystemInformationShowNewspaper(){
+		String news = "";
+		String masthead;
+		int seed;
+		int i, j;
+		int reply;
+		boolean realNews = false;
+		Random rand;
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		int WarpSystem = COMMANDER.curSystem;
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[WarpSystem];
+
+		if (!mGameState.AlreadyPaidForNewspaper){
+			mGameState.Credits -= (GameState.Difficulty + 1);
+			mGameState.AlreadyPaidForNewspaper = true;
+		}
+		rand = new Random((mGameState.Mercenary[0].curSystem & GameState.DEFSEEDX) | (mGameState.Days & GameState.DEFSEEDY));
+
+		if (mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].startsWith("*")){
+			masthead = String.format("The %s %s", mGameState.SolarSystemName[CURSYSTEM.nameIndex], mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].substring(2));
+		} else if (mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].startsWith("+")){
+			masthead = String.format("%s %s", mGameState.SolarSystemName[CURSYSTEM.nameIndex], mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].substring(2));
+		} else {
+			masthead = String.format("%s", mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS]);
+		}
+		
+		// Special Events get to go first, crowding out other news
+		if  (isNewsEvent(GameState.CAPTAINHUIEATTACKED))
+			news += "\nFamed Captain Huie Attacked by Brigand!";
+		if  (isNewsEvent(GameState.EXPERIMENTPERFORMED))
+			news += "\nTravelers Report Timespace Damage, Warp Problems!";
+		if  (isNewsEvent(GameState.CAPTAINHUIEDESTROYED))
+			news += "\nCitizens Mourn Destruction of Captain Huie's Ship!";
+		if  (isNewsEvent(GameState.CAPTAINAHABATTACKED))
+			news += "\nThug Assaults Captain Ahab!";
+		if  (isNewsEvent(GameState.CAPTAINAHABDESTROYED))
+			news += "\nDestruction of Captain Ahab's Ship Causes Anger!";
+		if  (isNewsEvent(GameState.CAPTAINCONRADATTACKED))
+			news += "\nCaptain Conrad Comes Under Attack By Criminal!";
+		if  (isNewsEvent(GameState.CAPTAINCONRADDESTROYED))
+			news += "\nCaptain Conrad's Ship Destroyed by Villain!";
+		if  (isNewsEvent(GameState.MONSTERKILLED))
+			news += "\nHero Slays Space Monster! Parade, Honors Planned for Today.";
+		if  (isNewsEvent(GameState.WILDARRESTED))
+			news += "\nNotorious Criminal Jonathan Wild Arrested!";
+		if  (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus == 1)
+			news += "\nSpace Monster Threatens Homeworld!";
+		if  (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus == 1)
+			news += "\nWormhole Travelers Harassed by Unusual Ship!";
+		if (isNewsEvent(GameState.EXPERIMENTSTOPPED))
+			news += "\nScientists Cancel High-profile Test! Committee to Investigate Design.";
+		if (isNewsEvent(GameState.EXPERIMENTNOTSTOPPED))
+			news += "\nHuge Explosion Reported at Research Facility.";
+		if (isNewsEvent(GameState.DRAGONFLY))
+			news += "\nExperimental Craft Stolen! Critics Demand Security Review.";
+		if (isNewsEvent(GameState.SCARAB))
+			news += "\nSecurity Scandal: Test Craft Confirmed Stolen.";
+		if (isNewsEvent(GameState.FLYBARATAS))
+			news += "\nInvestigators Report Strange Craft.";
+		if (isNewsEvent(GameState.FLYMELINA))
+			news += "\nRumors Continue: Melina Orbitted by Odd Starcraft.";
+		if (isNewsEvent(GameState.FLYREGULAS))
+			news += "\nStrange Ship Observed in Regulas Orbit.";
+		if (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus == 4 && !isNewsEvent(GameState.DRAGONFLYDESTROYED))
+			news += "\nUnidentified Ship: A Threat to Zalkon?";
+		if (isNewsEvent(GameState.DRAGONFLYDESTROYED))
+			news += "\nSpectacular Display as Stolen Ship Destroyed in Fierce Space Battle.";
+		if (isNewsEvent(GameState.SCARABDESTROYED))
+			news += "\nWormhole Traffic Delayed as Stolen Craft Destroyed.";
+		if (isNewsEvent(GameState.MEDICINEDELIVERY))
+			news += "\nDisease Antidotes Arrive! Health Officials Optimistic.";
+		if (isNewsEvent(GameState.JAPORIDISEASE))
+			news += "\nEditorial: We Must Help Japori!";
+		if (isNewsEvent(GameState.ARTIFACTDELIVERY))
+			news += "\nScientist Adds Alien Artifact to Museum Collection.";
+		if (isNewsEvent(GameState.JAREKGETSOUT))
+			news += "\nAmbassador Jarek Returns from Crisis.";
+		if (isNewsEvent(GameState.WILDGETSOUT))
+			news += "\nRumors Suggest Known Criminal J. Wild May Come to Kravat!";
+		if (isNewsEvent(GameState.GEMULONRESCUED))
+			news += "\nInvasion Imminent! Plans in Place to Repel Hostile Invaders.";
+		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !isNewsEvent(GameState.GEMULONRESCUED))
+			news += "\nAlien Invasion Devastates Planet!";
+		if (isNewsEvent(GameState.ALIENINVASION))
+			news += "\nEditorial: Who Will Warn Gemulon?";
+		if (isNewsEvent(GameState.ARRIVALVIASINGULARITY))
+			news += "\nTravelers Claim Sighting of Ship Materializing in Orbit!";
+
+		// local system status information
+		if (CURSYSTEM.status > 0) {
+			switch (CURSYSTEM.status) {
+				case GameState.WAR:
+					news += "\nWar News: Offensives Continue!";
+					break;
+				case GameState.PLAGUE:
+					news += "\nPlague Spreads! Outlook Grim.";
+					break;
+				case GameState.DROUGHT:
+					news += "\nNo Rain in Sight!";
+					break;
+				case GameState.BOREDOM:
+					news += "\nEditors: Won't Someone Entertain Us?";
+					break;
+				case GameState.COLD:
+					news += "\nCold Snap Continues!";
+					break;
+				case GameState.CROPFAILURE:
+					news += "\nSerious Crop Failure! Must We Ration?";
+					break;
+				case GameState.LACKOFWORKERS:
+					news += "\nJobless Rate at All-Time Low!";
+					break;
+			}
+		}
+		// character-specific news.
+		if (mGameState.PoliceRecordScore <= GameState.VILLAINSCORE) {
+			j = mGameState.GetRandom(4);
+			switch (j) {
+				case 0:
+					news += "\nPolice Warning: "+mGameState.NameCommander+" Will Dock At "+mGameState.SolarSystemName[CURSYSTEM.nameIndex]+"!";
+					break;
+				case 1:
+					news += "\nNotorious Criminal "+mGameState.NameCommander+" Sighted In "+mGameState.SolarSystemName[CURSYSTEM.nameIndex]+"!";
+					break;
+				case 2:
+					news += "\nLocals Rally to Deny Spaceport Access to "+mGameState.NameCommander+"!";
+					break;
+				case 3:
+					news += "\nTerror Strikes Locals on Arrival of "+mGameState.NameCommander+"!";
+					break;
+			}
+		}
+
+		if (mGameState.PoliceRecordScore == GameState.HEROSCORE) {
+			j = mGameState.GetRandom(3);
+			switch (j) {
+				case 0:
+					news += "\nLocals Welcome Visiting Hero "+mGameState.NameCommander+"!";
+					break;
+				case 1:
+					news += "\nFamed Hero "+mGameState.NameCommander+" to Visit System!";
+					break;
+				case 2:
+					news += "\nLarge Turnout At Spaceport to Welcome "+mGameState.NameCommander+"!";
+					break;
+			}
+		}
+
+		// caught littering?
+		if  (isNewsEvent(GameState.CAUGHTLITTERING))
+			news += "\nPolice Trace Orbiting Space Litter to "+mGameState.NameCommander+".";
+		// and now, finally, useful news (if any)
+		// base probability of a story showing up is (50 / MAXTECHLEVEL) * Current Tech Level
+		// This is then modified by adding 10% for every level of play less than Impossible
+		
+		for (i=0; i < GameState.MAXSOLARSYSTEM; i++) {
+			if (i != COMMANDER.curSystem &&
+		    ((mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]) <= mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].fuelTanks) ||
+		     (mGameState.WormholeExists(COMMANDER.curSystem, i))) &&
+			    mGameState.SolarSystem[i].status > 0) {
+				// Special stories that always get shown: moon, millionaire
+				if (mGameState.SolarSystem[i].special == GameState.MOONFORSALE) {
+					news += "\nSeller in "+mGameState.SolarSystemName[i]+" System has Utopian Moon available.";
+				}
+				if (mGameState.SolarSystem[i].special == GameState.BUYTRIBBLE) {
+					news += "\nCollector in "+mGameState.SolarSystemName[i]+" System seeks to purchase Tribbles.";
+				}
+
+				// And not-always-shown stories
+				if (mGameState.GetRandom(100) <= GameState.STORYPROBABILITY * CURSYSTEM.techLevel + 10 * (5 - GameState.Difficulty)) {
+					j = mGameState.GetRandom(6);
+					switch (j) {
+						case 0:
+							news += "\nReports of ";
+							break;
+						case 1:
+							news += "\nNews of ";
+							break;
+						case 2:
+							news += "\nNew Rumors of ";
+							break;
+						case 3:
+							news += "\nSources say ";
+							break;
+						case 4:
+							news += "\nNotice: ";
+							break;
+						case 5:
+							news += "\nEvidence Suggests ";
+							break;
+					}
+					switch (mGameState.SolarSystem[i].status) {
+						case GameState.WAR:
+							news += "Strife and War";
+							break;
+						case GameState.PLAGUE:
+							news += "Plague Outbreaks";
+							break;
+						case GameState.DROUGHT:
+							news += "Severe Drought";
+							break;
+						case GameState.BOREDOM:
+							news += "Terrible Boredom";
+							break;
+						case GameState.COLD:
+							news += "Cold Weather";
+							break;
+						case GameState.CROPFAILURE:
+							news += "Crop Failures";
+							break;
+						case GameState.LACKOFWORKERS:
+							news += "Labor Shortages";
+							break;
+					}
+					news += "in the "+mGameState.SolarSystemName[i]+" System.";
+					realNews = true;
+				}
+			}
+		}
+
+		// if there's no useful news, we throw up at least one
+		// headline from our canned news list.
+		if (!realNews) {
+			boolean[] shown = new boolean[GameState.MAXSTORIES];
+			for (i=0; i< GameState.MAXSTORIES; i++)
+				shown[i]= false;
+			for (i=0; i <= mGameState.GetRandom(GameState.MAXSTORIES); i++){
+				j = mGameState.GetRandom(GameState.MAXSTORIES);
+				if (!shown[j] && news.length() <= 150) {
+					news += "\n" + GameState.CannedNews[CURSYSTEM.politics][j];
+					shown[j] = true;
+				}
+			}
+		}
+
+		while (news.startsWith("\n"))
+			news = news.substring(1);
+
+		alertDialog(masthead, news, "The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"");
+	}
+	public void btnPersonnelRoster(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new PersonnelRosterFragment()).commit();
 		mCurrentState = "PersonnelRoster";
 	}
 
-	public void saveGame(){
+	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 
 		FileOutputStream fos = null;
@@ -167,7 +477,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		if (fos != null){
+		if (fos != null) {
 			ObjectOutputStream oos = null;
 			try {
 				oos = new ObjectOutputStream(fos);
@@ -181,25 +491,26 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu (Menu menu){
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		try {
 			menu.findItem(R.id.hotkey1).setTitle(mGameState.Shortcuts[mGameState.Shortcut1][0]);
 			menu.findItem(R.id.hotkey2).setTitle(mGameState.Shortcuts[mGameState.Shortcut2][0]);
 			menu.findItem(R.id.hotkey3).setTitle(mGameState.Shortcuts[mGameState.Shortcut3][0]);
 			menu.findItem(R.id.hotkey4).setTitle(mGameState.Shortcuts[mGameState.Shortcut4][0]);
-		} catch (Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")){
+		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.in_game, menu);
 
 		}
-		if (mNavigationDrawerFragment != null){
+		if (mNavigationDrawerFragment != null) {
 			if (!mNavigationDrawerFragment.isDrawerOpen()) {
 				// Only show items in the action bar relevant to this screen
 				// if the drawer is not showing. Otherwise, let the drawer
@@ -225,6 +536,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		return super.onOptionsItemSelected(item);
 	}
 
+	////////////////////////////////////////////////////////////////////////////
+	// Fragments -
+	////////////////////////////////////////////////////////////////////////////
 	public static class WelcomeScreenFragment extends Fragment {
 		public WelcomeScreenFragment() {
 		}
@@ -242,7 +556,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			} catch (FileNotFoundException e) {
 				foundSaveGame = false;
 			}
-			if (foundSaveGame){
+			if (foundSaveGame) {
 				ObjectInputStream ois = null;
 				try {
 					ois = new ObjectInputStream(fis);
@@ -253,6 +567,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					btn.setText(mGameState.NameCommander);
 				} catch (Exception e) {
 					e.printStackTrace();
+					mGameState = new GameState("Jameson");
+					foundSaveGame = false;
 				}
 			}
 
@@ -308,7 +624,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					btn.setEnabled(sum == mGameState.SkillPointsLeft);
 				}
 			};
-			SeekBar.OnSeekBarChangeListener levelChangeListener = new SeekBar.OnSeekBarChangeListener() {
+			SeekBar.OnSeekBarChangeListener levelChangeListener = new
+SeekBar.OnSeekBarChangeListener() {
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 					TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
@@ -342,6 +659,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
 			SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
+			CURSYSTEM.visited = true;
+
 			TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
 			textView.setText(mGameState.SolarSystemName[CURSYSTEM.nameIndex]);
 			textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
@@ -355,18 +674,100 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
 			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
 			textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
-			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates ]);
+			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
 			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
 			textView.setText(mGameState.Status[CURSYSTEM.status]);
 
 			Button btn = (Button) rootView.findViewById(R.id.btnSpecialEvent);
-			if (CURSYSTEM.special > 0){
+			if (CURSYSTEM.special > 0 && mGameState.OpenQuests() < 3) {
 				btn.setVisibility(View.VISIBLE);
 			} else {
 				btn.setVisibility(View.INVISIBLE);
 			}
+
+			if ((CURSYSTEM.special < 0) ||
+							    (CURSYSTEM.special == GameState.BUYTRIBBLE && mGameState.Ship.tribbles <= 0) ||
+							    (CURSYSTEM.special == GameState.ERASERECORD && mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) ||
+							    (CURSYSTEM.special == GameState.CARGOFORSALE && (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 3)) ||
+							    ((CURSYSTEM.special == GameState.DRAGONFLY || CURSYSTEM.special == GameState.JAPORIDISEASE ||
+											      CURSYSTEM.special == GameState.ALIENARTIFACT || CURSYSTEM.special == GameState.AMBASSADORJAREK ||
+											      CURSYSTEM.special == GameState.EXPERIMENT) && (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE)) ||
+							    (CURSYSTEM.special == GameState.TRANSPORTWILD && (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE)) ||
+							    (CURSYSTEM.special == GameState.GETREACTOR && (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE || mGameState.ReputationScore < GameState.AVERAGESCORE || mGameState.ReactorStatus != 0)) ||
+							    (CURSYSTEM.special == GameState.REACTORDELIVERED && !(mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21)) ||
+							    (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus < 2) ||
+							    (CURSYSTEM.special == GameState.EXPERIMENTSTOPPED && !(mGameState.ExperimentStatus >= 1 && mGameState.ExperimentStatus < 12)) ||
+							    (CURSYSTEM.special == GameState.FLYBARATAS && mGameState.DragonflyStatus < 1) ||
+							    (CURSYSTEM.special == GameState.FLYMELINA && mGameState.DragonflyStatus < 2) ||
+							    (CURSYSTEM.special == GameState.FLYREGULAS && mGameState.DragonflyStatus < 3) ||
+							    (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus < 5) ||
+							    (CURSYSTEM.special == GameState.SCARAB && (mGameState.ReputationScore < GameState.AVERAGESCORE || mGameState.ScarabStatus != 0)) ||
+							    (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus != 2) ||
+							    (CURSYSTEM.special == GameState.GETHULLUPGRADED && mGameState.ScarabStatus != 2) ||
+							    (CURSYSTEM.special == GameState.MEDICINEDELIVERY && mGameState.JaporiDiseaseStatus != 1) ||
+							    (CURSYSTEM.special == GameState.JAPORIDISEASE && (mGameState.JaporiDiseaseStatus != 0)) ||
+							    (CURSYSTEM.special == GameState.ARTIFACTDELIVERY && !mGameState.ArtifactOnBoard) ||
+							    (CURSYSTEM.special == GameState.JAREKGETSOUT && mGameState.JarekStatus != 1) ||
+							    (CURSYSTEM.special == GameState.WILDGETSOUT && mGameState.WildStatus != 1) ||
+							    (CURSYSTEM.special == GameState.GEMULONRESCUED && !(mGameState.InvasionStatus >= 1 && mGameState.InvasionStatus <= 7)) ||
+							    (CURSYSTEM.special == GameState.MOONFORSALE && (mGameState.MoonBought || mGameState.CurrentWorth() < (GameState.COSTMOON * 4) / 5)) ||
+							    (CURSYSTEM.special == GameState.MOONBOUGHT && !mGameState.MoonBought)) {
+				btn.setVisibility(View.INVISIBLE);
+			} else if (mGameState.OpenQuests() > 3 && (CURSYSTEM.special == GameState.TRIBBLE ||
+							                                           CURSYSTEM.special == GameState.SPACEMONSTER ||
+							                                           CURSYSTEM.special == GameState.DRAGONFLY ||
+							                                           CURSYSTEM.special == GameState.JAPORIDISEASE ||
+							                                           CURSYSTEM.special == GameState.ALIENARTIFACT ||
+							                                           CURSYSTEM.special == GameState.AMBASSADORJAREK ||
+							                                           CURSYSTEM.special == GameState.ALIENINVASION ||
+							                                           CURSYSTEM.special == GameState.EXPERIMENT ||
+							                                           CURSYSTEM.special == GameState.TRANSPORTWILD ||
+							                                           CURSYSTEM.special == GameState.GETREACTOR ||
+							                                           CURSYSTEM.special == GameState.SCARAB)) {
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+
+			if (CURSYSTEM.special > -1) {
+				if (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus == 2)
+					addNewsEvent(GameState.MONSTERKILLED);
+				else if (CURSYSTEM.special == GameState.DRAGONFLY)
+					addNewsEvent(GameState.DRAGONFLY);
+				else if (CURSYSTEM.special == GameState.SCARAB)
+					addNewsEvent(GameState.SCARAB);
+				else if (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus == 2)
+					addNewsEvent(GameState.SCARABDESTROYED);
+				else if (CURSYSTEM.special == GameState.FLYBARATAS && mGameState.DragonflyStatus == 1)
+					addNewsEvent(GameState.FLYBARATAS);
+				else if (CURSYSTEM.special == GameState.FLYMELINA && mGameState.DragonflyStatus == 2)
+					addNewsEvent(GameState.FLYMELINA);
+				else if (CURSYSTEM.special == GameState.FLYREGULAS && mGameState.DragonflyStatus == 3)
+					addNewsEvent(GameState.FLYREGULAS);
+				else if (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus == 5)
+					addNewsEvent(GameState.DRAGONFLYDESTROYED);
+				else if (CURSYSTEM.special == GameState.MEDICINEDELIVERY && mGameState.JaporiDiseaseStatus == 1)
+					addNewsEvent(GameState.MEDICINEDELIVERY);
+				else if (CURSYSTEM.special == GameState.ARTIFACTDELIVERY && mGameState.ArtifactOnBoard)
+					addNewsEvent(GameState.ARTIFACTDELIVERY);
+				else if (CURSYSTEM.special == GameState.JAPORIDISEASE && mGameState.JaporiDiseaseStatus == 0)
+					addNewsEvent(GameState.JAPORIDISEASE);
+				else if (CURSYSTEM.special == GameState.JAREKGETSOUT && mGameState.JarekStatus == 1)
+					addNewsEvent(GameState.JAREKGETSOUT);
+				else if (CURSYSTEM.special == GameState.WILDGETSOUT && mGameState.WildStatus == 1)
+					addNewsEvent(GameState.WILDGETSOUT);
+				else if (CURSYSTEM.special == GameState.GEMULONRESCUED && mGameState.InvasionStatus > 0 && mGameState.InvasionStatus < 8)
+					addNewsEvent(GameState.GEMULONRESCUED);
+				else if (CURSYSTEM.special == GameState.ALIENINVASION)
+					addNewsEvent(GameState.ALIENINVASION);
+				else if (CURSYSTEM.special == GameState.EXPERIMENTSTOPPED && mGameState.ExperimentStatus > 0 && mGameState.ExperimentStatus < 12)
+					addNewsEvent(GameState.EXPERIMENTSTOPPED);
+				else if (CURSYSTEM.special == GameState.EXPERIMENTNOTSTOPPED)
+					addNewsEvent(GameState.EXPERIMENTNOTSTOPPED);
+			}
+
 			btn = (Button) rootView.findViewById(R.id.btnMercenaryForHire);
-			if (mGameState.GetForHire() > -1){
+			if (mGameState.GetForHire() > -1) {
 				btn.setVisibility(View.VISIBLE);
 			} else {
 				btn.setVisibility(View.INVISIBLE);
@@ -376,6 +777,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public static class PersonnelRosterFragment extends Fragment {
 		View rootView;
+
 		public PersonnelRosterFragment() { }
 
 		@Override
@@ -386,9 +788,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Button btn;
 			rootView = inflater.inflate(R.layout.fragment_personnel_roster, container, false);
 
-			for (i=0; i<2; ++i) {
-				if ((mGameState.JarekStatus == 1 || mGameState.WildStatus == 1) && i < 2){
-					if (mGameState.JarekStatus == 1 && i == 0){ /* Jarek is always in 1st crew slot */
+			for (i = 0; i < 2; ++i) {
+				if ((mGameState.JarekStatus == 1 || mGameState.WildStatus == 1) && i < 2) {
+					if (mGameState.JarekStatus == 1 && i == 0) { /* Jarek is always in 1st crew slot */
 						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
 						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
 						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
@@ -396,7 +798,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						tv.setText("Jarek's quarters");
 						btn.setVisibility(View.INVISIBLE);
 						continue;
-					} else if (mGameState.JarekStatus == 1 && mGameState.WildStatus == 1 && i == 1){ /* Wild is in 2nd crew slot if Jarek is here, too */
+					} else if (mGameState.JarekStatus == 1 && mGameState.WildStatus == 1 && i == 1) { /* Wild is in 2nd crew slot if Jarek is here, too */
 						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
 						tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
 						btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
@@ -404,7 +806,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						tv.setText("Wild's quarters");
 						btn.setVisibility(View.INVISIBLE);
 						continue;
-					} else if (mGameState.WildStatus == 1 && i == 0){/* Wild is in 1st crew slot if Jarek is not here */
+					} else if (mGameState.WildStatus == 1 && i == 0) {/* Wild is in 1st crew slot if Jarek is not here */
 						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
 						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
 						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
@@ -420,20 +822,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
 					tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
 					btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
-				}	else {
+				} else {
 					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
 					tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
 					btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
 				}
 				ShipTypes.ShipType Ship = mGameState.ShipTypes.ShipTypes[mGameState.Ship.type];
-				if (Ship.crewQuarters <= i+1) {
+				if (Ship.crewQuarters <= i + 1) {
 					tl.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
 					tv.setText("No quarters available");
 					continue;
 				}
 
-				if (mGameState.Ship.crew[i+1] < 0) {
+				if (mGameState.Ship.crew[i + 1] < 0) {
 					tl.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
 					tv.setText("Vacancy");
@@ -442,7 +844,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 				tl.setVisibility(View.VISIBLE);
 				btn.setVisibility(View.VISIBLE);
-				DrawMercenary(i, mGameState.Ship.crew[i+1]); /* Crew Idx 0 is the player */
+				DrawMercenary(i, mGameState.Ship.crew[i + 1]); /* Crew Idx 0 is the player */
 			}
 
 			int ForHire = mGameState.GetForHire();
@@ -461,7 +863,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 			return rootView;
 		}
-		public void DrawMercenary(int i, int idxCrewMember){
+
+		public void DrawMercenary(int i, int idxCrewMember) {
 			TextView txtPilot;
 			TextView txtEngineer;
 			TextView txtTrader;
@@ -470,19 +873,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 			CrewMember c = mGameState.Mercenary[idxCrewMember];
 
-			if (i == 0){
+			if (i == 0) {
 				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew1);
 				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew1);
 				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew1);
 				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew1);
 				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew1);
-			} else if (i == 1){
+			} else if (i == 1) {
 				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew2);
 				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew2);
 				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew2);
 				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew2);
 				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew2);
-			} else /* if (i == 2) */{
+			} else /* if (i == 2) */ {
 				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrewNew);
 				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrewNew);
 				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrewNew);
@@ -490,10 +893,71 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				txtName = (TextView) rootView.findViewById(R.id.txtNameCrewNew);
 			}
 			txtPilot.setText(String.format("%d", c.pilot));
-			txtFighter.setText(String.format("%d",c.fighter));
-			txtEngineer.setText(String.format("%d",c.engineer));
-			txtTrader.setText(String.format("%d",c.trader));
+			txtFighter.setText(String.format("%d", c.fighter));
+			txtEngineer.setText(String.format("%d", c.engineer));
+			txtTrader.setText(String.format("%d", c.trader));
 			txtName.setText(mGameState.MercenaryName[c.nameIndex]);
+		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	// Helper Functions
+	////////////////////////////////////////////////////////////////////////////
+	public void ConfirmDialog(String title, String content, final String help, String positiveText, DialogInterface.OnClickListener positiveCallback, String negativeText, DialogInterface.OnClickListener negativeCallback) {
+		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this);
+		confirm.setTitle(title);
+		confirm.setMessage(content);
+		confirm.setPositiveButton(positiveText, positiveCallback);
+		confirm.setNegativeButton(negativeText, negativeCallback);
+		if (help.length() > 0){
+			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+		}
+		final AlertDialog dialog = confirm.create();
+		dialog.show();
+		if (help.length() > 0){
+			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+				Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
+				// dialog.dismiss();
+				}
+			});
+		}
+	}
+	public void alertDialog(String title, String content, final String help){
+		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this);
+		confirm.setTitle(title);
+		confirm.setMessage(content).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) { }
+		});
+		if (help.length() > 0){
+			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+		}
+		final AlertDialog dialog = confirm.create();
+		dialog.show();
+		if (help.length() > 0){
+			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
+					// dialog.dismiss();
+				}
+			});
 		}
 	}
 }

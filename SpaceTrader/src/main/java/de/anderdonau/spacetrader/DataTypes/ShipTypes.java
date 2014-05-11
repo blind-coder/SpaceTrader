@@ -35,25 +35,25 @@ public class ShipTypes {
 
 	public class ShipType {
 		String name;
-		int cargoBays;   // Number of cargo bays
+		public int cargoBays;   // Number of cargo bays
 		int weaponSlots; // Number of lasers possible
 		int shieldSlots; // Number of shields possible
 		int gadgetSlots; // Number of gadgets possible (e.g. docking computers)
 		public int crewQuarters;  // Number of crewmembers possible
 		public int fuelTanks;   // Each tank contains enough fuel to travel 10 parsecs
 		int minTechLevel;  // Minimum tech level needed to build ship
-		int costOfFuel;  // Cost to fill one tank with fuel
-		double price;     // Base ship cost
+		public int costOfFuel;  // Cost to fill one tank with fuel
+		public int price;     // Base ship cost
 		int bounty;     // Base bounty
 		int occurrence;   // Percentage of the ships you meet
 		public int hullStrength;  // Hull strength
 		int police;     // Encountered as police with at least this strength
 		int pirates;    // idem Pirates
 		int traders;    // idem Traders
-		int repairCosts; // Repair costs for 1 point of hull strength.
+		public int repairCosts; // Repair costs for 1 point of hull strength.
 		int size;      // Determines how easy it is to hit this ship
 
-		public ShipType(String name, int cargoBays, int weaponSlots, int shieldSlots, int gadgetSlots, int crewQuarters, int fuelTanks, int minTechLevel, int costOfFuel, double price, int bounty, int occurrence, int hullStrength, int police, int pirates, int traders, int repairCosts, int size) {
+		public ShipType(String name, int cargoBays, int weaponSlots, int shieldSlots, int gadgetSlots, int crewQuarters, int fuelTanks, int minTechLevel, int costOfFuel, int price, int bounty, int occurrence, int hullStrength, int police, int pirates, int traders, int repairCosts, int size) {
 			this.name = name;
 			this.cargoBays = cargoBays;
 			this.weaponSlots = weaponSlots;

@@ -11,7 +11,7 @@ package de.anderdonau.spacetrader.DataTypes;
 import de.anderdonau.spacetrader.GameState;
 
 public class Weapons {
-	Weapon[] mWeapons;
+	public Weapon[] mWeapons;
 
 	public Weapons() {
 		mWeapons = new Weapon[GameState.MAXWEAPONTYPE + GameState.EXTRAWEAPONS];
@@ -25,12 +25,12 @@ public class Weapons {
 
 	public class Weapon {
 		String name;
-		long power;
-		long price;
+		int power;
+		public int price;
 		int techLevel;
 		int chance; // Chance that this is fitted in a slot
 
-		public Weapon(String name, long power, long price, int techLevel, int chance) {
+		public Weapon(String name, int power, int price, int techLevel, int chance) {
 			this.name = name;
 			this.power = power;
 			this.price = price;
