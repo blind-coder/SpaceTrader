@@ -229,7 +229,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int i, j;
 		int reply;
 		boolean realNews = false;
-		Random rand;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		int WarpSystem = COMMANDER.curSystem;
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[WarpSystem];
@@ -238,7 +237,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			mGameState.Credits -= (GameState.Difficulty + 1);
 			mGameState.AlreadyPaidForNewspaper = true;
 		}
-		rand = new Random((mGameState.Mercenary[0].curSystem & GameState.DEFSEEDX) | (mGameState.Days & GameState.DEFSEEDY));
+		seed = mGameState.GetRandom((int) Math.pow(2, 31));
+		mGameState.rand = new Random((mGameState.Mercenary[0].curSystem & GameState.DEFSEEDX) | (mGameState.Days & GameState.DEFSEEDY));
 
 		if (mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].startsWith("*")){
 			masthead = String.format("The %s %s", mGameState.SolarSystemName[CURSYSTEM.nameIndex], mGameState.NewsPaperNames[CURSYSTEM.politics][WarpSystem%GameState.MAXMASTHEADS].substring(2));
@@ -460,6 +460,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		while (news.startsWith("\n"))
 			news = news.substring(1);
 
+		mGameState.rand = new Random(seed);
 		alertDialog(masthead, news, "The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"");
 	}
 	public void btnPersonnelRoster(View view) {
