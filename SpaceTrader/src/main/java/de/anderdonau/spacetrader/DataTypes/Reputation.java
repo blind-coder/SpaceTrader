@@ -11,8 +11,8 @@ package de.anderdonau.spacetrader.DataTypes;
 import de.anderdonau.spacetrader.GameState;
 
 public class Reputation {
-	int[] minScore = {GameState.HARMLESSREP, GameState.MOSTLYHARMLESSREP, GameState.POORREP, GameState.AVERAGESCORE, GameState.ABOVEAVERAGESCORE,
+	public int[] minScore = {GameState.HARMLESSREP, GameState.MOSTLYHARMLESSREP, GameState.POORREP, GameState.AVERAGESCORE, GameState.ABOVEAVERAGESCORE,
 	GameState.COMPETENTREP, GameState.DANGEROUSREP, GameState.DEADLYREP, GameState.ELITESCORE};
-	String[] name = {"Harmless", "Mostly harmless", "Poor", "Average", "Above average", "Competent", "Dangerous", "Deadly", "Elite"};
+	public String[] name = {"Harmless", "Mostly harmless", "Poor", "Average", "Above average", "Competent", "Dangerous", "Deadly", "Elite"};
 	public Reputation(){ }
 }

@@ -382,6 +382,7 @@ public class GameState implements Serializable {
 	Gadgets Gadgets = new Gadgets();
 	public SolarSystem[] SolarSystem = new SolarSystem[MAXSOLARSYSTEM];
 	final SpecialEvents SpecialEvents = new SpecialEvents();
+	public final String[] levelDesc = new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
 	final String[] SystemSize = {"Tiny", "Small", "Medium", "Large", "Huge"};
 	final String[] techLevel = {"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial", "Industrial", "Post-industrial", "Hi-tech"};
 	final String[] SolarSystemName = {"Acamar", "Adahn",    // The alternate personality for The Nameless One in "Planescape: Torment"

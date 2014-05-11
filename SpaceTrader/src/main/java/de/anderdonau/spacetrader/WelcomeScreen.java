@@ -41,6 +41,7 @@ import java.util.Random;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
+import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
@@ -155,6 +156,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnSystemInformation(null);
 				break;
 			case 8: // "Commander Status"
+				btnCommanderStatus(null);
 				break;
 			case 9: // "Galactic Chart"
 				break;
@@ -229,7 +231,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
 		mGameState = new GameState(t.getText().toString());
-		GameState.Difficulty = s.getProgress()+1;
+		GameState.Difficulty = s.getProgress();
 		s = (SeekBar) findViewById(R.id.skillPilot);
 		mGameState.Mercenary[0].pilot = s.getProgress()+1;
 		s = (SeekBar) findViewById(R.id.skillFighter);
@@ -486,7 +488,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							news += "Labor Shortages";
 							break;
 					}
-					news += "in the "+mGameState.SolarSystemName[i]+" System.";
+					news += " in the "+mGameState.SolarSystemName[i]+" System.";
 					realNews = true;
 				}
 			}
@@ -517,6 +519,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new PersonnelRosterFragment()).commit();
 		mCurrentState = "PersonnelRoster";
+	}
+	public void btnCommanderStatus(View view) {
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new CommanderStatusFragment()).commit();
+		mCurrentState = "CommanderStatus";
 	}
 
 	public void saveGame() {
@@ -634,8 +641,7 @@ SeekBar.OnSeekBarChangeListener() {
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 					TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
-					String[] levelDesc = new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
-					textview.setText(levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar)).getProgress()]);
+					textview.setText(mGameState.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar)).getProgress()]);
 				}
 
 				@Override
@@ -904,7 +910,69 @@ SeekBar.OnSeekBarChangeListener() {
 			txtName.setText(mGameState.MercenaryName[c.nameIndex]);
 		}
 	}
-	
+	public static class CommanderStatusFragment extends Fragment {
+		public CommanderStatusFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_commander_status, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			Ship Ship = mGameState.Ship;
+			TextView tv;
+			int i;
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusNameCommander);
+			tv.setText(mGameState.NameCommander);
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPilot);
+			tv.setText(String.format("%d [%d]", COMMANDER.pilot, mGameState.PilotSkill(Ship)));
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusFighter);
+			tv.setText(String.format("%d [%d]", COMMANDER.fighter, mGameState.FighterSkill(Ship)));
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusTrader);
+			tv.setText(String.format("%d [%d]", COMMANDER.trader, mGameState.TraderSkill(Ship)));
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusEngineer);
+			tv.setText(String.format("%d [%d]", COMMANDER.engineer, mGameState.EngineerSkill(Ship)));
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusKills);
+			tv.setText(String.format("%d", mGameState.PirateKills + mGameState.PoliceKills + mGameState.TraderKills));
+
+			i = 0;
+			while (i < GameState.MAXPOLICERECORD && mGameState.PoliceRecordScore >= mGameState.PoliceRecord.minScore[i])
+				++i;
+			--i;
+			if (i < 0)
+				++i;
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPoliceRecord);
+			tv.setText(mGameState.PoliceRecord.name[i]);
+
+			i = 0;
+			while (i < GameState.MAXREPUTATION && mGameState.ReputationScore >= mGameState.Reputation.minScore[i])
+				++i;
+			--i;
+			if (i < 0)
+				i = 0;
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusReputation);
+			tv.setText(mGameState.Reputation.name[i]);
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
+			tv.setText(mGameState.levelDesc[GameState.Difficulty]);
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDays);
+			tv.setText(String.format("%d", mGameState.Days));
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusCash);
+			tv.setText(String.format("%d cr.", mGameState.Credits));
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDebt);
+			tv.setText(String.format("%d cr.", mGameState.Debt));
+
+			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusWorth);
+			tv.setText(String.format("%d cr.", mGameState.CurrentWorth()));
+
+			return rootView;
+		}
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////
