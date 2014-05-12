@@ -1506,6 +1506,15 @@ public class GameState implements Serializable {
 		// The Difficulty part is commented in the original PalmOS source, too, but I think it maybe should be activated -- BRS
 		return (((ShipTypes.ShipTypes[a].price * (100 - TraderSkill(Ship))) / 100) /* * (Difficulty < 3 ? 1 : (Difficulty + 3)) / (Difficulty < 3 ? 1 : 5)*/);
 	}
+	public int BASEWEAPONPRICE(int a){
+		return (BasePrice(Weapons.mWeapons[a].techLevel, Weapons.mWeapons[a].price));
+	}
+	public int BASESHIELDPRICE(int a){
+		return (BasePrice(Shields.mShields[a].techLevel, Shields.mShields[a].price));
+	}
+	public int BASEGADGETPRICE(int a){
+		return (BasePrice(Gadgets.mGadgets[a].techLevel, Gadgets.mGadgets[a].price));
+	}
 	public void DetermineShipPrices() {
 		int i;
 		de.anderdonau.spacetrader.DataTypes.SolarSystem CURSYSTEM = SolarSystem[Mercenary[0].curSystem];

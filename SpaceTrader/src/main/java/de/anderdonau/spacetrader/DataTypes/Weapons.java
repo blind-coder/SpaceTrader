@@ -27,7 +27,7 @@ public class Weapons {
 		public String name;
 		int power;
 		public int price;
-		int techLevel;
+		public int techLevel;
 		int chance; // Chance that this is fitted in a slot
 
 		public Weapon(String name, int power, int price, int techLevel, int chance) {

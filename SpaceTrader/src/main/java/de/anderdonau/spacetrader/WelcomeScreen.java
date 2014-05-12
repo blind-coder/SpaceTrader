@@ -149,6 +149,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnShipyard(null);
 				break;
 			case 3: // "Buy Equipment"
+				btnBuyEquipment(null);
 				break;
 			case 4: // "Sell Equipment"
 				break;
@@ -1141,6 +1142,87 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			 }
 		);
 	}
+	public void btnBuyEquipment(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new BuyEquipmentFragment()).commit();
+		mCurrentState = "BuyEquipment";
+	}
+	public void BuyEquipmentButtonCallback(View view){
+		int Index;
+
+		Index = -1;
+		switch (view.getId()){
+			case R.id.btnBuyCloakingSystem:
+				Index++;
+			case R.id.btnBuyTargetingSystem:
+				Index++;
+			case R.id.btnBuyNavigationSystem:
+				Index++;
+			case R.id.btnBuyAutoRepairSystem:
+				Index++;
+			case R.id.btnBuy5CargoBays:
+				Index++;
+			case R.id.btnBuyReflectiveShield:
+				Index++;
+			case R.id.btnBuyEnergyShield:
+				Index++;
+			case R.id.btnBuyMilitaryLaser:
+				Index++;
+			case R.id.btnBuyBeamLaser:
+				Index++;
+			case R.id.btnBuyPulseLaser:
+				Index++;
+				break;
+			default: return;
+		}
+		if (Index < GameState.MAXWEAPONTYPE){
+			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots, mGameState.Ship.weapon, mGameState.BASEWEAPONPRICE(Index), mGameState.Weapons.mWeapons[Index].name, Index);
+		} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
+			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots, mGameState.Ship.shield, mGameState.BASESHIELDPRICE(Index-GameState.MAXWEAPONTYPE), mGameState.Shields.mShields[Index-GameState.MAXWEAPONTYPE].name, Index-GameState.MAXWEAPONTYPE);
+		} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
+			if (mGameState.HasGadget(mGameState.Ship, Index-(GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE))){
+				alertDialog("You Already Have One", "It's not useful to buy more than one of this item.", "");
+				return;
+			}
+			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget, mGameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)), mGameState.Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)].name, Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE));
+		}
+		btnBuyEquipment(null);
+	}
+	void BuyItem(int Slots, final int[] Item, final int Price, String Name, final int ItemIndex){
+		// *************************************************************************
+		// Buy an item: Slots is the number of slots, Item is the array in the
+		// Ship record which contains the item type, Price is the costs,
+		// Name is the name of the item and ItemIndex is the item type number
+		// *************************************************************************
+		final int FirstEmptySlot;
+
+		FirstEmptySlot = mGameState.GetFirstEmptySlot(Slots, Item);
+
+		if (Price <= 0){
+			alertDialog("Not Available", "That item is not available in this system.", "Each item is only available in a system which has the technological development needed to produce it.");
+		} else if (mGameState.Debt > 0) {
+			alertDialog("You Have A Debt", "You can't buy that as long as you have debts.", "");
+		} else if (Price > mGameState.ToSpend()){
+			alertDialog("Not enough money", "You do not have enough money to buy this item.", "If you can't pay the price mentioned to the right of an item, you can't get it. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.");
+		} else if (FirstEmptySlot < 0){
+			alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+		} else {
+			ConfirmDialog("Buy " + Name, String.format("Do you wish to buy this item for %d credits?", Price), "Tap Yes if you want to buy the item in the title for the price mentioned.",
+				"Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						Item[FirstEmptySlot] = ItemIndex;
+						mGameState.Credits -= Price;
+						btnBuyEquipment(null);
+					}
+				},
+				"No", new DialogInterface.OnClickListener() {
+				 @Override
+				 public void onClick(DialogInterface dialogInterface, int i) { }
+			 }
+			);
+		}
+	}
 
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
@@ -1872,11 +1954,149 @@ SeekBar.OnSeekBarChangeListener() {
 			tv = (TextView) rootView.findViewById(R.id.txtShipInfoGadgets);
 			tv.setText(String.format("%d", mType.gadgetSlots));
 
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoQuarters);
+			tv.setText(String.format("%d", mType.crewQuarters));
+
 			img = (ImageView) rootView.findViewById(R.id.imgShipInfoShip);
 			img.setImageDrawable(getResources().getDrawable(mType.drawable));
 			return rootView;
 		}
 
+	}
+	public static class BuyEquipmentFragment extends Fragment {
+		public BuyEquipmentFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_buy_equipment, container, false);
+			TextView tv;
+			Button btn;
+			int i;
+
+			i = -1;
+			btn = (Button) rootView.findViewById(R.id.btnBuyPulseLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyBeamLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyMilitaryLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+
+			i = -1;
+			btn = (Button) rootView.findViewById(R.id.btnBuyEnergyShield);
+			if (mGameState.BASESHIELDPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyReflectiveShield);
+			if (mGameState.BASESHIELDPRICE(++i) > 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+
+			i = -1;
+			btn = (Button) rootView.findViewById(R.id.btnBuy5CargoBays);
+			if (mGameState.BASEGADGETPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyAutoRepairSystem);
+			if (mGameState.BASEGADGETPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyNavigationSystem);
+			if (mGameState.BASEGADGETPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyTargetingSystem);
+			if (mGameState.BASEGADGETPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnBuyCloakingSystem);
+			if (mGameState.BASEGADGETPRICE(++i)> 0)
+				btn.setVisibility(View.VISIBLE);
+			else
+				btn.setVisibility(View.INVISIBLE);
+
+			i = -1;
+			tv = (TextView) rootView.findViewById(R.id.txtBuyPulseLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyBeamLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyMilitaryLaser);
+			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+
+			i = -1;
+			tv = (TextView) rootView.findViewById(R.id.txtBuyEnergyShield);
+			if (mGameState.BASESHIELDPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyReflectiveShield);
+			if (mGameState.BASESHIELDPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+
+			i = -1;
+			tv = (TextView) rootView.findViewById(R.id.txtBuy5CargoBays);
+			if (mGameState.BASEGADGETPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyAutoRepairSystem);
+			if (mGameState.BASEGADGETPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNavigationSystem);
+			if (mGameState.BASEGADGETPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyTargetingSystem);
+			if (mGameState.BASEGADGETPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyCloakingSystem);
+			if (mGameState.BASEGADGETPRICE(++i) > 0){
+				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
+			} else {
+				tv.setText("not sold");
+			}
+
+			return rootView;
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////

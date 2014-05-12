@@ -26,7 +26,7 @@ public class Shields {
 		public String name;
 		int power;
 		public int price;
-		int techLevel;
+		public int techLevel;
 		int chance; // Chance that this is fitted in a slot
 
 		public Shield(String name, int power, int price, int techLevel, int chance) {

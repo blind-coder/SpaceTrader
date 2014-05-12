@@ -16,8 +16,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Buy new ship"
-			android:id="@+id/txtBuyNewShipTitle"
+			android:text="Buy Equipment"
+			android:id="@+id/txtBuyEquipment"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
 			android:textStyle="bold"/>
@@ -25,7 +25,7 @@
 	<TableLayout
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:layout_below="@+id/txtBuyNewShipTitle"
+			android:layout_below="@+id/txtBuyEquipment"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true">
 
@@ -37,32 +37,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyFlea"
+					android:id="@+id/btnBuyPulseLaser"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Flea"
+					android:text="Pulse Laser"
 					android:id="@+id/textView"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoFlea"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="got one"
-					android:id="@+id/txtBuyNewShipPriceFlea"
+					android:id="@+id/txtBuyPulseLaser"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -75,32 +67,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyGnat"
+					android:id="@+id/btnBuyBeamLaser"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Gnat"
+					android:text="Beam Laser"
 					android:id="@+id/textView2"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoGnat"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="1000 cr."
-					android:id="@+id/txtBuyNewShipPriceGnat"
+					android:id="@+id/txtBuyBeamLaser"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -113,32 +97,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyFirefly"
+					android:id="@+id/btnBuyMilitaryLaser"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Firefly"
+					android:text="Military Laser"
 					android:id="@+id/textView3"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoFirefly"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="2000 cr."
-					android:id="@+id/txtBuyNewShipPriceFirefly"
+					android:id="@+id/txtBuyMilitaryLaser"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -151,32 +127,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyMosquito"
+					android:id="@+id/btnBuyEnergyShield"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Mosquito"
+					android:text="Energy Shield"
 					android:id="@+id/textView4"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoMosquito"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="3000 cr."
-					android:id="@+id/txtBuyNewShipPriceMosquito"
+					android:id="@+id/txtBuyEnergyShield"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -189,32 +157,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyBumblebee"
+					android:id="@+id/btnBuyReflectiveShield"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Bumblebee"
+					android:text="Reflective Shield"
 					android:id="@+id/textView5"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoBumblebee"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="4000 cr."
-					android:id="@+id/txtBuyNewShipPriceBumblebee"
+					android:id="@+id/txtBuyReflectiveShield"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -227,32 +187,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyBeetle"
+					android:id="@+id/btnBuy5CargoBays"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Beetle"
+					android:text="5 cargo bays"
 					android:id="@+id/textView6"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoBeetle"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="5000 cr."
-					android:id="@+id/txtBuyNewShipPriceBeetle"
+					android:id="@+id/txtBuy5CargoBays"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -265,32 +217,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyHornet"
+					android:id="@+id/btnBuyAutoRepairSystem"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Hornet"
+					android:text="Auto-repair system"
 					android:id="@+id/textView7"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoHornet"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="6000 cr."
-					android:id="@+id/txtBuyNewShipPriceHornet"
+					android:id="@+id/txtBuyAutoRepairSystem"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -303,32 +247,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyGrasshopper"
+					android:id="@+id/btnBuyNavigationSystem"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Grasshopper"
+					android:text="Navigation system"
 					android:id="@+id/textView8"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoGrasshopper"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="7000 cr."
-					android:id="@+id/txtBuyNewShipPriceGrasshopper"
+					android:id="@+id/txtBuyNavigationSystem"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -341,32 +277,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyTermite"
+					android:id="@+id/btnBuyTargetingSystem"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Termite"
+					android:text="Targeting system"
 					android:id="@+id/textView9"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoTermite"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="9000 cr."
-					android:id="@+id/txtBuyNewShipPriceTermite"
+					android:id="@+id/txtBuyTargetingSystem"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -379,32 +307,24 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Buy"
-					android:id="@+id/btnBuyWasp"
+					android:id="@+id/btnBuyCloakingSystem"
 					android:layout_column="0"
-					android:onClick="btnBuyNewShipStep1"/>
+					android:onClick="BuyEquipmentButtonCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Wasp"
+					android:text="Cloaking system"
 					android:id="@+id/textView10"
 					android:layout_column="1"/>
-
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Info"
-					android:id="@+id/btnInfoWasp"
-					android:layout_column="2"
-					android:onClick="btnBuyNewShipInfo"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10000 cr."
-					android:id="@+id/txtBuyNewShipPriceWasp"
+					android:id="@+id/txtBuyCloakingSystem"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
