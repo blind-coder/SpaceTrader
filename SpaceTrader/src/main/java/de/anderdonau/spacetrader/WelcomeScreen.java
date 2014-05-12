@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -151,6 +152,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnPersonnelRoster(null);
 				break;
 			case 6: // "Bank"
+				btnBank(null);
 				break;
 			case 7: // "System Information"
 				btnSystemInformation(null);
@@ -719,6 +721,83 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		alertDialog("Ship Status", buf, "");
 	}
+	public void btnBank(View view) {
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new BankFragment()).commit();
+		mCurrentState = "Bank";
+	}
+	public void btnBankGetLoan(View view){
+		if (mGameState.Debt >= mGameState.MaxLoan()){
+			alertDialog("Debt too high!", "Your debt is too high to get another loan.", "");
+			return;
+		}
+		inputDialog("Get Loan", String.format("How much do you want?\nYou can borrow up to %d credits.", mGameState.MaxLoan()), "Credits", "", new IFinputDialogCallback() {
+			@Override
+			public void execute(EditText input) {
+				try {
+					int amount = Integer.parseInt(input.getText().toString());
+					if (amount > 0){
+						amount = Math.min(mGameState.MaxLoan(), amount);
+						mGameState.Credits += amount;
+						mGameState.Debt += amount;
+						btnBank(null);
+					}
+				} catch (NumberFormatException e){
+					alertDialog("Error", e.getLocalizedMessage().toString(), "");
+				}
+			}
+		});
+	}
+	public void btnBankPaybackLoan(View view){
+		if (mGameState.Debt <= 0){
+			alertDialog("No debt.", "You don't have a loan to pay back.", "");
+			return;
+		}
+		inputDialog("Payback Loan", String.format("You have a debt of %d credits.\nHow much do you want to pay back?", mGameState.Debt), "Credits", "", new IFinputDialogCallback() {
+			@Override
+			public void execute(EditText input) {
+				try {
+					int amount = Integer.parseInt(input.getText().toString());
+					if (amount > 0){
+						amount = Math.min(mGameState.Debt, amount);
+						if (amount > mGameState.Credits){
+							alertDialog("Not enough credits!", String.format("You only have %d credits. You can't pay back more than that!", mGameState.Credits), "");
+							return;
+						}
+						mGameState.Credits -= amount;
+						mGameState.Debt -= amount;
+						btnBank(null);
+					}
+				} catch (NumberFormatException e){
+					alertDialog("Error", e.getLocalizedMessage().toString(), "");
+				}
+			}
+		});
+	}
+	public void btnBankBuyInsurance(View view){
+		if (mGameState.Insurance){
+			ConfirmDialog("Stop Insurance", "Do you really wish to stop your insurance and lose your no-claim?", "", "Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					mGameState.Insurance = false;
+					mGameState.NoClaim = 0;
+					btnBank(null);
+				}
+			}, "No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+		} else {
+			if (!mGameState.EscapePod){
+				alertDialog("No Escape Pod", "Insurance isn't useful for you, since you don't have an escape pod.", "");
+				return;
+			}
+			mGameState.Insurance = true;
+			btnBank(view);
+		}
+	}
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 
@@ -1165,6 +1244,58 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public static class BankFragment extends Fragment {
+		public BankFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_bank, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			Ship Ship = mGameState.Ship;
+			TextView tv;
+			Button btn;
+
+			btn = (Button) rootView.findViewById(R.id.btnBankGetLoan);
+			if (mGameState.Debt <= 0) {
+				btn.setText("Get Loan");
+			}	else {
+				btn.setText("Payback Loan");
+			}
+
+			btn = (Button) rootView.findViewById(R.id.btnBankBuyInsurance);
+			if (mGameState.Insurance) {
+				btn.setText("Stop insurance");
+			} else {
+				btn.setText("Buy insurance");
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankDebt);
+			tv.setText(String.format("%d cr.", mGameState.Debt));
+			btn = (Button) rootView.findViewById(R.id.btnBankPaybackLoan);
+			if (mGameState.Debt <= 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankMaxDebt);
+			tv.setText(String.format("%d cr.", mGameState.MaxLoan()));
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankShipValue);
+			tv.setText(String.format("%d cr.", mGameState.CurrentShipPriceWithoutCargo(true)));
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankNoClaim);
+			tv.setText(String.format("%d%%%s", Math.min(mGameState.NoClaim, 90), mGameState.NoClaim==90 ? " (maximum)" : ""));
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankCost);
+			tv.setText(String.format("%d cr. daily", mGameState.InsuranceMoney()));
+
+			tv = (TextView) rootView.findViewById(R.id.txtBankCash);
+			tv.setText(String.format("%d cr.", mGameState.Credits));
+
+			return rootView;
+		}
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
@@ -1213,6 +1344,47 @@ SeekBar.OnSeekBarChangeListener() {
 			});
 		}
 		final AlertDialog dialog = confirm.create();
+		dialog.show();
+		if (help.length() > 0){
+			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
+					// dialog.dismiss();
+				}
+			});
+		}
+	}
+	public interface IFinputDialogCallback {
+		public void execute(EditText input);
+	}
+	public void inputDialog(String title, String content, String hint, final String help, final IFinputDialogCallback cb){
+		final EditText input = new EditText(WelcomeScreen.this);
+		input.setHint(hint);
+		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
+				.setTitle(title)
+				.setMessage(content)
+				.setView(input)
+				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						cb.execute(input);
+					}
+				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Do nothing.
+					}
+				});
+		if (help.length() > 0){
+			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+		}
+		AlertDialog dialog = confirm.create();
 		dialog.show();
 		if (help.length() > 0){
 			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()

@@ -1464,8 +1464,9 @@ public class GameState implements Serializable {
 				break;
 			}
 		}
-
 		return FirstEmptySlot;
 	}
-
+	public int MaxLoan() {
+		return (int) (PoliceRecordScore >= CLEANSCORE ? Math.min(25000L, Math.max(1000L, ((CurrentWorth() / 10L) / 500L) * 500L)) : 500L);
+	}
 }
