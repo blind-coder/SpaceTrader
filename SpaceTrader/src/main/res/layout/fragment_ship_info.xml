@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="ShipName"
+			android:id="@+id/txtShipInfoTitle"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:textStyle="bold"/>
+
+	<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_below="@+id/txtShipInfoTitle"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Ship size:"
+					android:id="@+id/textView"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Small"
+					android:id="@+id/txtShipInfoSize"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Cargo bays:"
+					android:id="@+id/textView2"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="15"
+					android:id="@+id/txtShipInfoCargoBays"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Max range:"
+					android:id="@+id/textView3"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="14 parsec"
+					android:id="@+id/txtShipInfoRange"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Hull:"
+					android:id="@+id/textView4"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="100"
+					android:id="@+id/txtShipInfoHull"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Weapon slots:"
+					android:id="@+id/textView5"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1"
+					android:id="@+id/txtShipInfoWeapons"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Shield slots:"
+					android:id="@+id/textView6"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1"
+					android:id="@+id/txtShipInfoShields"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Gadget slots:"
+					android:id="@+id/textView7"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1"
+					android:id="@+id/txtShipInfoGadgets"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Quarters:"
+					android:id="@+id/textView8"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1"
+					android:id="@+id/txtShipInfoQuarters"
+					android:layout_column="1"
+					android:layout_gravity="right"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/imgShipInfoShip"
+					android:layout_column="0"
+					android:src="@drawable/bumblebee"
+					android:cropToPadding="false"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:onClick="btnPersonnelRoster">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Ships for sale"
+					android:id="@+id/btnShipInfoBack"
+					android:layout_column="0"
+					android:layout_span="2"
+					android:onClick="btnBuyNewShip"/>
+		</TableRow>
+
+	</TableLayout>
+
+</RelativeLayout>

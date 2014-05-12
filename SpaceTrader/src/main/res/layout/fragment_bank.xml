@@ -145,7 +145,7 @@
 			android:id="@+id/btnBankBuyInsurance"
 			android:layout_below="@+id/txtBankCost"
 			android:layout_centerHorizontal="true"
-			android:onClick="btnShipyardBuyEscapePod"/>
+			android:onClick="btnBankBuyInsurance"/>
 
 	<TextView
 			android:layout_width="wrap_content"

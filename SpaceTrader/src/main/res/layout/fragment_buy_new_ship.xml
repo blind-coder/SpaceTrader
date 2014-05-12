@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="Buy new ship"
+			android:id="@+id/txtBuyNewShipTitle"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:textStyle="bold"/>
+
+	<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_below="@+id/txtBuyNewShipTitle"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyFlea"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Flea"
+					android:id="@+id/textView"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoFlea"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="got one"
+					android:id="@+id/txtBuyNewShipPriceFlea"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyGnat"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Gnat"
+					android:id="@+id/textView2"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoGnat"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtBuyNewShipPriceGnat"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyFirefly"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Firefly"
+					android:id="@+id/textView3"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoFirefly"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="2000 cr."
+					android:id="@+id/txtBuyNewShipPriceFirefly"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyMosquito"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Mosquito"
+					android:id="@+id/textView4"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoMosquito"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="3000 cr."
+					android:id="@+id/txtBuyNewShipPriceMosquito"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyBumblebee"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Bumblebee"
+					android:id="@+id/textView5"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoBumblebee"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="4000 cr."
+					android:id="@+id/txtBuyNewShipPriceBumblebee"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyBeetle"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Beetle"
+					android:id="@+id/textView6"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoBeetle"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="5000 cr."
+					android:id="@+id/txtBuyNewShipPriceBeetle"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyHornet"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Hornet"
+					android:id="@+id/textView7"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoHornet"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="6000 cr."
+					android:id="@+id/txtBuyNewShipPriceHornet"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyGrasshopper"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Grasshopper"
+					android:id="@+id/textView8"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoGrasshopper"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="7000 cr."
+					android:id="@+id/txtBuyNewShipPriceGrasshopper"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyTermite"
+					android:layout_column="0"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Termite"
+					android:id="@+id/textView9"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoTermite"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="9000 cr."
+					android:id="@+id/txtBuyNewShipPriceTermite"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Buy"
+					android:id="@+id/btnBuyWasp"
+					android:layout_column="0"
+					android:longClickable="false"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Wasp"
+					android:id="@+id/textView10"
+					android:layout_column="1"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Info"
+					android:id="@+id/btnInfoWasp"
+					android:layout_column="2"
+					android:onClick="btnBuyNewShipInfo"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="10000 cr."
+					android:id="@+id/txtBuyNewShipPriceWasp"
+					android:layout_column="3"/>
+		</TableRow>
+	</TableLayout>
+</RelativeLayout>

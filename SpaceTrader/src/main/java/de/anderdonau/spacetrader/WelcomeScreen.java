@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -881,7 +883,47 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		);
 	}
-
+	public void btnBuyNewShip(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new BuyNewShipFragment()).commit();
+		mCurrentState = "BuyNewShip";
+	}
+	public void btnBuyNewShipInfo(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		mCurrentState = "BuyNewShip";
+		switch (view.getId()){
+			case R.id.btnInfoFlea:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[0])).commit();
+				break;
+			case R.id.btnInfoGnat:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[1])).commit();
+				break;
+			case R.id.btnInfoFirefly:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[2])).commit();
+				break;
+			case R.id.btnInfoMosquito:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[3])).commit();
+				break;
+			case R.id.btnInfoBumblebee:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[4])).commit();
+				break;
+			case R.id.btnInfoBeetle:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[5])).commit();
+				break;
+			case R.id.btnInfoHornet:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[6])).commit();
+				break;
+			case R.id.btnInfoGrasshopper:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[7])).commit();
+				break;
+			case R.id.btnInfoTermite:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[8])).commit();
+				break;
+			case R.id.btnInfoWasp:
+				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[9])).commit();
+				break;
+		}
+	}
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 
@@ -1473,6 +1515,144 @@ SeekBar.OnSeekBarChangeListener() {
 
 			return rootView;
 		}
+	}
+	public static class BuyNewShipFragment extends Fragment {
+		public BuyNewShipFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_buy_new_ship, container, false);
+			TextView tv;
+			Button btn;
+			int i;
+
+			mGameState.DetermineShipPrices();
+
+			i = -1;
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceFlea);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyFlea);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceGnat);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyGnat);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceFirefly);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyFirefly);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceMosquito);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyMosquito);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceBumblebee);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyBumblebee);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceBeetle);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyBeetle);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceHornet);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyHornet);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceGrasshopper);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyGrasshopper);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceTermite);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyTermite);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceWasp);
+			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
+			btn = (Button) rootView.findViewById(R.id.btnBuyWasp);
+			if (mGameState.ShipPrice[i] == 0){
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+			return rootView;
+		}
+	}
+	public static class ShipInfoFragment extends Fragment {
+		private ShipTypes.ShipType mType;
+		public ShipInfoFragment(ShipTypes.ShipType t) {
+			mType = t;
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_ship_info, container, false);
+			TextView tv;
+			ImageView img;
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoTitle);
+			tv.setText(mType.name);
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoSize);
+			tv.setText(mGameState.SystemSize[mType.size]);
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoCargoBays);
+			tv.setText(String.format("%d", mType.cargoBays));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoRange);
+			tv.setText(String.format("%d parsecs", mType.fuelTanks));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoHull);
+			tv.setText(String.format("%d", mType.hullStrength));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoWeapons);
+			tv.setText(String.format("%d", mType.weaponSlots));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoShields);
+			tv.setText(String.format("%d", mType.shieldSlots));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipInfoGadgets);
+			tv.setText(String.format("%d", mType.gadgetSlots));
+
+			img = (ImageView) rootView.findViewById(R.id.imgShipInfoShip);
+			img.setImageDrawable(getResources().getDrawable(mType.drawable));
+			return rootView;
+		}
+
 	}
 
 	////////////////////////////////////////////////////////////////////////////

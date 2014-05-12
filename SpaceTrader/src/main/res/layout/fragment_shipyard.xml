@@ -85,7 +85,7 @@
 			android:layout_below="@+id/txtShipyardFuelCost"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"
-			android:onClick="btnShipyardBuyEscapePod"/>
+			android:onClick="btnShipyardBuyMaxFuel"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -145,7 +145,8 @@
 			android:id="@+id/btnShipyardBuyNewShip"
 			android:layout_below="@+id/txtShipyardNewShipsForSale"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			android:layout_alignParentStart="true"
+			android:onClick="btnBuyNewShip"/>
 
 	<TextView
 			android:layout_width="wrap_content"

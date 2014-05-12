@@ -1469,4 +1469,22 @@ public class GameState implements Serializable {
 	public int MaxLoan() {
 		return (int) (PoliceRecordScore >= CLEANSCORE ? Math.min(25000L, Math.max(1000L, ((CurrentWorth() / 10L) / 500L) * 500L)) : 500L);
 	}
+	public int BASESHIPPRICE(int a){
+		// The Difficulty part is commented in the original PalmOS source, too, but I think it maybe should be activated -- BRS
+		return (((ShipTypes.ShipTypes[a].price * (100 - TraderSkill(Ship))) / 100) /* * (Difficulty < 3 ? 1 : (Difficulty + 3)) / (Difficulty < 3 ? 1 : 5)*/);
+	}
+	public void DetermineShipPrices() {
+		int i;
+		de.anderdonau.spacetrader.DataTypes.SolarSystem CURSYSTEM = SolarSystem[Mercenary[0].curSystem];
+
+		for (i=0; i<MAXSHIPTYPE; ++i) {
+			if (ShipTypes.ShipTypes[i].minTechLevel <= CURSYSTEM.techLevel) {
+				ShipPrice[i] = BASESHIPPRICE(i) - CurrentShipPrice(false);
+				if (ShipPrice[i] == 0)
+					ShipPrice[i] = 1;
+			} else {
+				ShipPrice[i] = 0;
+			}
+		}
+	}
 }
