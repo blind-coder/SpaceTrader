@@ -38,7 +38,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyFlea"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -74,7 +75,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyGnat"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -110,7 +112,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyFirefly"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -146,7 +149,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyMosquito"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -182,7 +186,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyBumblebee"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -218,7 +223,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyBeetle"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -254,7 +260,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyHornet"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -290,7 +297,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyGrasshopper"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -326,7 +334,8 @@
 					android:layout_height="wrap_content"
 					android:text="Buy"
 					android:id="@+id/btnBuyTermite"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -363,7 +372,7 @@
 					android:text="Buy"
 					android:id="@+id/btnBuyWasp"
 					android:layout_column="0"
-					android:longClickable="false"/>
+					android:onClick="btnBuyNewShipStep1"/>
 
 			<TextView
 					android:layout_width="wrap_content"

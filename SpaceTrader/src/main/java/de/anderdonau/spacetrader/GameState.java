@@ -1104,7 +1104,7 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		return (HasGadget(this.Ship, FUELCOMPACTOR) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
 	}
-	boolean HasGadget( Ship sh, int Gg ) {
+	boolean HasGadget(Ship sh, int Gg) {
 		int i;
 
 		for (i=0; i<MAXGADGET; ++i)
@@ -1117,6 +1117,39 @@ public class GameState implements Serializable {
 
 		return false;
 	}
+	int HasShield(Ship Sh, int Gg) {
+		// *************************************************************************
+		// Determines whether a certain shield type is on board
+		// *************************************************************************
+		int i, retVal;
+
+		retVal = 0;
+		for (i=0; i<MAXSHIELD; ++i) {
+			if (Sh.shield[i] < 0)
+				continue;
+			if (Sh.shield[i] == Gg)
+				retVal++;
+		}
+
+		return retVal;
+	}
+	boolean HasWeapon(Ship Sh, int Gg, boolean exactCompare ) {
+		// *************************************************************************
+		// Determines whether a certain weapon type is on board. If exactCompare is
+		// false, then better weapons will also return TRUE
+		// *************************************************************************
+		int i;
+
+		for (i=0; i<MAXWEAPON; ++i) {
+			if (Sh.weapon[i] < 0)
+				continue;
+			if ((Sh.weapon[i] == Gg) || (Sh.weapon[i] > Gg && !exactCompare))
+				return true;
+		}
+
+		return false;
+	}
+
 	void resetNewsEvents(){
 		NewsSpecialEventCount = 0;
 	}
@@ -1486,5 +1519,37 @@ public class GameState implements Serializable {
 				ShipPrice[i] = 0;
 			}
 		}
+	}
+	public void CreateShip(int Index) {
+		int i;
+
+		Ship.type = Index;
+
+		for (i=0; i<MAXWEAPON; ++i) {
+			Ship.weapon[i] = -1;
+		}
+
+		for (i=0; i<MAXSHIELD; ++i) {
+			Ship.shield[i] = -1;
+			Ship.shieldStrength[i] = 0;
+		}
+
+		for (i=0; i<MAXGADGET; ++i) {
+			Ship.gadget[i] = -1;
+		}
+
+		for (i=0; i<MAXTRADEITEM; ++i) {
+			Ship.cargo[i] = 0;
+			BuyingPrice[i] = 0;
+		}
+
+		Ship.fuel = GetFuelTanks();
+		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
+	}
+	public void BuyShip(int Index) {
+		CreateShip( Index );
+		Credits -= ShipPrice[Index];
+		if (ScarabStatus == 3) // Scarab hull hardening is not transferrable.
+			ScarabStatus = 0;
 	}
 }

@@ -924,6 +924,224 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+	public void btnBuyNewShipStep1(View view){
+		int Index;
+		int i, j;
+		int extra = 0;
+		boolean hasLightning = false;
+		boolean hasCompactor = false;
+		boolean hasMorganLaser = false;
+
+		switch (view.getId()){
+			case R.id.btnBuyFlea:
+				Index = 0;
+				break;
+			case R.id.btnBuyGnat:
+				Index = 1;
+				break;
+			case R.id.btnBuyFirefly:
+				Index = 2;
+				break;
+			case R.id.btnBuyMosquito:
+				Index = 3;
+				break;
+			case R.id.btnBuyBumblebee:
+				Index = 4;
+				break;
+			case R.id.btnBuyBeetle:
+				Index = 5;
+				break;
+			case R.id.btnBuyHornet:
+				Index = 6;
+				break;
+			case R.id.btnBuyGrasshopper:
+				Index = 7;
+				break;
+			case R.id.btnBuyTermite:
+				Index = 8;
+				break;
+			case R.id.btnBuyWasp:
+				Index = 9;
+				break;
+			default:
+				Index = 0;
+		}
+		j = 0;
+		for (i=0; i<GameState.MAXCREW; ++i)
+			if (mGameState.Ship.crew[i] >= 0)
+				++j;
+		if (j > mGameState.ShipTypes.ShipTypes[Index].crewQuarters){
+			alertDialog("Too Many Crewmembers", "The new ship you picked doesn't have enough quarters for all of your crewmembers. First you will have to fire one or more of them.", "");
+			return;
+		}
+
+		if (mGameState.ShipPrice[Index] == 0){
+			alertDialog("Ship Not Available", "That type of ship is not available in the current system.", "");
+			return;
+		} else if ((mGameState.ShipPrice[Index] > 0) && (mGameState.Debt > 0)){
+			alertDialog("You Are In Debt", "You can't buy that as long as you have debts.", "Before you can buy a new ship or new equipment, you must settle your debts at the bank.");
+			return;
+		} else if (mGameState.ShipPrice[Index] > mGameState.ToSpend()){
+			alertDialog("Not Enough Money", "You don't have enough money to buy this ship.", "");
+			return;
+		} else if ((mGameState.JarekStatus == 1) && (mGameState.WildStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 3)){
+			alertDialog("Passengers Needs Quarters", "You must get a ship with enough crew quarters so that Ambassador Jarek and Jonathan Wild can stay on board.", "");
+			return;
+		} else if ((mGameState.JarekStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 2)) {
+			alertDialog("Passenger Needs Quarters", "You must get a ship with enough crew quarters so that Ambassador Jarek can stay on board.", "");
+			return;
+		} else if ((mGameState.WildStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 2)){
+			alertDialog("Passenger Needs Quarters", "You must get a ship with enough crew quarters so that Jonathan Wild can stay on board.", "");
+			return;
+		} else if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21){
+			alertDialog("Shipyard Engineer", "Sorry! We can't take your ship as a trade-in. That Ion Reactor looks dangerous, and we have no way of removing it. Come back when you've gotten rid of it.", "You can't sell your ship as long as you have an Ion Reactor on board. Deliver the Reactor to Nix, and then you'll be able to get a new ship.");
+			return;
+		}
+
+		i = mGameState.HasShield(mGameState.Ship, GameState.LIGHTNINGSHIELD);
+		if (i > 0) {
+			if (mGameState.ShipTypes.ShipTypes[Index].shieldSlots < i){
+				// can't transfer the Lightning Shields. How often would this happen?
+				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer your Lightning Shield because the new ship has insufficient shield slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+			}
+			hasLightning = true;
+			extra += i*30000;
+		}
+
+		if (mGameState.HasGadget(mGameState.Ship, GameState.FUELCOMPACTOR)) {
+			if (mGameState.ShipTypes.ShipTypes[Index].gadgetSlots == 0) {
+				// can't transfer the Fuel Compactor
+				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer your Fuel Compactor because the new ship has insufficient gadget slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+			}
+			hasCompactor = true;
+			extra += 20000;
+		}
+
+		if (mGameState.HasWeapon(mGameState.Ship, GameState.MORGANLASERWEAPON, true)) {
+			if (mGameState.ShipTypes.ShipTypes[Index].weaponSlots == 0) {
+				// can't transfer the Laser
+				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer Morgans Laser because the new ship has insufficient weapon slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+			}
+			extra += 33333;
+			hasMorganLaser = true;
+		}
+
+		if (mGameState.ShipPrice[Index] + extra > mGameState.ToSpend()) {
+			alertDialog("Not Enough Money", "You won't have enough money to buy this ship and pay the cost to transfer all of your unique equipment. You should choose carefully which items you wish to transfer!", "");
+		}
+		extra = 0;
+
+		btnBuyNewShipStep1CheckLightningShields(Index, extra, hasLightning, hasCompactor, hasMorganLaser);
+	}
+	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final boolean hasLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+		final int[] extra = new int[1];
+		extra[0] = ex;
+		if (hasLightning && mGameState.ShipTypes.ShipTypes[Index].shieldSlots > 0) {
+			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
+				ConfirmDialog("Transfer Lightning Shield",
+          "I see you have a lightning shield. I'll transfer it to your new ship for 30000 credits.",
+          "For the sum of 30000 credits, you get to keep your unique lightning shield! This may seem to be a lot of money, but you must remember that this is the exact amount the shield is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+					"Yes", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							extra[0] += 30000;
+							btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], true, hasCompactor, hasMorganLaser);
+						}
+					},
+					"No", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+						}
+				 }
+				);
+			} else {
+				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!", "");
+			}
+		}
+		btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+	}
+	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final boolean addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+		final int[] extra = new int[1];
+		extra[0] = ex;
+		if (hasCompactor && mGameState.ShipTypes.ShipTypes[Index].gadgetSlots > 0) {
+			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
+				ConfirmDialog("Transfer Fuel Compactor",
+          "I see you have a fuel compactor. I'll transfer it to your new ship for 20000 credits.",
+          "For the sum of 20000 credits, you get to keep your unique fuel compactor! This may seem to be a lot of money, but you must remember that this is the exact amount the fuel compactor is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+					"Yes", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							extra[0] += 20000;
+							btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true, hasMorganLaser);
+						}
+					},
+					"No", new DialogInterface.OnClickListener() {
+					 @Override
+					 public void onClick(DialogInterface dialogInterface, int i) {
+						 btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
+					 }
+				 }
+				);
+			} else {
+				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer your Fuel Compactor to the new ship!", "");
+			}
+		}
+		btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
+	}
+	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final boolean addLightning, final boolean addCompactor, boolean hasMorganLaser){
+		final int[] extra = new int[1];
+		extra[0] = ex;
+		if (hasMorganLaser && mGameState.ShipTypes.ShipTypes[Index].weaponSlots > 0) {
+			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
+				ConfirmDialog("Transfer Morgan's Laser",
+          "I see you have a customized laser. I'll transfer it to your new ship for 33333 credits.", "For the sum of 33333 credits, you get to keep the laser given to you by Henry Morgan! This may seem to be a lot of money, but you must remember that this is the exact amount the laser is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+					"Yes", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							extra[0] += 33333;
+							btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, true);
+						}
+					},
+					"No", new DialogInterface.OnClickListener() {
+					 @Override
+					 public void onClick(DialogInterface dialogInterface, int i) {
+						 btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
+					 }
+				 }
+				);
+			} else {
+				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer Morgan's Laser to the new ship!", "");
+			}
+		}
+		btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
+	}
+	public void btnBuyNewShipStep2(final int Index, final int extra, final boolean addLightning, final boolean addCompactor, final boolean addMorganLaser){
+		ConfirmDialog("Buy New Ship",
+      String.format("Are you sure you wish to trade in your %s for a new %s%s?", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name, mGameState.ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning || addMorganLaser) ? ", and transfer your unique equipment to the new ship" : ""), "",
+				"Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						mGameState.BuyShip(Index);
+						mGameState.Credits -= extra;
+						if (addCompactor)
+							mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
+						if (addLightning)
+							mGameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
+						if (addMorganLaser)
+							mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
+						mGameState.Ship.tribbles = 0;
+						btnBuyNewShip(null);
+					}
+				},
+				"No", new DialogInterface.OnClickListener() {
+				 @Override
+				 public void onClick(DialogInterface dialogInterface, int i) {
+				 }
+			 }
+		);
+	}
+
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 
@@ -1516,7 +1734,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class BuyNewShipFragment extends Fragment {
+	public class BuyNewShipFragment extends Fragment {
 		public BuyNewShipFragment() { }
 
 		@Override
@@ -1609,6 +1827,12 @@ SeekBar.OnSeekBarChangeListener() {
 			} else {
 				btn.setVisibility(View.VISIBLE);
 			}
+
+			if (mGameState.Ship.tribbles > 0 && !mGameState.TribbleMessage) {
+				WelcomeScreen.this.alertDialog("You've Got Tribbles", "Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.", "Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.");
+				mGameState.TribbleMessage = true;
+			}
+
 			return rootView;
 		}
 	}
