@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -143,6 +144,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case 1: //"Sell Cargo"
 				break;
 			case 2: // "Shipyard"
+				btnShipyard(null);
 				break;
 			case 3: // "Buy Equipment"
 				break;
@@ -798,6 +800,88 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			btnBank(view);
 		}
 	}
+	public void btnShipyard(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new ShipyardFragment()).commit();
+		mCurrentState = "Shipyard";
+	}
+	public void btnShipyardBuyFuel(int amount){
+		int MaxFuel;
+		int Parsecs;
+
+		MaxFuel = (mGameState.GetFuelTanks() - mGameState.GetFuel()) * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].costOfFuel;
+		amount = Math.min(amount, MaxFuel);
+		amount = Math.min(amount, mGameState.Credits);
+
+		Parsecs = amount / mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].costOfFuel;
+
+		mGameState.Ship.fuel += Parsecs;
+		mGameState.Credits -= Parsecs * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].costOfFuel;
+		btnShipyard(null);
+	}
+	public void btnShipyardBuyFuel(View view){
+		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits", "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.", new IFinputDialogCallback() {
+			@Override
+			public void execute(EditText input) {
+				try {
+					int amount = Integer.parseInt(input.getText().toString());
+					btnShipyardBuyFuel(amount);
+				} catch (NumberFormatException e){
+					alertDialog("Error", e.getLocalizedMessage(), "");
+				}
+			}
+		});
+	}
+	public void btnShipyardBuyMaxFuel(View view){
+		btnShipyardBuyFuel(mGameState.Credits);
+	}
+	public void btnShipyardBuyRepairs(int amount){
+		int MaxRepairs;
+		int Percentage;
+
+		MaxRepairs = (mGameState.GetHullStrength() - mGameState.Ship.hull) * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].repairCosts;
+		amount = Math.min(amount, MaxRepairs);
+		amount = Math.min(amount, mGameState.Credits);
+
+		Percentage = amount / mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].repairCosts;
+
+		mGameState.Ship.hull += Percentage;
+		mGameState.Credits -= Percentage * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].repairCosts;
+		btnShipyard(null);
+	}
+	public void btnShipyardBuyRepairs(View view){
+		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits", "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.", new IFinputDialogCallback() {
+			@Override
+			public void execute(EditText input) {
+				try {
+					int amount = Integer.parseInt(input.getText().toString());
+					btnShipyardBuyRepairs(amount);
+				} catch (NumberFormatException e){
+					alertDialog("Error", e.getLocalizedMessage(), "");
+				}
+			}
+		});
+	}
+	public void btnShipyardBuyFullRepairs(View view){
+		btnShipyardBuyRepairs(mGameState.Credits);
+	}
+	public void btnShipyardBuyEscapePod(View view){
+		ConfirmDialog("Buy Escape Pod", "Do you want to buy an escape pod for 2000 credits?", "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
+      "No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) { }
+			},
+			"Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					mGameState.Credits -= 2000;
+					mGameState.EscapePod = true;
+					btnShipyard(null);
+				}
+			}
+		);
+	}
+
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
 
@@ -1296,6 +1380,100 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public static class ShipyardFragment extends Fragment {
+		public ShipyardFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_shipyard, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+			Ship Ship = mGameState.Ship;
+			TextView tv;
+			Button btn;
+
+			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFuel);
+				btn.setVisibility(View.VISIBLE);
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyMaxFuel);
+				btn.setVisibility(View.VISIBLE);
+			} else {
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFuel);
+				btn.setVisibility(View.INVISIBLE);
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyMaxFuel);
+				btn.setVisibility(View.INVISIBLE);
+			}
+
+			if (Ship.hull < mGameState.GetHullStrength()) {
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyRepairs);
+				btn.setVisibility(View.VISIBLE);
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFullRepairs);
+				btn.setVisibility(View.VISIBLE);
+			} else {
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyRepairs);
+				btn.setVisibility(View.INVISIBLE);
+				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFullRepairs);
+				btn.setVisibility(View.INVISIBLE);
+			}
+
+			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyNewShip);
+			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
+				btn.setText("Buy New Ship");
+			} else {
+				btn.setText("Ship Information");
+			}
+
+			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyEscapePod);
+			if (mGameState.EscapePod || mGameState.ToSpend() < 2000 || CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
+				btn.setVisibility(View.INVISIBLE);
+			} else {
+				btn.setVisibility(View.VISIBLE);
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelReserve);
+			tv.setText(String.format("You have fuel to fly %d parsec%s.", mGameState.GetFuel(), mGameState.GetFuel() == 1 ? "" : "s"));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelCost);
+			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
+				tv.setText(String.format("A full tank costs %d cr.", (mGameState.GetFuelTanks() - mGameState.GetFuel()) * mGameState.ShipTypes.ShipTypes[Ship.type].costOfFuel));
+			} else {
+				tv.setText("Your tank cannot hold more fuel.");
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardHullStrength);
+			tv.setText(String.format("Your hull strength is at %d%%.", (Ship.hull * 100) / mGameState.GetHullStrength()));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardRepairsNeeded);
+			if (Ship.hull < mGameState.GetHullStrength()) {
+				tv.setText(String.format("Full repair will cost %d cr.", (mGameState.GetHullStrength() - Ship.hull) * mGameState.ShipTypes.ShipTypes[Ship.type].repairCosts));
+			} else {
+				tv.setText("No repairs are needed.");
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardNewShipsForSale);
+			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel){
+				tv.setText("There are new ships for sale.");
+			} else {
+				tv.setText("No new ships are for sale.");
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardCash);
+			tv.setText(String.format("%d cr.", mGameState.Credits));
+
+			tv = (TextView) rootView.findViewById(R.id.txtShipyardBuyEscapePod);
+			if (mGameState.EscapePod){
+				tv.setText("You have an escape pod installed.");
+			} else if (CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel){
+				tv.setText("No escape pods are for sale.");
+			} else if (mGameState.ToSpend() < 2000){
+				tv.setText("You need 2000 cr. for an escape pod.");
+			} else {
+				tv.setText("You can buy an escape pod for 2000 cr.");
+			}
+
+			return rootView;
+		}
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
@@ -1363,6 +1541,7 @@ SeekBar.OnSeekBarChangeListener() {
 	public void inputDialog(String title, String content, String hint, final String help, final IFinputDialogCallback cb){
 		final EditText input = new EditText(WelcomeScreen.this);
 		input.setHint(hint);
+		input.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
 		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
 				.setTitle(title)
 				.setMessage(content)

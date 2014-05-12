@@ -41,7 +41,7 @@ public class ShipTypes {
 		public int gadgetSlots; // Number of gadgets possible (e.g. docking computers)
 		public int crewQuarters;  // Number of crewmembers possible
 		public int fuelTanks;   // Each tank contains enough fuel to travel 10 parsecs
-		int minTechLevel;  // Minimum tech level needed to build ship
+		public int minTechLevel;  // Minimum tech level needed to build ship
 		public int costOfFuel;  // Cost to fill one tank with fuel
 		public int price;     // Base ship cost
 		int bounty;     // Base bounty

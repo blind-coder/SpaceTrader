@@ -20,7 +20,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Bank"
+			android:text="Shipyard"
 			android:id="@+id/textView"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
@@ -30,8 +30,28 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Debt:"
-			android:id="@+id/textView2"
+			android:text="Cash:"
+			android:id="@+id/textView7"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="11445 cr."
+			android:id="@+id/txtShipyardCash"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="You have fuel to fly XX parsecs."
+			android:id="@+id/txtShipyardFuelReserve"
 			android:layout_below="@+id/textView"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
@@ -41,141 +61,110 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Max Debt:"
-			android:id="@+id/textView3"
-			android:layout_below="@+id/textView2"
+			android:text="A full fueltank costs XX credits."
+			android:id="@+id/txtShipyardFuelCost"
+			android:layout_below="@+id/txtShipyardFuelReserve"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="0 cr."
-			android:id="@+id/txtBankDebt"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignTop="@+id/textView2"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="500 cr."
-			android:id="@+id/txtBankMaxDebt"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignTop="@+id/textView3"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Get Loan"
-			android:id="@+id/btnBankGetLoan"
-			android:onClick="btnBankGetLoan"
-			android:layout_below="@+id/textView3"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Ship value:"
-			android:id="@+id/textView4"
-			android:layout_below="@+id/btnBankGetLoan"
+			android:text="Buy Fuel"
+			android:id="@+id/btnShipyardBuyFuel"
+			android:layout_below="@+id/txtShipyardFuelCost"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:layout_marginTop="30dp"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="No-claim:"
-			android:id="@+id/textView5"
-			android:layout_below="@+id/textView4"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Cost:"
-			android:id="@+id/textView6"
-			android:layout_below="@+id/textView5"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="7500 cr."
-			android:id="@+id/txtBankShipValue"
-			android:layout_alignTop="@+id/textView4"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="1%"
-			android:id="@+id/txtBankNoClaim"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignTop="@+id/textView5"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="75 cr. daily"
-			android:id="@+id/txtBankCost"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignTop="@+id/textView6"/>
+			android:onClick="btnShipyardBuyFuel"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Buy Insurance"
-			android:id="@+id/btnBankBuyInsurance"
-			android:layout_below="@+id/txtBankCost"
-			android:layout_centerHorizontal="true"
+			android:text="Buy Full Tank"
+			android:id="@+id/btnShipyardBuyMaxFuel"
+			android:layout_below="@+id/txtShipyardFuelCost"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
 			android:onClick="btnShipyardBuyEscapePod"/>
 
 	<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Cash:"
-			android:id="@+id/textView7"
-			android:layout_below="@+id/btnBankBuyInsurance"
+			android:text="Your hull strength is at XXX%."
+			android:id="@+id/txtShipyardHullStrength"
+			android:layout_below="@+id/btnShipyardBuyFuel"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:layout_marginTop="30dp"/>
+			android:layout_marginTop="25dp"/>
 
 	<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="11445 cr."
-			android:id="@+id/txtBankCash"
-			android:layout_alignTop="@+id/textView7"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:text="No repairs are needed."
+			android:id="@+id/txtShipyardRepairsNeeded"
+			android:layout_below="@+id/txtShipyardHullStrength"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Payback Loan"
-			android:id="@+id/btnBankPaybackLoan"
-			android:layout_alignParentRight="true"
+			android:text="Buy Repairs"
+			android:id="@+id/btnShipyardBuyRepairs"
+			android:layout_below="@+id/txtShipyardRepairsNeeded"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:onClick="btnShipyardBuyRepairs"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Buy Full Repairs"
+			android:id="@+id/btnShipyardBuyFullRepairs"
 			android:layout_alignParentEnd="true"
-			android:onClick="btnBankPaybackLoan"
-			android:layout_alignTop="@+id/btnBankGetLoan"/>
+			android:layout_alignTop="@+id/btnShipyardBuyRepairs"
+			android:onClick="btnShipyardBuyFullRepairs"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="There are new ships for sale."
+			android:id="@+id/txtShipyardNewShipsForSale"
+			android:layout_below="@+id/btnShipyardBuyRepairs"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_marginTop="20dp"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Buy New Ship"
+			android:id="@+id/btnShipyardBuyNewShip"
+			android:layout_below="@+id/txtShipyardNewShipsForSale"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="You can buy an escape pod for 2000 credits."
+			android:id="@+id/txtShipyardBuyEscapePod"
+			android:layout_below="@+id/btnShipyardBuyNewShip"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Buy Escape Pod"
+			android:id="@+id/btnShipyardBuyEscapePod"
+			android:layout_below="@+id/txtShipyardBuyEscapePod"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:onClick="btnShipyardBuyEscapePod"/>
 
 </RelativeLayout>
