@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.spec.MGF1ParameterSpec;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
@@ -174,6 +176,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case 9: // "Galactic Chart"
 				break;
 			case 10: // "Short Range Chart"
+				btnShortRangeChart(null);
 				break;
 		}
 	}
@@ -1589,6 +1592,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		SellCargo(Index, 999, GameState.SELLCARGO);
 		btnSellCargo(null);
 	}
+	public void btnShortRangeChart(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new ShortRangeChartFragment()).commit();
+		mCurrentState = "ShortRangeChart";
+	}
 
 	public void BuyCargo(int Index,int Amount) {
 		// *************************************************************************
@@ -2807,6 +2815,66 @@ SeekBar.OnSeekBarChangeListener() {
 			tv = (TextView) rootView.findViewById(R.id.txtSellCargoCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
+			return rootView;
+		}
+	}
+	public class ShortRangeChartFragment extends Fragment {
+		public ShortRangeChartFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
+			ShortRangeChart shortRangeChart = (ShortRangeChart) rootView.findViewById(R.id.ShortRangeChart);
+			shortRangeChart.setGameState(mGameState);
+
+			shortRangeChart.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent) {
+					ShortRangeChart shortRangeChart = (ShortRangeChart) view;
+					shortRangeChart.mDrawWormhole = -1;
+					shortRangeChart.invalidate();
+					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+						final int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
+						if (system >= 0){
+						/*
+						TODO: Move this to Galactic chart later.
+							if (system == shortRangeChart.mSelectedSystem){
+								ConfirmDialog("Track system", "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
+								              "", "Yes", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
+										mGameState.TrackedSystem = system;
+										btnShortRangeChart(null);
+									}
+								}, "No", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialogInterface, int i) {
+
+										}
+									}
+								);
+							}
+							*/
+							shortRangeChart.mSelectedSystem = system;
+							shortRangeChart.invalidate();
+						} else {
+							final int wormhole = shortRangeChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
+							if (wormhole >= 0){
+								shortRangeChart.mDrawWormhole = wormhole;
+								shortRangeChart.invalidate();
+							}
+						}
+					}
+					return false;
+				}
+			});
+			TextView tv = (TextView) rootView.findViewById(R.id.txtShortRangeChartDistToTarget);
+			if (mGameState.TrackedSystem < 0){
+				tv.setVisibility(View.INVISIBLE);
+			} else {
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(String.format("Distance to %s: %d parsec", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex], mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[mGameState.TrackedSystem])));
+			}
 			return rootView;
 		}
 	}
