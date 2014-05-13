@@ -599,9 +599,9 @@ public class GameState implements Serializable {
 
 			SolarSystem[i].techLevel = (char) (GetRandom(GameState.MAXTECHLEVEL));
 			SolarSystem[i].politics = (char) (GetRandom(GameState.MAXPOLITICS));
-			if (de.anderdonau.spacetrader.DataTypes.Politics.mPolitics[SolarSystem[i].politics].minTechLevel > SolarSystem[i].techLevel)
+			if (Politics.mPolitics[SolarSystem[i].politics].minTechLevel > SolarSystem[i].techLevel)
 				continue;
-			if (de.anderdonau.spacetrader.DataTypes.Politics.mPolitics[SolarSystem[i].politics].maxTechLevel < SolarSystem[i].techLevel)
+			if (Politics.mPolitics[SolarSystem[i].politics].maxTechLevel < SolarSystem[i].techLevel)
 				continue;
 
 			if (GetRandom(5) >= 3)
@@ -1561,4 +1561,133 @@ public class GameState implements Serializable {
 		if (ScarabStatus == 3) // Scarab hull hardening is not transferrable.
 			ScarabStatus = 0;
 	}
+	int StandardPrice(int Good, int Size, int Tech, int Government, int Resources) {
+		// *************************************************************************
+		// Standard price calculation
+		// *************************************************************************
+		int Price;
+
+		if (((Good == NARCOTICS) && (!Politics.mPolitics[Government].drugsOK)) ||
+		    ((Good == FIREARMS) &&  (!Politics.mPolitics[Government].firearmsOK)))
+			return 0;
+
+		// Determine base price on techlevel of system
+		Price = Tradeitems.mTradeitems[Good].priceLowTech + (Tech * Tradeitems.mTradeitems[Good].priceInc);
+
+		// If a good is highly requested, increase the price
+		if (Politics.mPolitics[Government].wanted == Good)
+			Price = (Price * 4) / 3;
+
+		// High trader activity decreases prices
+		Price = (Price * (100 - (2 * Politics.mPolitics[Government].strengthTraders))) / 100;
+
+		// Large system = high production decreases prices
+		Price = (Price * (100 - Size)) / 100;
+
+		// Special resources price adaptation
+		if (Resources > 0)
+		{
+			if (Tradeitems.mTradeitems[Good].cheapResource >= 0)
+				if (Resources == Tradeitems.mTradeitems[Good].cheapResource)
+					Price = (Price * 3) / 4;
+			if (Tradeitems.mTradeitems[Good].expensiveResource >= 0)
+				if (Resources == Tradeitems.mTradeitems[Good].expensiveResource)
+					Price = (Price * 4) / 3;
+		}
+
+		// If a system can't use something, its selling price is zero.
+		if (Tech < Tradeitems.mTradeitems[Good].techUsage)
+			return 0;
+
+		if (Price < 0)
+			return 0;
+
+		return Price;
+	}
+	public void DeterminePrices(int SystemID){
+		// *************************************************************************
+		// Determine prices in specified system (changed from Current System) SjG
+		// *************************************************************************
+		int i;
+
+		for (i=0; i<MAXTRADEITEM; ++i)
+		{
+			BuyPrice[i] = StandardPrice(i, SolarSystem[SystemID].size, SolarSystem[SystemID].techLevel,
+			                            SolarSystem[SystemID].politics, SolarSystem[SystemID].specialResources );
+
+			if (BuyPrice[i] <= 0) {
+				BuyPrice[i] = 0;
+				SellPrice[i] = 0;
+				continue;
+			}
+
+			// In case of a special status, adapt price accordingly
+			if (Tradeitems.mTradeitems[i].doublePriceStatus >= 0)
+				if (SolarSystem[SystemID].status == Tradeitems.mTradeitems[i].doublePriceStatus)
+					BuyPrice[i] = (BuyPrice[i] * 3) >> 1;
+
+			// Randomize price a bit
+			BuyPrice[i] = BuyPrice[i] + GetRandom( Tradeitems.mTradeitems[i].variance ) -
+			              GetRandom( Tradeitems.mTradeitems[i].variance );
+
+			// Should never happen
+			if (BuyPrice[i] <= 0) {
+				BuyPrice[i] = 0;
+				SellPrice[i] = 0;
+				continue;
+			}
+
+			SellPrice[i] = BuyPrice[i];
+			if (PoliceRecordScore < DUBIOUSSCORE) {
+				// Criminals have to pay off an intermediary
+				SellPrice[i] = (SellPrice[i] * 90) / 100;
+			}
+		}
+
+		RecalculateBuyPrices(SystemID);
+	}
+	void RecalculateBuyPrices(int SystemID) {
+		// *************************************************************************
+		// After changing the trader skill, buying prices must be recalculated.
+		// Revised to be callable on an arbitrary Solar System
+		// *************************************************************************
+		int i;
+
+		for (i=0; i<MAXTRADEITEM; ++i)
+		{
+			if (SolarSystem[SystemID].techLevel < Tradeitems.mTradeitems[i].techProduction){
+				BuyPrice[i] = 0;
+			} else if (((i == NARCOTICS) && (!Politics.mPolitics[SolarSystem[SystemID].politics].drugsOK)) ||
+			           ((i == FIREARMS) && (!Politics.mPolitics[SolarSystem[SystemID].politics].firearmsOK))) {
+				BuyPrice[i] = 0;
+			}	else {
+				if (PoliceRecordScore < DUBIOUSSCORE) {
+					BuyPrice[i] = (SellPrice[i] * 100) / 90;
+				} else {
+					BuyPrice[i] = SellPrice[i];
+				}
+				// BuyPrice = SellPrice + 1 to 12% (depending on trader skill (minimum is 1, max 12))
+				BuyPrice[i] = (BuyPrice[i] * (103 + (MAXSKILL - TraderSkill(Ship))) / 100);
+				if (BuyPrice[i] <= SellPrice[i]) {
+					BuyPrice[i] = SellPrice[i] + 1;
+				}
+			}
+		}
+	}
+	public void BuyCargo(int Index,int Amount) {
+		// *************************************************************************
+		// Buy amount of cargo
+		// *************************************************************************
+		int ToBuy;
+
+		ToBuy = Math.min(Amount, SolarSystem[Mercenary[0].curSystem].qty[Index]);
+		ToBuy = Math.min(ToBuy, TotalCargoBays() - FilledCargoBays() - LeaveEmpty);
+		ToBuy = Math.min(ToBuy, ToSpend() / BuyPrice[Index]);
+
+		Ship.cargo[Index] += ToBuy;
+		Credits -= ToBuy * BuyPrice[Index];
+		BuyingPrice[Index] += ToBuy * BuyPrice[Index];
+		SolarSystem[Mercenary[0].curSystem].qty[Index] -= ToBuy;
+	}
+
 }

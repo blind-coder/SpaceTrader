@@ -27,7 +27,8 @@
 			android:layout_height="fill_parent"
 			android:layout_below="@+id/txtBuyEquipment"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true">
+			android:layout_alignParentStart="true"
+			android:layout_alignParentRight="true">
 
 		<TableRow
 				android:layout_width="fill_parent"
