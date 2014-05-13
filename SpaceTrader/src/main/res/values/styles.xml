@@ -13,4 +13,9 @@
 		<!-- Customize your theme here. -->
 	</style>
 
+	<style name="BuySellButtons" parent="android:Widget.Button.Small">
+		<!-- Customizations  -->
+		<item name="android:minHeight">0dp</item>
+		<item name="android:minWidth">0dp</item>
+	</style>
 </resources>

@@ -152,6 +152,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnBuyEquipment(null);
 				break;
 			case 4: // "Sell Equipment"
+				btnSellEquipment(null);
 				break;
 			case 5: // "Personnel Roster"
 				btnPersonnelRoster(null);
@@ -823,17 +824,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnShipyard(null);
 	}
 	public void btnShipyardBuyFuel(View view){
-		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits", "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.", new IFinputDialogCallback() {
-			@Override
-			public void execute(EditText input) {
-				try {
-					int amount = Integer.parseInt(input.getText().toString());
-					btnShipyardBuyFuel(amount);
-				} catch (NumberFormatException e){
-					alertDialog("Error", e.getLocalizedMessage(), "");
-				}
-			}
-		});
+		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
+		            "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
+		            new IFinputDialogCallback() {
+			            @Override
+			            public void execute(EditText input) {
+				            try {
+					            int amount = Integer.parseInt(input.getText().toString());
+					            btnShipyardBuyFuel(amount);
+				            } catch (NumberFormatException e) {
+					            alertDialog("Error", e.getLocalizedMessage(), "");
+				            }
+			            }
+		            }
+		);
 	}
 	public void btnShipyardBuyMaxFuel(View view){
 		btnShipyardBuyFuel(mGameState.Credits);
@@ -853,28 +857,31 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnShipyard(null);
 	}
 	public void btnShipyardBuyRepairs(View view){
-		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits", "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.", new IFinputDialogCallback() {
-			@Override
-			public void execute(EditText input) {
-				try {
-					int amount = Integer.parseInt(input.getText().toString());
-					btnShipyardBuyRepairs(amount);
-				} catch (NumberFormatException e){
-					alertDialog("Error", e.getLocalizedMessage(), "");
-				}
-			}
-		});
+		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits",
+		            "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
+		            new IFinputDialogCallback() {
+			            @Override
+			            public void execute(EditText input) {
+				            try {
+					            int amount = Integer.parseInt(input.getText().toString());
+					            btnShipyardBuyRepairs(amount);
+				            } catch (NumberFormatException e) {
+					            alertDialog("Error", e.getLocalizedMessage(), "");
+				            }
+			            }
+		            }
+		);
 	}
 	public void btnShipyardBuyFullRepairs(View view){
 		btnShipyardBuyRepairs(mGameState.Credits);
 	}
 	public void btnShipyardBuyEscapePod(View view){
-		ConfirmDialog("Buy Escape Pod", "Do you want to buy an escape pod for 2000 credits?", "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
-      "No", new DialogInterface.OnClickListener() {
+		ConfirmDialog("Buy Escape Pod", "Do you want to buy an escape pod for 2000 credits?",
+		              "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
+		              "No", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) { }
-			},
-			"Yes", new DialogInterface.OnClickListener() {
+			}, "Yes", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) {
 					mGameState.Credits -= 2000;
@@ -1074,13 +1081,17 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
 							extra[0] += 20000;
-							btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true, hasMorganLaser);
+							btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true,
+							                                    hasMorganLaser
+							);
 						}
 					},
 					"No", new DialogInterface.OnClickListener() {
 					 @Override
 					 public void onClick(DialogInterface dialogInterface, int i) {
-						 btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
+						 btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false,
+						                                     hasMorganLaser
+						 );
 					 }
 				 }
 				);
@@ -1119,27 +1130,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void btnBuyNewShipStep2(final int Index, final int extra, final boolean addLightning, final boolean addCompactor, final boolean addMorganLaser){
 		ConfirmDialog("Buy New Ship",
-      String.format("Are you sure you wish to trade in your %s for a new %s%s?", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name, mGameState.ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning || addMorganLaser) ? ", and transfer your unique equipment to the new ship" : ""), "",
-				"Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						mGameState.BuyShip(Index);
-						mGameState.Credits -= extra;
-						if (addCompactor)
-							mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
-						if (addLightning)
-							mGameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
-						if (addMorganLaser)
-							mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
-						mGameState.Ship.tribbles = 0;
-						btnBuyNewShip(null);
-					}
-				},
-				"No", new DialogInterface.OnClickListener() {
-				 @Override
-				 public void onClick(DialogInterface dialogInterface, int i) {
-				 }
-			 }
+		              String.format("Are you sure you wish to trade in your %s for a new %s%s?",
+		                            mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name,
+		                            mGameState.ShipTypes.ShipTypes[Index].name,
+		                            (addCompactor || addLightning || addMorganLaser) ?
+		                            ", and transfer your unique equipment to the new ship" : ""
+		              ), "", "Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					mGameState.BuyShip(Index);
+					mGameState.Credits -= extra;
+					if (addCompactor)
+						mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
+					if (addLightning)
+						mGameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
+					if (addMorganLaser)
+						mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
+					mGameState.Ship.tribbles = 0;
+					btnBuyNewShip(null);
+				}
+			}, "No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+				}
+			}
 		);
 	}
 	public void btnBuyEquipment(View view){
@@ -1222,6 +1236,77 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			 }
 			);
 		}
+	}
+	public void btnSellEquipment(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new SellEquipmentFragment()).commit();
+		mCurrentState = "SellEquipment";
+	}
+	public void btnSellEquipmentOnClick(View view){
+		int idx = -1;
+		switch (view.getId()){
+			case R.id.btnSellEquipmentGadget3:
+				idx++;
+			case R.id.btnSellEquipmentGadget2:
+				idx++;
+			case R.id.btnSellEquipmentGadget1:
+				idx++;
+			case R.id.btnSellEquipmentShield3:
+				idx++;
+			case R.id.btnSellEquipmentShield2:
+				idx++;
+			case R.id.btnSellEquipmentShield1:
+				idx++;
+			case R.id.btnSellEquipmentWeapon3:
+				idx++;
+			case R.id.btnSellEquipmentWeapon2:
+				idx++;
+			case R.id.btnSellEquipmentWeapon1:
+				idx++;
+				break;
+			default: return;
+		}
+		final int Index = idx;
+		Log.d("SellEquipment", String.format("Selling equipment %d.", Index));
+		ConfirmDialog("Sell Item", "Are you sure you want to sell this item?",
+		              "Selling an item will return to you about 75% of what you first paid for it. If you sell a ship as a whole, all items on it will automatically be sold.",
+		              "Yes", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialogInterface, int i) {
+											if (Index < GameState.MAXWEAPONTYPE){
+												mGameState.Credits += mGameState.WEAPONSELLPRICE(Index);
+												for (i=Index+1; i<GameState.MAXWEAPON; ++i)
+													mGameState.Ship.weapon[i-1] = mGameState.Ship.weapon[i];
+												mGameState.Ship.weapon[GameState.MAXWEAPON-1] = -1;
+											} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
+												mGameState.Credits += mGameState.SHIELDSELLPRICE(Index - GameState.MAXWEAPON);
+												for (i=Index-GameState.MAXWEAPON+1; i<GameState.MAXSHIELD; ++i){
+													mGameState.Ship.shield[i-1] = mGameState.Ship.shield[i];
+													mGameState.Ship.shieldStrength[i-1] = mGameState.Ship.shieldStrength[i];
+												}
+												mGameState.Ship.shield[GameState.MAXSHIELD-1] = -1;
+												mGameState.Ship.shieldStrength[GameState.MAXSHIELD-1] = 0;
+											} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
+												if (mGameState.Ship.gadget[Index - GameState.MAXWEAPON - GameState.MAXSHIELD]==GameState.EXTRABAYS){
+													if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 5){
+														alertDialog("Cargo Bays Full",
+														            "The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
+														            "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.");
+														return;
+													}
+												}
+												mGameState.Credits += mGameState.GADGETSELLPRICE( Index - GameState.MAXWEAPON - GameState.MAXSHIELD);
+												for (i=Index-GameState.MAXWEAPON-GameState.MAXSHIELD+1;i<GameState.MAXGADGET; ++i)
+													mGameState.Ship.gadget[i-1] = mGameState.Ship.gadget[i];
+												mGameState.Ship.gadget[GameState.MAXGADGET-1] = -1;
+											}
+											btnSellEquipment(null);
+										}
+									}, "No", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialogInterface, int i) { }
+									}
+		);
 	}
 
 	public void saveGame() {
@@ -1553,7 +1638,7 @@ SeekBar.OnSeekBarChangeListener() {
 
 				tl.setVisibility(View.VISIBLE);
 				btn.setVisibility(View.VISIBLE);
-				DrawMercenary(i, mGameState.Ship.crew[i + 1]); /* Crew Idx 0 is the player */
+				DrawMercenary(i, mGameState.Ship.crew[i + 1]); /* Crew idx 0 is the player */
 			}
 
 			int ForHire = mGameState.GetForHire();
@@ -2098,7 +2183,96 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public static class SellEquipmentFragment extends Fragment {
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+			final View rootView = inflater.inflate(R.layout.fragment_sell_equipment, container, false);
+			TextView tv;
+			Button btn;
+			Ship Ship = mGameState.Ship;
+			int i;
 
+			for (i=0; i<GameState.MAXWEAPON; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentWeapon1: i == 1 ? R.id.btnSellEquipmentWeapon2: R.id.btnSellEquipmentWeapon3);
+				if (Ship.weapon[i] >= 0) {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 : i == 1 ? R.id.txtSellEquipmentWeapon2 : R.id.txtSellEquipmentWeapon3);
+					tv.setText(mGameState.Weapons.mWeapons[Ship.weapon[i]].name);
+					tv.setVisibility(View.VISIBLE);
+
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 : i == 1 ? R.id.txtSellEquipmentPriceWeapon2 : R.id.txtSellEquipmentPriceWeapon3);
+					tv.setText(String.format("%d cr.", mGameState.WEAPONSELLPRICE(i)));
+					tv.setVisibility(View.VISIBLE);
+
+					btn.setVisibility(View.VISIBLE);
+				} else {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 : i == 1 ? R.id.txtSellEquipmentPriceWeapon2 : R.id.txtSellEquipmentPriceWeapon3);
+					tv.setVisibility(View.INVISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 : i == 1 ? R.id.txtSellEquipmentWeapon2 : R.id.txtSellEquipmentWeapon3);
+					if (i == 0){
+						tv.setVisibility(View.VISIBLE);
+						tv.setText("You don't have any weapons to sell.");
+					} else {
+						tv.setVisibility(View.INVISIBLE);
+					}
+				}
+			}
+
+			for (i=0; i<GameState.MAXSHIELD; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentShield1 : i == 1 ? R.id.btnSellEquipmentShield2 : R.id.btnSellEquipmentShield3);
+				if (Ship.shield[i] >= 0) {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 : i == 1 ? R.id.txtSellEquipmentShield2 : R.id.txtSellEquipmentShield3);
+					tv.setText(mGameState.Shields.mShields[Ship.shield[i]].name);
+					tv.setVisibility(View.VISIBLE);
+
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 : i == 1 ? R.id.txtSellEquipmentPriceShield2 : R.id.txtSellEquipmentPriceShield3);
+					tv.setText(String.format("%d cr.", mGameState.SHIELDSELLPRICE(i)));
+					tv.setVisibility(View.VISIBLE);
+
+					btn.setVisibility(View.VISIBLE);
+				} else {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 : i == 1 ? R.id.txtSellEquipmentPriceShield2 : R.id.txtSellEquipmentPriceShield3);
+					tv.setVisibility(View.INVISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 : i == 1 ? R.id.txtSellEquipmentShield2 : R.id.txtSellEquipmentShield3);
+					if (i == 0){
+						tv.setVisibility(View.VISIBLE);
+						tv.setText("You don't have any shields to sell.");
+					} else {
+						tv.setVisibility(View.INVISIBLE);
+					}
+				}
+			}
+
+			for (i=0; i<GameState.MAXGADGET; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentGadget1 : i == 1 ? R.id.btnSellEquipmentGadget2 : R.id.btnSellEquipmentGadget3);
+				if (Ship.gadget[i] >= 0) {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 : i == 1 ? R.id.txtSellEquipmentGadget2 : R.id.txtSellEquipmentGadget3);
+					tv.setText(mGameState.Gadgets.mGadgets[Ship.gadget[i]].name);
+					tv.setVisibility(View.VISIBLE);
+
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 : i == 1 ? R.id.txtSellEquipmentPriceGadget2 : R.id.txtSellEquipmentPriceGadget3);
+					tv.setText(String.format("%d cr.", mGameState.GADGETSELLPRICE(i)));
+					tv.setVisibility(View.VISIBLE);
+
+					btn.setVisibility(View.VISIBLE);
+				} else {
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 : i == 1 ? R.id.txtSellEquipmentPriceGadget2 : R.id.txtSellEquipmentPriceGadget3);
+					tv.setVisibility(View.INVISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 : i == 1 ? R.id.txtSellEquipmentGadget2 : R.id.txtSellEquipmentGadget3);
+					if (i == 0){
+						tv.setVisibility(View.VISIBLE);
+						tv.setText("You don't have any gadgets to sell.");
+					} else {
+						tv.setVisibility(View.INVISIBLE);
+					}
+				}
+			}
+
+			return rootView;
+		}
+	}
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////

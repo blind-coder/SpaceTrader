@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="Sell Equipment"
+			android:id="@+id/txtSellEquipment"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:textStyle="bold"/>
+
+	<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_below="@+id/txtSellEquipment"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentWeapon1"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Weapon1"
+					android:id="@+id/txtSellEquipmentWeapon1"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceWeapon1"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentWeapon2"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Weapon2"
+					android:id="@+id/txtSellEquipmentWeapon2"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceWeapon2"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentWeapon3"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Weapon3"
+					android:id="@+id/txtSellEquipmentWeapon3"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceWeapon3"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentShield1"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Shield1"
+					android:id="@+id/txtSellEquipmentShield1"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceShield1"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentShield2"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Shield2"
+					android:id="@+id/txtSellEquipmentShield2"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceShield2"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentShield3"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Shield3"
+					android:id="@+id/txtSellEquipmentShield3"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceShield3"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentGadget1"
+					android:layout_column="0"
+					style="@style/BuySellButtons"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Gadget1"
+					android:id="@+id/txtSellEquipmentGadget1"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceGadget1"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:baselineAligned="false"
+				android:measureWithLargestChild="false"
+				>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentGadget2"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Gadget2"
+					android:id="@+id/txtSellEquipmentGadget2"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceGadget2"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Sell"
+					android:id="@+id/btnSellEquipmentGadget3"
+					android:layout_column="0"
+					style="@style/BuySellButtons"
+					android:onClick="btnSellEquipmentOnClick"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Gadget3"
+					android:id="@+id/txtSellEquipmentGadget3"
+					android:layout_column="1"
+					android:layout_gravity="center_vertical"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="1000 cr."
+					android:id="@+id/txtSellEquipmentPriceGadget3"
+					android:layout_column="2"
+					android:layout_gravity="center_vertical|right"
+					/>
+		</TableRow>
+	</TableLayout>
+</RelativeLayout>
