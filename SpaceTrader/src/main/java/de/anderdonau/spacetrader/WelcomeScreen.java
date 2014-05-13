@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.MergeCursor;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	private static Context mContext;
 	private static boolean foundSaveGame = false;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
+	public static SolarSystem WarpSystem;
 
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
@@ -1332,24 +1334,34 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		idx = -1;
 		switch (view.getId()){
+			case R.id.btnPriceListBuy10:
 			case R.id.btnBuyCargo10:
 				idx++;
+			case R.id.btnPriceListBuy9:
 			case R.id.btnBuyCargo9:
 				idx++;
+			case R.id.btnPriceListBuy8:
 			case R.id.btnBuyCargo8:
 				idx++;
+			case R.id.btnPriceListBuy7:
 			case R.id.btnBuyCargo7:
 				idx++;
+			case R.id.btnPriceListBuy6:
 			case R.id.btnBuyCargo6:
 				idx++;
+			case R.id.btnPriceListBuy5:
 			case R.id.btnBuyCargo5:
 				idx++;
+			case R.id.btnPriceListBuy4:
 			case R.id.btnBuyCargo4:
 				idx++;
+			case R.id.btnPriceListBuy3:
 			case R.id.btnBuyCargo3:
 				idx++;
+			case R.id.btnPriceListBuy2:
 			case R.id.btnBuyCargo2:
 				idx++;
+			case R.id.btnPriceListBuy1:
 			case R.id.btnBuyCargo1:
 				idx++;
 				break;
@@ -1401,9 +1413,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				            }
 				            if (Amount > 0) {
 					            BuyCargo(Index, Amount);
-					            btnBuyCargo(null);
+					            if (mCurrentState.equals("AveragePrices")){
+						            btnAveragePricesForm(null);
+					            } else {
+					              btnBuyCargo(null);
+					            }
 				            }
-
 			            }
 		            }
 		);
@@ -1596,6 +1611,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, new ShortRangeChartFragment()).commit();
 		mCurrentState = "ShortRangeChart";
+	}
+	public void btnAveragePricesForm(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new AveragePricesFragment()).commit();
+		mCurrentState = "AveragePrices";
+	}
+	public void btnToggleAverageDiffPrices(View view){
+		mGameState.PriceDifferences = !mGameState.PriceDifferences;
+		btnAveragePricesForm(null);
+	}
+	public void btnNextSystem(View view){
+		WarpSystem = mGameState.SolarSystem[NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev)];
+		btnAveragePricesForm(null);
+	}
+	public void btnWarpSystemInformation(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new WarpSystemInformationFragment()).commit();
+		mCurrentState = "WarpSystemInformation";
 	}
 
 	public void BuyCargo(int Index,int Amount) {
@@ -2836,6 +2869,16 @@ SeekBar.OnSeekBarChangeListener() {
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 						final int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						if (system >= 0){
+							WarpSystem = mGameState.SolarSystem[system];
+							if (!mGameState.AlwaysInfo &&
+							    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
+										 mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
+										mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
+							    ){
+								btnAveragePricesForm(null);
+							} else {
+								btnWarpSystemInformation(null);
+							}
 						/*
 						TODO: Move this to Galactic chart later.
 							if (system == shortRangeChart.mSelectedSystem){
@@ -2878,7 +2921,170 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public class AveragePricesFragment extends Fragment {
+		public AveragePricesFragment() { }
 
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_average_prices, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+			TextView tv, tvprice;
+			Button btn;
+
+			if (WarpSystem == null){
+				WarpSystem = CURSYSTEM;
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtPriceListSystemName);
+			tv.setText(mGameState.SolarSystemName[WarpSystem.nameIndex]);
+
+			tv = (TextView) rootView.findViewById(R.id.txtPriceListSpecialResources);
+			if (WarpSystem.visited)
+				tv.setText(mGameState.SpecialResources[WarpSystem.specialResources]);
+			else
+				tv.setText("Special resources unknown");
+
+			tv = (TextView) rootView.findViewById(R.id.txtPriceListTitle);
+			btn = (Button) rootView.findViewById(R.id.btnPriceListDiffAvg);
+			if (mGameState.PriceDifferences){
+				tv.setText("Price Differences");
+				btn.setText("Absolute Prices");
+			} else {
+				tv.setText("Absolute Prices");
+				btn.setText("Price Differences");
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtPriceListBays);
+			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+
+			tv = (TextView) rootView.findViewById(R.id.txtPriceListCash);
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
+
+			for (int i=0; i<GameState.MAXTRADEITEM; ++i) {
+				btn = (Button) rootView.findViewById(
+					                                    i == 0 ? R.id.btnPriceListBuy1 :
+					                                    i == 1 ? R.id.btnPriceListBuy2 :
+					                                    i == 2 ? R.id.btnPriceListBuy3 :
+					                                    i == 3 ? R.id.btnPriceListBuy4 :
+					                                    i == 4 ? R.id.btnPriceListBuy5 :
+					                                    i == 5 ? R.id.btnPriceListBuy6 :
+					                                    i == 6 ? R.id.btnPriceListBuy7 :
+					                                    i == 7 ? R.id.btnPriceListBuy8 :
+					                                    i == 8 ? R.id.btnPriceListBuy9 :
+					                                    /*i == 9 ?*/ R.id.btnPriceListBuy10
+				);
+				btn.setVisibility(mGameState.BuyPrice[i] <= 0 ? View.INVISIBLE : View.VISIBLE);
+				btn.setText(String.format("%d", CURSYSTEM.qty[i]));
+				tv = (TextView) rootView.findViewById(
+					                                     i == 0 ? R.id.txtPriceListName1 :
+					                                     i == 1 ? R.id.txtPriceListName2 :
+					                                     i == 2 ? R.id.txtPriceListName3 :
+					                                     i == 3 ? R.id.txtPriceListName4 :
+					                                     i == 4 ? R.id.txtPriceListName5 :
+					                                     i == 5 ? R.id.txtPriceListName6 :
+					                                     i == 6 ? R.id.txtPriceListName7 :
+					                                     i == 7 ? R.id.txtPriceListName8 :
+					                                     i == 8 ? R.id.txtPriceListName9 :
+					                                     /*i == 9 ?*/ R.id.txtPriceListName10
+				);
+				tvprice = (TextView) rootView.findViewById(
+					                                          i == 0 ? R.id.txtPriceListPrice1 :
+					                                          i == 1 ? R.id.txtPriceListPrice2 :
+					                                          i == 2 ? R.id.txtPriceListPrice3 :
+					                                          i == 3 ? R.id.txtPriceListPrice4 :
+					                                          i == 4 ? R.id.txtPriceListPrice5 :
+					                                          i == 5 ? R.id.txtPriceListPrice6 :
+					                                          i == 6 ? R.id.txtPriceListPrice7 :
+					                                          i == 7 ? R.id.txtPriceListPrice8 :
+					                                          i == 8 ? R.id.txtPriceListPrice9 :
+					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10
+				);
+
+				int Price = mGameState.StandardPrice( i, WarpSystem.size,
+				                       WarpSystem.techLevel, WarpSystem.politics,
+				                       (WarpSystem.visited ? WarpSystem.specialResources : -1) );
+
+				if (Price > mGameState.BuyPrice[i] && mGameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0){
+					tv.setTypeface(null, Typeface.BOLD);
+					tvprice.setTypeface(null, Typeface.BOLD);
+				} else {
+					tv.setTypeface(null, Typeface.NORMAL);
+					tvprice.setTypeface(null, Typeface.NORMAL);
+				}
+
+				if (Price <= 0 || (mGameState.PriceDifferences && mGameState.BuyPrice[i] <= 0)){
+					tvprice.setText("---");
+				} else {
+					if (mGameState.PriceDifferences)
+						tvprice.setText(String.format("%+d cr.", Price - mGameState.BuyPrice[i]));
+					else
+						tvprice.setText(String.format("%d cr.", Price));
+				}
+			}
+			return rootView;
+		}
+	}
+	public class WarpSystemInformationFragment extends Fragment {
+		public WarpSystemInformationFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+			TextView tv;
+
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
+			tv.setText(mGameState.SolarSystemName[WarpSystem.nameIndex]);
+
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoTechLevel);
+			tv.setText(mGameState.techLevel[WarpSystem.techLevel]);
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoGovernment);
+			tv.setText(Politics.mPolitics[WarpSystem.politics].name);
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
+			tv.setText(mGameState.SystemSize[WarpSystem.size]);
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
+			tv.setText(mGameState.Activity[mGameState.Politics.mPolitics[WarpSystem.politics].strengthPolice]);
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
+			tv.setText(mGameState.Activity[mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates]);
+
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
+			int Distance = mGameState.RealDistance(CURSYSTEM, WarpSystem);
+			if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem))
+				tv.setText("Wormhole");
+			else
+				tv.setText(String.format("%d parsecs", Distance));
+
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
+			tv.setText(String.format("%d cr.", mGameState.InsuranceMoney() + mGameState.MercenaryMoney() + (mGameState.Debt > 0 ? Math.max(mGameState.Debt / 10, 1) : 0 ) + mGameState.WormholeTax(COMMANDER.curSystem, WarpSystem)));
+
+			if (Distance > 0){
+				if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem
+				) || Distance <= mGameState.GetFuel()){
+					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
+					btn.setVisibility(View.VISIBLE);
+					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
+					btn.setVisibility(View.VISIBLE);
+					tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
+					tv.setVisibility(View.INVISIBLE);
+				} else if (Distance > mGameState.GetFuel()){
+					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
+					btn.setVisibility(View.INVISIBLE);
+					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
+					btn.setVisibility(View.INVISIBLE);
+					tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
+					tv.setVisibility(View.VISIBLE);
+				}
+			}
+
+			/* TODO
+			if (WormholeExists( COMMANDER.CurSystem, WarpSystem ) || Insurance || Debt > 0 || Ship.Crew[1] >= 0)
+				WarpSystemButtonSpecific->show();
+				*/
+			return rootView;
+		}
+	}
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////
@@ -2980,5 +3186,38 @@ SeekBar.OnSeekBarChangeListener() {
 				}
 			});
 		}
+	}
+	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
+		int i;
+		for (i = 0; mGameState.SolarSystem[i] != Current; i++);
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+
+		if (Back)
+			--i;
+	  else
+			++i;
+
+		while (true) {
+			if (i < 0)
+				i = GameState.MAXSOLARSYSTEM - 1;
+			else if (i >= GameState.MAXSOLARSYSTEM)
+				i = 0;
+			if (mGameState.SolarSystem[i] == Current)
+				break;
+
+			if (mGameState.WormholeExists(COMMANDER.curSystem, i))
+				return i;
+			else if (mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]
+			) <= mGameState.GetFuel() && mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]) > 0)
+				return i;
+
+			if (Back)
+				--i;
+			else
+				++i;
+		}
+
+		return -1;
 	}
 }

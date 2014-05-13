@@ -1,0 +1,266 @@
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".WelcomeScreen"
+		>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="System Information"
+			android:id="@+id/textView"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:textStyle="bold"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Name:"
+			android:id="@+id/strDescName"
+			android:layout_below="@+id/textView"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_marginTop="28dp"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Size:"
+			android:id="@+id/strDescSize"
+			android:layout_below="@+id/strDescName"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Tech Level:"
+			android:id="@+id/strDescTechLevel"
+			android:layout_below="@+id/strDescSize"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Government:"
+			android:id="@+id/strDescGovernment"
+			android:layout_below="@+id/strDescTechLevel"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Distance:"
+			android:id="@+id/strDescDistance"
+			android:layout_below="@+id/strDescGovernment"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Police:"
+			android:id="@+id/strDescPolice"
+			android:layout_below="@+id/strDescDistance"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Pirates:"
+			android:id="@+id/strDescPirates"
+			android:layout_below="@+id/strDescPolice"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Acamar"
+			android:id="@+id/strRemoteSysInfoName"
+			android:layout_alignTop="@+id/strDescName"
+			android:layout_toRightOf="@+id/strDescName"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentStart="false"
+			android:singleLine="false"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Large"
+			android:id="@+id/strRemoteSysInfoSize"
+			android:layout_alignTop="@+id/strDescSize"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_toRightOf="@+id/strDescSize"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Hi-Tech"
+			android:id="@+id/strRemoteSysInfoTechLevel"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignTop="@+id/strDescTechLevel"
+			android:layout_toRightOf="@+id/strDescTechLevel"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Fascist"
+			android:id="@+id/strRemoteSysInfoGovernment"
+			android:layout_alignTop="@+id/strDescGovernment"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_toRightOf="@+id/strDescGovernment"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="12 parsecs"
+			android:id="@+id/strRemoteSysInfoDistance"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignTop="@+id/strDescDistance"
+			android:layout_toRightOf="@+id/strDescGovernment"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Minimal"
+			android:id="@+id/strRemoteSysInfoPolice"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignTop="@+id/strDescPolice"
+			android:layout_toRightOf="@+id/strDescPolice"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Abundant"
+			android:id="@+id/strRemoteSysInfoPirates"
+			android:layout_alignTop="@+id/strDescPirates"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_toRightOf="@+id/strDescPirates"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Travel costs:"
+			android:id="@+id/textView2"
+			android:layout_below="@+id/strDescPirates"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="12 cr."
+			android:id="@+id/strRemoteSysInfoCosts"
+			android:layout_below="@+id/strRemoteSysInfoPirates"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignLeft="@+id/strRemoteSysInfoResources"
+			android:layout_alignStart="@+id/strRemoteSysInfoResources"
+			android:gravity="right"
+			android:paddingRight="@dimen/activity_vertical_margin"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Short Range Chart"
+			android:id="@+id/button"
+			android:onClick="btnShortRangeChart"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentBottom="true"
+			android:layout_toLeftOf="@+id/btnRemoteSyWarp"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Price List"
+			android:id="@+id/btnRemoteSysPriceList"
+			android:layout_above="@+id/button"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
+			android:onClick="btnAveragePricesForm"/>
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="WARP"
+			android:id="@+id/btnRemoteSyWarp"
+			android:textSize="50dp"
+			android:visibility="invisible"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentBottom="true"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="This system is out of range!"
+			android:id="@+id/strRemoteSysOutOfRange"
+			android:layout_below="@+id/textView2"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:paddingLeft="@dimen/activity_vertical_margin"
+			android:textStyle="bold"/>
+
+</RelativeLayout>

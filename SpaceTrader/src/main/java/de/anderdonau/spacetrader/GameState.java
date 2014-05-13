@@ -1068,6 +1068,11 @@ public class GameState implements Serializable {
 		return (SQR(a.x - b.x) + SQR(a.y - b.y));
 	}
 
+	public boolean WormholeExists(int a, SolarSystem s) {
+		int i;
+		for (i = 0; SolarSystem[i] != s; i++);
+		return WormholeExists(a, i);
+	}
 	public boolean WormholeExists(int a, int b) {
 		int i;
 
@@ -1091,6 +1096,12 @@ public class GameState implements Serializable {
 			}
 		}
 		return false;
+	}
+	public int WormholeTax(int a, SolarSystem b) {
+		if (WormholeExists( a, b ))
+			return(ShipTypes.ShipTypes[Ship.type].costOfFuel * 25);
+
+		return 0;
 	}
 	public int RealDistance( SolarSystem a, SolarSystem b ){
 		return (int) Math.sqrt(SqrDistance(a, b));
