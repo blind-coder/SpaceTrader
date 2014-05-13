@@ -1561,7 +1561,7 @@ public class GameState implements Serializable {
 		if (ScarabStatus == 3) // Scarab hull hardening is not transferrable.
 			ScarabStatus = 0;
 	}
-	int StandardPrice(int Good, int Size, int Tech, int Government, int Resources) {
+	public int StandardPrice(int Good, int Size, int Tech, int Government, int Resources) {
 		// *************************************************************************
 		// Standard price calculation
 		// *************************************************************************
@@ -1646,7 +1646,7 @@ public class GameState implements Serializable {
 
 		RecalculateBuyPrices(SystemID);
 	}
-	void RecalculateBuyPrices(int SystemID) {
+	public void RecalculateBuyPrices(int SystemID) {
 		// *************************************************************************
 		// After changing the trader skill, buying prices must be recalculated.
 		// Revised to be callable on an arbitrary Solar System
@@ -1674,20 +1674,4 @@ public class GameState implements Serializable {
 			}
 		}
 	}
-	public void BuyCargo(int Index,int Amount) {
-		// *************************************************************************
-		// Buy amount of cargo
-		// *************************************************************************
-		int ToBuy;
-
-		ToBuy = Math.min(Amount, SolarSystem[Mercenary[0].curSystem].qty[Index]);
-		ToBuy = Math.min(ToBuy, TotalCargoBays() - FilledCargoBays() - LeaveEmpty);
-		ToBuy = Math.min(ToBuy, ToSpend() / BuyPrice[Index]);
-
-		Ship.cargo[Index] += ToBuy;
-		Credits -= ToBuy * BuyPrice[Index];
-		BuyingPrice[Index] += ToBuy * BuyPrice[Index];
-		SolarSystem[Mercenary[0].curSystem].qty[Index] -= ToBuy;
-	}
-
 }

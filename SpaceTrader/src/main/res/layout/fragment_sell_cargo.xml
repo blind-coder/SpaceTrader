@@ -16,7 +16,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Buy Cargo"
+			android:text="Sell Cargo"
 			android:id="@+id/textView"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
@@ -39,17 +39,17 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="12"
-					android:id="@+id/btnBuyCargo1"
+					android:id="@+id/btnSellCargo1"
 					android:layout_column="0"
 					style="@style/BuySellButtons"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Water"
-					android:id="@+id/textView2"
+					android:id="@+id/txtSellName1"
 					android:layout_column="1"
 					android:layout_gravity="center_vertical"
 					android:autoText="false"
@@ -59,18 +59,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll1"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll1"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10 cr."
-					android:id="@+id/txtBuyCargoPrice1"
+					android:id="@+id/txtSellCargoPrice1"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -79,16 +79,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="67"
-					android:id="@+id/btnBuyCargo6"
+					android:id="@+id/btnSellCargo6"
 					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Firearms"
-					android:id="@+id/textView7"
+					android:id="@+id/txtSellName6"
 					android:layout_column="6"
 					android:layout_gravity="center_vertical"/>
 
@@ -96,18 +96,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll6"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll6"
 					android:layout_column="7"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="60 cr."
-					android:id="@+id/txtBuyCargoPrice6"
+					android:id="@+id/txtSellCargoPrice6"
 					android:layout_column="8"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -122,16 +122,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="23"
-					android:id="@+id/btnBuyCargo2"
+					android:id="@+id/btnSellCargo2"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Furs"
-					android:id="@+id/textView3"
+					android:id="@+id/txtSellName2"
 					android:layout_column="1"
 					android:layout_gravity="center_vertical"/>
 
@@ -139,18 +139,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll2"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll2"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="20 cr."
-					android:id="@+id/txtBuyCargoPrice2"
+					android:id="@+id/txtSellCargoPrice2"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -159,16 +159,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="78"
-					android:id="@+id/btnBuyCargo7"
+					android:id="@+id/btnSellCargo7"
 					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Medicine"
-					android:id="@+id/textView8"
+					android:id="@+id/txtSellName7"
 					android:layout_column="6"
 					android:layout_gravity="center_vertical"/>
 
@@ -176,18 +176,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll7"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll7"
 					android:layout_column="7"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="70 cr."
-					android:id="@+id/txtBuyCargoPrice7"
+					android:id="@+id/txtSellCargoPrice7"
 					android:layout_column="8"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -201,16 +201,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="34"
-					android:id="@+id/btnBuyCargo3"
+					android:id="@+id/btnSellCargo3"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Food"
-					android:id="@+id/textView4"
+					android:id="@+id/txtSellName3"
 					android:layout_column="1"
 					android:layout_gravity="center_vertical"/>
 
@@ -218,18 +218,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll3"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll3"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="30 cr."
-					android:id="@+id/txtBuyCargoPrice3"
+					android:id="@+id/txtSellCargoPrice3"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -238,16 +238,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="89"
-					android:id="@+id/btnBuyCargo8"
+					android:id="@+id/btnSellCargo8"
 					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Machines"
-					android:id="@+id/textView9"
+					android:id="@+id/txtSellName8"
 					android:layout_column="6"
 					android:layout_gravity="center_vertical"/>
 
@@ -255,18 +255,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll8"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll8"
 					android:layout_column="7"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="80 cr."
-					android:id="@+id/txtBuyCargoPrice8"
+					android:id="@+id/txtSellCargoPrice8"
 					android:layout_column="8"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -280,16 +280,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="45"
-					android:id="@+id/btnBuyCargo4"
+					android:id="@+id/btnSellCargo4"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Ore"
-					android:id="@+id/textView5"
+					android:id="@+id/txtSellName4"
 					android:layout_column="1"
 					android:layout_gravity="center_vertical"/>
 
@@ -297,18 +297,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll4"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll4"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="40 cr."
-					android:id="@+id/txtBuyCargoPrice4"
+					android:id="@+id/txtSellCargoPrice4"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -317,16 +317,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="90"
-					android:id="@+id/btnBuyCargo9"
+					android:id="@+id/btnSellCargo9"
 					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Narcotics"
-					android:id="@+id/textView10"
+					android:id="@+id/txtSellName9"
 					android:layout_column="6"
 					android:layout_gravity="center_vertical"/>
 
@@ -334,18 +334,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll9"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll9"
 					android:layout_column="7"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="90 cr."
-					android:id="@+id/txtBuyCargoPrice9"
+					android:id="@+id/txtSellCargoPrice9"
 					android:layout_column="8"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -359,16 +359,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="56"
-					android:id="@+id/btnBuyCargo5"
+					android:id="@+id/btnSellCargo5"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Games"
-					android:id="@+id/textView6"
+					android:id="@+id/txtSellName5"
 					android:layout_column="1"
 					android:layout_gravity="center_vertical"/>
 
@@ -376,18 +376,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll5"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll5"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="50 cr."
-					android:id="@+id/txtBuyCargoPrice5"
+					android:id="@+id/txtSellCargoPrice5"
 					android:layout_column="3"
 					android:layout_gravity="center_vertical|right"/>
 
@@ -396,16 +396,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="01"
-					android:id="@+id/btnBuyCargo10"
+					android:id="@+id/btnSellCargo10"
 					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnSellCargoCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Robots"
-					android:id="@+id/textView11"
+					android:id="@+id/txtSellName10"
 					android:layout_column="6"
 					android:layout_gravity="center_vertical"/>
 
@@ -413,18 +413,18 @@
 					style="@style/BuySellButtons"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Max"
-					android:id="@+id/btnBuyCargoAll10"
+					android:text="All"
+					android:id="@+id/btnSellCargoAll10"
 					android:layout_column="7"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnSellCargoAllCallback"/>
 
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="100 cr."
-					android:id="@+id/txtBuyCargoPrice10"
+					android:id="@+id/txtSellCargoPrice10"
 					android:layout_column="8"
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
@@ -436,7 +436,7 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="Bays: 0/15"
-			android:id="@+id/txtBuyCargoBays"
+			android:id="@+id/txtSellCargoBays"
 			android:layout_column="0"
 			android:layout_span="2"
 			android:layout_alignParentBottom="true"
@@ -448,7 +448,7 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="Cash: 11445 cr."
-			android:id="@+id/txtBuyCargoCash"
+			android:id="@+id/txtSellCargoCash"
 			android:layout_span="3"
 			android:singleLine="true"
 			android:layout_gravity="right"

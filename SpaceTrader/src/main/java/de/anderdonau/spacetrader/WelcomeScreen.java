@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -147,6 +148,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnBuyCargo(null);
 				break;
 			case 1: //"Sell Cargo"
+				btnSellCargo(null);
 				break;
 			case 2: // "Shipyard"
 				btnShipyard(null);
@@ -742,22 +744,25 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			alertDialog("Debt too high!", "Your debt is too high to get another loan.", "");
 			return;
 		}
-		inputDialog("Get Loan", String.format("How much do you want?\nYou can borrow up to %d credits.", mGameState.MaxLoan()), "Credits", "", new IFinputDialogCallback() {
+		inputDialog("Get Loan", String.format("How much do you want?\nYou can borrow up to %d credits.",
+		                                      mGameState.MaxLoan()
+		), "Credits", "", new IFinputDialogCallback() {
 			@Override
 			public void execute(EditText input) {
 				try {
 					int amount = Integer.parseInt(input.getText().toString());
-					if (amount > 0){
+					if (amount > 0) {
 						amount = Math.min(mGameState.MaxLoan(), amount);
 						mGameState.Credits += amount;
 						mGameState.Debt += amount;
 						btnBank(null);
 					}
-				} catch (NumberFormatException e){
+				} catch (NumberFormatException e) {
 					alertDialog("Error", e.getLocalizedMessage().toString(), "");
 				}
 			}
-		});
+		}
+		);
 	}
 	public void btnBankPaybackLoan(View view){
 		if (mGameState.Debt <= 0){
@@ -1375,27 +1380,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		inputDialog("Buy Cargo",
 		            String.format("How many do you want to buy?\nAt %d cr. each you can afford %d.",
-		                          mGameState.BuyPrice[idx],
-		                          Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index])),
-		            "Amount",
-                "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
-                new IFinputDialogCallback() {
-	                @Override
-	                public void execute(EditText input) {
-		                int Amount;
-		                try {
-			                Amount = Integer.parseInt(input.getText().toString());
-		                } catch (NumberFormatException e){
-			                alertDialog("Error", e.getLocalizedMessage(), "");
-			                Amount = 0;
-		                }
-		                if (Amount > 0){
-			                mGameState.BuyCargo(Index, Amount);
-			                btnBuyCargo(null);
-		                }
+		                          mGameState.BuyPrice[idx], Math.min(mGameState
+			                                                             .ToSpend() / mGameState.BuyPrice[Index],
+		                                                             CURSYSTEM.qty[Index]
+		            )
+		            ), "Amount",
+		            "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
+		            new IFinputDialogCallback() {
+			            @Override
+			            public void execute(EditText input) {
+				            int Amount;
+				            try {
+					            Amount = Integer.parseInt(input.getText().toString());
+				            } catch (NumberFormatException e) {
+					            alertDialog("Error", e.getLocalizedMessage(), "");
+					            Amount = 0;
+				            }
+				            if (Amount > 0) {
+					            BuyCargo(Index, Amount);
+					            btnBuyCargo(null);
+				            }
 
-	                }
-                }
+			            }
+		            }
 		);
 	}
 	public void btnBuyCargoAllCallback(View view){
@@ -1454,10 +1461,226 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 
-		mGameState.BuyCargo(Index, 999);
+		BuyCargo(Index, 999);
     btnBuyCargo(null);
 	}
+	public void btnSellCargo(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new SellCargoFragment()).commit();
+		mCurrentState = "SellCargo";
+	}
+	public void btnSellCargoCallback(View view){
+		int Index;
 
+		Index = -1;
+		switch (view.getId()){
+			case R.id.btnSellCargo10:
+				Index++;
+			case R.id.btnSellCargo9:
+				Index++;
+			case R.id.btnSellCargo8:
+				Index++;
+			case R.id.btnSellCargo7:
+				Index++;
+			case R.id.btnSellCargo6:
+				Index++;
+			case R.id.btnSellCargo5:
+				Index++;
+			case R.id.btnSellCargo4:
+				Index++;
+			case R.id.btnSellCargo3:
+				Index++;
+			case R.id.btnSellCargo2:
+				Index++;
+			case R.id.btnSellCargo1:
+				Index++;
+				break;
+			default: alertDialog("Error", "No cargo selected.", ""); return;
+		}
+
+
+		if (mGameState.Ship.cargo[Index] <= 0){
+			alertDialog("None To Sell", "You have none of these goods in your cargo bays.",
+			            "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything."
+			);
+			return;
+		}
+		if (mGameState.SellPrice[Index] <= 0)
+		{
+			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.",
+			            "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them."
+			);
+			return;
+		}
+
+		final int idx = Index;
+		inputDialog("Sell Cargo", String
+			                          .format("How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.",
+			                                  mGameState.Ship.cargo[Index], mGameState.SellPrice[Index],
+			                                  mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ?
+			                                  "loss" : "profit", Math
+				                                                     .abs(mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] - mGameState.SellPrice[Index]),
+			                                  mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ?
+			                                  (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index]) - mGameState.SellPrice[Index] :
+			                                  mGameState.SellPrice[Index] - (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index])
+			                          ), "Amount",
+		            "If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
+		            new IFinputDialogCallback() {
+			            @Override
+			            public void execute(EditText input) {
+				            int Amount;
+				            try {
+					            Amount = Integer.parseInt(input.getText().toString());
+				            } catch (NumberFormatException e){
+					            alertDialog("Error", e.getLocalizedMessage(), "");
+					            Amount = 0;
+				            }
+				            if (Amount > 0){
+					            SellCargo(idx, Amount, GameState.SELLCARGO);
+					            btnSellCargo(null);
+				            }
+			            }
+		            }
+		);
+	}
+	public void btnSellCargoAllCallback(View view){
+		int Index;
+
+		Index = -1;
+		switch (view.getId()){
+			case R.id.btnSellCargoAll10:
+				Index++;
+			case R.id.btnSellCargoAll9:
+				Index++;
+			case R.id.btnSellCargoAll8:
+				Index++;
+			case R.id.btnSellCargoAll7:
+				Index++;
+			case R.id.btnSellCargoAll6:
+				Index++;
+			case R.id.btnSellCargoAll5:
+				Index++;
+			case R.id.btnSellCargoAll4:
+				Index++;
+			case R.id.btnSellCargoAll3:
+				Index++;
+			case R.id.btnSellCargoAll2:
+				Index++;
+			case R.id.btnSellCargoAll1:
+				Index++;
+				break;
+			default: alertDialog("Error", "No cargo selected.", ""); return;
+		}
+
+		if (mGameState.Ship.cargo[Index] <= 0){
+			alertDialog("None To Sell", "You have none of these goods in your cargo bays.",
+			            "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything."
+			);
+			return;
+		}
+		if (mGameState.SellPrice[Index] <= 0)
+		{
+			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.",
+			            "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them."
+			);
+			return;
+		}
+
+		SellCargo(Index, 999, GameState.SELLCARGO);
+		btnSellCargo(null);
+	}
+
+	public void BuyCargo(int Index,int Amount) {
+		// *************************************************************************
+		// Buy amount of cargo
+		// *************************************************************************
+		int ToBuy;
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
+
+		ToBuy = Math.min(Amount, CURSYSTEM.qty[Index]);
+		ToBuy = Math.min(ToBuy, mGameState.TotalCargoBays() - mGameState.FilledCargoBays() - mGameState.LeaveEmpty);
+		ToBuy = Math.min(ToBuy, mGameState.ToSpend() / mGameState.BuyPrice[Index]);
+
+		mGameState.Ship.cargo[Index] += ToBuy;
+		mGameState.Credits -= ToBuy * mGameState.BuyPrice[Index];
+		mGameState.BuyingPrice[Index] += ToBuy * mGameState.BuyPrice[Index];
+		CURSYSTEM.qty[Index] -= ToBuy;
+	}
+	public void SellCargo(final int Index, int Amount, int Operation) {
+		// *************************************************************************
+		// Sell or Jettison amount of cargo
+		// Operation is SELLCARGO, DUMPCARGO, or JETTISONCARGO
+		// *************************************************************************
+		int ToSell;
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		Ship Ship = mGameState.Ship;
+
+		if (Ship.cargo[Index] <= 0) {
+			if (Operation == GameState.SELLCARGO)
+				alertDialog("None To Sell", "You have none of these goods in your cargo bays.", "");
+			else
+				alertDialog("None To Dump", "You have none of these goods in your cargo bays.", "");
+			return;
+		}
+
+		if (mGameState.SellPrice[Index] <= 0 && Operation == GameState.SELLCARGO) {
+			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.", "");
+			return;
+		}
+
+		ToSell = Math.min(Amount, Ship.cargo[Index]);
+		final int ToJettison = ToSell;
+
+		if (Operation == GameState.JETTISONCARGO) {
+			if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE && !mGameState.LitterWarning) {
+				mGameState.LitterWarning = true;
+				ConfirmDialog("Space Littering",
+				              "Dumping cargo in space is considered littering. If the police finds your dumped goods and tracks them to you, this will influence your record. Do you really wish to dump?",
+				              "Space litterers will at least be considered dubious. If you are already a dubious character, space littering will only add to your list of offences.",
+				              "Yes", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialogInterface, int i) {
+													mGameState.Ship.cargo[Index] -= ToJettison;
+													if (mGameState.GetRandom(10) < mGameState.Difficulty + 1) {
+														if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
+															mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+														else
+															--mGameState.PoliceRecordScore;
+														addNewsEvent(GameState.CAUGHTLITTERING);
+													}
+												}
+											}, "No", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialogInterface, int i) {
+
+												}
+											}
+				);
+				return;
+			}
+			mGameState.Ship.cargo[Index] -= ToJettison;
+			if (mGameState.GetRandom(10) < mGameState.Difficulty + 1) {
+				if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
+					mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+				else
+					--mGameState.PoliceRecordScore;
+				addNewsEvent(GameState.CAUGHTLITTERING);
+			}
+		}
+
+		if (Operation == GameState.DUMPCARGO) {
+			ToSell = Math.min(ToSell, mGameState.ToSpend() / 5 * (mGameState.Difficulty + 1));
+		}
+
+		mGameState.BuyingPrice[Index] = (mGameState.BuyingPrice[Index] * (Ship.cargo[Index] - ToSell)) / Ship.cargo[Index];
+		Ship.cargo[Index] -= ToSell;
+		if (Operation == GameState.SELLCARGO)
+			mGameState.Credits += ToSell * mGameState.SellPrice[Index];
+		if (Operation == GameState.DUMPCARGO)
+			mGameState.Credits -= ToSell * 5 * (mGameState.Difficulty + 1);
+		if (Operation == GameState.JETTISONCARGO) {
+		}
+	}
 
 	public void saveGame() {
 		SaveGame s = new SaveGame(mGameState);
@@ -2452,15 +2675,15 @@ SeekBar.OnSeekBarChangeListener() {
 					                                    /*i == 9 ? */R.id.btnBuyCargo10
 				);
 				btnAll = (Button) rootView.findViewById(
-					                                    i == 0 ? R.id.btnBuyCargoAll1 :
-					                                    i == 1 ? R.id.btnBuyCargoAll2 :
-					                                    i == 2 ? R.id.btnBuyCargoAll3 :
-					                                    i == 3 ? R.id.btnBuyCargoAll4 :
-					                                    i == 4 ? R.id.btnBuyCargoAll5 :
-					                                    i == 5 ? R.id.btnBuyCargoAll6 :
-					                                    i == 6 ? R.id.btnBuyCargoAll7 :
-					                                    i == 7 ? R.id.btnBuyCargoAll8 :
-					                                    i == 8 ? R.id.btnBuyCargoAll9 :
+					                                       i == 0 ? R.id.btnBuyCargoAll1 :
+					                                       i == 1 ? R.id.btnBuyCargoAll2 :
+					                                       i == 2 ? R.id.btnBuyCargoAll3 :
+					                                       i == 3 ? R.id.btnBuyCargoAll4 :
+					                                       i == 4 ? R.id.btnBuyCargoAll5 :
+					                                       i == 5 ? R.id.btnBuyCargoAll6 :
+					                                       i == 6 ? R.id.btnBuyCargoAll7 :
+					                                       i == 7 ? R.id.btnBuyCargoAll8 :
+					                                       i == 8 ? R.id.btnBuyCargoAll9 :
 					                                    /*i == 9 ? */R.id.btnBuyCargoAll10
 				);
 				tv = (TextView) rootView.findViewById(
@@ -2491,6 +2714,97 @@ SeekBar.OnSeekBarChangeListener() {
 			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoBays);
 			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
 			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoCash);
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
+
+			return rootView;
+		}
+	}
+	public class SellCargoFragment extends Fragment {
+		public SellCargoFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_sell_cargo, container, false);
+			CrewMember COMMANDER;
+			SolarSystem CURSYSTEM;
+			COMMANDER = mGameState.Mercenary[0];
+			CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+			TextView tv;
+			TextView name;
+			Button btn;
+			Button btnAll;
+			int i;
+
+			for (i=0; i<GameState.MAXTRADEITEM; ++i) {
+				btn = (Button) rootView.findViewById(
+					                                    i == 0 ? R.id.btnSellCargo1 :
+					                                    i == 1 ? R.id.btnSellCargo2 :
+					                                    i == 2 ? R.id.btnSellCargo3 :
+					                                    i == 3 ? R.id.btnSellCargo4 :
+					                                    i == 4 ? R.id.btnSellCargo5 :
+					                                    i == 5 ? R.id.btnSellCargo6 :
+					                                    i == 6 ? R.id.btnSellCargo7 :
+					                                    i == 7 ? R.id.btnSellCargo8 :
+					                                    i == 8 ? R.id.btnSellCargo9 :
+					                                    /*i == 9 ? */R.id.btnSellCargo10
+				);
+				btnAll = (Button) rootView.findViewById(
+					                                       i == 0 ? R.id.btnSellCargoAll1 :
+					                                       i == 1 ? R.id.btnSellCargoAll2 :
+					                                       i == 2 ? R.id.btnSellCargoAll3 :
+					                                       i == 3 ? R.id.btnSellCargoAll4 :
+					                                       i == 4 ? R.id.btnSellCargoAll5 :
+					                                       i == 5 ? R.id.btnSellCargoAll6 :
+					                                       i == 6 ? R.id.btnSellCargoAll7 :
+					                                       i == 7 ? R.id.btnSellCargoAll8 :
+					                                       i == 8 ? R.id.btnSellCargoAll9 :
+					                                    /*i == 9 ? */R.id.btnSellCargoAll10
+				);
+				tv = (TextView) rootView.findViewById(
+					                                     i == 0 ? R.id.txtSellCargoPrice1 :
+					                                     i == 1 ? R.id.txtSellCargoPrice2 :
+					                                     i == 2 ? R.id.txtSellCargoPrice3 :
+					                                     i == 3 ? R.id.txtSellCargoPrice4 :
+					                                     i == 4 ? R.id.txtSellCargoPrice5 :
+					                                     i == 5 ? R.id.txtSellCargoPrice6 :
+					                                     i == 6 ? R.id.txtSellCargoPrice7 :
+					                                     i == 7 ? R.id.txtSellCargoPrice8 :
+					                                     i == 8 ? R.id.txtSellCargoPrice9 :
+					                                     /*i == 9 ? */R.id.txtSellCargoPrice10
+				);
+        name = (TextView) rootView.findViewById(
+	                                             i == 0 ? R.id.txtSellName1 :
+	                                             i == 1 ? R.id.txtSellName2 :
+	                                             i == 2 ? R.id.txtSellName3 :
+	                                             i == 3 ? R.id.txtSellName4 :
+	                                             i == 4 ? R.id.txtSellName5 :
+	                                             i == 5 ? R.id.txtSellName6 :
+	                                             i == 6 ? R.id.txtSellName7 :
+	                                             i == 7 ? R.id.txtSellName8 :
+	                                             i == 8 ? R.id.txtSellName9 :
+	                                             /*i == 9 ? */R.id.txtSellName10
+				);
+				if (mGameState.BuyingPrice[i] < mGameState.SellPrice[i] * mGameState.Ship.cargo[i]){
+					name.setTypeface(null, Typeface.BOLD);
+				} else {
+					name.setTypeface(null, Typeface.NORMAL);
+				}
+				if (mGameState.SellPrice[i] > 0){
+					btn.setText(String.format("%d", mGameState.Ship.cargo[i]));
+					tv.setText(String.format("%d cr.", mGameState.SellPrice[i]));
+					tv.setVisibility(View.VISIBLE);
+					btn.setVisibility(View.VISIBLE);
+					btnAll.setVisibility(View.VISIBLE);
+				} else {
+					tv.setText("not trade");
+					tv.setVisibility(View.VISIBLE);
+					btn.setVisibility(View.INVISIBLE);
+					btnAll.setVisibility(View.INVISIBLE);
+				}
+			}
+			tv = (TextView) rootView.findViewById(R.id.txtSellCargoBays);
+			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+			tv = (TextView) rootView.findViewById(R.id.txtSellCargoCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			return rootView;
