@@ -2299,7 +2299,7 @@ SeekBar.OnSeekBarChangeListener() {
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardCash);
-			tv.setText(String.format("%d cr.", mGameState.Credits));
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardBuyEscapePod);
 			if (mGameState.EscapePod){
@@ -2326,6 +2326,9 @@ SeekBar.OnSeekBarChangeListener() {
 			int i;
 
 			mGameState.DetermineShipPrices();
+
+			tv = (TextView) rootView.findViewById(R.id.txtBuyShipCash);
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			i = -1;
 			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceFlea);
@@ -2472,6 +2475,9 @@ SeekBar.OnSeekBarChangeListener() {
 			Button btn;
 			int i;
 
+			tv = (TextView) rootView.findViewById(R.id.txtBuyEquipmentCash);
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
+
 			i = -1;
 			btn = (Button) rootView.findViewById(R.id.btnBuyPulseLaser);
 			if (mGameState.BASEWEAPONPRICE(++i) > 0)
@@ -2606,6 +2612,9 @@ SeekBar.OnSeekBarChangeListener() {
 			Ship Ship = mGameState.Ship;
 			int i;
 
+			tv = (TextView) rootView.findViewById(R.id.txtSellEquipmentCash);
+			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
+
 			for (i=0; i<GameState.MAXWEAPON; ++i) {
 				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentWeapon1: i == 1 ? R.id.btnSellEquipmentWeapon2: R.id.btnSellEquipmentWeapon3);
 				if (Ship.weapon[i] >= 0) {
@@ -2623,12 +2632,8 @@ SeekBar.OnSeekBarChangeListener() {
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
 					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 : i == 1 ? R.id.txtSellEquipmentWeapon2 : R.id.txtSellEquipmentWeapon3);
-					if (i == 0){
-						tv.setVisibility(View.VISIBLE);
-						tv.setText("You don't have any weapons to sell.");
-					} else {
-						tv.setVisibility(View.INVISIBLE);
-					}
+					tv.setVisibility(View.INVISIBLE);
+					tv.setText("");
 				}
 			}
 
@@ -2649,12 +2654,8 @@ SeekBar.OnSeekBarChangeListener() {
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
 					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 : i == 1 ? R.id.txtSellEquipmentShield2 : R.id.txtSellEquipmentShield3);
-					if (i == 0){
-						tv.setVisibility(View.VISIBLE);
-						tv.setText("You don't have any shields to sell.");
-					} else {
-						tv.setVisibility(View.INVISIBLE);
-					}
+					tv.setVisibility(View.INVISIBLE);
+					tv.setText("");
 				}
 			}
 
@@ -2675,12 +2676,8 @@ SeekBar.OnSeekBarChangeListener() {
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
 					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 : i == 1 ? R.id.txtSellEquipmentGadget2 : R.id.txtSellEquipmentGadget3);
-					if (i == 0){
-						tv.setVisibility(View.VISIBLE);
-						tv.setText("You don't have any gadgets to sell.");
-					} else {
-						tv.setVisibility(View.INVISIBLE);
-					}
+					tv.setText("");
+					tv.setVisibility(View.INVISIBLE);
 				}
 			}
 

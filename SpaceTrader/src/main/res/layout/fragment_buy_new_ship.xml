@@ -24,7 +24,7 @@
 
 	<TableLayout
 			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
+			android:layout_height="wrap_content"
 			android:layout_below="@+id/txtBuyNewShipTitle"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
@@ -430,4 +430,14 @@
 					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 	</TableLayout>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Cash: 11445 cr."
+			android:id="@+id/txtBuyShipCash"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"/>
 </RelativeLayout>
