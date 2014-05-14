@@ -31,7 +31,7 @@ public class Gadgets {
 		public String name;
 		public int    price;
 		public int    techLevel;
-		int chance; // Chance that this is fitted in a slot
+		public int    chance; // Chance that this is fitted in a slot
 
 		public Gadget(String name, int price, int techLevel, int chance) {
 			this.name = name;

@@ -24,10 +24,10 @@ public class Shields {
 
 	public class Shield {
 		public String name;
-		int power;
-		public int price;
-		public int techLevel;
-		int chance; // Chance that this is fitted in a slot
+		public int    power;
+		public int    price;
+		public int    techLevel;
+		public int    chance; // Chance that this is fitted in a slot
 
 		public Shield(String name, int power, int price, int techLevel, int chance) {
 			this.name = name;

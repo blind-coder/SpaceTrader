@@ -15,12 +15,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.MergeCursor;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,7 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.spec.MGF1ParameterSpec;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
@@ -125,20 +121,38 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (mCurrentState.equals("WelcomeScreen")) {
 			finish();
 			return;
-		}
+		} else
 		if (mCurrentState.equals("startup")) {
 			finish();
 			return;
-		}
+		} else
 		if (mCurrentState.equals("StartNewGame")) {
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
 			mCurrentState = "WelcomeScreen";
 			return;
+		} else
+		if (mCurrentState.equals("Encounter")){
+			ConfirmDialog("Can't save now",
+			              "You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!\nAre you sure you want to quit?",
+			              "",
+			              "Yes", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialogInterface, int i) {
+												finish();
+											}
+										}, "No", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialogInterface, int i) {
+												return;
+											}
+										}
+			);
+		} else {
+			Log.d("onBackPressed", "unhandled state: " + mCurrentState);
+			saveGame();
+			finish();
 		}
-		Log.d("onBackPressed", "unhandled state: " + mCurrentState);
-		saveGame();
-		finish();
 	}
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
@@ -251,7 +265,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		mGameState = new GameState(t.getText().toString());
 		mGameState.DeterminePrices(mGameState.Mercenary[0].curSystem);
 
-		GameState.Difficulty = s.getProgress();
+		GameState.setDifficulty(s.getProgress());
 		s = (SeekBar) findViewById(R.id.skillPilot);
 		mGameState.Mercenary[0].pilot = s.getProgress()+1;
 		s = (SeekBar) findViewById(R.id.skillFighter);
@@ -271,11 +285,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		mCurrentState = "SystemInformation";
 	}
 	public void btnSystemInformationNewspaper(View view){
-		if (!mGameState.AlreadyPaidForNewspaper && mGameState.ToSpend() < (GameState.Difficulty + 1)){
-			alertDialog("Not enough money!", String.format("A newspaper costs %d credits in this system. You don't have enough money!", GameState.Difficulty + 1), "");
+		if (!mGameState.AlreadyPaidForNewspaper && mGameState.ToSpend() < (GameState.getDifficulty() + 1)){
+			alertDialog("Not enough money!", String.format("A newspaper costs %d credits in this system. You don't have enough money!", GameState.getDifficulty() + 1), "");
 		} else if (!mGameState.AlreadyPaidForNewspaper){
 			if (!mGameState.NewsAutoPay && !mGameState.AlreadyPaidForNewspaper){
-				ConfirmDialog("Buy newspaper", String.format("The local newspaper costs %d credits. Do you wish to buy a copy?", GameState.Difficulty + 1), "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+				ConfirmDialog("Buy newspaper", String.format("The local newspaper costs %d credits. Do you wish to buy a copy?", GameState.getDifficulty() + 1), "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
           "Yes", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialogInterface, int i) {
@@ -299,14 +313,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		String masthead;
 		int seed;
 		int i, j;
-		int reply;
 		boolean realNews = false;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		int WarpSystem = COMMANDER.curSystem;
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[WarpSystem];
 
 		if (!mGameState.AlreadyPaidForNewspaper){
-			mGameState.Credits -= (GameState.Difficulty + 1);
+			mGameState.Credits -= (GameState.getDifficulty() + 1);
 			mGameState.AlreadyPaidForNewspaper = true;
 		}
 		seed = mGameState.GetRandom((int) Math.pow(2, 31));
@@ -463,7 +476,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				}
 
 				// And not-always-shown stories
-				if (mGameState.GetRandom(100) <= GameState.STORYPROBABILITY * CURSYSTEM.techLevel + 10 * (5 - GameState.Difficulty)) {
+				if (mGameState.GetRandom(100) <= GameState.STORYPROBABILITY * CURSYSTEM.techLevel + 10 * (5 - GameState.getDifficulty())) {
 					j = mGameState.GetRandom(6);
 					switch (j) {
 						case 0:
@@ -1058,6 +1071,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final boolean hasLightning, final boolean hasCompactor, final boolean hasMorganLaser){
 		final int[] extra = new int[1];
+		// TODO: might be multiple lightning shields after all!
 		extra[0] = ex;
 		if (hasLightning && mGameState.ShipTypes.ShipTypes[Index].shieldSlots > 0) {
 			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
@@ -1630,6 +1644,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		fragmentManager.beginTransaction().replace(R.id.container, new WarpSystemInformationFragment()).commit();
 		mCurrentState = "WarpSystemInformation";
 	}
+	public void btnDoWarp(View view){
+		DoWarp(false);
+	}
+	public void btnEncounter(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new EncounterFragment()).commit();
+		mCurrentState = "Encounter";
+	}
 
 	public void BuyCargo(int Index,int Amount) {
 		// *************************************************************************
@@ -1682,7 +1704,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 												@Override
 												public void onClick(DialogInterface dialogInterface, int i) {
 													mGameState.Ship.cargo[Index] -= ToJettison;
-													if (mGameState.GetRandom(10) < mGameState.Difficulty + 1) {
+													if (mGameState.GetRandom(10) < mGameState.getDifficulty() + 1) {
 														if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
 															mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
 														else
@@ -1700,7 +1722,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				return;
 			}
 			mGameState.Ship.cargo[Index] -= ToJettison;
-			if (mGameState.GetRandom(10) < mGameState.Difficulty + 1) {
+			if (mGameState.GetRandom(10) < mGameState.getDifficulty() + 1) {
 				if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
 					mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
 				else
@@ -1710,7 +1732,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (Operation == GameState.DUMPCARGO) {
-			ToSell = Math.min(ToSell, mGameState.ToSpend() / 5 * (mGameState.Difficulty + 1));
+			ToSell = Math.min(ToSell, mGameState.ToSpend() / 5 * (mGameState.getDifficulty() + 1));
 		}
 
 		mGameState.BuyingPrice[Index] = (mGameState.BuyingPrice[Index] * (Ship.cargo[Index] - ToSell)) / Ship.cargo[Index];
@@ -1718,7 +1740,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Operation == GameState.SELLCARGO)
 			mGameState.Credits += ToSell * mGameState.SellPrice[Index];
 		if (Operation == GameState.DUMPCARGO)
-			mGameState.Credits -= ToSell * 5 * (mGameState.Difficulty + 1);
+			mGameState.Credits -= ToSell * 5 * (mGameState.getDifficulty() + 1);
 		if (Operation == GameState.JETTISONCARGO) {
 		}
 	}
@@ -2152,7 +2174,7 @@ SeekBar.OnSeekBarChangeListener() {
 			tv.setText(mGameState.Reputation.name[i]);
 
 			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
-			tv.setText(mGameState.levelDesc[GameState.Difficulty]);
+			tv.setText(mGameState.levelDesc[GameState.getDifficulty()]);
 
 			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDays);
 			tv.setText(String.format("%d", mGameState.Days));
@@ -2866,6 +2888,7 @@ SeekBar.OnSeekBarChangeListener() {
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 						final int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						if (system >= 0){
+							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
 							if (!mGameState.AlwaysInfo &&
 							    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
@@ -3082,6 +3105,99 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public static class EncounterFragment extends Fragment {
+		public EncounterFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_encounter, container, false);
+			CrewMember COMMANDER = mGameState.Mercenary[0];
+			Ship Ship = mGameState.Ship;
+			Ship Opponent = mGameState.Opponent;
+			TextView tv;
+			Button btn;
+			int d, i;
+			int objindex;
+			RenderShip renderShip;
+
+			renderShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerShip);
+			renderShip.setShip(Ship);
+			renderShip.setRotate(false);
+			renderShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerOpponent);
+			renderShip.setShip(Opponent);
+			renderShip.setRotate(true);
+
+			/*playerShipNeedsUpdate=true;
+			opponentShipNeedsUpdate=true;
+
+			EncounterDisplayShips();
+			EncounterDisplayNextAction( true );
+
+			if (EncounterType == POSTMARIEPOLICEENCOUNTER)
+			{
+				DrawChars( "You encounter the Customs Police.", 6, 75 );
+			}
+			else
+			{
+				StrCopy( SBuf, "At " );
+				SBufMultiples( Clicks, "click" );
+				StrCat( SBuf, " from " );
+				StrCat( SBuf, SolarSystemName[SolarSystem[WarpSystem].NameIndex] );
+				StrCat( SBuf, ", you" );
+				DrawChars( SBuf, 6, 75 );
+
+				StrCopy( SBuf, "encounter " );
+				if (ENCOUNTERPOLICE( EncounterType ))
+					StrCat( SBuf, "a police " );
+				else if (ENCOUNTERPIRATE( EncounterType ))
+				{
+					if (Opponent.Type == MANTISTYPE)
+						StrCat( SBuf, "an alien " );
+					else
+						StrCat( SBuf, "a pirate " );
+				}
+				else if (ENCOUNTERTRADER( EncounterType ))
+					StrCat( SBuf, "a trader " );
+				else if (ENCOUNTERMONSTER( EncounterType ))
+					StrCat( SBuf, " " );
+				else if (EncounterType == MARIECELESTEENCOUNTER)
+					StrCat(SBuf,"a drifting ship");
+				else if (EncounterType == CAPTAINAHABENCOUNTER)
+					StrCat(SBuf, "the famous Captain Ahab");
+				else if (EncounterType == CAPTAINCONRADENCOUNTER)
+					StrCat(SBuf, "Captain Conrad");
+				else if (EncounterType == CAPTAINHUIEENCOUNTER)
+					StrCat(SBuf, "Captain Huie");
+				else if (EncounterType == BOTTLEOLDENCOUNTER || EncounterType == BOTTLEGOODENCOUNTER)
+					StrCat(SBuf, "a floating bottle.");
+				else
+					StrCat( SBuf, "a stolen " );
+				if (EncounterType != MARIECELESTEENCOUNTER && EncounterType != CAPTAINAHABENCOUNTER &&
+					    EncounterType != CAPTAINCONRADENCOUNTER && EncounterType != CAPTAINHUIEENCOUNTER &&
+					    EncounterType != BOTTLEOLDENCOUNTER && EncounterType != BOTTLEGOODENCOUNTER)
+				{
+					StrCopy( SBuf2, Shiptype[Opponent.Type].Name );
+					SBuf2[0] = TOLOWER( SBuf2[0] );
+					StrCat( SBuf, SBuf2 );
+				}
+				StrCat( SBuf, "." );
+
+				DrawChars( SBuf, 6, 88 );
+			}
+
+			d = sqrt( Ship.Tribbles/250 );
+			for (i=0; i<d; ++i)
+			{
+				objindex = FrmGetObjectIndex( frmP, EncounterTribble0Button +
+					                                    GetRandom( TRIBBLESONSCREEN ) );
+				cp = (ControlPtr)FrmGetObjectPtr( frmP, objindex );
+				CtlShowControl( cp );
+			}
+
+*/
+				return rootView;
+		}
+	}
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////
@@ -3216,5 +3332,777 @@ SeekBar.OnSeekBarChangeListener() {
 		}
 
 		return -1;
+	}
+
+	public void DoWarp(boolean viaSingularity) {
+		int i, Distance;
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+
+		// if Wild is aboard, make sure ship is armed!
+		if (mGameState.WildStatus == 1) {
+			if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)){
+				ConfirmDialog("Wild Won't Stay Aboard",
+				              "Jonathan Wild isn't willing to go with you if you are not armed with at least a Beam Laser.",
+				              "",
+				              "Stay here", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						return;
+					}
+				}, "Goodbye Wild", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							mGameState.WildStatus = 0;
+							WelcomeScreen.this.alertDialog("Say Goodbye to Wild",
+							                               "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
+							                               ""
+							);
+							return;
+						}
+					}
+				);
+				return;
+			}
+		}
+
+		// Check for Large Debt
+		if (mGameState.Debt > GameState.DEBTTOOLARGE) {
+			alertDialog("Large Debt",
+			            "Your debt is too large.  You are not allowed to leave this system until your debt is lowered.",
+			            ""
+			);
+			return;
+		}
+
+		// Check for enough money to pay Mercenaries
+		if (mGameState.MercenaryMoney() > mGameState.Credits) {
+			alertDialog("Pay Mercenaries",
+			            "You don't have enough cash to pay your mercenaries to come with you on this trip. Fire them or make sure you have enough cash.",
+			            "You must pay your mercenaries daily, that is, before you warp to another system. If you don't have the cash, you must either sell something so you have enough cash, or fire the mercenaries you can't pay. Until then, warping is out of the question."
+			);
+			return;
+		}
+
+		// Check for enough money to pay Insurance
+		if (mGameState.Insurance) {
+			if (mGameState.InsuranceMoney() + mGameState.MercenaryMoney() > mGameState.Credits) {
+				alertDialog("Not Enough Money", "You don't have enough cash to pay for your insurance.",
+				            "You can't leave if you haven't paid your insurance. If you have no way to pay, you should stop your insurance at the bank."
+				);
+				return;
+			}
+		}
+
+		// Check for enough money to pay Wormhole Tax
+		if (mGameState.InsuranceMoney() + mGameState.MercenaryMoney() + mGameState.WormholeTax(COMMANDER.curSystem,
+		                                                                                       WarpSystem
+		) > mGameState.Credits) {
+			alertDialog("Wormhole Tax", "You don't have enough money to pay for the wormhole tax.",
+			            "Wormhole tax must be paid when you want to warp through a wormhole. It depends on the type of your ship."
+			);
+			return;
+		}
+
+		if (!viaSingularity) {
+			mGameState.Credits -= mGameState.WormholeTax(COMMANDER.curSystem, WarpSystem);
+			mGameState.Credits -= mGameState.MercenaryMoney();
+			mGameState.Credits -= mGameState.InsuranceMoney();
+		}
+
+		for (i=0; i<GameState.MAXSHIELD; ++i) {
+			if (mGameState.Ship.shield[i] < 0)
+				break;
+			mGameState.Ship.shieldStrength[i] = mGameState.Shields.mShields[mGameState.Ship.shield[i]].power;
+		}
+
+		CURSYSTEM.countDown = GameState.CountDown;
+		if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem) || viaSingularity) {
+			Distance = 0;
+			mGameState.ArrivedViaWormhole = true;
+		} else {
+			Distance = mGameState.RealDistance(CURSYSTEM, WarpSystem);
+			mGameState.Ship.fuel -= Math.min(Distance, mGameState.GetFuel());
+			mGameState.ArrivedViaWormhole = false;
+		}
+
+		resetNewsEvents();
+		if (!viaSingularity) {
+			// normal warp.
+			mGameState.PayInterest();
+			IncDays(1);
+			if (mGameState.Insurance)
+				++mGameState.NoClaim;
+		} else {
+			// add the singularity news story
+			addNewsEvent(GameState.ARRIVALVIASINGULARITY);
+		}
+		mGameState.Clicks = 21;
+		mGameState.Raided = false;
+		mGameState.Inspected = false;
+		mGameState.LitterWarning = false;
+		mGameState.MonsterHull = (mGameState.MonsterHull * 105) / 100;
+		if (mGameState.MonsterHull > mGameState.ShipTypes.ShipTypes[mGameState.SpaceMonster.type].hullStrength)
+			mGameState.MonsterHull = mGameState.ShipTypes.ShipTypes[mGameState.SpaceMonster.type].hullStrength;
+		if (mGameState.Days%3 == 0) {
+			if (mGameState.PoliceRecordScore > GameState.CLEANSCORE)
+				--mGameState.PoliceRecordScore;
+		}
+		if (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE){
+			if (mGameState.Difficulty <= GameState.NORMAL)
+				++mGameState.PoliceRecordScore;
+			else if (mGameState.Days%GameState.getDifficulty() == 0)
+				++mGameState.PoliceRecordScore;
+		}
+
+		mGameState.PossibleToGoThroughRip=true;
+
+		mGameState.DeterminePrices(mGameState.WarpSystem);
+		Travel();
+	}
+	void IncDays(int Amount) {
+		mGameState.Days += Amount;
+		if (mGameState.InvasionStatus > 0 && mGameState.InvasionStatus < 8) {
+			mGameState.InvasionStatus += Amount;
+			if (mGameState.InvasionStatus >= 8)
+			{
+				mGameState.SolarSystem[GameState.GEMULONSYSTEM].special = GameState.GEMULONINVADED;
+				mGameState.SolarSystem[GameState.GEMULONSYSTEM].techLevel = 0;
+				mGameState.SolarSystem[GameState.GEMULONSYSTEM].politics = GameState.ANARCHY;
+			}
+		}
+
+		if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+			mGameState.ReactorStatus += Amount;
+			if (mGameState.ReactorStatus > 20)
+				mGameState.ReactorStatus = 20;
+		}
+
+		if (mGameState.ExperimentStatus > 0 && mGameState.ExperimentStatus < 12) {
+			mGameState.ExperimentStatus += Amount;
+			if (mGameState.ExperimentStatus > 11) {
+				mGameState.FabricRipProbability = GameState.FABRICRIPINITIALPROBABILITY;
+				mGameState.SolarSystem[GameState.DALEDSYSTEM].special = GameState.EXPERIMENTNOTSTOPPED;
+				// in case Amount > 1
+				mGameState.ExperimentStatus = 12;
+				alertDialog("Experiment Performed",
+				            "The galaxy is abuzz with news of a terrible malfunction in Dr. Fehler's laboratory. Evidently, he was not warned in time and he performed his experiment... with disastrous results!",
+				            ""
+				);
+				addNewsEvent(GameState.EXPERIMENTPERFORMED);
+			}
+		} else if (mGameState.ExperimentStatus == 12 && mGameState.FabricRipProbability > 0) {
+			mGameState.FabricRipProbability -= Amount;
+		}
+	}
+	void Travel() {
+		int EncounterTest, StartClicks, i, j, Repairs, FirstEmptySlot, rareEncounter;
+		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard, EasterEgg;
+		boolean HaveMilitaryLaser, HaveReflectiveShield;
+		long previousTribbles;
+		Ship Ship = mGameState.Ship;
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+
+		Pirate = false;
+		Trader = false;
+		Police = false;
+		Mantis = false;
+		HaveMilitaryLaser = mGameState.HasWeapon(Ship, GameState.MILITARYLASERWEAPON, true);
+		HaveReflectiveShield = mGameState.HasShield(Ship, GameState.REFLECTIVESHIELD) > 0;
+
+		// if timespace is ripped, we may switch the warp system here.
+		if (mGameState.PossibleToGoThroughRip && mGameState.ExperimentStatus == 12 && mGameState.FabricRipProbability > 0 &&
+			    (mGameState.GetRandom(100) < mGameState.FabricRipProbability || mGameState.FabricRipProbability == 25)) {
+			alertDialog("Timespace Fabric Rip",
+			            "You have flown through a tear in the timespace continuum caused by Dr. Fehler's failed experiment. You may not have reached your planned destination!",
+			            ""
+			);
+			WarpSystem = mGameState.SolarSystem[mGameState.GetRandom(GameState.MAXSOLARSYSTEM)];
+		}
+
+		mGameState.PossibleToGoThroughRip=false;
+
+		StartClicks = mGameState.Clicks;
+		--mGameState.Clicks;
+
+		while (mGameState.Clicks > 0) {
+			// Engineer may do some repairs
+			Repairs = mGameState.GetRandom(mGameState.EngineerSkill(Ship)) >> 1;
+			Ship.hull += Repairs;
+			if (Ship.hull > mGameState.GetHullStrength()) {
+				Repairs = Ship.hull - mGameState.GetHullStrength();
+				Ship.hull = mGameState.GetHullStrength();
+			} else
+				Repairs = 0;
+
+			// Shields are easier to repair
+			Repairs = 2 * Repairs;
+			for (i=0; i<GameState.MAXSHIELD; ++i) {
+				if (Ship.shield[i] < 0)
+					break;
+				Ship.shieldStrength[i] += Repairs;
+				if (Ship.shieldStrength[i] > mGameState.Shields.mShields[Ship.shield[i]].power) {
+					Repairs = Ship.shieldStrength[i] - mGameState.Shields.mShields[Ship.shield[i]].power;
+					Ship.shieldStrength[i] = mGameState.Shields.mShields[Ship.shield[i]].power;
+				} else
+					Repairs = 0;
+			}
+
+			// Encounter with space monster
+			if ((mGameState.Clicks == 1) && (mGameState.WarpSystem == GameState.ACAMARSYSTEM) && (mGameState.MonsterStatus == 1)) {
+				mGameState.Opponent = mGameState.SpaceMonster;
+				mGameState.Opponent.hull = mGameState.MonsterHull;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].pilot = 8 + mGameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].fighter = 8 + mGameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].trader = 1;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].engineer = 1 + mGameState.getDifficulty();
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.SPACEMONSTERIGNORE;
+				else
+					mGameState.EncounterType = GameState.SPACEMONSTERATTACK;
+				btnEncounter(null);
+				return;
+			}
+
+			// Encounter with the stolen Scarab
+			if (mGameState.Clicks == 20 && WarpSystem.special == GameState.SCARABDESTROYED &&
+				    mGameState.ScarabStatus == 1 && mGameState.ArrivedViaWormhole) {
+				mGameState.Opponent = mGameState.Scarab;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].pilot = 5 + GameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].trader = 1;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.SCARABIGNORE;
+				else
+					mGameState.EncounterType = GameState.SCARABATTACK;
+				btnEncounter(null);
+				return;
+			}
+			// Encounter with stolen Dragonfly
+			if ((mGameState.Clicks == 1) && (WarpSystem == mGameState.SolarSystem[GameState.ZALKONSYSTEM]) && (mGameState.DragonflyStatus == 4)) {
+				mGameState.Opponent = mGameState.Dragonfly;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].pilot = 4 + GameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].trader = 1;
+				mGameState.Mercenary[mGameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.DRAGONFLYIGNORE;
+				else
+					mGameState.EncounterType = GameState.DRAGONFLYATTACK;
+				btnEncounter(null);
+				return;
+			}
+
+			if (WarpSystem == mGameState.SolarSystem[GameState.GEMULONSYSTEM] && mGameState.InvasionStatus > 7) {
+				if (mGameState.GetRandom(10) > 4)
+					Mantis = true;
+			} else {
+				// Check if it is time for an encounter
+				EncounterTest = mGameState.GetRandom(44 - (2 * GameState.getDifficulty()));
+
+				// encounters are half as likely if you're in a flea.
+				if (Ship.type == 0)
+					EncounterTest *= 2;
+
+				if (EncounterTest < mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates &&
+					    !mGameState.Raided) // When you are already raided, other pirates have little to gain
+					Pirate = true;
+				else if (EncounterTest <
+					         mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
+						         mGameState.STRENGTHPOLICE(WarpSystem))
+					// StrengthPolice adapts itself to your criminal record: you'll
+					// encounter more police if you are a hardened criminal.
+					Police = true;
+				else if (EncounterTest <
+					         mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
+						         mGameState.STRENGTHPOLICE(WarpSystem) +
+						         mGameState.Politics.mPolitics[WarpSystem.politics].strengthTraders)
+					Trader = true;
+				else if (mGameState.WildStatus == 1 && WarpSystem == mGameState.SolarSystem[GameState.KRAVATSYSTEM]) {
+					// if you're coming in to Kravat & you have Wild onboard, there'll be swarms o' cops.
+					rareEncounter = mGameState.GetRandom(100);
+					if (GameState.getDifficulty() <= GameState.EASY && rareEncounter < 25) {
+						Police = true;
+					}
+					else if (GameState.getDifficulty() == GameState.NORMAL && rareEncounter < 33) {
+						Police = true;
+					}
+					else if (GameState.getDifficulty() > GameState.NORMAL && rareEncounter < 50) {
+						Police = true;
+					}
+				}
+				if (!(Trader || Police || Pirate))
+					if (mGameState.ArtifactOnBoard && mGameState.GetRandom(20) <= 3)
+						Mantis = true;
+			}
+
+			// Encounter with police
+			if (Police) {
+				mGameState.GenerateOpponent(GameState.POLICE);
+				mGameState.EncounterType = GameState.POLICEIGNORE;
+				// If you are cloaked, they don't see you
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.POLICEIGNORE;
+				else if (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
+					// If you're a criminal, the police will tend to attack
+					if (mGameState.TotalWeapons(mGameState.Opponent, -1, -1) <= 0) {
+						if (mGameState.Cloaked(mGameState.Opponent, Ship))
+							mGameState.EncounterType = GameState.POLICEIGNORE;
+						else
+							mGameState.EncounterType = GameState.POLICEFLEE;
+					}
+					if (mGameState.ReputationScore < GameState.AVERAGESCORE)
+						mGameState.EncounterType = GameState.POLICEATTACK;
+					else if (mGameState.GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore / (1 + mGameState.Opponent.type)))
+						mGameState.EncounterType = GameState.POLICEATTACK;
+					else if (mGameState.Cloaked(mGameState.Opponent, Ship))
+						mGameState.EncounterType = GameState.POLICEIGNORE;
+					else
+						mGameState.EncounterType = GameState.POLICEFLEE;
+				}
+				else if (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE &&
+					         mGameState.PoliceRecordScore < GameState.CLEANSCORE && !mGameState.Inspected) {
+					// If you're reputation is dubious, the police will inspect you
+					mGameState.EncounterType = GameState.POLICEINSPECTION;
+					mGameState.Inspected = true;
+				} else if (mGameState.PoliceRecordScore < GameState.LAWFULSCORE) {
+					// If your record is clean, the police will inspect you with a chance of 10% on Normal
+					if (mGameState.GetRandom(12 - GameState.getDifficulty()) < 1 && !mGameState.Inspected) {
+						mGameState.EncounterType = GameState.POLICEINSPECTION;
+						mGameState.Inspected = true;
+					}
+				} else {
+					// If your record indicates you are a lawful trader, the chance on inspection drops to 2.5%
+					if (mGameState.GetRandom(40) == 1 && !mGameState.Inspected) {
+						mGameState.EncounterType = GameState.POLICEINSPECTION;
+						mGameState.Inspected = true;
+					}
+				}
+
+				// if you're suddenly stuck in a lousy ship, Police won't flee even if you
+				// have a fearsome reputation.
+				if (mGameState.EncounterType == GameState.POLICEFLEE && mGameState.Opponent.type > Ship.type) {
+					if (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
+						mGameState.EncounterType = GameState.POLICEATTACK;
+					} else {
+						mGameState.EncounterType = GameState.POLICEINSPECTION;
+					}
+				}
+
+				// If they ignore you and you can't see them, the encounter doesn't take place
+				if (mGameState.EncounterType == GameState.POLICEIGNORE && mGameState.Cloaked(mGameState.Opponent, Ship)) {
+					--mGameState.Clicks;
+					continue;
+				}
+
+
+				// If you automatically don't want to confront someone who ignores you, the
+				// encounter may not take place
+				if (mGameState.AlwaysIgnorePolice && (mGameState.EncounterType == GameState.POLICEIGNORE ||
+				                                      mGameState.EncounterType == GameState.POLICEFLEE)) {
+					--mGameState.Clicks;
+					continue;
+				}
+				btnEncounter(null);
+				return;
+			}
+			// Encounter with pirate
+			else if (Pirate || Mantis) {
+				if (Mantis)
+					mGameState.GenerateOpponent(GameState.MANTIS);
+				else
+					mGameState.GenerateOpponent(GameState.PIRATE);
+
+				// If you have a cloak, they don't see you
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.PIRATEIGNORE;
+
+				// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
+				else if (mGameState.Opponent.type >= 7 ||
+					         mGameState.GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore * 4) / (1 + mGameState.Opponent.type))
+					mGameState.EncounterType = GameState.PIRATEATTACK;
+				else
+					mGameState.EncounterType = GameState.PIRATEFLEE;
+
+				if (Mantis)
+					mGameState.EncounterType = GameState.PIRATEATTACK;
+
+				// if Pirates are in a better ship, they won't flee, even if you have a very scary
+				// reputation.
+				if (mGameState.EncounterType == GameState.PIRATEFLEE && mGameState.Opponent.type > Ship.type)				{
+					mGameState.EncounterType = GameState.PIRATEATTACK;
+				}
+
+				// If they ignore you or flee and you can't see them, the encounter doesn't take place
+				if ((mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.PIRATEFLEE) &&
+				    mGameState.Cloaked(mGameState.Opponent, Ship)) {
+					--mGameState.Clicks;
+					continue;
+				}
+				if (mGameState.AlwaysIgnorePirates && (mGameState.EncounterType == GameState.PIRATEIGNORE ||
+					                                       mGameState.EncounterType == GameState.PIRATEFLEE)){
+					--mGameState.Clicks;
+					continue;
+				}
+				btnEncounter(null);
+				return;
+			}
+			// Encounter with trader
+			else if (Trader) {
+				mGameState.GenerateOpponent(GameState.TRADER);
+				mGameState.EncounterType = GameState.TRADERIGNORE;
+				// If you are cloaked, they don't see you
+				if (mGameState.Cloaked(Ship, mGameState.Opponent))
+					mGameState.EncounterType = GameState.TRADERIGNORE;
+				// If you're a criminal, traders tend to flee if you've got at least some reputation
+				else if (mGameState.PoliceRecordScore <= GameState.CRIMINALSCORE) {
+					if (mGameState.GetRandom(GameState.ELITESCORE) <= (mGameState.ReputationScore * 10) / (1 + mGameState.Opponent.type)) {
+						if (mGameState.Cloaked(mGameState.Opponent, Ship))
+							mGameState.EncounterType = GameState.TRADERIGNORE;
+						else
+							mGameState.EncounterType = GameState.TRADERFLEE;
+					}
+				}
+
+				// Will there be trade in orbit?
+				if (mGameState.EncounterType == GameState.TRADERIGNORE && (mGameState.GetRandom(1000) < mGameState.ChanceOfTradeInOrbit)) {
+					if (mGameState.FilledCargoBays() < mGameState.TotalCargoBays() &&
+						    mGameState.HasTradeableItems(mGameState.Opponent, WarpSystem, GameState.TRADERSELL))
+						mGameState.EncounterType = GameState.TRADERSELL;
+
+					// we fudge on whether the trader has capacity to carry the stuff he's buying.
+					if (mGameState.HasTradeableItems(Ship, WarpSystem, GameState.TRADERBUY) && mGameState.EncounterType != GameState.TRADERSELL)
+						mGameState.EncounterType = GameState.TRADERBUY;
+				}
+
+				// If they ignore you and you can't see them, the encounter doesn't take place
+				if ((mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.TRADERFLEE ||
+					     mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) &&
+					    mGameState.Cloaked(mGameState.Opponent, Ship)) {
+					--mGameState.Clicks;
+					continue;
+				}
+				// pay attention to user's prefs with regard to ignoring traders
+				if (mGameState.AlwaysIgnoreTraders && (mGameState.EncounterType == GameState.TRADERIGNORE ||
+					                                       mGameState.EncounterType == GameState.TRADERFLEE)) {
+					--mGameState.Clicks;
+					continue;
+				}
+				// pay attention to user's prefs with regard to ignoring trade in orbit
+				if (mGameState.AlwaysIgnoreTradeInOrbit && (mGameState.EncounterType == GameState.TRADERBUY ||
+					                                            mGameState.EncounterType == GameState.TRADERSELL)) {
+					--mGameState.Clicks;
+					continue;
+				}
+				btnEncounter(null);
+				return;
+			}
+			// Very Rare Random Events:
+			// 1. Encounter the abandoned Marie Celeste, which you may loot.
+			// 2. Captain Ahab will trade your Reflective Shield for skill points in Piloting.
+			// 3. Captain Conrad will trade your Military Laser for skill points in Engineering.
+			// 4. Captain Huie will trade your Military Laser for points in Trading.
+			// 5. Encounter an out-of-date bottle of Captain Marmoset's Skill Tonic. This
+			//    will affect skills depending on game difficulty level.
+			// 6. Encounter a good bottle of Captain Marmoset's Skill Tonic, which will invoke
+			//    IncreaseRandomSkill one or two times, depending on game difficulty.
+			else if ((mGameState.Days > 10) && (mGameState.GetRandom(1000) < mGameState.ChanceOfVeryRareEncounter)){
+				rareEncounter = mGameState.GetRandom(GameState.MAXVERYRAREENCOUNTER);
+
+				switch (rareEncounter) {
+					case GameState.MARIECELESTE:
+						if ((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) != GameState.ALREADYMARIE){
+							mGameState.VeryRareEncounter |= GameState.ALREADYMARIE;
+							mGameState.EncounterType = GameState.MARIECELESTEENCOUNTER;
+							mGameState.GenerateOpponent(GameState.TRADER);
+							for (i=0;i<GameState.MAXTRADEITEM;i++) {
+								mGameState.Opponent.cargo[i]=0;
+							}
+							mGameState.Opponent.cargo[GameState.NARCOTICS] = Math.min(mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays,5);
+							btnEncounter(null);
+							return;
+						}
+						break;
+
+					case GameState.CAPTAINAHAB:
+						if (HaveReflectiveShield && COMMANDER.pilot < 10 &&
+							    mGameState.PoliceRecordScore > GameState.CRIMINALSCORE &&
+							    (mGameState.VeryRareEncounter & GameState.ALREADYAHAB) != GameState.ALREADYAHAB) {
+							mGameState.VeryRareEncounter |= GameState.ALREADYAHAB;
+							mGameState.EncounterType = GameState.CAPTAINAHABENCOUNTER;
+							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
+							btnEncounter(null);
+							return;
+						}
+						break;
+
+					case GameState.CAPTAINCONRAD:
+						if (HaveMilitaryLaser && COMMANDER.engineer < 10 &&
+							    mGameState.PoliceRecordScore > GameState.CRIMINALSCORE &&
+							    (mGameState.VeryRareEncounter & GameState.ALREADYCONRAD) != GameState.ALREADYCONRAD) {
+							mGameState.VeryRareEncounter &= GameState.ALREADYCONRAD;
+							mGameState.EncounterType = GameState.CAPTAINCONRADENCOUNTER;
+							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
+							btnEncounter(null);
+							return;
+						}
+						break;
+
+					case GameState.CAPTAINHUIE:
+						if (HaveMilitaryLaser && COMMANDER.trader < 10 &&
+							    mGameState.PoliceRecordScore > GameState.CRIMINALSCORE &&
+							    (mGameState.VeryRareEncounter & GameState.ALREADYHUIE) != GameState.ALREADYHUIE) {
+							mGameState.VeryRareEncounter |= GameState.ALREADYHUIE;
+							mGameState.EncounterType = GameState.CAPTAINHUIEENCOUNTER;
+							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
+							btnEncounter(null);
+							return;
+						}
+						break;
+					case GameState.BOTTLEOLD:
+						if  ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) != GameState.ALREADYBOTTLEOLD) {
+							mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEOLD;
+							mGameState.EncounterType = GameState.BOTTLEOLDENCOUNTER;
+							mGameState.GenerateOpponent(GameState.TRADER);
+							mGameState.Opponent.type = GameState.BOTTLETYPE;
+							mGameState.Opponent.hull = 10;
+							btnEncounter(null);
+							return;
+						}
+						break;
+					case GameState.BOTTLEGOOD:
+						if  ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) != GameState.ALREADYBOTTLEGOOD) {
+							mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEGOOD;
+							mGameState.EncounterType = GameState.BOTTLEGOODENCOUNTER;
+							mGameState.GenerateOpponent(GameState.TRADER);
+							mGameState.Opponent.type = GameState.BOTTLETYPE;
+							mGameState.Opponent.hull = 10;
+							btnEncounter(null);
+							return;
+						}
+						break;
+				}
+			}
+			--mGameState.Clicks;
+		}
+
+		// ah, just when you thought you were gonna get away with it...
+		if (mGameState.JustLootedMarie) {
+			mGameState.GenerateOpponent(GameState.POLICE);
+			mGameState.EncounterType = GameState.POSTMARIEPOLICEENCOUNTER;
+			mGameState.JustLootedMarie = false;
+			mGameState.Clicks++;
+			btnEncounter(null);
+			return;
+		}
+
+		// Arrival in the target system
+		if (StartClicks > 20){
+			alertDialog("Uneventful trip", "After an uneventful trip, you arrive at your destination.",
+			            "Be glad you didn't encounter any pirates."
+			);
+		} else {
+			alertDialog("Arrival", "You arrive at your destination.", "Another trip you have survived."
+			);
+		}
+
+		// Check for Large Debt - 06/30/01 SRA
+		if (mGameState.Debt >= 75000)
+			alertDialog("Warning: Large Debt",
+			            "Your debt is getting too large. Reduce it quickly or your ship will be put on a chain!",
+			            ""
+			);
+		// Debt Reminder
+		if (mGameState.Debt > 0 && mGameState.RemindLoans && mGameState.Days % 5 == 0) {
+			alertDialog("Loan Notification", String
+				                                 .format("The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
+				                                         mGameState.Debt
+				                                 ),
+			            "The Bank Officer will contact you every five days to remind you of your debt. You can turn off these warnings on the second page of Game Options."
+			);
+		}
+
+		//TODO: Arrival();
+
+		// Reactor warnings:
+		// now they know the quest has a time constraint!
+		if (mGameState.ReactorStatus == 2)
+			alertDialog("Reactor Warning",
+			            "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
+			            ""
+			);
+			// better deliver it soon!
+		else if (mGameState.ReactorStatus == 16)
+			alertDialog("Reactor Warning",
+			            "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
+			            ""
+			);
+			// last warning!
+		else if (mGameState.ReactorStatus == 18)
+			alertDialog("Reactor Warning",
+			            "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
+			            ""
+			);
+		if (mGameState.ReactorStatus == 20) {
+			alertDialog("Reactor Meltdown!",
+			            "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
+			            ""
+			);
+			mGameState.ReactorStatus = 0;
+			if (mGameState.EscapePod) {
+				// TODO: EscapeWithPod();
+				return;
+			} else {
+				// TODO
+				alertDialog("You lose",
+				            "Your ship has been destroyed.",
+				            ""
+				);
+				// TODO: btnShipDestroyed(null);
+				return;
+			}
+		}
+
+		if (mGameState.TrackAutoOff && mGameState.TrackedSystem == COMMANDER.curSystem) {
+			mGameState.TrackedSystem = -1;
+		}
+
+		FoodOnBoard = false;
+		previousTribbles = Ship.tribbles;
+
+		if (Ship.tribbles > 0 && mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+			Ship.tribbles /= 2;
+			if (Ship.tribbles < 10) {
+				Ship.tribbles = 0;
+				alertDialog("All the Tribbles Died",
+				            "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
+				            ""
+				);
+			} else {
+				alertDialog("Half the Tribbles Died",
+				            "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
+				            "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell."
+				);
+			}
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.NARCOTICS] > 0) {
+			Ship.tribbles = 1 + mGameState.GetRandom(3);
+			j = 1 + mGameState.GetRandom(3);
+			i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
+			mGameState.BuyingPrice[GameState.NARCOTICS] = (mGameState.BuyingPrice[mGameState.NARCOTICS] *
+				                          (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
+			Ship.cargo[GameState.NARCOTICS] -= i;
+			Ship.cargo[GameState.FURS] += i;
+			alertDialog("Tribbles ate Narcotics",
+			            "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
+			            ""
+			);
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
+			Ship.tribbles += 100 + mGameState.GetRandom(Ship.cargo[GameState.FOOD] * 100 );
+			i = mGameState.GetRandom(Ship.cargo[GameState.FOOD]);
+			mGameState.BuyingPrice[GameState.FOOD] = (mGameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[mGameState.FOOD];
+			Ship.cargo[GameState.FOOD] = i;
+			alertDialog("Tribbles Ate Food",
+			            "You find that, instead of food, some of your cargo bays contain only tribbles!",
+			            "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them."
+			);
+			FoodOnBoard = true;
+		}
+
+		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES)
+			Ship.tribbles += 1 + mGameState.GetRandom(Math.max(1,
+			                                                   (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
+			)
+			);
+
+		if (Ship.tribbles > mGameState.MAXTRIBBLES)
+			Ship.tribbles = mGameState.MAXTRIBBLES;
+
+		String buf;
+		if ((previousTribbles < 100 && Ship.tribbles >= 100) ||
+			    (previousTribbles < 1000 && Ship.tribbles >= 1000) ||
+			    (previousTribbles < 10000 && Ship.tribbles >= 10000) ||
+			    (previousTribbles < 50000 && Ship.tribbles >= 50000)) {
+			if (Ship.tribbles >= mGameState.MAXTRIBBLES)
+				buf = "a dangerous number of";
+			else
+				buf = String.format("%d", Ship.tribbles);
+			alertDialog("Space Port Inspector",
+			            "Excuse me, but do you realize you have "+buf+" tribbles on board your ship?",
+			            "You might want to do something about those Tribbles..."
+			);
+		}
+
+		mGameState.TribbleMessage = false;
+
+		Ship.hull += mGameState.GetRandom(mGameState.EngineerSkill(Ship));
+		if (Ship.hull > mGameState.GetHullStrength())
+			Ship.hull = mGameState.GetHullStrength();
+
+		TryAutoRepair = true;
+		if (mGameState.AutoFuel) {
+			btnShipyardBuyFuel(9999);
+			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
+				if (mGameState.AutoRepair && Ship.hull < mGameState.GetHullStrength()) {
+					alertDialog("Not Enough Money",
+					            "You don't have enough money to get a full tank or full hull repairs.",
+					            "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money."
+					);
+					TryAutoRepair = false;
+				} else
+					alertDialog("No Full Tanks", "You do not have enough money to buy full tanks.",
+					            "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money."
+					);
+			}
+		}
+
+		if (mGameState.AutoRepair && TryAutoRepair) {
+			btnShipyardBuyRepairs(99999);
+			if (Ship.hull < mGameState.GetHullStrength())
+				alertDialog("No Full Repairs",
+				            "You don't have enough money to get your hull fully repaired.",
+				            "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system."
+				);
+		}
+
+  /* This Easter Egg gives the commander a Lighting Shield */
+		if (COMMANDER.curSystem == GameState.OGSYSTEM) {
+			i = 0;
+			EasterEgg = false;
+			while (i < GameState.MAXTRADEITEM) {
+				if (Ship.cargo[i] != 1)
+					break;
+				++i;
+			}
+			if (i >= GameState.MAXTRADEITEM)
+				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[Ship.type].shieldSlots, Ship.shield);
+			else
+				FirstEmptySlot = -1;
+
+			if (FirstEmptySlot >= 0) {
+				alertDialog("Easter",
+				            "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
+				            "Look up your ship's equipment."
+				);
+				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
+				Ship.shieldStrength[FirstEmptySlot] = mGameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+				EasterEgg = true;
+			}
+
+			if (EasterEgg) {
+				for (i=0; i<GameState.MAXTRADEITEM; ++i) {
+					Ship.cargo[i] = 0;
+					mGameState.BuyingPrice[i] = 0;
+				}
+			}
+		}
+
+		// It seems a glitch may cause cargo bays to become negative - no idea how...
+		for (i=0; i<GameState.MAXTRADEITEM; ++i)
+			if (Ship.cargo[i] < 0)
+				Ship.cargo[i] = 0;
+
+		btnSystemInformation(null);
 	}
 }

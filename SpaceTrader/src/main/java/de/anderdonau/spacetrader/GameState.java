@@ -29,524 +29,699 @@ import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 public class GameState implements Serializable {
 	// Special Enables      // Comment these out to disable code
-	public static final boolean _STRA_CHEAT_ = true; // Cheat Enable
-	public static final boolean _STRA_SHIPYARDCREDITS_ = true; // Display Trade Credits in Ship Yard
-	public static final boolean _INCLUDE_DEBUG_DIALOGS_ = true; // Include code for displaying Debug Alerts
+	public static final boolean      _STRA_CHEAT_                = true; // Cheat Enable
+	public static final boolean      _STRA_SHIPYARDCREDITS_      = true;
+	// Display Trade Credits in Ship Yard
+	public static final boolean      _INCLUDE_DEBUG_DIALOGS_     = true;
+	// Include code for displaying Debug Alerts
 	// Add Ships, Weapons, Shields, and Gadgets that don't show up normally
-	public static final int EXTRAWEAPONS = 1;   // Number of weapons over standard
-	public static final int EXTRAGADGETS = 1;   // Number of Gadgets over standard
-	public static final int EXTRASHIELDS = 1;   // Number of Shields over standard
-	public static final int EXTRASHIPS = 5;  // Number of Ships over standard
-	public static final int DEFSEEDX = 521288629;
-	public static final int DEFSEEDY = 362436069;
-	public static final int MAXTRADEITEM = 10;
-	public static final int MAXCREDITS = 99999999;
-	public static final int MAXPRICE = 99999;
-	public static final int MAXQUANTITY = 999;
+	public static final int          EXTRAWEAPONS                = 1;
+	// Number of weapons over standard
+	public static final int          EXTRAGADGETS                = 1;
+	// Number of Gadgets over standard
+	public static final int          EXTRASHIELDS                = 1;
+	// Number of Shields over standard
+	public static final int          EXTRASHIPS                  = 5;
+	// Number of Ships over standard
+	public static final int          DEFSEEDX                    = 521288629;
+	public static final int          DEFSEEDY                    = 362436069;
+	public static final int          MAXTRADEITEM                = 10;
+	public static final int          MAXCREDITS                  = 99999999;
+	public static final int          MAXPRICE                    = 99999;
+	public static final int          MAXQUANTITY                 = 999;
 	// Activity level of police, traders or pirates
-	public static final int MAXACTIVITY = 8;
+	public static final int          MAXACTIVITY                 = 8;
 	// System status: normally this is uneventful, but sometimes a system has a
 	// special event occurring. This influences some prices.
-	public static final int MAXSTATUS = 8;
-	public static final int UNEVENTFUL = 0;
-	public static final int WAR = 1;
-	public static final int PLAGUE = 2;
-	public static final int DROUGHT = 3;
-	public static final int BOREDOM = 4;
-	public static final int COLD = 5;
-	public static final int CROPFAILURE = 6;
-	public static final int LACKOFWORKERS = 7;
+	public static final int          MAXSTATUS                   = 8;
+	public static final int          UNEVENTFUL                  = 0;
+	public static final int          WAR                         = 1;
+	public static final int          PLAGUE                      = 2;
+	public static final int          DROUGHT                     = 3;
+	public static final int          BOREDOM                     = 4;
+	public static final int          COLD                        = 5;
+	public static final int          CROPFAILURE                 = 6;
+	public static final int          LACKOFWORKERS               = 7;
 	// Difficulty levels
-	public static final int MAXDIFFICULTY = 5;
-	public static final int BEGINNER = 0;
-	public static final int EASY = 1;
-	public static final int NORMAL = 2;
-	public static final int HARD = 3;
-	public static final int IMPOSSIBLE = 4;
+	public static final int          MAXDIFFICULTY               = 5;
+	public static final int          BEGINNER                    = 0;
+	public static final int          EASY                        = 1;
+	public static final int          NORMAL                      = 2;
+	public static final int          HARD                        = 3;
+	public static final int          IMPOSSIBLE                  = 4;
 	// Crewmembers. The commander is always the crewmember with index= 0;
 	// Zeethibal is always the last
-	public static final int MAXCREWMEMBER = 31;
-	public static final int MAXSKILL = 10;
+	public static final int          MAXCREWMEMBER               = 31;
+	public static final int          MAXSKILL                    = 10;
 	// Skills
-	public static final int PILOTSKILL = 0;
-	public static final int FIGHTERSKILL = 1;
-	public static final int TRADERSKILL = 2;
-	public static final int ENGINEERSKILL = 3;
-	public static final int MAXSKILLTYPE = 4;
-	public static final int SKILLBONUS = 3;
-	public static final int CLOAKBONUS = 2;
+	public static final int          PILOTSKILL                  = 0;
+	public static final int          FIGHTERSKILL                = 1;
+	public static final int          TRADERSKILL                 = 2;
+	public static final int          ENGINEERSKILL               = 3;
+	public static final int          MAXSKILLTYPE                = 4;
+	public static final int          SKILLBONUS                  = 3;
+	public static final int          CLOAKBONUS                  = 2;
 	// Tradeitems
-	public static final int WATER = 0;
-	public static final int FURS = 1;
-	public static final int FOOD = 2;
-	public static final int ORE = 3;
-	public static final int GAMES = 4;
-	public static final int FIREARMS = 5;
-	public static final int MEDICINE = 6;
-	public static final int MACHINERY = 7;
-	public static final int NARCOTICS = 8;
-	public static final int ROBOTS = 9;
+	public static final int          WATER                       = 0;
+	public static final int          FURS                        = 1;
+	public static final int          FOOD                        = 2;
+	public static final int          ORE                         = 3;
+	public static final int          GAMES                       = 4;
+	public static final int          FIREARMS                    = 5;
+	public static final int          MEDICINE                    = 6;
+	public static final int          MACHINERY                   = 7;
+	public static final int          NARCOTICS                   = 8;
+	public static final int          ROBOTS                      = 9;
 	// Ship types
-	public static final int MAXSHIPTYPE = 10;
-	public static final int MAXRANGE = 20;
-	public static final int MANTISTYPE = MAXSHIPTYPE + 2;
-	public static final int SCARABTYPE = MAXSHIPTYPE + 3;
-	public static final int BOTTLETYPE = MAXSHIPTYPE + 4;
+	public static final int          MAXSHIPTYPE                 = 10;
+	public static final int          MAXRANGE                    = 20;
+	public static final int          MANTISTYPE                  = MAXSHIPTYPE + 2;
+	public static final int          SCARABTYPE                  = MAXSHIPTYPE + 3;
+	public static final int          BOTTLETYPE                  = MAXSHIPTYPE + 4;
 	// Weapons
-	public static final int MAXWEAPONTYPE = 3;
-	public static final int PULSELASERWEAPON = 0;
-	public static final int PULSELASERPOWER = 15;
-	public static final int BEAMLASERWEAPON = 1;
-	public static final int BEAMLASERPOWER = 25;
-	public static final int MILITARYLASERWEAPON = 2;
-	public static final int MILITARYLASERPOWER = 35;
-	public static final int MORGANLASERWEAPON = 3;
-	public static final int MORGANLASERPOWER = 85; // fixme!
+	public static final int          MAXWEAPONTYPE               = 3;
+	public static final int          PULSELASERWEAPON            = 0;
+	public static final int          PULSELASERPOWER             = 15;
+	public static final int          BEAMLASERWEAPON             = 1;
+	public static final int          BEAMLASERPOWER              = 25;
+	public static final int          MILITARYLASERWEAPON         = 2;
+	public static final int          MILITARYLASERPOWER          = 35;
+	public static final int          MORGANLASERWEAPON           = 3;
+	public static final int          MORGANLASERPOWER            = 85; // fixme!
 	// Shields
-	public static final int MAXSHIELDTYPE = 2;
-	public static final int ENERGYSHIELD = 0;
-	public static final int ESHIELDPOWER = 100;
-	public static final int REFLECTIVESHIELD = 1;
-	public static final int RSHIELDPOWER = 200;
-	public static final int LIGHTNINGSHIELD = 2;
-	public static final int LSHIELDPOWER = 350;
+	public static final int          MAXSHIELDTYPE               = 2;
+	public static final int          ENERGYSHIELD                = 0;
+	public static final int          ESHIELDPOWER                = 100;
+	public static final int          REFLECTIVESHIELD            = 1;
+	public static final int          RSHIELDPOWER                = 200;
+	public static final int          LIGHTNINGSHIELD             = 2;
+	public static final int          LSHIELDPOWER                = 350;
 	// Hull Upgrade
-	public static final int UPGRADEDHULL = 50;
+	public static final int          UPGRADEDHULL                = 50;
 	// Gadgets
-	public static final int MAXGADGETTYPE = 5;
-	public static final int EXTRABAYS = 0;
-	public static final int AUTOREPAIRSYSTEM = 1;
-	public static final int NAVIGATINGSYSTEM = 2;
-	public static final int TARGETINGSYSTEM = 3;
-	public static final int CLOAKINGDEVICE = 4;
-	public static final int FUELCOMPACTOR = 5; // MAXGADGETTYPE += 1;
+	public static final int          MAXGADGETTYPE               = 5;
+	public static final int          EXTRABAYS                   = 0;
+	public static final int          AUTOREPAIRSYSTEM            = 1;
+	public static final int          NAVIGATINGSYSTEM            = 2;
+	public static final int          TARGETINGSYSTEM             = 3;
+	public static final int          CLOAKINGDEVICE              = 4;
+	public static final int          FUELCOMPACTOR               = 5; // MAXGADGETTYPE += 1;
 	// Police Action
-	public static final int POLICE = 0;
-	public static final int POLICEINSPECTION = 0;// Police asks to submit for inspection
-	public static final int POLICEIGNORE = 1;// Police just ignores you
-	public static final int POLICEATTACK = 2;// Police attacks you (sometimes on sight)
-	public static final int POLICEFLEE = 3;// Police is fleeing
-	public static final int MAXPOLICE = 9;
+	public static final int          POLICE                      = 0;
+	public static final int          POLICEINSPECTION            = 0;
+	// Police asks to submit for inspection
+	public static final int          POLICEIGNORE                = 1;// Police just ignores you
+	public static final int          POLICEATTACK                = 2;
+	// Police attacks you (sometimes on sight)
+	public static final int          POLICEFLEE                  = 3;// Police is fleeing
+	public static final int          MAXPOLICE                   = 9;
 	// Pirate Actions
-	public static final int PIRATE = 10;
-	public static final int PIRATEATTACK = 10;// Pirate attacks
-	public static final int PIRATEFLEE = 11;// Pirate flees
-	public static final int PIRATEIGNORE = 12;// Pirate ignores you (because of cloak)
-	public static final int PIRATESURRENDER = 13;// Pirate surrenders
-	public static final int MAXPIRATE = 19;
+	public static final int          PIRATE                      = 10;
+	public static final int          PIRATEATTACK                = 10;// Pirate attacks
+	public static final int          PIRATEFLEE                  = 11;// Pirate flees
+	public static final int          PIRATEIGNORE                = 12;
+	// Pirate ignores you (because of cloak)
+	public static final int          PIRATESURRENDER             = 13;// Pirate surrenders
+	public static final int          MAXPIRATE                   = 19;
 	// Trader Actions
-	public static final int TRADER = 20;
-	public static final int TRADERIGNORE = 20;// Trader passes
-	public static final int TRADERFLEE = 21;// Trader flees
-	public static final int TRADERATTACK = 22;// Trader is attacking (after being provoked)
-	public static final int TRADERSURRENDER = 23;// Trader surrenders
-	public static final int TRADERSELL = 24;// Trader will sell products in orbit
-	public static final int TRADERBUY = 25;// Trader will buy products in orbit
-	public static final int TRADERNOTRADE = 26;// Player has declined to transact with Trader
-	public static final int MAXTRADER = 29;
+	public static final int          TRADER                      = 20;
+	public static final int          TRADERIGNORE                = 20;// Trader passes
+	public static final int          TRADERFLEE                  = 21;// Trader flees
+	public static final int          TRADERATTACK                = 22;
+	// Trader is attacking (after being provoked)
+	public static final int          TRADERSURRENDER             = 23;// Trader surrenders
+	public static final int          TRADERSELL                  = 24;
+	// Trader will sell products in orbit
+	public static final int          TRADERBUY                   = 25;
+	// Trader will buy products in orbit
+	public static final int          TRADERNOTRADE               = 26;
+	// Player has declined to transact with Trader
+	public static final int          MAXTRADER                   = 29;
 	// Space Monster Actions
-	public static final int SPACEMONSTERATTACK = 30;
-	public static final int SPACEMONSTERIGNORE = 31;
-	public static final int MAXSPACEMONSTER = 39;
+	public static final int          SPACEMONSTERATTACK          = 30;
+	public static final int          SPACEMONSTERIGNORE          = 31;
+	public static final int          MAXSPACEMONSTER             = 39;
 	// Dragonfly Actions
-	public static final int DRAGONFLYATTACK = 40;
-	public static final int DRAGONFLYIGNORE = 41;
-	public static final int MAXDRAGONFLY = 49;
-	public static final int MANTIS = 50;
+	public static final int          DRAGONFLYATTACK             = 40;
+	public static final int          DRAGONFLYIGNORE             = 41;
+	public static final int          MAXDRAGONFLY                = 49;
+	public static final int          MANTIS                      = 50;
 	// Scarab Actions
-	public static final int SCARABATTACK = 60;
-	public static final int SCARABIGNORE = 61;
-	public static final int MAXSCARAB = 69;
+	public static final int          SCARABATTACK                = 60;
+	public static final int          SCARABIGNORE                = 61;
+	public static final int          MAXSCARAB                   = 69;
 	// Famous Captain
-	public static final int FAMOUSCAPTAIN = 70;
-	public static final int FAMOUSCAPATTACK = 71;
-	public static final int CAPTAINAHABENCOUNTER = 72;
-	public static final int CAPTAINCONRADENCOUNTER = 73;
-	public static final int CAPTAINHUIEENCOUNTER = 74;
-	public static final int MAXFAMOUSCAPTAIN = 79;
+	public static final int          FAMOUSCAPTAIN               = 70;
+	public static final int          FAMOUSCAPATTACK             = 71;
+	public static final int          CAPTAINAHABENCOUNTER        = 72;
+	public static final int          CAPTAINCONRADENCOUNTER      = 73;
+	public static final int          CAPTAINHUIEENCOUNTER        = 74;
+	public static final int          MAXFAMOUSCAPTAIN            = 79;
 	// Other Special Encounters
-	public static final int MARIECELESTEENCOUNTER = 80;
-	public static final int BOTTLEOLDENCOUNTER = 81;
-	public static final int BOTTLEGOODENCOUNTER = 82;
-	public static final int POSTMARIEPOLICEENCOUNTER = 83;
+	public static final int          MARIECELESTEENCOUNTER       = 80;
+	public static final int          BOTTLEOLDENCOUNTER          = 81;
+	public static final int          BOTTLEGOODENCOUNTER         = 82;
+	public static final int          POSTMARIEPOLICEENCOUNTER    = 83;
 	// The commander's ship
-	public static final int MAXWEAPON = 3;
-	public static final int MAXSHIELD = 3;
-	public static final int MAXGADGET = 3;
-	public static final int MAXCREW = 3;
-	public static final int MAXTRIBBLES = 100000;
+	public static final int          MAXWEAPON                   = 3;
+	public static final int          MAXSHIELD                   = 3;
+	public static final int          MAXGADGET                   = 3;
+	public static final int          MAXCREW                     = 3;
+	public static final int          MAXTRIBBLES                 = 100000;
 	// Solar systems
-	public static final int MAXSOLARSYSTEM = 120;
-	public static final int ACAMARSYSTEM = 0;
-	public static final int BARATASSYSTEM = 6;
-	public static final int DALEDSYSTEM = 17;
-	public static final int DEVIDIASYSTEM = 22;
-	public static final int GEMULONSYSTEM = 32;
-	public static final int JAPORISYSTEM = 41;
-	public static final int KRAVATSYSTEM = 50;
-	public static final int MELINASYSTEM = 59;
-	public static final int NIXSYSTEM = 67;
-	public static final int OGSYSTEM = 70;
-	public static final int REGULASSYSTEM = 82;
-	public static final int SOLSYSTEM = 92;
-	public static final int UTOPIASYSTEM = 109;
-	public static final int ZALKONSYSTEM = 118;
+	public static final int          MAXSOLARSYSTEM              = 120;
+	public static final int          ACAMARSYSTEM                = 0;
+	public static final int          BARATASSYSTEM               = 6;
+	public static final int          DALEDSYSTEM                 = 17;
+	public static final int          DEVIDIASYSTEM               = 22;
+	public static final int          GEMULONSYSTEM               = 32;
+	public static final int          JAPORISYSTEM                = 41;
+	public static final int          KRAVATSYSTEM                = 50;
+	public static final int          MELINASYSTEM                = 59;
+	public static final int          NIXSYSTEM                   = 67;
+	public static final int          OGSYSTEM                    = 70;
+	public static final int          REGULASSYSTEM               = 82;
+	public static final int          SOLSYSTEM                   = 92;
+	public static final int          UTOPIASYSTEM                = 109;
+	public static final int          ZALKONSYSTEM                = 118;
 	// Special events
-	public static final int COSTMOON = 500000;
-	public static final int MAXSPECIALEVENT = 37;
-	public static final int ENDFIXED = 7;
-	public static final int MAXTEXT = 9;
-	public static final int DRAGONFLYDESTROYED = 0;
-	public static final int FLYBARATAS = 1;
-	public static final int FLYMELINA = 2;
-	public static final int FLYREGULAS = 3;
-	public static final int MONSTERKILLED = 4;
-	public static final int MEDICINEDELIVERY = 5;
-	public static final int MOONBOUGHT = 6;  // ----- fixed locations precede
-	public static final int MOONFORSALE = 7;
-	public static final int SKILLINCREASE = 8;
-	public static final int TRIBBLE = 9;
-	public static final int ERASERECORD = 10;
-	public static final int BUYTRIBBLE = 11;
-	public static final int SPACEMONSTER = 12;
-	public static final int DRAGONFLY = 13;
-	public static final int CARGOFORSALE = 14;
-	public static final int INSTALLLIGHTNINGSHIELD = 15;
-	public static final int JAPORIDISEASE = 16;
-	public static final int LOTTERYWINNER = 17;
-	public static final int ARTIFACTDELIVERY = 18;
-	public static final int ALIENARTIFACT = 19;
-	public static final int AMBASSADORJAREK = 20;
-	public static final int ALIENINVASION = 21;
-	public static final int GEMULONINVADED = 22;
-	public static final int GETFUELCOMPACTOR = 23;
-	public static final int EXPERIMENT = 24;
-	public static final int TRANSPORTWILD = 25;
-	public static final int GETREACTOR = 26;
-	public static final int GETSPECIALLASER = 27;
-	public static final int SCARAB = 28;
-	public static final int GETHULLUPGRADED = 29;  // ------ fixed locations follow
-	public static final int SCARABDESTROYED = 30;
-	public static final int REACTORDELIVERED = 31;
-	public static final int JAREKGETSOUT = 32;
-	public static final int GEMULONRESCUED = 33;
-	public static final int EXPERIMENTSTOPPED = 34;
-	public static final int EXPERIMENTNOTSTOPPED = 35;
-	public static final int WILDGETSOUT = 36;
+	public static final int          COSTMOON                    = 500000;
+	public static final int          MAXSPECIALEVENT             = 37;
+	public static final int          ENDFIXED                    = 7;
+	public static final int          MAXTEXT                     = 9;
+	public static final int          DRAGONFLYDESTROYED          = 0;
+	public static final int          FLYBARATAS                  = 1;
+	public static final int          FLYMELINA                   = 2;
+	public static final int          FLYREGULAS                  = 3;
+	public static final int          MONSTERKILLED               = 4;
+	public static final int          MEDICINEDELIVERY            = 5;
+	public static final int          MOONBOUGHT                  = 6;
+	// ----- fixed locations precede
+	public static final int          MOONFORSALE                 = 7;
+	public static final int          SKILLINCREASE               = 8;
+	public static final int          TRIBBLE                     = 9;
+	public static final int          ERASERECORD                 = 10;
+	public static final int          BUYTRIBBLE                  = 11;
+	public static final int          SPACEMONSTER                = 12;
+	public static final int          DRAGONFLY                   = 13;
+	public static final int          CARGOFORSALE                = 14;
+	public static final int          INSTALLLIGHTNINGSHIELD      = 15;
+	public static final int          JAPORIDISEASE               = 16;
+	public static final int          LOTTERYWINNER               = 17;
+	public static final int          ARTIFACTDELIVERY            = 18;
+	public static final int          ALIENARTIFACT               = 19;
+	public static final int          AMBASSADORJAREK             = 20;
+	public static final int          ALIENINVASION               = 21;
+	public static final int          GEMULONINVADED              = 22;
+	public static final int          GETFUELCOMPACTOR            = 23;
+	public static final int          EXPERIMENT                  = 24;
+	public static final int          TRANSPORTWILD               = 25;
+	public static final int          GETREACTOR                  = 26;
+	public static final int          GETSPECIALLASER             = 27;
+	public static final int          SCARAB                      = 28;
+	public static final int          GETHULLUPGRADED             = 29;
+	// ------ fixed locations follow
+	public static final int          SCARABDESTROYED             = 30;
+	public static final int          REACTORDELIVERED            = 31;
+	public static final int          JAREKGETSOUT                = 32;
+	public static final int          GEMULONRESCUED              = 33;
+	public static final int          EXPERIMENTSTOPPED           = 34;
+	public static final int          EXPERIMENTNOTSTOPPED        = 35;
+	public static final int          WILDGETSOUT                 = 36;
 	// Max Number of Tribble Buttons
-	public static final int TRIBBLESONSCREEN = 31;  // Other special events (Encounters)
+	public static final int          TRIBBLESONSCREEN            = 31;
+	// Other special events (Encounters)
 	// First is probability in= 1000;that one could happen at all:
-	public static final int CHANCEOFVERYRAREENCOUNTER = 5;
-	public static final int MAXVERYRAREENCOUNTER = 6;
-	public static final int MARIECELESTE = 0;
-	public static final int CAPTAINAHAB = 1;
-	public static final int CAPTAINCONRAD = 2;
-	public static final int CAPTAINHUIE = 3;
-	public static final int BOTTLEOLD = 4;
-	public static final int BOTTLEGOOD = 5;  // Already done this encounter?
-	public static final int ALREADYMARIE = 1;
-	public static final int ALREADYAHAB = 2;
-	public static final int ALREADYCONRAD = 4;
-	public static final int ALREADYHUIE = 8;
-	public static final int ALREADYBOTTLEOLD = 16;
-	public static final int ALREADYBOTTLEGOOD = 32;
+	public static final int          CHANCEOFVERYRAREENCOUNTER   = 5;
+	public static final int          MAXVERYRAREENCOUNTER        = 6;
+	public static final int          MARIECELESTE                = 0;
+	public static final int          CAPTAINAHAB                 = 1;
+	public static final int          CAPTAINCONRAD               = 2;
+	public static final int          CAPTAINHUIE                 = 3;
+	public static final int          BOTTLEOLD                   = 4;
+	public static final int          BOTTLEGOOD                  = 5;  // Already done this encounter?
+	public static final int          ALREADYMARIE                = 1;
+	public static final int          ALREADYAHAB                 = 2;
+	public static final int          ALREADYCONRAD               = 4;
+	public static final int          ALREADYHUIE                 = 8;
+	public static final int          ALREADYBOTTLEOLD            = 16;
+	public static final int          ALREADYBOTTLEGOOD           = 32;
 	// Propability in= 1000;that a trader will make offer while in orbit
-	public static final int CHANCEOFTRADEINORBIT = 100;
+	public static final int          CHANCEOFTRADEINORBIT        = 100;
 	// Political systems (governments)
-	public static final int MAXPOLITICS = 17;
-	public static final int MAXSTRENGTH = 8;
-	public static final int ANARCHY = 0;
+	public static final int          MAXPOLITICS                 = 17;
+	public static final int          MAXSTRENGTH                 = 8;
+	public static final int          ANARCHY                     = 0;
 	// Tech levels.
-	public static final int MAXTECHLEVEL = 8;
+	public static final int          MAXTECHLEVEL                = 8;
 	// Cargo Dumping Codes. These identify the operation so we can reuse
 	// some of the Sell Cargo code.
 	// SELL is obvious, Dump is when in dock, Jettison is when in space.
-	public static final int SELLCARGO = 1;
-	public static final int DUMPCARGO = 2;
-	public static final int JETTISONCARGO = 3;
+	public static final int          SELLCARGO                   = 1;
+	public static final int          DUMPCARGO                   = 2;
+	public static final int          JETTISONCARGO               = 3;
 	// System sizes (influences the number of goods available)
-	public static final int MAXSIZE = 5;
+	public static final int          MAXSIZE                     = 5;
 	// Newspaper Mastheads and Headlines have been moved into String Resources, where
 	// they belong. Mastheads starting with codes will have the codes replaced as follows:
 	// + -> System Name
 	// * -> The System Name
-	public static final int MAXMASTHEADS = 3;      // number of newspaper names per Political situation
-	public static final int MAXSTORIES = 4;      // number of canned stories per Political situation
-	public static final int NEWSINDENT1 = 5;      // pixels to indent= 1;t line of news story
-	public static final int NEWSINDENT2 = 5;      // pixels to indent= 2;d line of news story
-	public static final int STORYPROBABILITY = 50 / MAXTECHLEVEL; // probability of a story being shown
-	public static final int MAXSPECIALNEWSEVENTS = 5;              // maximum number of special news events to keep for a system
+	public static final int          MAXMASTHEADS                = 3;
+	// number of newspaper names per Political situation
+	public static final int          MAXSTORIES                  = 4;
+	// number of canned stories per Political situation
+	public static final int          NEWSINDENT1                 = 5;
+	// pixels to indent= 1;t line of news story
+	public static final int          NEWSINDENT2                 = 5;
+	// pixels to indent= 2;d line of news story
+	public static final int          STORYPROBABILITY            = 50 / MAXTECHLEVEL;
+	// probability of a story being shown
+	public static final int          MAXSPECIALNEWSEVENTS        = 5;
+	// maximum number of special news events to keep for a system
 	// // News Events that don't exactly match special events
-	public static final int WILDARRESTED = 90;
-	public static final int CAUGHTLITTERING = 91;
-	public static final int EXPERIMENTPERFORMED = 92;
-	public static final int ARRIVALVIASINGULARITY = 93;
-	public static final int CAPTAINHUIEATTACKED = 100;
-	public static final int CAPTAINCONRADATTACKED = 101;
-	public static final int CAPTAINAHABATTACKED = 102;
-	public static final int CAPTAINHUIEDESTROYED = 110;
-	public static final int CAPTAINCONRADDESTROYED = 111;
-	public static final int CAPTAINAHABDESTROYED = 112;
+	public static final int          WILDARRESTED                = 90;
+	public static final int          CAUGHTLITTERING             = 91;
+	public static final int          EXPERIMENTPERFORMED         = 92;
+	public static final int          ARRIVALVIASINGULARITY       = 93;
+	public static final int          CAPTAINHUIEATTACKED         = 100;
+	public static final int          CAPTAINCONRADATTACKED       = 101;
+	public static final int          CAPTAINAHABATTACKED         = 102;
+	public static final int          CAPTAINHUIEDESTROYED        = 110;
+	public static final int          CAPTAINCONRADDESTROYED      = 111;
+	public static final int          CAPTAINAHABDESTROYED        = 112;
 	// Police record
-	public static final int MAXPOLICERECORD = 10;
-	public static final int ATTACKPOLICESCORE = -3;
-	public static final int KILLPOLICESCORE = -6;
-	public static final int CAUGHTWITHWILDSCORE = -4;
-	public static final int ATTACKTRADERSCORE = -2;
-	public static final int PLUNDERTRADERSCORE = -2;
-	public static final int KILLTRADERSCORE = -4;
-	public static final int ATTACKPIRATESCORE = 0;
-	public static final int KILLPIRATESCORE = 1;
-	public static final int PLUNDERPIRATESCORE = -1;
-	public static final int TRAFFICKING = -1;
-	public static final int FLEEFROMINSPECTION = -2;
-	public static final int TAKEMARIENARCOTICS = -4;
+	public static final int          MAXPOLICERECORD             = 10;
+	public static final int          ATTACKPOLICESCORE           = -3;
+	public static final int          KILLPOLICESCORE             = -6;
+	public static final int          CAUGHTWITHWILDSCORE         = -4;
+	public static final int          ATTACKTRADERSCORE           = -2;
+	public static final int          PLUNDERTRADERSCORE          = -2;
+	public static final int          KILLTRADERSCORE             = -4;
+	public static final int          ATTACKPIRATESCORE           = 0;
+	public static final int          KILLPIRATESCORE             = 1;
+	public static final int          PLUNDERPIRATESCORE          = -1;
+	public static final int          TRAFFICKING                 = -1;
+	public static final int          FLEEFROMINSPECTION          = -2;
+	public static final int          TAKEMARIENARCOTICS          = -4;
 	// Police Record Score
-	public static final int PSYCHOPATHSCORE = -70;
-	public static final int VILLAINSCORE = -30;
-	public static final int CRIMINALSCORE = -10;
-	public static final int DUBIOUSSCORE = -5;
-	public static final int CLEANSCORE = 0;
-	public static final int LAWFULSCORE = 5;
-	public static final int TRUSTEDSCORE = 10;
-	public static final int HELPERSCORE = 25;
-	public static final int HEROSCORE = 75;
+	public static final int          PSYCHOPATHSCORE             = -70;
+	public static final int          VILLAINSCORE                = -30;
+	public static final int          CRIMINALSCORE               = -10;
+	public static final int          DUBIOUSSCORE                = -5;
+	public static final int          CLEANSCORE                  = 0;
+	public static final int          LAWFULSCORE                 = 5;
+	public static final int          TRUSTEDSCORE                = 10;
+	public static final int          HELPERSCORE                 = 25;
+	public static final int          HEROSCORE                   = 75;
 	// Reputation (depends on number of kills)
-	public static final int MAXREPUTATION = 9;
-	public static final int HARMLESSREP = 0;
-	public static final int MOSTLYHARMLESSREP = 10;
-	public static final int POORREP = 20;
-	public static final int AVERAGESCORE = 40;
-	public static final int ABOVEAVERAGESCORE = 80;
-	public static final int COMPETENTREP = 150;
-	public static final int DANGEROUSREP = 300;
-	public static final int DEADLYREP = 600;
-	public static final int ELITESCORE = 1500;
+	public static final int          MAXREPUTATION               = 9;
+	public static final int          HARMLESSREP                 = 0;
+	public static final int          MOSTLYHARMLESSREP           = 10;
+	public static final int          POORREP                     = 20;
+	public static final int          AVERAGESCORE                = 40;
+	public static final int          ABOVEAVERAGESCORE           = 80;
+	public static final int          COMPETENTREP                = 150;
+	public static final int          DANGEROUSREP                = 300;
+	public static final int          DEADLYREP                   = 600;
+	public static final int          ELITESCORE                  = 1500;
 	// Debt Control
-	public static final int DEBTWARNING = 75000;
-	public static final int DEBTTOOLARGE = 100000;
-	public static final int MAXRESOURCES = 13;
-	public static final int NOSPECIALRESOURCES = 0;
-	public static final int MINERALRICH = 1;
-	public static final int MINERALPOOR = 2;
-	public static final int DESERT = 3;
-	public static final int LOTSOFWATER = 4;
-	public static final int RICHSOIL = 5;
-	public static final int POORSOIL = 6;
-	public static final int RICHFAUNA = 7;
-	public static final int LIFELESS = 8;
-	public static final int WEIRDMUSHROOMS = 9;
-	public static final int LOTSOFHERBS = 10;
-	public static final int ARTISTIC = 11;
-	public static final int WARLIKE = 12;
+	public static final int          DEBTWARNING                 = 75000;
+	public static final int          DEBTTOOLARGE                = 100000;
+	public static final int          MAXRESOURCES                = 13;
+	public static final int          NOSPECIALRESOURCES          = 0;
+	public static final int          MINERALRICH                 = 1;
+	public static final int          MINERALPOOR                 = 2;
+	public static final int          DESERT                      = 3;
+	public static final int          LOTSOFWATER                 = 4;
+	public static final int          RICHSOIL                    = 5;
+	public static final int          POORSOIL                    = 6;
+	public static final int          RICHFAUNA                   = 7;
+	public static final int          LIFELESS                    = 8;
+	public static final int          WEIRDMUSHROOMS              = 9;
+	public static final int          LOTSOFHERBS                 = 10;
+	public static final int          ARTISTIC                    = 11;
+	public static final int          WARLIKE                     = 12;
 	// Wormholes
-	public static final int MAXWORMHOLE = 6;
-	public static final int GALAXYWIDTH = 150;
-	public static final int GALAXYHEIGHT = 110;
-	public static final int SHORTRANGEWIDTH = 160;
-	public static final int SHORTRANGEHEIGHT = 160;
-	public static final int SHORTRANGEBOUNDSX = 10;
-	public static final int BOUNDSX = 5;
-	public static final int BOUNDSY = 20;
-	public static final int MINDISTANCE = 6;
-	public static final int CLOSEDISTANCE = 13;
-	public static final int WORMHOLEDISTANCE = 3;
-	public static final int EXTRAERASE = 3;  // (There are new functions for crunching down booleans and nibbles, which gain us a little room...)
-	public static final int MAXFORFUTUREUSE = 96;
+	public static final int          MAXWORMHOLE                 = 6;
+	public static final int          GALAXYWIDTH                 = 150;
+	public static final int          GALAXYHEIGHT                = 110;
+	public static final int          SHORTRANGEWIDTH             = 160;
+	public static final int          SHORTRANGEHEIGHT            = 160;
+	public static final int          SHORTRANGEBOUNDSX           = 10;
+	public static final int          BOUNDSX                     = 5;
+	public static final int          BOUNDSY                     = 20;
+	public static final int          MINDISTANCE                 = 6;
+	public static final int          CLOSEDISTANCE               = 13;
+	public static final int          WORMHOLEDISTANCE            = 3;
+	public static final int          EXTRAERASE                  = 3;
+	// (There are new functions for crunching down booleans and nibbles, which gain us a little room...)
+	public static final int          MAXFORFUTUREUSE             = 96;
 	// Resources. Some systems have special resources, which influences some prices.
 	// this is in percentage, and will decrease by one every day.
-	public static final int FABRICRIPINITIALPROBABILITY = 25;
-	public static final int MAXHIGHSCORE = 3;
-	public static final int KILLED = 0;
-	public static final int RETIRED = 1;
-	public static final int MOON = 2;
-	public static final Tradeitems Tradeitems = new Tradeitems();
-	public Politics Politics = new Politics();
-	final PoliceRecord PoliceRecord = new PoliceRecord();
-	final Reputation Reputation = new Reputation();
-	final String[] Status = {"under no particular pressure",  // Uneventful
-					                        "at war",        // Ore and Weapons in demand
-					                        "ravaged by a plague",   // Medicine in demand
-					                        "suffering from a drought",    // Water in demand
-					                        "suffering from extreme boredom",  // Games and Narcotics in demand
-					                        "suffering from a cold spell", // Furs in demand
-					                        "suffering from a crop failure", // Food in demand
-					                        "lacking enough workers"   // Machinery and Robots in demand
-	};
-	final String[] SpecialResources = {"Nothing special", "Mineral rich", "Mineral poor", "Desert", "Sweetwater oceans", "Rich soil", "Poor soil", "Rich fauna", "Lifeless", "Weird mushrooms", "Special herbs", "Artistic populace", "Warlike populace"};
-	final String[] Activity = {"Absent", "Minimal", "Few", "Some", "Moderate", "Many", "Abundant", "Swarms"};
-	final String[] MercenaryName = {"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre", "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete", "Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley", "Wonton", "Yorvick", "Zeethibal"};
+	public static final int          FABRICRIPINITIALPROBABILITY = 25;
+	public static final int          MAXHIGHSCORE                = 3;
+	public static final int          KILLED                      = 0;
+	public static final int          RETIRED                     = 1;
+	public static final int          MOON                        = 2;
+	public static final Tradeitems   Tradeitems                  = new Tradeitems();
+	public              Politics     Politics                    = new Politics();
+	final               PoliceRecord PoliceRecord                = new PoliceRecord();
+	final               Reputation   Reputation                  = new Reputation();
+	final               String[]     Status                      =
+		{"under no particular pressure",  // Uneventful
+		 "at war",        // Ore and Weapons in demand
+		 "ravaged by a plague",   // Medicine in demand
+		 "suffering from a drought",    // Water in demand
+		 "suffering from extreme boredom",  // Games and Narcotics in demand
+		 "suffering from a cold spell", // Furs in demand
+		 "suffering from a crop failure", // Food in demand
+		 "lacking enough workers"   // Machinery and Robots in demand
+		};
+	final               String[]     SpecialResources            =
+		{"Nothing special", "Mineral rich", "Mineral poor", "Desert", "Sweetwater oceans", "Rich soil",
+		 "Poor soil", "Rich fauna", "Lifeless", "Weird mushrooms", "Special herbs", "Artistic populace",
+		 "Warlike populace"};
+	final               String[]     Activity                    =
+		{"Absent", "Minimal", "Few", "Some", "Moderate", "Many", "Abundant", "Swarms"};
+	final               String[]     MercenaryName               =
+		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre",
+		 "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
+		 "Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley",
+		 "Wonton", "Yorvick", "Zeethibal"};
 	ShipTypes ShipTypes = new ShipTypes();
-	Weapons Weapons = new Weapons();
-	Shields Shields = new Shields();
-	Gadgets Gadgets = new Gadgets();
-	public SolarSystem[] SolarSystem = new SolarSystem[MAXSOLARSYSTEM];
-	final SpecialEvents SpecialEvents = new SpecialEvents();
-	public final String[] levelDesc = new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
-	final String[] SystemSize = {"Tiny", "Small", "Medium", "Large", "Huge"};
-	final String[] techLevel = {"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial", "Industrial", "Post-industrial", "Hi-tech"};
-	final String[] SolarSystemName = {"Acamar", "Adahn",    // The alternate personality for The Nameless One in "Planescape: Torment"
-					                                 "Aldea", "Andevian", "Antedi", "Balosnee", "Baratas", "Brax",     // One of the heroes in Master of Magic
-					                                 "Bretel",   // This is a Dutch device for keeping your pants up.
-					                                 "Calondia", "Campor", "Capelle",    // The city I lived in while programming this game
-					                                 "Carzon", "Castor",   // A Greek demi-god
-					                                 "Cestus", "Cheron", "Courteney",  // After Courteney Cox...
-					                                 "Daled", "Damast", "Davlos", "Deneb", "Deneva", "Devidia", "Draylon", "Drema", "Endor", "Esmee",    // One of the witches in Pratchett's Discworld
-					                                 "Exo", "Ferris",   // Iron
-					                                 "Festen",   // A great Scandinavian movie
-					                                 "Fourmi",   // An ant, in French
-					                                 "Frolix",   // A solar system in one of Philip K. Dick's novels
-					                                 "Gemulon", "Guinifer",   // One way of writing the name of king Arthur's wife
-					                                 "Hades",    // The underworld
-					                                 "Hamlet",   // From Shakespeare
-					                                 "Helena",   // Of Troy
-					                                 "Hulst",    // A Dutch plant
-					                                 "Iodine",   // An element
-					                                 "Iralius", "Janus",    // A seldom encountered Dutch boy's name
-					                                 "Japori", "Jarada", "Jason",    // A Greek hero
-					                                 "Kaylon", "Khefka", "Kira",     // My dog's name
-					                                 "Klaatu",   // From a classic SF movie
-					                                 "Klaestron", "Korma",    // An Indian sauce
-					                                 "Kravat",   // Interesting spelling of the French word for "tie"
-					                                 "Krios", "Laertes",    // A king in a Greek tragedy
-					                                 "Largo", "Lave",     // The starting system in Elite
-					                                 "Ligon", "Lowry",    // The name of the "hero" in Terry Gilliam's "Brazil"
-					                                 "Magrat",   // The second of the witches in Pratchett's Discworld
-					                                 "Malcoria", "Melina", "Mentar",   // The Psilon home system in Master of Orion
-					                                 "Merik", "Mintaka", "Montor",   // A city in Ultima III and Ultima VII part 2
-					                                 "Mordan", "Myrthe",   // The name of my daughter (comment: Pieter Sproncks daughter)
-					                                 "Nelvana", "Nix",      // An interesting spelling of a word meaning "nothing" in Dutch
-					                                 "Nyle",     // An interesting spelling of the great river
-					                                 "Odet", "Og",     // The last of the witches in Pratchett's Discworld
-					                                 "Omega",    // The end of it all
-					                                 "Omphalos",   // Greek for navel
-					                                 "Orias", "Othello",    // From Shakespeare
-					                                 "Parade",   // This word means the same in Dutch and in English
-					                                 "Penthara", "Picard",   // The enigmatic captain from ST:TNG
-					                                 "Pollux",   // Brother of Castor
-					                                 "Quator", "Rakhar", "Ran",      // A film by Akira Kurosawa
-					                                 "Regulas", "Relva", "Rhymus", "Rochani", "Rubicum",    // The river Ceasar crossed to get into Rome
-					                                 "Rutia", "Sarpeidon", "Sefalla", "Seltrice", "Sigma", "Sol",      // That's our own solar system
-					                                 "Somari", "Stakoron", "Styris", "Talani", "Tamus", "Tantalos",   // A king from a Greek tragedy
-					                                 "Tanuga", "Tarchannen", "Terosa", "Thera",    // A seldom encountered Dutch girl's name
-					                                 "Titan",    // The largest moon of Jupiter
-					                                 "Torin",    // A hero from Master of Magic
-					                                 "Triacus", "Turkana", "Tyrus", "Umberlee",   // A god from AD&D, which has a prominent role in Baldur's Gate
-					                                 "Utopia",   // The ultimate goal
-					                                 "Vadera", "Vagra", "Vandor", "Ventax", "Xenon", "Xerxes",   // A Greek hero
-					                                 "Yew",      // A city which is in almost all of the Ultima games
-					                                 "Yojimbo",    // A film by Akira Kurosawa
-					                                 "Zalkon", "Zuul"      // From the first Ghostbusters movie
+	Weapons   Weapons   = new Weapons();
+	Shields   Shields   = new Shields();
+	Gadgets   Gadgets   = new Gadgets();
+	public        SolarSystem[] SolarSystem               = new SolarSystem[MAXSOLARSYSTEM];
+	final         SpecialEvents SpecialEvents             = new SpecialEvents();
+	public final  String[]      levelDesc                 =
+		new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
+	final         String[]      SystemSize                =
+		{"Tiny", "Small", "Medium", "Large", "Huge"};
+	final         String[]      techLevel                 =
+		{"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial",
+		 "Industrial", "Post-industrial", "Hi-tech"};
+	final         String[]      SolarSystemName           = {"Acamar", "Adahn",
+	                                                         // The alternate personality for The Nameless One in "Planescape: Torment"
+	                                                         "Aldea", "Andevian", "Antedi",
+	                                                         "Balosnee", "Baratas", "Brax",
+	                                                         // One of the heroes in Master of Magic
+	                                                         "Bretel",
+	                                                         // This is a Dutch device for keeping your pants up.
+	                                                         "Calondia", "Campor", "Capelle",
+	                                                         // The city I lived in while programming this game
+	                                                         "Carzon", "Castor",   // A Greek demi-god
+	                                                         "Cestus", "Cheron", "Courteney",
+	                                                         // After Courteney Cox...
+	                                                         "Daled", "Damast", "Davlos", "Deneb",
+	                                                         "Deneva", "Devidia", "Draylon", "Drema",
+	                                                         "Endor", "Esmee",
+	                                                         // One of the witches in Pratchett's Discworld
+	                                                         "Exo", "Ferris",   // Iron
+	                                                         "Festen",   // A great Scandinavian movie
+	                                                         "Fourmi",   // An ant, in French
+	                                                         "Frolix",
+	                                                         // A solar system in one of Philip K. Dick's novels
+	                                                         "Gemulon", "Guinifer",
+	                                                         // One way of writing the name of king Arthur's wife
+	                                                         "Hades",    // The underworld
+	                                                         "Hamlet",   // From Shakespeare
+	                                                         "Helena",   // Of Troy
+	                                                         "Hulst",    // A Dutch plant
+	                                                         "Iodine",   // An element
+	                                                         "Iralius", "Janus",
+	                                                         // A seldom encountered Dutch boy's name
+	                                                         "Japori", "Jarada", "Jason",
+	                                                         // A Greek hero
+	                                                         "Kaylon", "Khefka", "Kira",
+	                                                         // My dog's name
+	                                                         "Klaatu",   // From a classic SF movie
+	                                                         "Klaestron", "Korma",// An Indian sauce
+	                                                         "Kravat",
+	                                                         // Interesting spelling of the French word for "tie"
+	                                                         "Krios", "Laertes",
+	                                                         // A king in a Greek tragedy
+	                                                         "Largo", "Lave",
+	                                                         // The starting system in Elite
+	                                                         "Ligon", "Lowry",
+	                                                         // The name of the "hero" in Terry Gilliam's "Brazil"
+	                                                         "Magrat",
+	                                                         // The second of the witches in Pratchett's Discworld
+	                                                         "Malcoria", "Melina", "Mentar",
+	                                                         // The Psilon home system in Master of Orion
+	                                                         "Merik", "Mintaka", "Montor",
+	                                                         // A city in Ultima III and Ultima VII part 2
+	                                                         "Mordan", "Myrthe",
+	                                                         // The name of my daughter (comment: Pieter Sproncks daughter)
+	                                                         "Nelvana", "Nix",
+	                                                         // An interesting spelling of a word meaning "nothing" in Dutch
+	                                                         "Nyle",
+	                                                         // An interesting spelling of the great river
+	                                                         "Odet", "Og",
+	                                                         // The last of the witches in Pratchett's Discworld
+	                                                         "Omega",    // The end of it all
+	                                                         "Omphalos",   // Greek for navel
+	                                                         "Orias", "Othello",
+	                                                         // From Shakespeare
+	                                                         "Parade",
+	                                                         // This word means the same in Dutch and in English
+	                                                         "Penthara", "Picard",
+	                                                         // The enigmatic captain from ST:TNG
+	                                                         "Pollux",   // Brother of Castor
+	                                                         "Quator", "Rakhar", "Ran",
+	                                                         // A film by Akira Kurosawa
+	                                                         "Regulas", "Relva", "Rhymus", "Rochani",
+	                                                         "Rubicum",
+	                                                         // The river Ceasar crossed to get into Rome
+	                                                         "Rutia", "Sarpeidon", "Sefalla",
+	                                                         "Seltrice", "Sigma", "Sol",
+	                                                         // That's our own solar system
+	                                                         "Somari", "Stakoron", "Styris", "Talani",
+	                                                         "Tamus", "Tantalos",
+	                                                         // A king from a Greek tragedy
+	                                                         "Tanuga", "Tarchannen", "Terosa",
+	                                                         "Thera",
+	                                                         // A seldom encountered Dutch girl's name
+	                                                         "Titan",
+	                                                         // The largest moon of Jupiter
+	                                                         "Torin",
+	                                                         // A hero from Master of Magic
+	                                                         "Triacus", "Turkana", "Tyrus",
+	                                                         "Umberlee",
+	                                                         // A god from AD&D, which has a prominent role in Baldur's Gate
+	                                                         "Utopia",   // The ultimate goal
+	                                                         "Vadera", "Vagra", "Vandor", "Ventax",
+	                                                         "Xenon", "Xerxes",   // A Greek hero
+	                                                         "Yew",
+	                                                         // A city which is in almost all of the Ultima games
+	                                                         "Yojimbo",    // A film by Akira Kurosawa
+	                                                         "Zalkon", "Zuul"
+	                                                         // From the first Ghostbusters movie
 	};
-	public int Credits = 1000;            // Current credits owned
-	public int Debt = 0;               // Current Debt
-	public int[] BuyPrice = new int[MAXTRADEITEM];    // Price list current system
-	public int[] BuyingPrice = new int[MAXTRADEITEM]; // Total price paid for trade goods
-	public int[] SellPrice = new int[MAXTRADEITEM];   // Price list current system
-	public int[] ShipPrice = new int[MAXSHIPTYPE];    // Price list current system (recalculate when buy ship screen is entered)
-	public int PoliceKills = 0;           // Number of police ships killed
-	public int TraderKills = 0;           // Number of trader ships killed
-	public int PirateKills = 0;           // Number of pirate ships killed
-	public int PoliceRecordScore = 0;     //= 0;= Clean record
-	public int ReputationScore = 0;       //= 0;= Harmless
-	public int MonsterHull = 500;         // Hull strength of monster
-	public int SkillPointsLeft = 16;      // Skillpoints to distribute at start of game
-	public int CheatCounter = 0;
-	public int CurForm = 0;                // Form to return to
-	public int Days = 0;                   // Number of days playing
-	public int EncounterType = 0;          // Type of current encounter
-	public int GalacticChartSystem = 0;    // Current system on Galactic chart
-	public int LeaveEmpty = 0;             // Number of cargo bays to leave empty when buying goods
-	public int NewsSpecialEventCount = 0;  // Simplifies tracking what Quests have just been initiated or completed for the News System. This is not important enough to get saved.
-	public int NoClaim = 0;                // Days of No-Claim
-	public int SelectedShipType = 0;       // Selected Ship type for Shiptype Info screen
-	public int TrackedSystem = -1;         // The short-range chart will display an arrow towards this system if the value is not -1
-	public int WarpSystem = 0;             // Target system for warp
-	public int Shortcut1 = 0;        // default shortcut= 1;= Buy Cargo
-	public int Shortcut2 = 1;        // default shortcut= 2;= Sell Cargo
-	public int Shortcut3 = 2;        // default shortcut= 3;= Shipyard
-	public int Shortcut4 = 10;       // default shortcut= 4;= Short Range Warp
-	public String[][] Shortcuts = {{"B", "Buy Cargo"}, {"S", "Sell Cargo"}, {"Y", "Ship Yard"}, {"E", "Buy Equipment"}, {"Q", "Sell Equipment"}, {"P", "Personnel"}, {"K", "Bank"}, {"I", "System Info"}, {"C", "Commander Status"}, {"G", "Galactic Chart"}, {"W", "Warp Chart"}};
+	public        int           Credits                   = 1000;            // Current credits owned
+	public        int           Debt                      = 0;               // Current Debt
+	public        int[]         BuyPrice                  = new int[MAXTRADEITEM];
+	// Price list current system
+	public        int[]         BuyingPrice               = new int[MAXTRADEITEM];
+	// Total price paid for trade goods
+	public        int[]         SellPrice                 = new int[MAXTRADEITEM];
+	// Price list current system
+	public        int[]         ShipPrice                 = new int[MAXSHIPTYPE];
+	// Price list current system (recalculate when buy ship screen is entered)
+	public        int           PoliceKills               = 0;// Number of police ships killed
+	public        int           TraderKills               = 0;// Number of trader ships killed
+	public        int           PirateKills               = 0;// Number of pirate ships killed
+	public        int           PoliceRecordScore         = 0;     //= 0;= Clean record
+	public        int           ReputationScore           = 0;       //= 0;= Harmless
+	public        int           MonsterHull               = 500;         // Hull strength of monster
+	public        int           SkillPointsLeft           = 16;
+	// Skillpoints to distribute at start of game
+	public        int           CheatCounter              = 0;
+	public        int           CurForm                   = 0;                // Form to return to
+	public        int           Days                      = 0;// Number of days playing
+	public        int           EncounterType             = 0;          // Type of current encounter
+	public        int           GalacticChartSystem       = 0;    // Current system on Galactic chart
+	public        int           LeaveEmpty                = 0;
+	// Number of cargo bays to leave empty when buying goods
+	public        int           NewsSpecialEventCount     = 0;
+	// Simplifies tracking what Quests have just been initiated or completed for the News System. This is not important enough to get saved.
+	public        int           NoClaim                   = 0;                // Days of No-Claim
+	public        int           SelectedShipType          = 0;
+	// Selected Ship type for Shiptype Info screen
+	public        int           TrackedSystem             = -1;
+	// The short-range chart will display an arrow towards this system if the value is not -1
+	public        int           WarpSystem                = 0;             // Target system for warp
+	public        int           Shortcut1                 = 0;// default shortcut= 1;= Buy Cargo
+	public        int           Shortcut2                 = 1;// default shortcut= 2;= Sell Cargo
+	public        int           Shortcut3                 = 2;
+	// default shortcut= 3;= Shipyard
+	public        int           Shortcut4                 = 10;
+	// default shortcut= 4;= Short Range Warp
+	public        String[][]    Shortcuts                 =
+		{{"B", "Buy Cargo"}, {"S", "Sell Cargo"}, {"Y", "Ship Yard"}, {"E", "Buy Equipment"},
+		 {"Q", "Sell Equipment"}, {"P", "Personnel"}, {"K", "Bank"}, {"I", "System Info"},
+		 {"C", "Commander Status"}, {"G", "Galactic Chart"}, {"W", "Warp Chart"}};
 	// the next two values are NOT saved between sessions -- they can only be changed via cheats.
-	public int ChanceOfVeryRareEncounter = CHANCEOFVERYRAREENCOUNTER;
-	public int ChanceOfTradeInOrbit = CHANCEOFTRADEINORBIT;
-	public int Clicks = 0;                      // Distance from target system,= 0;= arrived
-	public static int Difficulty = NORMAL;     // Difficulty level
-	public int DragonflyStatus = 0;     //= 0;= Dragonfly not available,= 1;= Go to Baratas,= 2;= Go to Melina,= 3;= Go to Regulas,= 4;= Go to Zalkon,= 5;= Dragonfly destroyed
-	public int ExperimentStatus = 0;    // Experiment;= 0;not given yet,1-11 days from start;= 12;performed,= 13;cancelled
-	public int FabricRipProbability = 0; // if Experiment == 8; this is the probability of being warped to a random planet.
-	public int InvasionStatus = 0;      // Status Alien invasion of Gemulon;= 0;not given yet;= 1;7=days from start;= 8;too late
-	public int JaporiDiseaseStatus = 0; //= 0;= No disease,= 1;= Go to Japori (always at least= 10;medicine cannisters),= 2;= Assignment finished or canceled
-	public int JarekStatus = 0;         // Ambassador Jarek= 0;not delivered;= 1;on board;= 2;delivered
-	public int MonsterStatus = 0;       //= 0;= Space monster isn't available,= 1;= Space monster is in Acamar system,= 2;= Space monster is destroyed
-	public int ReactorStatus = 0;     // Unstable Reactor Status:= 0;not encountered;= 1;20=days of mission (bays of fuel left == 10;- (ReactorStatus/2);= 21;delivered
-	public int ScarabStatus = 0;    // Scarab:= 0;not given yet,= 1;not destroyed,= 2;destroyed, upgrade not performed,= 3;destroyed, hull upgrade performed
-	public int VeryRareEncounter = 0;     // bit map for which Very Rare Encounter(s) have taken place (see traveler.c, around line= 1850;
-	public int WildStatus = 0;    // Jonathan Wild:= 0;not delivered;= 1;on board;= 2;delivered
-	public boolean APLscreen = false;           // Is true is the APL screen was last shown after the SRC
-	public boolean AlreadyPaidForNewspaper = false; // once you buy a paper on a system, you don't have to pay again.
-	public boolean AlwaysIgnorePirates = false; // Automatically ignores pirates when it is safe to do so
-	public boolean AlwaysIgnorePolice = true;   // Automatically ignores police when it is safe to do so
-	public boolean AlwaysIgnoreTradeInOrbit = false; // Automatically ignores Trade in Orbit when it is safe to do so
-	public boolean AlwaysIgnoreTraders = false; // Automatically ignores traders when it is safe to do so
-	public boolean AlwaysInfo = false;          // Will always go from SRC to Info
-	public boolean ArrivedViaWormhole = false; // flag to indicate whether player arrived on current planet via wormhole
-	public boolean ArtifactOnBoard = false;     // Alien artifact on board
-	public boolean AttackFleeing = false;     // Continue attack on fleeing ship
-	public boolean AutoAttack = false;      // Auto-attack mode
-	public boolean AutoFlee = false;      // Auto-flee mode
-	public boolean AutoFuel = false;            // Automatically get a full tank when arriving in a new system
-	public boolean AutoRepair = false;          // Automatically get a full hull repair when arriving in a new system
-	public boolean CanSuperWarp = false;   // Do you have the Portable Singularity on board?
-	public boolean Continuous = false;      // Continuous attack/flee mode
-	public boolean EscapePod = false;           // Escape Pod in ship
-	public boolean GameLoaded = false;     // Indicates whether a game is loaded
-	public boolean IdentifyStartup = false;  // Identify commander at game start
-	public boolean Inspected = false;           // True when the commander has been inspected during the trip
-	public boolean Insurance = false;           // Insurance bought
-	public boolean JustLootedMarie = false;    // flag to indicate whether player looted Marie Celeste
-	public boolean LitterWarning = false;    // Warning against littering has been issued.
-	public boolean MoonBought = false;          // Indicates whether a moon is available at Utopia
-	public boolean NewsAutoPay = false;    // by default, ask each time someone buys a newspaper
-	public boolean PossibleToGoThroughRip = false; // if Dr Fehler's experiment happened, we can only go through one space-time rip per warp.
-	public boolean PriceDifferences = false;    // Show price differences instead of absolute prices
-	public boolean Raided = false;              // True when the commander has been raided during the trip
-	public boolean RemindLoans = true;     // remind you every five days about outstanding loan balances
-	public boolean ReserveMoney = false;        // Keep enough money for insurance and mercenaries
-	public boolean SaveOnArrival = false;    // Autosave when arriving in a system
-	public boolean SharePreferences = true;  // Share preferences between switched games.
-	public boolean ShowTrackedRange = true;  // display range when tracking a system on Short Range Chart
-	public boolean TextualEncounters = false;   // Show encounters as text.
-	public boolean TrackAutoOff = true;    // Automatically stop tracking a system when you get to it?
-	public boolean TribbleMessage = false;      // Is true if the Ship Yard on the current system informed you about the tribbles
-	public boolean UseHWButtons = false;   // by default, don't use Hardware W buttons
-	public int[] Wormhole = new int[GameState.MAXWORMHOLE];
-	public int[] NewsEvents = new int[MAXSPECIALNEWSEVENTS]; // Array of news events.
+	public        int           ChanceOfVeryRareEncounter = CHANCEOFVERYRAREENCOUNTER;
+	public        int           ChanceOfTradeInOrbit      = CHANCEOFTRADEINORBIT;
+	public        int           Clicks                    = 0;
+	// Distance from target system,= 0;= arrived
+	public static int           Difficulty                = NORMAL;     // Difficulty level
+	public        int           DragonflyStatus           = 0;
+	//= 0;= Dragonfly not available,= 1;= Go to Baratas,= 2;= Go to Melina,= 3;= Go to Regulas,= 4;= Go to Zalkon,= 5;= Dragonfly destroyed
+	public        int           ExperimentStatus          = 0;
+	// Experiment;= 0;not given yet,1-11 days from start;= 12;performed,= 13;cancelled
+	public        int           FabricRipProbability      = 0;
+	// if Experiment == 8; this is the probability of being warped to a random planet.
+	public        int           InvasionStatus            = 0;
+	// Status Alien invasion of Gemulon;= 0;not given yet;= 1;7=days from start;= 8;too late
+	public        int           JaporiDiseaseStatus       = 0;
+	//= 0;= No disease,= 1;= Go to Japori (always at least= 10;medicine cannisters),= 2;= Assignment finished or canceled
+	public        int           JarekStatus               = 0;
+	// Ambassador Jarek= 0;not delivered;= 1;on board;= 2;delivered
+	public        int           MonsterStatus             = 0;
+	//= 0;= Space monster isn't available,= 1;= Space monster is in Acamar system,= 2;= Space monster is destroyed
+	public        int           ReactorStatus             = 0;
+	// Unstable Reactor Status:= 0;not encountered;= 1;20=days of mission (bays of fuel left == 10;- (ReactorStatus/2);= 21;delivered
+	public        int           ScarabStatus              = 0;
+	// Scarab:= 0;not given yet,= 1;not destroyed,= 2;destroyed, upgrade not performed,= 3;destroyed, hull upgrade performed
+	public        int           VeryRareEncounter         = 0;
+	// bit map for which Very Rare Encounter(s) have taken place (see traveler.c, around line= 1850;
+	public        int           WildStatus                = 0;
+	// Jonathan Wild:= 0;not delivered;= 1;on board;= 2;delivered
+	public        boolean       APLscreen                 = false;
+	// Is true is the APL screen was last shown after the SRC
+	public        boolean       AlreadyPaidForNewspaper   = false;
+	// once you buy a paper on a system, you don't have to pay again.
+	public        boolean       AlwaysIgnorePirates       = false;
+	// Automatically ignores pirates when it is safe to do so
+	public        boolean       AlwaysIgnorePolice        = true;
+	// Automatically ignores police when it is safe to do so
+	public        boolean       AlwaysIgnoreTradeInOrbit  = false;
+	// Automatically ignores Trade in Orbit when it is safe to do so
+	public        boolean       AlwaysIgnoreTraders       = false;
+	// Automatically ignores traders when it is safe to do so
+	public        boolean       AlwaysInfo                = false;
+	// Will always go from SRC to Info
+	public        boolean       ArrivedViaWormhole        = false;
+	// flag to indicate whether player arrived on current planet via wormhole
+	public        boolean       ArtifactOnBoard           = false;     // Alien artifact on board
+	public        boolean       AttackFleeing             = false;
+	// Continue attack on fleeing ship
+	public        boolean       AutoAttack                = false;      // Auto-attack mode
+	public        boolean       AutoFlee                  = false;      // Auto-flee mode
+	public        boolean       AutoFuel                  = false;
+	// Automatically get a full tank when arriving in a new system
+	public        boolean       AutoRepair                = false;
+	// Automatically get a full hull repair when arriving in a new system
+	public        boolean       CanSuperWarp              = false;
+	// Do you have the Portable Singularity on board?
+	public        boolean       Continuous                = false;      // Continuous attack/flee mode
+	public        boolean       EscapePod                 = false;           // Escape Pod in ship
+	public        boolean       GameLoaded                = false;
+	// Indicates whether a game is loaded
+	public        boolean       IdentifyStartup           = false;
+	// Identify commander at game start
+	public        boolean       Inspected                 = false;
+	// True when the commander has been inspected during the trip
+	public        boolean       Insurance                 = false;           // Insurance bought
+	public        boolean       JustLootedMarie           = false;
+	// flag to indicate whether player looted Marie Celeste
+	public        boolean       LitterWarning             = false;
+	// Warning against littering has been issued.
+	public        boolean       MoonBought                = false;
+	// Indicates whether a moon is available at Utopia
+	public        boolean       NewsAutoPay               = false;
+	// by default, ask each time someone buys a newspaper
+	public        boolean       PossibleToGoThroughRip    = false;
+	// if Dr Fehler's experiment happened, we can only go through one space-time rip per warp.
+	public        boolean       PriceDifferences          = false;
+	// Show price differences instead of absolute prices
+	public        boolean       Raided                    = false;
+	// True when the commander has been raided during the trip
+	public        boolean       RemindLoans               = true;
+	// remind you every five days about outstanding loan balances
+	public        boolean       ReserveMoney              = false;
+	// Keep enough money for insurance and mercenaries
+	public        boolean       SaveOnArrival             = false;
+	// Autosave when arriving in a system
+	public        boolean       SharePreferences          = true;
+	// Share preferences between switched games.
+	public        boolean       ShowTrackedRange          = true;
+	// display range when tracking a system on Short Range Chart
+	public        boolean       TextualEncounters         = false;   // Show encounters as text.
+	public        boolean       TrackAutoOff              = true;
+	// Automatically stop tracking a system when you get to it?
+	public        boolean       TribbleMessage            = false;
+	// Is true if the Ship Yard on the current system informed you about the tribbles
+	public        boolean       UseHWButtons              = false;
+	// by default, don't use Hardware W buttons
+	public        int[]         Wormhole                  = new int[GameState.MAXWORMHOLE];
+	public        int[]         NewsEvents                = new int[MAXSPECIALNEWSEVENTS];
+	// Array of news events.
+	public static int           CountDown                 = 3; // Countdown for reset of tradeitems.
 	CrewMember[] CrewMember;
 	public CrewMember[] Mercenary;
-	public Ship Ship;
-	public Ship Opponent;
+	public Ship         Ship;
+	public Ship         Opponent;
 	Ship SpaceMonster;
 	Ship Scarab;
 	Ship Dragonfly;
 	String[][] NewsPaperNames = {{"* Arsenal", "The Grassroot", "Kick It!"},       /* Anarchy */
-					                            {"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
-					                            {"Planet News", "* Times", "Interstate Update"},      /* Communist */
-					                            {"The Objectivist", "* Market", "The Invisible Hand"},      /* Confederacy */
-					                            {"+ Memo", "News From The Board", "Status Report"},     /* Corporate */
-					                            {"Pulses", "Binary Stream", "The System Clock"},      /* Cybernetic */
-					                            {"The Daily Planet", "* Majority", "Unanimity"},      /* Democracy */
-					                            {"The Command", "Leader's Voice", "* Mandate"},       /* Dictatorship */
-					                            {"State Tribune", "Motherland News", "Homeland Report"},    /* Fascist */
-					                            {"News from the Keep", "The Town Crier", "* Herald"},     /* Feudal */
-					                            {"General Report", "+ Dispatch", "* Sentry"},       /* Military */
-					                            {"Royal Times", "The Loyal Subject", "The Fanfare"},      /* Monarchy */
-					                            {"Pax Humani", "Principle", "* Chorus"},        /* Pacifist */
-					                            {"All for One", "Brotherhood", "The People's Syndicate"},   /* Socialist */
-					                            {"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
-					                            {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
-					                            {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
-	static String[][] CannedNews = {{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.", "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"}, {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!", "Restrictions on Corporate Freedom Abolished by Courts!"}, {"Party Reports Productivity Increase.", "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!", "Politburo Approves New 5-Year Plan!"}, {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!", "Southern States Resist Federal Taxation for Capital Projects!", "States Request Federal Intervention in Citrus Conflict!"}, {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.", "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."}, {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.", "Storage Banks to be Upgraded!", "System Backup Rescheduled."}, {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!", "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."}, {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!", "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"}, {"Drug Smugglers Sentenced to Death!", "Aliens Required to Carry Visible Identification at All Times!", "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."}, {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!", "Baron Ignores Ultimatum!", "War of Succession Threatens!"}, {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?", "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"}, {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!", "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"}, {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?", "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "}, {"Government Promises Increased Welfare Benefits!", "State Denies Food Rationing Required to Prevent Famine.", "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"}, {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."}, {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.", "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."}, {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.", "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
+	                             {"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
+	                             {"Planet News", "* Times", "Interstate Update"},      /* Communist */
+	                             {"The Objectivist", "* Market", "The Invisible Hand"},      /* Confederacy */
+	                             {"+ Memo", "News From The Board", "Status Report"},     /* Corporate */
+	                             {"Pulses", "Binary Stream", "The System Clock"},      /* Cybernetic */
+	                             {"The Daily Planet", "* Majority", "Unanimity"},      /* Democracy */
+	                             {"The Command", "Leader's Voice", "* Mandate"},       /* Dictatorship */
+	                             {"State Tribune", "Motherland News", "Homeland Report"},    /* Fascist */
+	                             {"News from the Keep", "The Town Crier", "* Herald"},     /* Feudal */
+	                             {"General Report", "+ Dispatch", "* Sentry"},       /* Military */
+	                             {"Royal Times", "The Loyal Subject", "The Fanfare"},      /* Monarchy */
+	                             {"Pax Humani", "Principle", "* Chorus"},        /* Pacifist */
+	                             {"All for One", "Brotherhood", "The People's Syndicate"},   /* Socialist */
+	                             {"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
+	                             {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
+	                             {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
+	static String[][] CannedNews =
+		{{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.",
+		  "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"},
+		 {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!",
+		  "Restrictions on Corporate Freedom Abolished by Courts!"},
+		 {"Party Reports Productivity Increase.",
+		  "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!",
+		  "Politburo Approves New 5-Year Plan!"},
+		 {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!",
+		  "Southern States Resist Federal Taxation for Capital Projects!",
+		  "States Request Federal Intervention in Citrus Conflict!"},
+		 {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.",
+		  "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."},
+		 {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.",
+		  "Storage Banks to be Upgraded!", "System Backup Rescheduled."},
+		 {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!",
+		  "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."},
+		 {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!",
+		  "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"},
+		 {"Drug Smugglers Sentenced to Death!",
+		  "Aliens Required to Carry Visible Identification at All Times!",
+		  "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."},
+		 {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!",
+		  "Baron Ignores Ultimatum!", "War of Succession Threatens!"},
+		 {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?",
+		  "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"},
+		 {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!",
+		  "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"},
+		 {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?",
+		  "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "},
+		 {"Government Promises Increased Welfare Benefits!",
+		  "State Denies Food Rationing Required to Prevent Famine.",
+		  "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"},
+		 {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."},
+		 {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.",
+		  "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."},
+		 {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.",
+		  "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
 	public String NameCommander;
 	public Random rand = new Random();
 
@@ -567,10 +742,19 @@ public class GameState implements Serializable {
 		while (i < GameState.MAXSOLARSYSTEM) {
 			if (i < GameState.MAXWORMHOLE) {
 				// Place the first system somewhere in the centre
-				Log.d("gamestateinit", String.format("SolarSystem[%d].x = ((%d / 2) - GetRandom(%d)) + ((%d * (1 + 2 * (%d %% 3))) / 6))", i, GameState.CLOSEDISTANCE, GameState.CLOSEDISTANCE, GameState.GALAXYWIDTH, i));
+				Log.d("gamestateinit", String
+					                       .format("SolarSystem[%d].x = ((%d / 2) - GetRandom(%d)) + ((%d * (1 + 2 * (%d %% 3))) / 6))",
+					                               i, GameState.CLOSEDISTANCE, GameState.CLOSEDISTANCE,
+					                               GameState.GALAXYWIDTH, i
+					                       )
+				);
 
-				SolarSystem[i].x = (((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
-				SolarSystem[i].y = (((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYHEIGHT * (i < 3 ? 1 : 3)) / 4));
+				SolarSystem[i].x =
+					(((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
+				SolarSystem[i].y =
+					(((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYHEIGHT * (i < 3 ?
+					                                                                                                    1 :
+					                                                                                                    3)) / 4));
 				Wormhole[i] = i;
 			} else {
 				SolarSystem[i].x = (1 + GetRandom(GameState.GALAXYWIDTH - 2));
@@ -966,6 +1150,15 @@ public class GameState implements Serializable {
 						                    0); // No tribbles on board
 	}
 
+	public static int getDifficulty() {
+		return Difficulty;
+	}
+
+	public static void setDifficulty(int difficulty) {
+		Difficulty = difficulty;
+		CountDown = difficulty + 3;
+	}
+
 	public GameState(SaveGame g){
 		int i;
 		initializeBasic();
@@ -1044,7 +1237,7 @@ public class GameState implements Serializable {
 		this.VeryRareEncounter = g.VeryRareEncounter;
 		this.WarpSystem = g.WarpSystem;
 		this.WildStatus = g.WildStatus;
-		this.Difficulty = g.Difficulty;
+		GameState.setDifficulty(SaveGame.Difficulty);
 
 		for (i=0; i<GameState.MAXWORMHOLE; i++){
 			this.Wormhole[i] = g.Wormhole[i];
@@ -1684,5 +1877,394 @@ public class GameState implements Serializable {
 				}
 			}
 		}
+	}
+	// *************************************************************************
+	// Pay interest on debt
+	// *************************************************************************
+	public void PayInterest() {
+		int IncDebt;
+
+		if (Debt > 0)
+		{
+			IncDebt = Math.max(1, Debt / 10);
+			if (Credits > IncDebt){
+				Credits -= IncDebt;
+			} else {
+				Debt += (IncDebt - Credits);
+				Credits = 0;
+			}
+		}
+	}
+
+	public boolean Cloaked(Ship Sh, Ship Opp) {
+		return (HasGadget( Sh, CLOAKINGDEVICE ) && (EngineerSkill( Sh ) > EngineerSkill( Opp )));
+	}
+	public int STRENGTHPOLICE(SolarSystem a) {
+		return PoliceRecordScore < PSYCHOPATHSCORE ? 3 * Politics.mPolitics[a.politics].strengthPolice :
+		       PoliceRecordScore < VILLAINSCORE ? 2 * Politics.mPolitics[a.politics].strengthPolice :
+		       Politics.mPolitics[a.politics].strengthPolice;
+	}
+	public void GenerateOpponent(int Opp) {
+		Boolean Redo;
+		int i = 0;
+		int j;
+		int sum;
+		int Tries;
+		int d, e, f, k, m;
+		int Bays;
+
+		Tries = 1;
+
+		if (Opp == FAMOUSCAPTAIN) {
+			// we just fudge for the Famous Captains' Ships...
+			Opponent.type = MAXSHIPTYPE - 1;
+			for (i=0;i<MAXSHIELD;i++) {
+				Opponent.shield[i] = REFLECTIVESHIELD;
+				Opponent.shieldStrength[i]= RSHIELDPOWER;
+			}
+			for (i=0;i<MAXWEAPON;i++) {
+				Opponent.weapon[i] = MILITARYLASERWEAPON;
+			}
+			Opponent.gadget[0]=TARGETINGSYSTEM;
+			Opponent.gadget[1]=NAVIGATINGSYSTEM;
+			Opponent.hull = ShipTypes.ShipTypes[MAXSHIPTYPE - 1].hullStrength;
+
+			// these guys are bad-ass!
+			Opponent.crew[0] = MAXCREWMEMBER;
+			Mercenary[Opponent.crew[0]].pilot = MAXSKILL;
+			Mercenary[Opponent.crew[0]].fighter = MAXSKILL;
+			Mercenary[Opponent.crew[0]].trader = MAXSKILL;
+			Mercenary[Opponent.crew[0]].engineer = MAXSKILL;
+			return;
+		}
+
+		if (Opp == MANTIS)
+			Tries = 1+Difficulty;
+
+		// The police will try to hunt you down with better ships if you are
+		// a villain, and they will try even harder when you are considered to
+		// be a psychopath (or are transporting Jonathan Wild)
+
+		if (Opp == POLICE) {
+			if (PoliceRecordScore < VILLAINSCORE && WildStatus != 1)
+				Tries = 3;
+			else if (PoliceRecordScore < PSYCHOPATHSCORE || WildStatus == 1)
+				Tries = 5;
+			Tries = Math.max(1, Tries + Difficulty - NORMAL);
+		}
+
+		// Pirates become better when you get richer
+		if (Opp == PIRATE) {
+			Tries = 1 + (CurrentWorth() / 100000);
+			Tries = Math.max(1, Tries + Difficulty - NORMAL);
+		}
+
+		j = 0;
+		if (Opp == TRADER)
+			Opponent.type = 0;
+		else
+			Opponent.type = 1;
+
+		k = (Difficulty >= NORMAL ? Difficulty - NORMAL : 0);
+
+		while (j < Tries) {
+			Redo = true;
+
+			while (Redo) {
+				d = GetRandom( 100 );
+				i = 0;
+				sum = ShipTypes.ShipTypes[0].occurrence;
+
+				while (sum < d) {
+					if (i >= MAXSHIPTYPE-1)
+						break;
+					++i;
+					sum += ShipTypes.ShipTypes[i].occurrence;
+				}
+
+				if (Opp == POLICE && (ShipTypes.ShipTypes[i].police < 0 ||
+            Politics.mPolitics[SolarSystem[WarpSystem].politics].strengthPolice + k < ShipTypes.ShipTypes[i].police))
+					continue;
+
+				if (Opp == PIRATE && (ShipTypes.ShipTypes[i].pirates < 0 ||
+            Politics.mPolitics[SolarSystem[WarpSystem].politics].strengthPirates + k < ShipTypes.ShipTypes[i].pirates))
+					continue;
+
+				if (Opp == TRADER && (ShipTypes.ShipTypes[i].traders < 0 ||
+            Politics.mPolitics[SolarSystem[WarpSystem].politics].strengthTraders + k < ShipTypes.ShipTypes[i].traders))
+					continue;
+
+				Redo = false;
+			}
+
+			if (i > Opponent.type)
+				Opponent.type = i;
+			++j;
+		}
+
+		if (Opp == MANTIS)
+			Opponent.type = MANTISTYPE;
+		else
+			Tries = Math.max(1, (CurrentWorth() / 150000) + Difficulty - NORMAL);
+
+		// Determine the gadgets
+		if (ShipTypes.ShipTypes[Opponent.type].gadgetSlots <= 0)
+			d = 0;
+		else if (Difficulty <= HARD) {
+			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].gadgetSlots + 1 );
+			if (d < ShipTypes.ShipTypes[Opponent.type].gadgetSlots){
+				if (Tries > 4)
+					++d;
+				else if (Tries > 2)
+					d += GetRandom( 2 );
+			}
+		} else
+			d = ShipTypes.ShipTypes[Opponent.type].gadgetSlots;
+		for (i=0; i<d; ++i) {
+			e = 0;
+			f = 0;
+			while (e < Tries) {
+				k = GetRandom(100);
+				j = 0;
+				sum = Gadgets.mGadgets[0].chance;
+				while (k < sum){
+					if (j >= MAXGADGETTYPE - 1)
+						break;
+					++j;
+					sum += Gadgets.mGadgets[j].chance;
+				}
+				if (!HasGadget(Opponent, j))
+				if (j > f)
+					f = j;
+				++e;
+			}
+			Opponent.gadget[i] = f;
+		}
+		for (i=d; i<MAXGADGET; ++i)
+			Opponent.gadget[i] = -1;
+
+		// Determine the number of cargo bays
+		Bays = ShipTypes.ShipTypes[Opponent.type].cargoBays;
+		for (i=0; i<MAXGADGET; ++i)
+			if (Opponent.gadget[i] == EXTRABAYS)
+				Bays += 5;
+
+		// Fill the cargo bays
+		for (i=0; i<MAXTRADEITEM; ++i)
+			Opponent.cargo[i] = 0;
+
+		if (Bays > 5) {
+			if (Difficulty >= NORMAL) {
+				m = 3 + GetRandom( Bays - 5 );
+				sum = Math.min(m, 15);
+			} else
+				sum = Bays;
+			if (Opp == POLICE)
+				sum = 0;
+			if (Opp == PIRATE) {
+				if (Difficulty < NORMAL)
+					sum = (sum * 4) / 5;
+				else
+					sum = sum / Difficulty;
+			}
+			if (sum < 1)
+				sum = 1;
+
+			i = 0;
+			while (i < sum) {
+				j = GetRandom( MAXTRADEITEM );
+				k = 1 + GetRandom( 10 - j );
+				if (i + k > sum)
+					k = sum - i;
+				Opponent.cargo[j] += k;
+				i += k;
+			}
+		}
+
+		// Fill the fuel tanks
+		Opponent.fuel = ShipTypes.ShipTypes[Opponent.type].fuelTanks;
+
+		// No tribbles on board
+		Opponent.tribbles = 0;
+
+		// Fill the weapon slots (if possible, at least one weapon)
+		if (ShipTypes.ShipTypes[Opponent.type].weaponSlots <= 0)
+			d = 0;
+		else if (ShipTypes.ShipTypes[Opponent.type].weaponSlots <= 1)
+			d = 1;
+		else if (Difficulty <= HARD) {
+			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].weaponSlots);
+			if (d < ShipTypes.ShipTypes[Opponent.type].weaponSlots){
+				if (Tries > 4 && Difficulty >= HARD)
+					++d;
+				else if (Tries > 3 || Difficulty >= HARD)
+					d += GetRandom( 2 );
+			}
+		} else
+			d = ShipTypes.ShipTypes[Opponent.type].weaponSlots;
+		for (i=0; i<d; ++i) {
+			e = 0;
+			f = 0;
+			while (e < Tries) {
+				k = GetRandom( 100 );
+				j = 0;
+				sum = Weapons.mWeapons[0].chance;
+				while (k < sum) {
+					if (j >= MAXWEAPONTYPE - 1)
+						break;
+					++j;
+					sum += Weapons.mWeapons[j].chance;
+				}
+				if (j > f)
+					f = j;
+				++e;
+			}
+			Opponent.weapon[i] = f;
+		}
+		for (i=d; i<MAXWEAPON; ++i)
+			Opponent.weapon[i] = -1;
+
+		// Fill the shield slots
+		if (ShipTypes.ShipTypes[Opponent.type].shieldSlots <= 0)
+			d = 0;
+		else if (Difficulty <= HARD) {
+			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].shieldSlots + 1 );
+			if (d < ShipTypes.ShipTypes[Opponent.type].shieldSlots){
+				if (Tries > 3)
+					++d;
+				else if (Tries > 1)
+					d += GetRandom( 2 );
+			}
+		} else
+			d = ShipTypes.ShipTypes[Opponent.type].shieldSlots;
+		for (i=0; i<d; ++i) {
+			e = 0;
+			f = 0;
+
+			while (e < Tries) {
+				k = GetRandom( 100 );
+				j = 0;
+				sum = Shields.mShields[0].chance;
+				while (k < sum) {
+					if (j >= MAXSHIELDTYPE - 1)
+						break;
+					++j;
+					sum += Shields.mShields[j].chance;
+				}
+				if (j > f)
+					f = j;
+				++e;
+			}
+			Opponent.shield[i] = f;
+
+			j = 0;
+			k = 0;
+			while (j < 5) {
+				e = 1 + GetRandom(Shields.mShields[Opponent.shield[i]].power);
+				if (e > k)
+					k = e;
+				++j;
+			}
+			Opponent.shieldStrength[i] = k;
+		}
+		for (i=d; i<MAXSHIELD; ++i) {
+			Opponent.shield[i] = -1;
+			Opponent.shieldStrength[i] = 0;
+		}
+
+		// Set hull strength
+		i = 0;
+		k = 0;
+		// If there are shields, the hull will probably be stronger
+		if (Opponent.shield[0] >= 0 && GetRandom( 10 ) <= 7)
+			Opponent.hull = ShipTypes.ShipTypes[Opponent.type].hullStrength;
+		else {
+			while (i < 5) {
+				d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].hullStrength);
+				if (d > k)
+					k = d;
+				++i;
+			}
+			Opponent.hull = k;
+		}
+
+		if (Opp == MANTIS || Opp == FAMOUSCAPTAIN)
+			Opponent.hull = ShipTypes.ShipTypes[Opponent.type].hullStrength;
+
+
+		// Set the crew. These may be duplicates, or even equal to someone aboard
+		// the commander's ship, but who cares, it's just for the skills anyway.
+		Opponent.crew[0] = MAXCREWMEMBER;
+		Mercenary[Opponent.crew[0]].pilot = 1 + GetRandom( MAXSKILL );
+		Mercenary[Opponent.crew[0]].fighter = 1 + GetRandom( MAXSKILL );
+		Mercenary[Opponent.crew[0]].trader = 1 + GetRandom( MAXSKILL );
+		Mercenary[Opponent.crew[0]].engineer = 1 + GetRandom( MAXSKILL );
+		if (WarpSystem == KRAVATSYSTEM && WildStatus == 1 && (GetRandom(10)<Difficulty + 1)) {
+			Mercenary[Opponent.crew[0]].engineer = MAXSKILL;
+		}
+		if (Difficulty <= HARD) {
+			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].crewQuarters );
+			if (Difficulty >= HARD && d < ShipTypes.ShipTypes[Opponent.type].crewQuarters)
+				++d;
+		}
+		else
+			d = ShipTypes.ShipTypes[Opponent.type].crewQuarters;
+		for (i=1; i<d; ++i)
+			Opponent.crew[i] = GetRandom( MAXCREWMEMBER );
+		for (i=d; i<MAXCREW; ++i)
+			Opponent.crew[i] = -1;
+	}
+	long TotalWeapons(Ship Sh, int minWeapon, int maxWeapon) {
+		// *************************************************************************
+		// Calculate total possible weapon strength
+		// Modified to allow an upper and lower limit on which weapons work.
+		// Weapons equal to or between minWeapon and maxWeapon (e.g., PULSELASERWEAPON)
+		// will do damage. Use -1 to allow damage from any weapon, which is almost
+		// always what you want. SjG
+		// *************************************************************************
+		int i;
+		long j;
+
+		j = 0;
+		for (i=0; i<MAXWEAPON; ++i)
+		{
+			if (Sh.weapon[i] < 0)
+				break;
+
+			if ((minWeapon != -1 && Sh.weapon[i] < minWeapon) ||
+			(maxWeapon != -1 && Sh.weapon[i] > maxWeapon))
+			continue;
+
+			j += Weapons.mWeapons[Sh.weapon[i]].power;
+		}
+
+		return j;
+	}
+
+	public boolean HasTradeableItems(Ship sh, SolarSystem warpSystem, int Operation) {
+		int i;
+		Boolean ret = false, thisRet;
+		for (i = 0; i< MAXTRADEITEM; i++) {
+			// trade only if trader is selling and the item has a buy price on the
+			// local system, or trader is buying, and there is a sell price on the
+			// local system.
+			thisRet = false;
+			if (sh.cargo[i] > 0 && Operation == TRADERSELL && BuyPrice[i] > 0)
+				thisRet = true;
+			else if (sh.cargo[i] > 0 && Operation == TRADERBUY && SellPrice[i] > 0)
+				thisRet = true;
+
+			// Criminals can only buy or sell illegal goods, Noncriminals cannot buy
+			// or sell such items.
+			if (PoliceRecordScore < DUBIOUSSCORE && i != FIREARMS && i != NARCOTICS)
+				thisRet = false;
+			else if (PoliceRecordScore >= DUBIOUSSCORE && (i == FIREARMS || i == NARCOTICS))
+				thisRet = false;
+
+			if (thisRet)
+				ret = true;
+		}
+
+		return ret;
 	}
 }
