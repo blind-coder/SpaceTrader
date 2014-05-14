@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.spec.MGF1ParameterSpec;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
@@ -48,6 +49,7 @@ import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
+import de.anderdonau.spacetrader.DataTypes.Tradeitems;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -57,6 +59,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	private static boolean foundSaveGame = false;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	public static SolarSystem WarpSystem;
+	public static boolean playerShipNeedsUpdate, opponentShipNeedsUpdate;
+	public static RenderShip EncounterPlayerShip, EncounterOpponentShip;
+	public static TextView EncounterText;
+	public static Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard,
+		btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
 
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
@@ -3100,7 +3107,7 @@ SeekBar.OnSeekBarChangeListener() {
 
 			/* TODO
 			if (WormholeExists( COMMANDER.CurSystem, WarpSystem ) || Insurance || Debt > 0 || Ship.Crew[1] >= 0)
-				WarpSystemButtonSpecific->show();
+				WarpSystemButtonSpecific.setVisibility(View.VISIBLE);
 				*/
 			return rootView;
 		}
@@ -3118,84 +3125,80 @@ SeekBar.OnSeekBarChangeListener() {
 			Button btn;
 			int d, i;
 			int objindex;
-			RenderShip renderShip;
 
-			renderShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerShip);
-			renderShip.setShip(Ship);
-			renderShip.setRotate(false);
-			renderShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerOpponent);
-			renderShip.setShip(Opponent);
-			renderShip.setRotate(true);
+			EncounterPlayerShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerShip);
+			EncounterPlayerShip.setShip(Ship);
+			EncounterPlayerShip.setRotate(false);
+			EncounterOpponentShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerOpponent);
+			EncounterOpponentShip.setShip(Opponent);
+			EncounterOpponentShip.setRotate(true);
 
-			/*playerShipNeedsUpdate=true;
-			opponentShipNeedsUpdate=true;
+			btnAttack = (Button) rootView.findViewById(R.id.btnAttack);
+			btnFlee = (Button) rootView.findViewById(R.id.btnFlee);
+			btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
+			btnBribe = (Button) rootView.findViewById(R.id.btnBribe);
+			btnIgnore = (Button) rootView.findViewById(R.id.btnIgnore);
+			btnYield = (Button) rootView.findViewById(R.id.btnYield);
+			btnBoard  = (Button) rootView.findViewById(R.id.btnBoard);
+			btnPlunder = (Button) rootView.findViewById(R.id.btnPlunder);
+			btnSurrender = (Button) rootView.findViewById(R.id.btnSurrender);
+			btnDrink = (Button) rootView.findViewById(R.id.btnDrink);
+			btnMeet = (Button) rootView.findViewById(R.id.btnMeet);
+			btnTrade = (Button) rootView.findViewById(R.id.btnTrade);
+			btnInt = (Button) rootView.findViewById(R.id.btnInt);
+			EncounterText = (TextView) rootView.findViewById(R.id.txtEncounterText);
 
-			EncounterDisplayShips();
+			EncounterButtons();
+
+			playerShipNeedsUpdate=false;
+			opponentShipNeedsUpdate=false;
+
+			//EncounterDisplayShips();
 			EncounterDisplayNextAction( true );
 
-			if (EncounterType == POSTMARIEPOLICEENCOUNTER)
-			{
-				DrawChars( "You encounter the Customs Police.", 6, 75 );
-			}
-			else
-			{
-				StrCopy( SBuf, "At " );
-				SBufMultiples( Clicks, "click" );
-				StrCat( SBuf, " from " );
-				StrCat( SBuf, SolarSystemName[SolarSystem[WarpSystem].NameIndex] );
-				StrCat( SBuf, ", you" );
-				DrawChars( SBuf, 6, 75 );
-
-				StrCopy( SBuf, "encounter " );
-				if (ENCOUNTERPOLICE( EncounterType ))
-					StrCat( SBuf, "a police " );
-				else if (ENCOUNTERPIRATE( EncounterType ))
-				{
-					if (Opponent.Type == MANTISTYPE)
-						StrCat( SBuf, "an alien " );
+			if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+				EncounterText.setText("You encounter the Customs Police.");
+			} else {
+				String buf;
+				buf = String.format("At %d click%s from %s you encounter ", mGameState.Clicks, mGameState.Clicks == 1 ? "" : "s", mGameState.SolarSystemName[WarpSystem.nameIndex]);
+				if (mGameState.ENCOUNTERPOLICE(mGameState.EncounterType))
+					buf += "a police ";
+				else if (mGameState.ENCOUNTERPIRATE(mGameState.EncounterType)) {
+					if (Opponent.type == GameState.MANTISTYPE)
+						buf += "an alien ";
 					else
-						StrCat( SBuf, "a pirate " );
-				}
-				else if (ENCOUNTERTRADER( EncounterType ))
-					StrCat( SBuf, "a trader " );
-				else if (ENCOUNTERMONSTER( EncounterType ))
-					StrCat( SBuf, " " );
-				else if (EncounterType == MARIECELESTEENCOUNTER)
-					StrCat(SBuf,"a drifting ship");
-				else if (EncounterType == CAPTAINAHABENCOUNTER)
-					StrCat(SBuf, "the famous Captain Ahab");
-				else if (EncounterType == CAPTAINCONRADENCOUNTER)
-					StrCat(SBuf, "Captain Conrad");
-				else if (EncounterType == CAPTAINHUIEENCOUNTER)
-					StrCat(SBuf, "Captain Huie");
-				else if (EncounterType == BOTTLEOLDENCOUNTER || EncounterType == BOTTLEGOODENCOUNTER)
-					StrCat(SBuf, "a floating bottle.");
+						buf += "a pirate ";
+				} else if (mGameState.ENCOUNTERTRADER( mGameState.EncounterType ))
+					buf += "a trader ";
+				else if (mGameState.ENCOUNTERMONSTER(mGameState.EncounterType))
+					buf += "";
+				else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER)
+					buf += "a drifting ship ";
+				else if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
+					buf += "the famous Captain Ahab ";
+				else if (mGameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
+					buf += "Captain Conrad ";
+				else if (mGameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
+					buf += "Captain Huie ";
+				else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER)
+					buf += "a floating bottle. ";
 				else
-					StrCat( SBuf, "a stolen " );
-				if (EncounterType != MARIECELESTEENCOUNTER && EncounterType != CAPTAINAHABENCOUNTER &&
-					    EncounterType != CAPTAINCONRADENCOUNTER && EncounterType != CAPTAINHUIEENCOUNTER &&
-					    EncounterType != BOTTLEOLDENCOUNTER && EncounterType != BOTTLEGOODENCOUNTER)
-				{
-					StrCopy( SBuf2, Shiptype[Opponent.Type].Name );
-					SBuf2[0] = TOLOWER( SBuf2[0] );
-					StrCat( SBuf, SBuf2 );
+					buf += "a stolen ";
+				if (mGameState.EncounterType != GameState.MARIECELESTEENCOUNTER && mGameState.EncounterType != GameState.CAPTAINAHABENCOUNTER &&
+					    mGameState.EncounterType != GameState.CAPTAINCONRADENCOUNTER && mGameState.EncounterType != GameState.CAPTAINHUIEENCOUNTER &&
+					    mGameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && mGameState.EncounterType != GameState.BOTTLEGOODENCOUNTER){
+					buf += mGameState.ShipTypes.ShipTypes[Opponent.type].name;
 				}
-				StrCat( SBuf, "." );
+				buf += ".\n";
 
-				DrawChars( SBuf, 6, 88 );
+				EncounterText.setText(buf += EncounterText.getText().toString());
 			}
 
-			d = sqrt( Ship.Tribbles/250 );
-			for (i=0; i<d; ++i)
-			{
-				objindex = FrmGetObjectIndex( frmP, EncounterTribble0Button +
-					                                    GetRandom( TRIBBLESONSCREEN ) );
-				cp = (ControlPtr)FrmGetObjectPtr( frmP, objindex );
-				CtlShowControl( cp );
+			d = (int)Math.ceil(Math.sqrt( Ship.tribbles/250 ));
+			for (i=0; i<d; ++i) {
+				/* TODO: Draw tribbles */
 			}
-
-*/
-				return rootView;
+			return rootView;
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////
@@ -3344,13 +3347,12 @@ SeekBar.OnSeekBarChangeListener() {
 			if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)){
 				ConfirmDialog("Wild Won't Stay Aboard",
 				              "Jonathan Wild isn't willing to go with you if you are not armed with at least a Beam Laser.",
-				              "",
-				              "Stay here", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						return;
-					}
-				}, "Goodbye Wild", new DialogInterface.OnClickListener() {
+				              "", "Stay here", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							return;
+						}
+					}, "Goodbye Wild", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
 							mGameState.WildStatus = 0;
@@ -3460,7 +3462,7 @@ SeekBar.OnSeekBarChangeListener() {
 		mGameState.DeterminePrices(mGameState.WarpSystem);
 		Travel();
 	}
-	void IncDays(int Amount) {
+	public void IncDays(int Amount) {
 		mGameState.Days += Amount;
 		if (mGameState.InvasionStatus > 0 && mGameState.InvasionStatus < 8) {
 			mGameState.InvasionStatus += Amount;
@@ -3495,7 +3497,7 @@ SeekBar.OnSeekBarChangeListener() {
 			mGameState.FabricRipProbability -= Amount;
 		}
 	}
-	void Travel() {
+	public void Travel() {
 		int EncounterTest, StartClicks, i, j, Repairs, FirstEmptySlot, rareEncounter;
 		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard, EasterEgg;
 		boolean HaveMilitaryLaser, HaveReflectiveShield;
@@ -4104,5 +4106,259 @@ SeekBar.OnSeekBarChangeListener() {
 				Ship.cargo[i] = 0;
 
 		btnSystemInformation(null);
+	}
+	public static void EncounterDisplayShips() {
+		// *************************************************************************
+		// Display on the encounter screen the ships (and also wipe it)
+		// *************************************************************************
+		RenderShip r;
+		if (opponentShipNeedsUpdate) {
+			EncounterOpponentShip.invalidate();
+			opponentShipNeedsUpdate = false;
+		}
+		if (playerShipNeedsUpdate) {
+			EncounterPlayerShip.invalidate();
+			playerShipNeedsUpdate = false;
+		}
+	}
+	static void EncounterDisplayNextAction(Boolean FirstDisplay) {
+		// *************************************************************************
+		// Display on the encounter screen what the next action will be
+		// *************************************************************************
+			if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
+			EncounterText.setText("The police summon you to submit to an inspection.");
+		}
+		else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER)
+		{
+			EncounterText.setText("\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\"");
+		}
+		else if (FirstDisplay && mGameState.EncounterType == GameState.POLICEATTACK && mGameState.PoliceRecordScore > GameState.CRIMINALSCORE)
+		{
+			EncounterText.setText("The police hail they want you to surrender.");
+		}
+		else if (mGameState.EncounterType == GameState.POLICEFLEE ||
+			         mGameState.EncounterType == GameState.TRADERFLEE ||
+			         mGameState.EncounterType == GameState.PIRATEFLEE){
+			EncounterText.setText("You opponent is fleeing.");
+		}
+		else if (mGameState.EncounterType == GameState.PIRATEATTACK ||
+			         mGameState.EncounterType == GameState.POLICEATTACK ||
+			         mGameState.EncounterType == GameState.TRADERATTACK ||
+			         mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
+			         mGameState.EncounterType == GameState.TRADERATTACK ||
+			         mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
+			         mGameState.EncounterType == GameState.DRAGONFLYATTACK ||
+			         mGameState.EncounterType == GameState.SCARABATTACK ||
+			         mGameState.EncounterType == GameState.FAMOUSCAPATTACK){
+			EncounterText.setText("Your opponent attacks.");
+		}
+		else if (mGameState.EncounterType == GameState.TRADERIGNORE ||
+			         mGameState.EncounterType == GameState.POLICEIGNORE ||
+			         mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||
+			         mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||
+			         mGameState.EncounterType == GameState.PIRATEIGNORE ||
+			         mGameState.EncounterType == GameState.SCARABIGNORE) {
+			if (mGameState.Cloaked(mGameState.Ship, mGameState.Opponent))
+				EncounterText.setText("It doesn't notice you.");
+			else
+			EncounterText.setText("it ignores you.");
+		}
+		else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
+			EncounterText.setText("You are hailed with an offer to trade goods.");
+		}
+		else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER){
+			EncounterText.setText("Your opponent hails that he surrenders to you.");
+		}
+		else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
+			EncounterText.setText("The Marie Celeste appears to be completely abandoned.");
+		}
+		else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType) && mGameState.EncounterType != GameState.FAMOUSCAPATTACK) {
+			EncounterText.setText("The Captain requests a brief meeting with you.");
+		}
+		else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER ||
+			         mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER){
+			EncounterText.setText("It appears to be a rare bottle of Captain Marmoset's Skill Tonic!");
+		}
+	}
+	public static void EncounterButtons() {
+		btnInt.setVisibility(View.INVISIBLE);
+		btnAttack.setVisibility(View.INVISIBLE);
+		btnFlee.setVisibility(View.INVISIBLE);
+		btnSubmit.setVisibility(View.INVISIBLE);
+		btnBribe.setVisibility(View.INVISIBLE);
+		btnYield.setVisibility(View.INVISIBLE);
+		btnIgnore.setVisibility(View.INVISIBLE);
+		btnSurrender.setVisibility(View.INVISIBLE);
+		btnPlunder.setVisibility(View.INVISIBLE);
+		btnBoard.setVisibility(View.INVISIBLE);
+		btnMeet.setVisibility(View.INVISIBLE);
+		btnDrink.setVisibility(View.INVISIBLE);
+		btnTrade.setVisibility(View.INVISIBLE);
+
+		if (mGameState.AutoAttack || mGameState.AutoFlee)
+			btnInt.setVisibility(View.VISIBLE);
+
+		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnFlee.setVisibility(View.VISIBLE);
+			btnSubmit.setVisibility(View.VISIBLE);
+			btnBribe.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnFlee.setVisibility(View.VISIBLE);
+			btnYield.setVisibility(View.VISIBLE);
+			btnBribe.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.POLICEFLEE ||mGameState.EncounterType == GameState.TRADERFLEE ||mGameState.EncounterType == GameState.PIRATEFLEE) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.PIRATEATTACK ||mGameState.EncounterType == GameState.POLICEATTACK || mGameState.EncounterType == GameState.SCARABATTACK) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnFlee.setVisibility(View.VISIBLE);
+			btnSurrender.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.FAMOUSCAPATTACK) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnFlee.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.TRADERATTACK ||mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||mGameState.EncounterType == GameState.DRAGONFLYATTACK) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnFlee.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.TRADERIGNORE ||mGameState.EncounterType == GameState.POLICEIGNORE ||mGameState.EncounterType == GameState.PIRATEIGNORE ||mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||mGameState.EncounterType == GameState.SCARABIGNORE) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER ||mGameState.EncounterType == GameState.PIRATESURRENDER) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnPlunder.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER){
+			btnBoard.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+		} else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType)) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+			btnMeet.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
+			btnDrink.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+		} else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
+			btnAttack.setVisibility(View.VISIBLE);
+			btnIgnore.setVisibility(View.VISIBLE);
+			btnTrade.setVisibility(View.VISIBLE);
+		}
+
+		/* TODO
+		if (!TextualEncounters){
+			btnYou.setVisibility(View.INVISIBLE);
+			btnOpponent.setVisibility(View.INVISIBLE);
+		} else {
+			btnYou.setVisibility(View.VISIBLE);
+			btnOpponent.setVisibility(View.VISIBLE);
+		}
+		*/
+	}
+	public void EncounterButtonTradeCallback() {
+		final int i;
+
+		if (mGameState.EncounterType == GameState.TRADERBUY) {
+			i = mGameState.GetRandomTradeableItem(mGameState.Ship, GameState.TRADERBUY);
+
+			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
+				if (mGameState.GetRandom(100) <= 45)
+					mGameState.SellPrice[i] *= 0.8;
+				else
+					mGameState.SellPrice[i] *= 1.1;
+			} else {
+				if (mGameState.GetRandom(100) <= 10)
+					mGameState.SellPrice[i] *= 0.9;
+				else
+					mGameState.SellPrice[i] *= 1.1;
+			}
+
+			mGameState.SellPrice[i] /= mGameState.Tradeitems.mTradeitems[i].roundOff;
+			++mGameState.SellPrice[i];
+			mGameState.SellPrice[i] *= mGameState.Tradeitems.mTradeitems[i].roundOff;
+			if (mGameState.SellPrice[i] < mGameState.Tradeitems.mTradeitems[i].minTradePrice)
+				mGameState.SellPrice[i] = mGameState.Tradeitems.mTradeitems[i].minTradePrice;
+			if (mGameState.SellPrice[i] > mGameState.Tradeitems.mTradeitems[i].maxTradePrice)
+				mGameState.SellPrice[i] = mGameState.Tradeitems.mTradeitems[i].maxTradePrice;
+
+			String buf = String.format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.SellPrice[i], mGameState.Ship.cargo[i], mGameState.BuyingPrice[i] / mGameState.Ship.cargo[i]);
+
+			inputDialog("Trade offer", buf, "Amount", "", new IFinputDialogCallback() {
+				@Override
+				public void execute(EditText input) {
+					int Amount = 0;
+					try {
+						Amount = Integer.parseInt(input.getText().toString());
+					} catch (NumberFormatException e){
+						alertDialog("Error", e.getLocalizedMessage(), "");
+						Amount = 0;
+					}
+					Amount = Math.max(0, Math.min(mGameState.Ship.cargo[i], Amount));
+					Amount = Math.min(Amount, mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays);
+					if (Amount > 0) {
+						mGameState.BuyingPrice[i] = mGameState.BuyingPrice[i]*(mGameState.Ship.cargo[i]-Amount)/mGameState.Ship.cargo[i];
+						mGameState.Ship.cargo[i] -= Amount;
+						mGameState.Opponent.cargo[i] = Amount;
+						mGameState.Credits += Amount * mGameState.SellPrice[i];
+						alertDialog("Trade Completed",
+						            String.format("%s %s. It's been a pleasure doing business with you.",
+						                          "Thanks for selling us the",
+						                          mGameState.Tradeitems.mTradeitems[i].name),
+						            ""
+						);
+					}
+					Travel();
+				}
+			});
+		} else if (mGameState.EncounterType == GameState.TRADERSELL) {
+			i = mGameState.GetRandomTradeableItem (mGameState.Opponent, GameState.TRADERSELL);
+			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
+				if (mGameState.GetRandom(100) <= 45)
+					mGameState.BuyPrice[i] *= 1.1;
+				else
+					mGameState.BuyPrice[i] *= 0.8;
+			} else {
+				if (mGameState.GetRandom(100) <= 10)
+					mGameState.BuyPrice[i] *= 1.1;
+				else
+					mGameState.BuyPrice[i] *= 0.9;
+			}
+
+			mGameState.BuyPrice[i] /= mGameState.Tradeitems.mTradeitems[i].roundOff;
+			mGameState.BuyPrice[i] *= mGameState.Tradeitems.mTradeitems[i].roundOff;
+			if (mGameState.BuyPrice[i] < mGameState.Tradeitems.mTradeitems[i].minTradePrice)
+				mGameState.BuyPrice[i] = mGameState.Tradeitems.mTradeitems[i].minTradePrice;
+			if (mGameState.BuyPrice[i] > mGameState.Tradeitems.mTradeitems[i].maxTradePrice)
+				mGameState.BuyPrice[i] = mGameState.Tradeitems.mTradeitems[i].maxTradePrice;
+
+			String buf = String.format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.BuyPrice[i], mGameState.Opponent.cargo[i], mGameState.Credits / mGameState.BuyPrice[i]);
+
+			inputDialog("Trade Offer", buf, "Amount", "", new IFinputDialogCallback() {
+				@Override
+				public void execute(EditText input) {
+					int Amount = 0;
+					try {
+						Amount = Integer.parseInt(input.getText().toString());
+					} catch (NumberFormatException e){
+						alertDialog("Error", e.getLocalizedMessage(), "");
+						Amount = 0;
+					}
+					Amount = Math.max(0, Math.min(mGameState.Opponent.cargo[i], Amount));
+					Amount = Math.min( Amount, (mGameState.Credits / mGameState.BuyPrice[i]));
+					if (Amount > 0) {
+						mGameState.Ship.cargo[i] += Amount;
+						mGameState.Opponent.cargo[i] -= Amount;
+						mGameState.BuyingPrice[i] += (Amount * mGameState.BuyPrice[i]);
+						mGameState.Credits -= (Amount * mGameState.BuyPrice[i]);
+
+						alertDialog("Trade Completed",
+						            String.format("%s %s. It's been a pleasure doing business with you.",
+						                          "Thanks for buying the",
+						                          mGameState.Tradeitems.mTradeitems[i].name
+						               ), ""
+						);
+					}
+					Travel();
+				}
+			});
+		}
 	}
 }

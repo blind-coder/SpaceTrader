@@ -38,9 +38,9 @@ public class Tradeitems {
 	}
 
 	public class Tradeitem {
-		String name;
-		public int techProduction;  // Tech level needed for production
-		public int techUsage;     // Tech level needed to use
+		public String name;
+		public int    techProduction;  // Tech level needed for production
+		public int    techUsage;     // Tech level needed to use
 		int techTopProduction; // Tech level which produces this item the most
 		public int priceLowTech;   // Medium price at lowest tech level
 		public int priceInc;     // Price increase per tech level
@@ -48,9 +48,9 @@ public class Tradeitems {
 		public int doublePriceStatus;  // Price increases considerably when this event occurs
 		public int cheapResource;    // When this resource is available, this trade item is cheap
 		public int expensiveResource;  // When this resource is available, this trade item is expensive
-		int minTradePrice;    // Minimum price to buy/sell in orbit
-		int maxTradePrice;    // Minimum price to buy/sell in orbit
-		int roundOff;     // Roundoff price for trade in orbit
+		public int minTradePrice;    // Minimum price to buy/sell in orbit
+		public int maxTradePrice;    // Minimum price to buy/sell in orbit
+		public int roundOff;     // Roundoff price for trade in orbit
 
 		public Tradeitem(String name, int techProduction, int techUsage, int techTopProduction, int priceLowTech, int priceInc, int variance, int doublePriceStatus, int cheapResource, int expensiveResource, int minTradePrice, int maxTradePrice, int roundOff) {
 			this.name = name;

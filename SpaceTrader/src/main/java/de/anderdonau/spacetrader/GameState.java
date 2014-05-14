@@ -1647,9 +1647,6 @@ public class GameState implements Serializable {
 		return sum;
 	}
 
-	// *************************************************************************
-	// Money available to spend
-	// *************************************************************************
 	public int MercenaryMoney(){
 		int i, ToPay;
 
@@ -1667,6 +1664,9 @@ public class GameState implements Serializable {
 			return (Math.max(1, (((CurrentShipPriceWithoutCargo( true ) * 5) / 2000) * (100 - Math.min( NoClaim, 90 )) / 100) ));
 	}
 	int ToSpend(){
+		// *************************************************************************
+		// Money available to spend
+		// *************************************************************************
 		if (!ReserveMoney)
 			return Credits;
 		return Math.max(0,  Credits - MercenaryMoney() - InsuranceMoney());
@@ -1878,10 +1878,10 @@ public class GameState implements Serializable {
 			}
 		}
 	}
-	// *************************************************************************
-	// Pay interest on debt
-	// *************************************************************************
 	public void PayInterest() {
+		// *************************************************************************
+		// Pay interest on debt
+		// *************************************************************************
 		int IncDebt;
 
 		if (Debt > 0)
@@ -2266,5 +2266,119 @@ public class GameState implements Serializable {
 		}
 
 		return ret;
+	}
+	int TotalShields(Ship Sh) {
+		// *************************************************************************
+		// Calculate total possible shield strength
+		// *************************************************************************
+		int i;
+		int j;
+
+		j = 0;
+		for (i=0; i<MAXSHIELD; ++i)
+		{
+			if (Sh.shield[i] < 0)
+				break;
+			j += this.Shields.mShields[Sh.shield[i]].power;
+		}
+
+		return j;
+	}
+	int TotalShieldStrength(Ship Sh) {
+		// *************************************************************************
+		// Calculate total shield strength
+		// *************************************************************************
+		int i;
+		int k;
+
+		k = 0;
+		for (i=0; i<MAXSHIELD; ++i)
+		{
+			if (Sh.shield[i] < 0)
+				break;
+			k += Sh.shieldStrength[i];
+		}
+
+		return k;
+	}
+	public boolean ENCOUNTERFAMOUS(int a){
+		return ((a) >= FAMOUSCAPTAIN && (a) <= MAXFAMOUSCAPTAIN);
+	}
+	public boolean ENCOUNTERPOLICE(int a){
+		return ((a) >= POLICE && (a) <= MAXPOLICE);
+	}
+	public boolean ENCOUNTERPIRATE(int a){
+		return  ((a) >= PIRATE && (a) <= MAXPIRATE);
+	}
+	public boolean ENCOUNTERTRADER(int a){
+		return  ((a) >= TRADER && (a) <= MAXTRADER);
+	}
+	public boolean ENCOUNTERMONSTER(int a){
+		return ((a) >= SPACEMONSTERATTACK && (a) <= MAXSPACEMONSTER);
+	}
+	public boolean ENCOUNTERDRAGONFLY(int a){
+		return  ((a) >= DRAGONFLYATTACK && (a) <= MAXDRAGONFLY);
+	}
+	public boolean ENCOUNTERSCARAB(int a){
+		return ((a) >= SCARABATTACK && (a) <= MAXSCARAB);
+	}
+	public int GetRandomTradeableItem(Ship sh, int Operation) {
+		// *************************************************************************
+		// Returns the index of a trade good that is on a given ship that can be
+		// sold in a given system.
+		// *************************************************************************
+		boolean looping = true;
+		int i=0, j;
+
+		while (looping && i < 10){
+			j = GetRandom(MAXTRADEITEM);
+			// It's not as ugly as it may look! If the ship has a particular item, the following
+			// conditions must be met for it to be tradeable:
+			// if the trader is buying, there must be a valid sale price for that good on the local system
+			// if the trader is selling, there must be a valid buy price for that good on the local system
+			// if the player is criminal, the good must be illegal
+			// if the player is not criminal, the good must be legal
+			if ( (sh.cargo[j] > 0 && Operation == TRADERSELL && BuyPrice[j] > 0) &&
+				     ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) ||
+					      (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS)) )
+				looping = false;
+			else if ( (sh.cargo[j] > 0 && Operation == TRADERBUY &&  SellPrice[j] > 0)  &&
+				          ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) ||
+					           (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS)) )
+				looping = false;
+				// alles klar?
+			else
+			{
+				j = -1;
+				i++;
+			}
+		}
+		// if we didn't succeed in picking randomly, we'll pick sequentially. We can do this, because
+		// this routine is only called if there are tradeable goods.
+		if (j == -1)
+		{
+			j = 0;
+			looping = true;
+			while (looping)
+			{
+				// see lengthy comment above.
+				if ( (((sh.cargo[j] > 0) && (Operation == TRADERSELL) &&  (BuyPrice[j] > 0)) ||
+					      ((sh.cargo[j] > 0) && (Operation == TRADERBUY) &&  (SellPrice[j] > 0))) &&
+					     ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) ||
+						      (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS)) ){
+					looping = false;
+				}
+				else
+				{
+					j++;
+					if (j == MAXTRADEITEM)
+					{
+						// this should never happen!
+						looping = false;
+					}
+				}
+			}
+		}
+		return j;
 	}
 }

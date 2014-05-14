@@ -30,6 +30,7 @@ public class RenderShip extends View {
 
 	private boolean rotate = false;
 	Bitmap bitmap;
+	Bitmap bitmap_shield;
 	Bitmap bitmap_damaged;
 	Rect src = new Rect();
 	Rect dst = new Rect();
@@ -54,6 +55,7 @@ public class RenderShip extends View {
 	public void setRotate(boolean rotate) {
 		if (rotate != this.rotate){
 			bitmap = rotateBitmap(bitmap);
+			bitmap_shield = rotateBitmap(bitmap_shield);
 			bitmap_damaged = rotateBitmap(bitmap_damaged);
 			this.rotate = rotate;
 		}
@@ -63,8 +65,9 @@ public class RenderShip extends View {
 		this.mShip = ship;
 		this.rotate = false;
 		if (WelcomeScreen.mGameState == null) {
-			bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.spacemonster);
-			bitmap_damaged = BitmapFactory.decodeResource(getResources(), R.drawable.spacemonster_damaged);
+			bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beetle);
+			bitmap_shield = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_shield);
+			bitmap_damaged = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_damaged);
 		} else {
 			bitmap = BitmapFactory.decodeResource(getResources(),
 			                                      WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable
@@ -72,32 +75,55 @@ public class RenderShip extends View {
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(),
 			                                              WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable_damaged
 			);
+			bitmap_shield = BitmapFactory.decodeResource(getResources(),
+			                                              WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable_shield
+			);
 		}
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
 		int dmgPercent;
+		int shieldPercent;
 		if (mShip == null) {
+			Random rand = new Random();
 			int[] cargo = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 			int[] weapon = {1, -1, -1};
 			int[] shield = {1, -1, -1};
-			int[] shieldStrength = {100, -1, -1};
+			int[] shieldStrength = {rand.nextInt(GameState.ESHIELDPOWER), -1, -1};
 			int[] gadget = {-1, -1, -1};
 			int[] crew = {1, -1, -1};
 			int fuel = 10;
-			Random rand = new Random();
 			int hull = rand.nextInt(200);
 			int tribbles = 0;
-			Ship s = new Ship(ShipTypes.SPACEMONSTER, cargo, weapon, shield, shieldStrength, gadget, crew, fuel, hull, tribbles);
+			Ship s = new Ship(ShipTypes.BEETLE, cargo, weapon, shield, shieldStrength, gadget, crew, fuel, hull, tribbles);
 			this.setShip(s);
 			this.setRotate(true);
 		}
 
 		if (WelcomeScreen.mGameState == null){
 			dmgPercent = (mShip.hull * 100) / 200;
+			shieldPercent = (mShip.shieldStrength[0] * 100 / GameState.ESHIELDPOWER);
 		} else {
+			if (WelcomeScreen.mGameState.TotalShields(mShip) > 0){
+				shieldPercent = (WelcomeScreen.mGameState.TotalShieldStrength(mShip)*100)/WelcomeScreen.mGameState.TotalShields(mShip);
+			} else {
+				shieldPercent = -1;
+			}
 			dmgPercent = (mShip.hull * 100) / WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].hullStrength;
+		}
+
+		if (shieldPercent > 0){
+			src.top = 0;
+			src.bottom = bitmap_shield.getHeight();
+			src.left = 0;
+			src.right = bitmap_shield.getWidth()*shieldPercent/100;
+
+			dst.top = getHeight()/2 - bitmap_shield.getHeight()/2;
+			dst.bottom = dst.top + (src.bottom - src.top);
+			dst.left = getWidth()/2 - bitmap_shield.getWidth()/2;
+			dst.right = dst.left + (src.right - src.left);
+			canvas.drawBitmap(bitmap_shield, src, dst, paint);
 		}
 
 		src.top = 0;

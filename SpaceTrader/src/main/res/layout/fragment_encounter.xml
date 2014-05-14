@@ -43,4 +43,158 @@
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"/>
 
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Encounter Text."
+			android:id="@+id/txtEncounterText"
+			android:layout_below="@+id/EncounterPlayerShip"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignRight="@+id/EncounterPlayerOpponent"
+			android:layout_alignEnd="@+id/EncounterPlayerOpponent"/>
+
+	<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="false"
+			android:layout_alignEnd="@+id/EncounterPlayerOpponent"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:stretchColumns="0,1,2,3"
+			>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Attack"
+					android:id="@+id/btnAttack"
+					android:layout_column="0"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Flee"
+					android:id="@+id/btnFlee"
+					android:layout_column="1"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Submit"
+					android:id="@+id/btnSubmit"
+					android:layout_column="2"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Bribe"
+					android:id="@+id/btnBribe"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Ignore"
+					android:id="@+id/btnIgnore"
+					android:layout_column="1"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Yield"
+					android:id="@+id/btnYield"
+					android:layout_column="2"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Int."
+					android:id="@+id/btnInt"
+					android:layout_column="3"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Board"
+					android:id="@+id/btnBoard"
+					android:layout_column="0"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Plunder"
+					android:id="@+id/btnPlunder"
+					android:layout_column="1"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Surrender"
+					android:id="@+id/btnSurrender"
+					android:layout_column="2"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Drink"
+					android:id="@+id/btnDrink"
+					android:layout_column="0"/>
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Meet"
+					android:id="@+id/btnMeet"
+					android:layout_column="2"/>
+		</TableRow>
+
+		<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+
+			<Button
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Trade"
+					android:id="@+id/btnTrade"
+					android:layout_column="2"/>
+		</TableRow>
+
+	</TableLayout>
+
 </RelativeLayout>
