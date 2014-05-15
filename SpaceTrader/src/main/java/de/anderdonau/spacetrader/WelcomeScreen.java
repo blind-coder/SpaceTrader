@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
 import android.util.Log;
@@ -30,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -62,6 +65,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public static TextView EncounterText;
 	public static Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard,
 		btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
+	public static ProgressBar pBarEncounter;
 
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
@@ -805,19 +809,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		inputDialog("Get Loan", String.format("How much do you want?\nYou can borrow up to %d credits.",
 		                                      mGameState.MaxLoan()
-		), "Credits", "", new IFinputDialogCallback() {
+		), "Credits", "", mGameState.MaxLoan(), new IFinputDialogCallback() {
 			@Override
-			public void execute(EditText input) {
-				try {
-					int amount = Integer.parseInt(input.getText().toString());
-					if (amount > 0) {
-						amount = Math.min(mGameState.MaxLoan(), amount);
-						mGameState.Credits += amount;
-						mGameState.Debt += amount;
-						btnBank(null);
-					}
-				} catch (NumberFormatException e) {
-					alertDialog("Error", e.getLocalizedMessage().toString(), "");
+			public void execute(SeekBar seekBar) {
+				int amount = seekBar.getProgress();
+				if (amount > 0) {
+					amount = Math.min(mGameState.MaxLoan(), amount);
+					mGameState.Credits += amount;
+					mGameState.Debt += amount;
+					btnBank(null);
 				}
 			}
 		}
@@ -828,23 +828,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			alertDialog("No debt.", "You don't have a loan to pay back.", "");
 			return;
 		}
-		inputDialog("Payback Loan", String.format("You have a debt of %d credits.\nHow much do you want to pay back?", mGameState.Debt), "Credits", "", new IFinputDialogCallback() {
+		inputDialog("Payback Loan", String.format("You have a debt of %d credits.\nHow much do you want to pay back?", mGameState.Debt),
+		            "Credits", "", mGameState.Debt, new IFinputDialogCallback() {
 			@Override
-			public void execute(EditText input) {
-				try {
-					int amount = Integer.parseInt(input.getText().toString());
-					if (amount > 0){
-						amount = Math.min(mGameState.Debt, amount);
-						if (amount > mGameState.Credits){
-							alertDialog("Not enough credits!", String.format("You only have %d credits. You can't pay back more than that!", mGameState.Credits), "");
-							return;
-						}
-						mGameState.Credits -= amount;
-						mGameState.Debt -= amount;
-						btnBank(null);
+			public void execute(SeekBar seekBar) {
+				int amount = seekBar.getProgress();
+				if (amount > 0){
+					amount = Math.min(mGameState.Debt, amount);
+					if (amount > mGameState.Credits){
+						alertDialog("Not enough credits!", String.format("You only have %d credits. You can't pay back more than that!", mGameState.Credits), "");
+						return;
 					}
-				} catch (NumberFormatException e){
-					alertDialog("Error", e.getLocalizedMessage().toString(), "");
+					mGameState.Credits -= amount;
+					mGameState.Debt -= amount;
+					btnBank(null);
 				}
 			}
 		});
@@ -895,11 +892,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnShipyardBuyFuel(View view){
 		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
 		            "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
+								mGameState.Credits,
 		            new IFinputDialogCallback() {
 			            @Override
-			            public void execute(EditText input) {
+			            public void execute(SeekBar seekBar) {
 				            try {
-					            int amount = Integer.parseInt(input.getText().toString());
+					            int amount = seekBar.getProgress();
 					            btnShipyardBuyFuel(amount);
 				            } catch (NumberFormatException e) {
 					            alertDialog("Error", e.getLocalizedMessage(), "");
@@ -928,15 +926,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnShipyardBuyRepairs(View view){
 		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits",
 		            "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
+								mGameState.Credits,
 		            new IFinputDialogCallback() {
 			            @Override
-			            public void execute(EditText input) {
-				            try {
-					            int amount = Integer.parseInt(input.getText().toString());
-					            btnShipyardBuyRepairs(amount);
-				            } catch (NumberFormatException e) {
-					            alertDialog("Error", e.getLocalizedMessage(), "");
-				            }
+			            public void execute(SeekBar seekBar) {
+				            int amount = seekBar.getProgress();
+				            btnShipyardBuyRepairs(amount);
 			            }
 		            }
 		);
@@ -1450,22 +1445,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		inputDialog("Buy Cargo",
 		            String.format("How many do you want to buy?\nAt %d cr. each you can afford %d.",
-		                          mGameState.BuyPrice[idx], Math.min(mGameState
-			                                                             .ToSpend() / mGameState.BuyPrice[Index],
-		                                                             CURSYSTEM.qty[Index]
-		            )
-		            ), "Amount",
+		                          mGameState.BuyPrice[idx],
+		                          Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index])),
+                "Amount",
 		            "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
+								Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index]),
 		            new IFinputDialogCallback() {
 			            @Override
-			            public void execute(EditText input) {
+			            public void execute(SeekBar seekBar) {
 				            int Amount;
-				            try {
-					            Amount = Integer.parseInt(input.getText().toString());
-				            } catch (NumberFormatException e) {
-					            alertDialog("Error", e.getLocalizedMessage(), "");
-					            Amount = 0;
-				            }
+				            Amount = seekBar.getProgress();
 				            if (Amount > 0) {
 					            BuyCargo(Index, Amount);
 					            if (mCurrentState.equals("AveragePrices")){
@@ -1598,16 +1587,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                                  mGameState.SellPrice[Index] - (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index])
 			                          ), "Amount",
 		            "If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
+								mGameState.Ship.cargo[Index],
 		            new IFinputDialogCallback() {
 			            @Override
-			            public void execute(EditText input) {
+			            public void execute(SeekBar seekBar) {
 				            int Amount;
-				            try {
-					            Amount = Integer.parseInt(input.getText().toString());
-				            } catch (NumberFormatException e){
-					            alertDialog("Error", e.getLocalizedMessage(), "");
-					            Amount = 0;
-				            }
+				            Amount = seekBar.getProgress();
 				            if (Amount > 0){
 					            SellCargo(idx, Amount, GameState.SELLCARGO);
 					            btnSellCargo(null);
@@ -3146,10 +3131,11 @@ SeekBar.OnSeekBarChangeListener() {
 				}
 			}
 
-			/* TODO
-			if (WormholeExists( COMMANDER.CurSystem, WarpSystem ) || Insurance || Debt > 0 || Ship.Crew[1] >= 0)
+			/* TODO: Specific Costs Button
+			if (mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, WarpSystem ) ||
+				    mGameState.Insurance || mGameState.Debt > 0 || mGameState.Ship.crew[1] >= 0)
 				WarpSystemButtonSpecific.setVisibility(View.VISIBLE);
-				*/
+			*/
 			return rootView;
 		}
 	}
@@ -3184,6 +3170,7 @@ SeekBar.OnSeekBarChangeListener() {
 			btnMeet = (Button) rootView.findViewById(R.id.btnMeet);
 			btnTrade = (Button) rootView.findViewById(R.id.btnTrade);
 			btnInt = (Button) rootView.findViewById(R.id.btnInt);
+			pBarEncounter = (ProgressBar) rootView.findViewById(R.id.pBarEncounter);
 			EncounterText = (TextView) rootView.findViewById(R.id.txtEncounterText);
 
 			EncounterButtons();
@@ -3300,19 +3287,44 @@ SeekBar.OnSeekBarChangeListener() {
 		}
 	}
 	public interface IFinputDialogCallback {
-		public void execute(EditText input);
+		public void execute(SeekBar seekBar);
 	}
-	public void inputDialog(String title, String content, String hint, final String help, final IFinputDialogCallback cb){
+	public void inputDialog(String title, String content, String hint, final String help, final int max, final IFinputDialogCallback cb){
 		final EditText input = new EditText(WelcomeScreen.this);
 		input.setHint(hint);
 		input.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+		final LinearLayout linearLayout = new LinearLayout(WelcomeScreen.this);
+		final SeekBar seekBar = new SeekBar(WelcomeScreen.this);
+		seekBar.setMax(max);
+		final TextView textView = new TextView(WelcomeScreen.this);
+		textView.setText("0");
+		seekBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		linearLayout.addView(textView);
+		linearLayout.addView(seekBar);
+		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				textView.setText(String.format("%d", seekBar.getProgress()));
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
 		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
 				.setTitle(title)
 				.setMessage(content)
-				.setView(input)
+				.setView(linearLayout)
 				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						cb.execute(input);
+						cb.execute(seekBar);
 					}
 				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
@@ -3991,7 +4003,7 @@ SeekBar.OnSeekBarChangeListener() {
 			);
 			mGameState.ReactorStatus = 0;
 			if (mGameState.EscapePod) {
-				// TODO: EscapeWithPod();
+				EscapeWithPod();
 				return;
 			} else {
 				// TODO
@@ -3999,7 +4011,7 @@ SeekBar.OnSeekBarChangeListener() {
 				            "Your ship has been destroyed.",
 				            ""
 				);
-				// TODO: btnShipDestroyed(null);
+				btnDestroyed();
 				return;
 			}
 		}
@@ -4231,10 +4243,12 @@ SeekBar.OnSeekBarChangeListener() {
 		btnMeet.setVisibility(View.INVISIBLE);
 		btnDrink.setVisibility(View.INVISIBLE);
 		btnTrade.setVisibility(View.INVISIBLE);
+		pBarEncounter.setVisibility(View.INVISIBLE);
 
-		if (mGameState.AutoAttack || mGameState.AutoFlee)
+		if (mGameState.AutoAttack || mGameState.AutoFlee){
 			btnInt.setVisibility(View.VISIBLE);
-
+			pBarEncounter.setVisibility(View.VISIBLE);
+		}
 		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnFlee.setVisibility(View.VISIBLE);
@@ -4420,16 +4434,11 @@ SeekBar.OnSeekBarChangeListener() {
 
 			String buf = String.format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.SellPrice[i], mGameState.Ship.cargo[i], mGameState.BuyingPrice[i] / mGameState.Ship.cargo[i]);
 
-			inputDialog("Trade offer", buf, "Amount", "", new IFinputDialogCallback() {
+			inputDialog("Trade offer", buf, "Amount", "", mGameState.Ship.cargo[i], new IFinputDialogCallback() {
 				@Override
-				public void execute(EditText input) {
+				public void execute(SeekBar seekBar) {
 					int Amount = 0;
-					try {
-						Amount = Integer.parseInt(input.getText().toString());
-					} catch (NumberFormatException e){
-						alertDialog("Error", e.getLocalizedMessage(), "");
-						Amount = 0;
-					}
+					Amount = seekBar.getProgress();
 					Amount = Math.max(0, Math.min(mGameState.Ship.cargo[i], Amount));
 					Amount = Math.min(Amount, mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays);
 					if (Amount > 0) {
@@ -4470,16 +4479,11 @@ SeekBar.OnSeekBarChangeListener() {
 
 			String buf = String.format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.BuyPrice[i], mGameState.Opponent.cargo[i], mGameState.Credits / mGameState.BuyPrice[i]);
 
-			inputDialog("Trade Offer", buf, "Amount", "", new IFinputDialogCallback() {
+			inputDialog("Trade Offer", buf, "Amount", "", mGameState.Opponent.cargo[i], new IFinputDialogCallback() {
 				@Override
-				public void execute(EditText input) {
+				public void execute(SeekBar seekBar) {
 					int Amount = 0;
-					try {
-						Amount = Integer.parseInt(input.getText().toString());
-					} catch (NumberFormatException e){
-						alertDialog("Error", e.getLocalizedMessage(), "");
-						Amount = 0;
-					}
+					Amount = seekBar.getProgress();
 					Amount = Math.max(0, Math.min(mGameState.Opponent.cargo[i], Amount));
 					Amount = Math.min( Amount, (mGameState.Credits / mGameState.BuyPrice[i]));
 					if (Amount > 0) {
@@ -5337,7 +5341,7 @@ SeekBar.OnSeekBarChangeListener() {
 	// A fight round
 	// Return value indicates whether fight continues into another round
 	// *************************************************************************
-	public boolean ExecuteAction(Boolean CommanderFlees){
+	public boolean ExecuteAction(final Boolean CommanderFlees){
 		Boolean CommanderGotHit, OpponentGotHit;
 		long OpponentHull, ShipHull;
 		int y, i;
@@ -5614,7 +5618,17 @@ SeekBar.OnSeekBarChangeListener() {
     CtlDrawControl( cp ); */
 		}
 
-		if (mGameState.Continuous && (mGameState.AutoAttack || mGameState.AutoFlee) /*TODO Continuus&& !Fl::has_timeout(ContinuousAttackFlee)*/){
+		if (mGameState.Continuous && (mGameState.AutoAttack || mGameState.AutoFlee)){
+			Handler delayHandler = new Handler();
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					if (!ExecuteAction(CommanderFlees)){
+						Travel();
+					}
+				}
+			};
+			delayHandler.postDelayed(r, 1500);
 		}
 		return (true);
 	}

@@ -64,7 +64,7 @@
 			android:layout_alignParentRight="true"
 			android:layout_alignParentBottom="true"
 			android:stretchColumns="0,1,2,3"
-			>
+			android:id="@+id/tableLayout">
 
 		<TableRow
 				android:layout_width="fill_parent"
@@ -206,8 +206,20 @@
 					android:id="@+id/btnTrade"
 					android:onClick="EncounterButtonTradeCallback"
 					android:layout_column="2"/>
+
 		</TableRow>
 
 	</TableLayout>
+
+	<ProgressBar
+			style="?android:attr/progressBarStyleLarge"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/pBarEncounter"
+			android:indeterminate="true"
+			android:layout_alignEnd="@+id/EncounterPlayerOpponent"
+			android:layout_alignParentEnd="false"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
