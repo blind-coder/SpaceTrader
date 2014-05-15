@@ -88,7 +88,7 @@ public class SaveGame implements Serializable {
 	public int WarpSystem;
 	public int WildStatus;
 	public int[] Wormhole = new int[GameState.MAXWORMHOLE];
-	public static int Difficulty;
+	public int Difficulty;
 	public int ScarabStatus;
 
 	public SaveGame(GameState g) {
@@ -168,7 +168,7 @@ public class SaveGame implements Serializable {
 		this.VeryRareEncounter = g.VeryRareEncounter;
 		this.WarpSystem = g.WarpSystem;
 		this.WildStatus = g.WildStatus;
-		this.Difficulty = g.Difficulty;
+		this.Difficulty = GameState.getDifficulty();
 
 		for (i=0; i<GameState.MAXWORMHOLE; i++){
 			this.Wormhole[i] = g.Wormhole[i];

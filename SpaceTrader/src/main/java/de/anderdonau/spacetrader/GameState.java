@@ -8,8 +8,6 @@
 
 package de.anderdonau.spacetrader;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.Random;
 
@@ -566,7 +564,7 @@ public class GameState implements Serializable {
 	public        int           ChanceOfTradeInOrbit      = CHANCEOFTRADEINORBIT;
 	public        int           Clicks                    = 0;
 	// Distance from target system,= 0;= arrived
-	public static int           Difficulty                = NORMAL;     // Difficulty level
+	static int           Difficulty                = NORMAL;     // Difficulty level
 	public        int           DragonflyStatus           = 0;
 	//= 0;= Dragonfly not available,= 1;= Go to Baratas,= 2;= Go to Melina,= 3;= Go to Regulas,= 4;= Go to Zalkon,= 5;= Dragonfly destroyed
 	public        int           ExperimentStatus          = 0;
@@ -742,13 +740,6 @@ public class GameState implements Serializable {
 		while (i < GameState.MAXSOLARSYSTEM) {
 			if (i < GameState.MAXWORMHOLE) {
 				// Place the first system somewhere in the centre
-				Log.d("gamestateinit", String
-					                       .format("SolarSystem[%d].x = ((%d / 2) - GetRandom(%d)) + ((%d * (1 + 2 * (%d %% 3))) / 6))",
-					                               i, GameState.CLOSEDISTANCE, GameState.CLOSEDISTANCE,
-					                               GameState.GALAXYWIDTH, i
-					                       )
-				);
-
 				SolarSystem[i].x =
 					(((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
 				SolarSystem[i].y =
@@ -1153,7 +1144,6 @@ public class GameState implements Serializable {
 	public static int getDifficulty() {
 		return Difficulty;
 	}
-
 	public static void setDifficulty(int difficulty) {
 		Difficulty = difficulty;
 		CountDown = difficulty + 3;
@@ -1237,7 +1227,7 @@ public class GameState implements Serializable {
 		this.VeryRareEncounter = g.VeryRareEncounter;
 		this.WarpSystem = g.WarpSystem;
 		this.WildStatus = g.WildStatus;
-		GameState.setDifficulty(SaveGame.Difficulty);
+		GameState.setDifficulty(g.Difficulty);
 
 		for (i=0; i<GameState.MAXWORMHOLE; i++){
 			this.Wormhole[i] = g.Wormhole[i];
@@ -1765,6 +1755,18 @@ public class GameState implements Serializable {
 		if (ScarabStatus == 3) // Scarab hull hardening is not transferrable.
 			ScarabStatus = 0;
 	}
+	public void CreateFlea() {
+		// *************************************************************************
+		// You get a Flea
+		// *************************************************************************
+		int i;
+		CreateShip(0);
+		for (i=1; i<MAXCREW; ++i)
+			Ship.crew[i] = -1;
+		EscapePod = false;
+		Insurance = false;
+		NoClaim = 0;
+	}
 	public int StandardPrice(int Good, int Size, int Tech, int Government, int Resources) {
 		// *************************************************************************
 		// Standard price calculation
@@ -2214,7 +2216,7 @@ public class GameState implements Serializable {
 		for (i=d; i<MAXCREW; ++i)
 			Opponent.crew[i] = -1;
 	}
-	long TotalWeapons(Ship Sh, int minWeapon, int maxWeapon) {
+	int TotalWeapons(Ship Sh, int minWeapon, int maxWeapon) {
 		// *************************************************************************
 		// Calculate total possible weapon strength
 		// Modified to allow an upper and lower limit on which weapons work.
@@ -2223,7 +2225,7 @@ public class GameState implements Serializable {
 		// always what you want. SjG
 		// *************************************************************************
 		int i;
-		long j;
+		int j;
 
 		j = 0;
 		for (i=0; i<MAXWEAPON; ++i)
@@ -2328,7 +2330,7 @@ public class GameState implements Serializable {
 		// sold in a given system.
 		// *************************************************************************
 		boolean looping = true;
-		int i=0, j;
+		int i=0, j = -1;
 
 		while (looping && i < 10){
 			j = GetRandom(MAXTRADEITEM);
@@ -2380,5 +2382,103 @@ public class GameState implements Serializable {
 			}
 		}
 		return j;
+	}
+
+	void IncreaseRandomSkill() {
+		// *************************************************************************
+		// Increase one of the skills of the commander
+		// *************************************************************************
+		Boolean Redo;
+		int d = 0, oldtraderskill;
+		CrewMember COMMANDER = Mercenary[0];
+
+		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
+			    COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL)
+			return;
+
+		oldtraderskill = TraderSkill(Ship);
+
+		Redo = true;
+		while (Redo) {
+			d = (GetRandom(MAXSKILLTYPE));
+			if ((d == 0 && COMMANDER.pilot < MAXSKILL) ||
+				    (d == 1 && COMMANDER.fighter < MAXSKILL) ||
+				    (d == 2 && COMMANDER.trader < MAXSKILL) ||
+				    (d == 3 && COMMANDER.engineer < MAXSKILL))
+				Redo = false;
+		}
+		if (d == 0)
+			COMMANDER.pilot += 1;
+		else if (d == 1)
+			COMMANDER.fighter += 1;
+		else if (d == 2) {
+			COMMANDER.trader += 1;
+			if (oldtraderskill != TraderSkill(Ship))
+			RecalculateBuyPrices(COMMANDER.curSystem);
+		}
+		else
+			COMMANDER.engineer += 1;
+	}
+	void DecreaseRandomSkill( int amount ) {
+		// *************************************************************************
+		// Decrease one of the skills of the commander
+		// *************************************************************************
+		Boolean Redo;
+		int d = 0, oldtraderskill;
+		CrewMember COMMANDER = Mercenary[0];
+
+		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
+			    COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL)
+			return;
+
+		oldtraderskill = TraderSkill(Ship);
+
+		Redo = true;
+		while (Redo) {
+			d = (GetRandom( MAXSKILLTYPE ));
+			if ((d == 0 && COMMANDER.pilot > amount) ||
+				    (d == 1 && COMMANDER.fighter > amount) ||
+				    (d == 2 && COMMANDER.trader > amount) ||
+				    (d == 3 && COMMANDER.engineer > amount))
+				Redo = false;
+		}
+		if (d == 0)
+			COMMANDER.pilot -= amount;
+		else if (d == 1)
+			COMMANDER.fighter -= amount;
+		else if (d == 2) {
+			COMMANDER.trader -= amount;
+			if (oldtraderskill != TraderSkill(Ship))
+				RecalculateBuyPrices(COMMANDER.curSystem);
+		}
+		else
+			COMMANDER.engineer -= amount;
+	}
+	void TonicTweakRandomSkill() {
+		// *************************************************************************
+		// Randomly tweak one of the skills of the commander
+		// *************************************************************************
+		int oldPilot, oldFighter, oldTrader, oldEngineer;
+		CrewMember COMMANDER = Mercenary[0];
+		oldPilot = COMMANDER.pilot;
+		oldFighter = COMMANDER.fighter;
+		oldTrader = COMMANDER.trader;
+		oldEngineer = COMMANDER.engineer;
+
+		if (Difficulty < HARD) {
+			// add one to a random skill, subtract one from a random skill
+			while ( oldPilot == COMMANDER.pilot &&
+				        oldFighter == COMMANDER.fighter &&
+				        oldTrader == COMMANDER.trader &&
+				        oldEngineer == COMMANDER.engineer){
+				IncreaseRandomSkill();
+				DecreaseRandomSkill(1);
+			}
+		} else {
+			// add one to two random skills, subtract three from one random skill
+			IncreaseRandomSkill();
+			IncreaseRandomSkill();
+			DecreaseRandomSkill(3);
+		}
 	}
 }

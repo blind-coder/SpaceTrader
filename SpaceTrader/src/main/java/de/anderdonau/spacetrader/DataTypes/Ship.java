@@ -26,12 +26,12 @@ public class Ship implements Serializable {
 
 	public Ship(int type, int[] cargo, int[] weapon, int[] shield, int[] shieldStrength, int[] gadget, int[] crew, int fuel, int hull, int tribbles) {
 		this.type = type;
-		this.cargo = cargo;
-		this.weapon = weapon;
-		this.shield = shield;
-		this.shieldStrength = shieldStrength;
-		this.gadget = gadget;
-		this.crew = crew;
+		this.cargo = cargo.clone();
+		this.weapon = weapon.clone();
+		this.shield = shield.clone();
+		this.shieldStrength = shieldStrength.clone();
+		this.gadget = gadget.clone();
+		this.crew = crew.clone();
 		this.fuel = fuel;
 		this.hull = hull;
 		this.tribbles = tribbles;

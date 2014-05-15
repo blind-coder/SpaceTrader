@@ -46,7 +46,7 @@ public class SolarSystem implements Serializable {
 
 			// Because of the enormous profits possible, there shouldn't be too many robots or narcotics available
 			if (i == GameState.ROBOTS || i == GameState.NARCOTICS)
-				this.qty[i] = ((this.qty[i] * (5 - GameState.Difficulty)) / (6 - GameState.Difficulty)) + 1;
+				this.qty[i] = ((this.qty[i] * (5 - GameState.getDifficulty())) / (6 - GameState.getDifficulty())) + 1;
 
 			if (GameState.Tradeitems.mTradeitems[i].cheapResource >= 0)
 				if (this.specialResources == GameState.Tradeitems.mTradeitems[i].cheapResource)
