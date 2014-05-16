@@ -2481,4 +2481,47 @@ public class GameState implements Serializable {
 			DecreaseRandomSkill(3);
 		}
 	}
+	  // *************************************************************************
+		// NthLowest Skill. Returns skill with the nth lowest score
+		// (i.e., 2 is the second worst skill). If there is a tie, it will return
+		// in the order of Pilot, Fighter, Trader, Engineer.
+		// *************************************************************************
+	public int NthLowestSkill(Ship Sh,int n) {
+		int i = 0, lower = 1, retVal = 0;
+		boolean looping = true;
+		while (looping) {
+			retVal = 0;
+			if (Mercenary[Sh.crew[0]].pilot == i){
+				if (lower == n){
+					looping = false;
+					retVal = PILOTSKILL;
+				}
+				lower++;
+			}
+			if (Mercenary[Sh.crew[0]].fighter == i){
+				if (lower == n){
+					looping = false;
+					retVal = FIGHTERSKILL;
+				}
+				lower++;
+			}
+			if (Mercenary[Sh.crew[0]].trader == i){
+				if (lower == n){
+					looping = false;
+					retVal = TRADERSKILL;
+				}
+				lower++;
+			}
+			if (Mercenary[Sh.crew[0]].engineer == i){
+				if (lower == n){
+					looping = false;
+					retVal = ENGINEERSKILL;
+				}
+
+				lower++;
+			}
+			i++;
+		}
+		return retVal;
+	}
 }

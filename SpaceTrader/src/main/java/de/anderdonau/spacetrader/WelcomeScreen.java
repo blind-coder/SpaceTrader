@@ -51,6 +51,7 @@ import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
+import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -433,7 +434,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			news += "\nRumors Suggest Known Criminal J. Wild May Come to Kravat!";
 		if (isNewsEvent(GameState.GEMULONRESCUED))
 			news += "\nInvasion Imminent! Plans in Place to Repel Hostile Invaders.";
-		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !isNewsEvent(GameState.GEMULONRESCUED))
+		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !isNewsEvent(GameState.GEMULONRESCUED) && mGameState.InvasionStatus > 0)
 			news += "\nAlien Invasion Devastates Planet!";
 		if (isNewsEvent(GameState.ALIENINVASION))
 			news += "\nEditorial: Who Will Warn Gemulon?";
@@ -5623,8 +5624,10 @@ SeekBar.OnSeekBarChangeListener() {
 			Runnable r = new Runnable() {
 				@Override
 				public void run() {
-					if (!ExecuteAction(CommanderFlees)){
-						Travel();
+					if (mGameState.AutoAttack || mGameState.AutoFlee){
+						if (!ExecuteAction(CommanderFlees)){
+							Travel();
+						}
 					}
 				}
 			};
@@ -5909,6 +5912,334 @@ SeekBar.OnSeekBarChangeListener() {
 		if (mGameState.SaveOnArrival){
 			saveGame();
 		}
+	}
+	public void btnSpecialCallback(View view) {
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+		SpecialEvents.SpecialEvent Event = mGameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+
+		if (Event.justAMessage) {
+			alertDialog(Event.title, Event.questStringID, "");
+			btnSpecialCallbackStep2();
+		} else {
+			ConfirmDialog(Event.title, Event.questStringID, "", "Yes",
+			              new DialogInterface.OnClickListener() {
+				              @Override
+				              public void onClick(DialogInterface dialogInterface, int i) {
+					              btnSpecialCallbackStep2();
+				              }
+			              }, "No",
+			              new DialogInterface.OnClickListener() {
+				              @Override
+				              public void onClick(DialogInterface dialogInterface, int i) {
+
+				              }
+			              }
+			);
+		}
+	}
+	public void btnSpecialCallbackStep2(){
+		int i, FirstEmptySlot;
+		CrewMember COMMANDER = mGameState.Mercenary[0];
+		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+		SpecialEvents.SpecialEvent Event = mGameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+
+		if (mGameState.ToSpend() < Event.price){
+			alertDialog("Not Enough Money", "You don't have enough cash to spend to accept this offer.",
+			            ""
+			);
+			return;
+		}
+
+		switch (CURSYSTEM.special) {
+			case GameState.GETREACTOR:
+				if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 15) {
+					alertDialog("Not Enough Bays", "You don't have enough empty cargo bays at the moment.",
+					            ""
+					);
+					return;
+				} else if (mGameState.WildStatus == 1) {
+					ConfirmDialog("Wild Won't Stay Aboard", String
+						                                        .format("Jonathan Wild isn't willing to go with you if you bring that Reactor on board. He'd rather take his chances hiding out here on %s.",
+						                                                mGameState.SolarSystemName[CURSYSTEM.nameIndex]
+						                                        ),
+					              "", "Goodbye Wild",
+					              new DialogInterface.OnClickListener() {
+						              @Override
+						              public void onClick(DialogInterface dialogInterface, int i) {
+							              mGameState.WildStatus = 0;
+							              alertDialog("Say Goodbye to Wild",
+							                          "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
+							                          ""
+							              );
+							              mGameState.ReactorStatus = 1;
+						              }
+					              }, "Leave Reactor",
+					              new DialogInterface.OnClickListener() {
+						              @Override
+						              public void onClick(DialogInterface dialogInterface, int i) {
+						              }
+					              }
+					);
+					return;
+				}
+				break;
+			case GameState.REACTORDELIVERED:
+				CURSYSTEM.special = GameState.GETSPECIALLASER;
+				mGameState.ReactorStatus = 21;
+				btnSystemInformation(null);
+				return;
+			case GameState.MONSTERKILLED:
+				break;
+			case GameState.SCARAB:
+				mGameState.ScarabStatus = 1;
+				break;
+			case GameState.SCARABDESTROYED:
+				mGameState.ScarabStatus = 2;
+				CURSYSTEM.special = GameState.GETHULLUPGRADED;
+				btnSystemInformation(null);
+				return;
+			case GameState.GETHULLUPGRADED:
+				alertDialog("Hull Upgraded",
+				            "Technicians spend the day retrofitting the hull of your ship.",
+				            "Technicians spent the day replacing welds and bolts, and adding materials to your ship. When they're done, they tell you your ship should be significantly sturdier."
+				);
+				mGameState.Ship.hull += GameState.UPGRADEDHULL;
+				mGameState.ScarabStatus = 3;
+				break;
+
+			case GameState.EXPERIMENT:
+				mGameState.ExperimentStatus = 1;
+				break;
+
+			case GameState.EXPERIMENTSTOPPED:
+				mGameState.ExperimentStatus = 13;
+				mGameState.CanSuperWarp = true;
+				break;
+
+			case GameState.EXPERIMENTNOTSTOPPED:
+				break;
+
+			case GameState.ARTIFACTDELIVERY:
+				mGameState.ArtifactOnBoard = false;
+				break;
+
+			case GameState.ALIENARTIFACT:
+				mGameState.ArtifactOnBoard = true;
+				break;
+
+			case GameState.FLYBARATAS:
+			case GameState.FLYMELINA:
+			case GameState.FLYREGULAS:
+				++mGameState.DragonflyStatus;
+				break;
+
+			case GameState.DRAGONFLYDESTROYED:
+				CURSYSTEM.special = GameState.INSTALLLIGHTNINGSHIELD;
+				btnSystemInformation(null);
+				return;
+
+			case GameState.GEMULONRESCUED:
+				CURSYSTEM.special = GameState.GETFUELCOMPACTOR;
+				mGameState.InvasionStatus = 0;
+				btnSystemInformation(null);
+				return;
+
+			case GameState.MEDICINEDELIVERY:
+				mGameState.JaporiDiseaseStatus = 2;
+				mGameState.IncreaseRandomSkill();
+				mGameState.IncreaseRandomSkill();
+				break;
+
+			case GameState.MOONFORSALE:
+				mGameState.MoonBought = true;
+				alertDialog("Moon Bought", "You bought a moon in the Utopia system. Go there to claim it.",
+				            ""
+				);
+				break;
+
+			case GameState.MOONBOUGHT:
+				// TODO btnMoonBought();
+				return;
+
+			case GameState.SKILLINCREASE:
+				alertDialog("Skill Increase", "The alien increases one of your skills.", "");
+				mGameState.IncreaseRandomSkill();
+				break;
+
+			case GameState.TRIBBLE:
+				alertDialog("A Tribble", "You are now the proud owner of a little, cute, furry tribble.",
+				            "The merchant prince sold you a cute, furry tribble. You can see your new acquisition on the Commander Status screen."
+				);
+				mGameState.Ship.tribbles = 1;
+				break;
+
+			case GameState.BUYTRIBBLE:
+				alertDialog("No More Tribbles",
+				            "The alien uses his alien technology to beam over your whole collection of tribbles to his ship.",
+				            "No more tribbles!"
+				);
+				mGameState.Credits += (mGameState.Ship.tribbles >> 1);
+				mGameState.Ship.tribbles = 0;
+				break;
+
+			case GameState.ERASERECORD:
+				alertDialog("Clean Record", "The hacker resets your police record to Clean.", "");
+				mGameState.PoliceRecordScore = GameState.CLEANSCORE;
+				mGameState.RecalculateSellPrices();
+				break;
+
+			case GameState.SPACEMONSTER:
+				mGameState.MonsterStatus = 1;
+				break;
+
+			case GameState.DRAGONFLY:
+				mGameState.DragonflyStatus = 1;
+				break;
+
+			case GameState.AMBASSADORJAREK:
+				if (mGameState.Ship.crew[mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].crewQuarters-1] >= 0) {
+					alertDialog("No Quarters Available",
+					            "You do not have any crew quarters available for Ambassador Jarek.", ""
+					);
+					return;
+				}
+				alertDialog("Passenger On Board", "You have taken Ambassador Jarek on board.", "");
+				mGameState.JarekStatus = 1;
+				break;
+
+			case GameState.TRANSPORTWILD:
+				if (mGameState.Ship.crew[mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].crewQuarters-1] >= 0) {
+					alertDialog("No Quarters Available",
+					            "You do not have any crew quarters available for Jonathan Wild.", ""
+					);
+					return;
+				}
+				if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)) {
+				alertDialog("Wild Won't Stay Aboard", String
+					                                      .format("Jonathan Wild isn't about to go with you if you're not armed with at least a Beam Laser. He'd rather take his chances hiding out here on %s.",
+					                                              mGameState.SolarSystemName[CURSYSTEM.nameIndex]
+					                                      ), ""
+				);
+				return;
+			}
+			if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+				alertDialog("Wild Won't Board Ship",
+				            "Jonathan Wild doesn't like the looks of that Ion Reactor. He thinks it's too dangerous, and won't get on board.",
+				            "The Ion Reactor is known to be unstable, and Jonathan Wild is trying to get to safety. He's not willing to get on the ship le the Reactor's on board."
+				);
+				return;
+			}
+			alertDialog("Passenger On Board", "You have taken Jonathan Wild on board.", "");
+			mGameState.WildStatus = 1;
+			break;
+
+			case GameState.ALIENINVASION:
+				mGameState.InvasionStatus = 1;
+				break;
+
+			case GameState.JAREKGETSOUT:
+				mGameState.JarekStatus = 2;
+				mGameState.RecalculateBuyPrices(COMMANDER.curSystem);
+				break;
+
+			case GameState.WILDGETSOUT:
+				mGameState.WildStatus = 2;
+				mGameState.Mercenary[GameState.MAXCREWMEMBER-1].curSystem = GameState.KRAVATSYSTEM;
+				// Zeethibal has a 10 in player's lowest score, an 8
+				// in the next lowest score, and 5 elsewhere.
+				mGameState.Mercenary[GameState.MAXCREWMEMBER-1].pilot = 5;
+				mGameState.Mercenary[GameState.MAXCREWMEMBER-1].fighter = 5;
+				mGameState.Mercenary[GameState.MAXCREWMEMBER-1].trader = 5;
+				mGameState.Mercenary[GameState.MAXCREWMEMBER-1].engineer = 5;
+				switch (mGameState.NthLowestSkill(mGameState.Ship, 1)){
+				case GameState.PILOTSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].pilot = 10;
+					break;
+				case GameState.FIGHTERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].fighter = 10;
+					break;
+				case GameState.TRADERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].trader = 10;
+					break;
+				case GameState.ENGINEERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].engineer = 10;
+					break;
+			}
+			switch (mGameState.NthLowestSkill(mGameState.Ship, 2)){
+				case GameState.PILOTSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].pilot = 8;
+					break;
+				case GameState.FIGHTERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].fighter = 8;
+					break;
+				case GameState.TRADERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].trader = 8;
+					break;
+				case GameState.ENGINEERSKILL:
+					mGameState.Mercenary[GameState.MAXCREWMEMBER-1].engineer = 8;
+					break;
+			}
+
+			if (mGameState.PoliceRecordScore < GameState.CLEANSCORE)
+				mGameState.PoliceRecordScore = GameState.CLEANSCORE;
+			break;
+
+			case GameState.CARGOFORSALE:
+				alertDialog("Sealed Canisters", "You bought the sealed canisters and put them in your cargo bays.", "");
+				i = mGameState.GetRandom(GameState.MAXTRADEITEM);
+				mGameState.Ship.cargo[i] += 3;
+				mGameState.BuyingPrice[i] += Event.price;
+				break;
+
+			case GameState.INSTALLLIGHTNINGSHIELD:
+				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots, mGameState.Ship.shield);
+				if (FirstEmptySlot < 0){
+					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					return;
+				} else {
+					alertDialog("Lightning Shield", "You now have one lightning shield installed on your ship.", "");
+					mGameState.Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
+					mGameState.Ship.shieldStrength[FirstEmptySlot] = mGameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+				}
+				break;
+
+			case GameState.GETSPECIALLASER:
+				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots, mGameState.Ship.weapon);
+				if (FirstEmptySlot < 0){
+					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					return;
+				} else {
+					alertDialog("Morgan's Laser", "You now have Henry Morgan's special laser installed on your ship.", "");
+					mGameState.Ship.weapon[FirstEmptySlot] = GameState.MORGANLASERWEAPON;
+				}
+				break;
+
+			case GameState.GETFUELCOMPACTOR:
+				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget);
+				if (FirstEmptySlot < 0){
+					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					return;
+				} else {
+					alertDialog("Fuel Compactor", "You now have a fuel compactor installed on your ship.", "");
+					mGameState.Ship.gadget[FirstEmptySlot] = GameState.FUELCOMPACTOR;
+					mGameState.Ship.fuel = mGameState.GetFuelTanks();
+				}
+				break;
+
+			case GameState.JAPORIDISEASE:
+				if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 10) {
+					alertDialog("Not Enough Bays", "You don't have enough empty cargo bays at the moment.", "");
+					return;
+				} else {
+					alertDialog("Antidote", "Ten of your cargo bays now contain antidote for the Japori system.", "");
+					mGameState.JaporiDiseaseStatus = 1;
+				}
+				break;
+		}
+		mGameState.Credits -= Event.price;
+		CURSYSTEM.special = -1;
+		btnSystemInformation(null);
 	}
 /*
 	void EndOfGame( int EndStatus ) {

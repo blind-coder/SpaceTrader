@@ -131,6 +131,7 @@
 			android:id="@+id/btnSpecialEvent"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
+			android:onClick="btnSpecialCallback"
 			android:layout_alignParentEnd="true"/>
 
 	<Button
