@@ -3388,6 +3388,69 @@ SeekBar.OnSeekBarChangeListener() {
 		return -1;
 	}
 
+	public void btnPersonnelRosterHireCallback(View view){
+		int ForHire = mGameState.GetForHire();
+		int FirstFree = -1;
+		int oldtraderskill;
+		Ship Ship = mGameState.Ship;
+
+		oldtraderskill = mGameState.TraderSkill(Ship);
+		if (Ship.crew[1] == -1)
+			FirstFree = 1;
+		else if (Ship.crew[2] == -1)
+			FirstFree = 2;
+
+		if ((FirstFree < 0) || (mGameState.AvailableQuarters() <= FirstFree)) {
+			alertDialog("No Free Quarters", "There are currently no free crew quarters on your ship.",
+			            "If you hire someone, you must give him or her quarters on your ship. Depending on the type of ship, you can hire zero, one or two mercenaries."
+			);
+			return;
+		} else {
+			Ship.crew[FirstFree] = ForHire;
+		}
+		btnPersonnelRoster(null);
+		if (oldtraderskill != mGameState.TraderSkill(Ship))
+			mGameState.RecalculateBuyPrices(mGameState.Mercenary[0].curSystem);
+	}
+	public void btnPersonnelRosterFireCallback(View view){
+		final int i;
+
+		switch (view.getId()){
+			case R.id.btnFireCrew1:
+				i = 1;
+				break;
+			case R.id.btnFireCrew2:
+				i = 2;
+				break;
+			default:
+				return;
+		}
+
+		ConfirmDialog("Fire Mercenary", "Are you sure you wish to fire this mercenary?",
+		              "If you fire a mercenary, he or she returns to his or her home system", "Yes",
+		              new DialogInterface.OnClickListener() {
+			              @Override
+			              public void onClick(DialogInterface dialogInterface, int i) {
+				              Ship Ship = mGameState.Ship;
+				              int oldtraderskill;
+				              oldtraderskill = mGameState.TraderSkill(Ship);
+				              if (i == 1) {
+					              Ship.crew[1] = Ship.crew[2];
+				              }
+				              Ship.crew[2] = -1;
+				              btnPersonnelRoster(null);
+				              if (oldtraderskill != mGameState.TraderSkill(Ship))
+					              mGameState.RecalculateBuyPrices(mGameState.Mercenary[0].curSystem);
+			              }
+		              }, "No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			}
+		);
+	}
+
 	public void DoWarp(boolean viaSingularity) {
 		int i, Distance;
 		CrewMember COMMANDER = mGameState.Mercenary[0];

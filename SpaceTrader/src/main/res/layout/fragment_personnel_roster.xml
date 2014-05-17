@@ -28,6 +28,7 @@
 			android:text="Fire"
 			android:id="@+id/btnFireCrew1"
 			android:layout_below="@+id/textView"
+			android:onClick="btnPersonnelRosterFireCallback"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
 			android:layout_marginTop="20dp"/>
@@ -171,6 +172,7 @@
 			android:id="@+id/btnFireCrew2"
 			android:layout_marginTop="30dp"
 			android:layout_below="@+id/tableLayoutCrew1"
+			android:onClick="btnPersonnelRosterFireCallback"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"/>
 
@@ -312,6 +314,7 @@
 			android:id="@+id/btnHireCrewNew"
 			android:layout_marginTop="30dp"
 			android:layout_below="@+id/tableLayoutCrew2"
+			android:onClick="btnPersonnelRosterHireCallback"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"/>
 
