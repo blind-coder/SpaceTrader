@@ -248,6 +248,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		String call = "";
+		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer_layout.closeDrawers();
 		switch (id){
 			case R.id.hotkey1:
 				call = mGameState.Shortcuts[mGameState.Shortcut1][0];
@@ -265,6 +267,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnGameOptions(null);
 				return true;
 			case R.id.menuNewGame:
+				ConfirmDialog("Really start new game?",
+				              "If you start a new game your current game will be deleted!\n"+
+											"You will not be added to the high score table!",
+				              "",
+				              "Yes",
+				              new DialogInterface.OnClickListener() {
+					              @Override
+					              public void onClick(DialogInterface dialogInterface, int i) {
+						              WelcomeScreen.mContext.deleteFile("savegame.txt");
+						              FragmentManager fragmentManager = getFragmentManager();
+						              fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
+						              fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
+						              mCurrentState = "WelcomeScreen";
+					              }
+				              },
+				              "No",
+				              new DialogInterface.OnClickListener() {
+					              @Override
+					              public void onClick(DialogInterface dialogInterface, int i) {
+
+					              }
+				              }
+				);
 				return true;
 			case R.id.menuRetire:
 				return true;
