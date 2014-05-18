@@ -9,13 +9,10 @@
 package de.anderdonau.spacetrader;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
@@ -51,17 +48,10 @@ public class ShortRangeChart extends View {
 		int offsetY = CURSYSTEM.y * Multiplicator;
 
 		for (int i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
-			Log.d("getSystemAt", String.format("Checking system %d: %s", i, mGameState.SolarSystemName[i]
-			)
-			);
 			SolarSystem s = mGameState.SolarSystem[i];
 			int x = s.x * Multiplicator - offsetX + getWidth() / 2;
 			int y = s.y * Multiplicator - offsetY + getHeight() / 2;
 
-			Log.d("getSystemAt", String.format("%f >= %d - %d == %d", posX, x, radius, x - radius));
-			Log.d("getSystemAt", String.format("%f <= %d + %d == %d", posX, x, radius, x + radius));
-			Log.d("getSystemAt", String.format("%f >= %d - %d == %d", posY, y, radius, y - radius));
-			Log.d("getSystemAt", String.format("%f <= %d + %d == %d", posY, y, radius, y + radius));
 			if (posX >= x - radius && posX <= x + radius) {
 				if (posY >= y - radius && posY <= y + radius) {
 					return i;
