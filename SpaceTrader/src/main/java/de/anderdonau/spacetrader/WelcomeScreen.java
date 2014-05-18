@@ -47,6 +47,7 @@ import java.io.ObjectOutputStream;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.HighScore;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
@@ -118,15 +119,41 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
-		mCurrentState = "WelcomeScreen";
 
 		// Set up the drawer.
 		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mNavigationDrawerFragment = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
 		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
+
+		FileInputStream fis = null;
+		try {
+			fis = mContext.openFileInput("savegame.txt");
+			foundSaveGame = true;
+		} catch (FileNotFoundException e) {
+			foundSaveGame = false;
+		}
+		if (foundSaveGame) {
+			ObjectInputStream ois = null;
+			try {
+				ois = new ObjectInputStream(fis);
+				SaveGame s = (SaveGame) ois.readObject();
+				mGameState = new GameState(s);
+				ois.close();
+				fis.close();
+				fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
+				btnSystemInformation(null);
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+				mGameState = new GameState("Jameson");
+				foundSaveGame = false;
+			}
+		}
+		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
+		mCurrentState = "StartNewGame";
 	}
+
 	@Override
 	public void onBackPressed() {
 		if (mCurrentState.equals("WelcomeScreen")) {
@@ -135,12 +162,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} else
 		if (mCurrentState.equals("startup")) {
 			finish();
-			return;
-		} else
-		if (mCurrentState.equals("StartNewGame")) {
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
-			mCurrentState = "WelcomeScreen";
 			return;
 		} else
 		if (mCurrentState.equals("Encounter")){
@@ -277,7 +298,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					              public void onClick(DialogInterface dialogInterface, int i) {
 						              WelcomeScreen.mContext.deleteFile("savegame.txt");
 						              FragmentManager fragmentManager = getFragmentManager();
-						              fragmentManager.beginTransaction().replace(R.id.container, new WelcomeScreenFragment()).commit();
+						              fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
 						              fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 						              mCurrentState = "WelcomeScreen";
 					              }
@@ -292,10 +313,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				);
 				return true;
 			case R.id.menuRetire:
+				ConfirmDialog("Retire", "Do you really want to retire?", "", "Yes",
+				              new DialogInterface.OnClickListener() {
+					              @Override
+					              public void onClick(DialogInterface dialogInterface, int i) {
+						              EndOfGame(GameState.RETIRED);
+					              }
+				              }, "No", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+
+						}
+					}
+				);
 				return true;
 			case R.id.menuShortcuts:
 				return true;
 			case R.id.menuHighscores:
+				ViewHighScores();
 				return true;
 			case R.id.menuClearHighscore:
 				return true;
@@ -459,16 +494,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	////////////////////////////////////////////////////
 	// Button Callbacks
 	////////////////////////////////////////////////////
-	public void btnLoadOrStartGame(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		if (foundSaveGame) {
-			btnSystemInformation(null);
-			fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
-		} else {
-			fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
-			mCurrentState = "StartNewGame";
-		}
-	}
 	public void btnStartNewGame(View view) {
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
@@ -2017,43 +2042,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 	////////////////////////////////////////////////////////////////////////////
 	// Fragments -
-	////////////////////////////////////////////////////////////////////////////
-	public static class WelcomeScreenFragment extends Fragment {
-		public WelcomeScreenFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_welcome_screen, container, false);
-			Button btn = (Button) rootView.findViewById(R.id.btnLoadOrStartGame);
-			btn.setText(getString(R.string.wScrStartNewGame));
-
-			FileInputStream fis = null;
-			try {
-				fis = mContext.openFileInput("savegame.txt");
-				foundSaveGame = true;
-			} catch (FileNotFoundException e) {
-				foundSaveGame = false;
-			}
-			if (foundSaveGame) {
-				ObjectInputStream ois = null;
-				try {
-					ois = new ObjectInputStream(fis);
-					SaveGame s = (SaveGame) ois.readObject();
-					mGameState = new GameState(s);
-					ois.close();
-					fis.close();
-					btn.setText(mGameState.NameCommander);
-				} catch (Exception e) {
-					e.printStackTrace();
-					mGameState = new GameState("Jameson");
-					foundSaveGame = false;
-				}
-			}
-
-			return rootView;
-		}
-	}
+	//////////////////////////////////////////////////////////////////////		}
 	public static class StartNewGameFragment extends Fragment {
 		public StartNewGameFragment() { }
 
@@ -6568,74 +6557,127 @@ SeekBar.OnSeekBarChangeListener() {
 		CURSYSTEM.special = -1;
 		btnSystemInformation(null);
 	}
-/*
-	void EndOfGame( int EndStatus ) {
+	int GetScore(int EndStatus, int Days, int Worth, int Level) {
+		int d;
+
+		Worth = (Worth < 1000000 ? Worth : 1000000 + ((Worth - 1000000) / 10) );
+
+		if (EndStatus == GameState.KILLED)
+			return (Level+1)*((Worth * 90) / 50000);
+		else if (EndStatus == GameState.RETIRED)
+			return (Level+1)*((Worth * 95) / 50000);
+		else {
+			d = ((Level+1)*100) - Days;
+			if (d < 0)
+				d = 0;
+			return (Level+1)*((Worth + (d * 1000)) / 500);
+		}
+	}
+	void EndOfGame(int EndStatus) {
 		int i, j;
 		Boolean Scored;
 		long a, b;
+		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
 
 		Scored = false;
-		i = 0;
-		a = GetScore( EndStatus, Days, CurrentWorth(), Difficulty );
+		a = GetScore(EndStatus, mGameState.Days, mGameState.CurrentWorth(), GameState.getDifficulty());
 
-		LoadHighScore();
+		for (i=0; i<GameState.MAXHIGHSCORE; i++){
+			Hscores[i] = new HighScore(getApplicationContext(), i);
+		}
 
-		for (i=0; i<MAXHIGHSCORE; i++){
-			b = GetScore( Hscores[i].Status, Hscores[i].Days, Hscores[i].Worth, Hscores[i].Difficulty );
+		for (i=0; i<GameState.MAXHIGHSCORE; i++){
+			b = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(), Hscores[i].getDifficulty());
 
-			if ((a > b) || (a == b && CurrentWorth() > Hscores[i].Worth) ||
-				    (a == b && CurrentWorth() == Hscores[i].Worth && Days > Hscores[i].Days) ||
-				    Hscores[i].Name[0] == '\0')
-			{
+			if ((a > b) || (a == b && mGameState.CurrentWorth() > Hscores[i].getWorth()) ||
+				    (a == b && mGameState.CurrentWorth() == Hscores[i].getWorth() &&
+					     mGameState.Days > Hscores[i].getDays()
+				    )
+				){
 				Scored = true;
 
-				if (!GameLoaded){
-					for (j=MAXHIGHSCORE-1; j>i; --j) {
-						sprintf(Hscores[j].Name, "%s", Hscores[j-1].Name);
-						Hscores[j].Status = Hscores[j-1].Status;
-						Hscores[j].Days = Hscores[j-1].Days;
-						Hscores[j].Worth = Hscores[j-1].Worth;
-						Hscores[j].Difficulty = Hscores[j-1].Difficulty;
+				if (!mGameState.GameLoaded){
+					for (j=GameState.MAXHIGHSCORE-1; j>i; --j) {
+						Hscores[j].setName(Hscores[j-1].getName());
+						Hscores[j].setStatus(Hscores[j-1].getStatus());
+						Hscores[j].setDays(Hscores[j-1].getDays());
+						Hscores[j].setWorth(Hscores[j-1].getWorth());
+						Hscores[j].setDifficulty(Hscores[j-1].getDifficulty());
 					}
 
-					sprintf(Hscores[i].Name, "%s", NameCommander);
-					Hscores[i].Status = EndStatus;
-					Hscores[i].Days = Days;
-					Hscores[i].Worth = CurrentWorth();
-					Hscores[i].Difficulty = Difficulty;
+					Hscores[i].setName(mGameState.NameCommander);
+					Hscores[i].setStatus(EndStatus);
+					Hscores[i].setDays(mGameState.Days);
+					Hscores[i].setWorth(mGameState.CurrentWorth());
+					Hscores[i].setDifficulty(GameState.getDifficulty());
 				}
 				break;
 			}
 		}
 
-		if (Scored && GameLoaded) {
-			sprintf(buf, "Without loading a savegame, you" );
-			sprintf(buf2, "would have made the high-score list." );
+		String buf = "", buf2 = "";
+		if (Scored && mGameState.GameLoaded) {
+			buf = "Without loading a savegame, you";
+			buf2 = "would have made the high-score list.";
 		} else if (Scored) {
-			sprintf(buf, "Congratulations!" );
-			sprintf(buf2, "You have made the high-score list!" );
+			buf = "Congratulations!";
+			buf2 = "You have made the high-score list!";
 		} else {
-			sprintf(buf, "Alas! This is not enough to enter" );
-			sprintf(buf2, "the high-score list." );
+			buf = "Alas! This is not enough to enter";
+			buf2 = "the high-score list.";
 		}
-		st_choice_help("Final score", "You achieved a score of %i.%i%%.\nAfter %i Days you %s.\n%s\n%s", NULL, "OK", NULL, NULL, (a / 50L), ((a%50)/5), Days, (EndStatus == KILLED ? "got killed" : (EndStatus == RETIRED ? "retired on a barren moon" : "retired on an utopian moon")), buf, buf2);
+		alertDialog("Final score",
+		            String.format("You achieved a score of %d.%d%%.\n" +
+			                          "After %d Days you %s.\n%s\n%s", (a / 50), ((a%50)/5),
+		                          mGameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+		                                            (EndStatus == GameState.RETIRED ? "retired on a barren moon" :
+		                                             "retired on an utopian moon")),
+		                          buf,
+		                          buf2),
+		            ""
+		);
 
-		char *filename;
-		filename = (char *)malloc(2048);
-		sprintf(filename, "%s/.spacetrader", getenv("HOME"));
-		unlink(filename);
-
-		FILE *sgfile;
-		sprintf(filename, "%s/.spacetraderhighscore", getenv("HOME"));
-		sgfile = fopen(filename, "w+");
-		fwrite(&Hscores, sizeof(HIGHSCORE), MAXHIGHSCORE, sgfile);
-		fclose(sgfile);
-		free(filename);
-
-		if (Scored && !GameLoaded)
+		if (Scored && !mGameState.GameLoaded)
 			ViewHighScores();
 
-		_exit(0);
+		WelcomeScreen.mContext.deleteFile("savegame.txt");
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
+		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
+		mCurrentState = "StartNewGame";
 	}
-*/
+	void ViewHighScores() {
+		int i;
+		int Percentage;
+		String msg = "";
+
+		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
+		for (i=0; i<GameState.MAXHIGHSCORE; i++){
+			Hscores[i] = new HighScore(getApplicationContext(), i);
+		}
+
+		for (i=0; i<GameState.MAXHIGHSCORE; ++i) {
+			if (Hscores[i].getName().isEmpty()){
+				msg += "Empty\n\n\n\n";
+				continue;
+			}
+
+			Percentage = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(),
+			                      Hscores[i].getDifficulty()
+			);
+			msg += String.format("%d. %-20s %3d.%d%%\n", i+1, Hscores[i].getName(), (Percentage / 50), ((Percentage%50) / 5));
+
+			if (Hscores[i].getStatus() == GameState.MOON)
+				msg += "Claimed moon";
+			else if (Hscores[i].getStatus() == GameState.RETIRED)
+				msg += "Retired";
+			else
+				msg += "Was killed";
+			msg += String.format(" in %d day%s, worth %d credits on %s level\n\n", Hscores[i].getDays(),
+			                     Hscores[i].getDays() == 1 ? "" : "s", Hscores[i].getWorth(),
+			                     mGameState.levelDesc[Hscores[i].getDifficulty()]
+			);
+		}
+		alertDialog("Highscores", msg, "");
+	}
 }
