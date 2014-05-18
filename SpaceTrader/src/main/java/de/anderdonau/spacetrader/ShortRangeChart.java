@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
@@ -23,8 +24,12 @@ public class ShortRangeChart extends View {
 	public          int       WormholeOffset = 4;
 	protected       GameState mGameState     = null;
 	protected       int       mDrawWormhole  = -1;
-	protected int mSelectedSystem = -1;
+	protected       int       mSelectedSystem = -1;
 	protected       int       radius;
+	protected       float     mOffsetX = 0;
+	protected       float     mOffsetY = 0;
+	protected       float     mCurrentX = 0;
+	protected       float     mCurrentY = 0;
 
 	public ShortRangeChart(Context context) {
 		super(context);
@@ -49,8 +54,8 @@ public class ShortRangeChart extends View {
 
 		for (int i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			SolarSystem s = mGameState.SolarSystem[i];
-			int x = s.x * Multiplicator - offsetX + getWidth() / 2;
-			int y = s.y * Multiplicator - offsetY + getHeight() / 2;
+			int x = s.x * Multiplicator - offsetX + getWidth() / 2 + (int)mOffsetX;
+			int y = s.y * Multiplicator - offsetY + getHeight() / 2 + (int)mOffsetY;
 
 			if (posX >= x - radius && posX <= x + radius) {
 				if (posY >= y - radius && posY <= y + radius) {
@@ -88,6 +93,7 @@ public class ShortRangeChart extends View {
 		int offsetX = CURSYSTEM.x * Multiplicator;
 		int offsetY = CURSYSTEM.y * Multiplicator;
 
+		canvas.translate(mOffsetX, mOffsetY);
 		paint.setTextSize(40);
 		paint.setStrokeWidth(0);
 		paint.setTextAlign(Paint.Align.CENTER);
@@ -170,5 +176,31 @@ public class ShortRangeChart extends View {
 		                  to.y * Multiplicator - offsetY + getHeight() / 2, paint);
 			paint.setStrokeWidth(0);
 		}
+	}
+
+	public void scrollBy(float x, float y){
+		mOffsetX += x;
+		mOffsetY += y;
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			mCurrentX = event.getRawX();
+			mCurrentY = event.getRawY();
+		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			float x = event.getRawX();
+			float y = event.getRawY();
+
+			// Update how much the touch moved
+			mOffsetX += x - mCurrentX;
+			mOffsetY += y - mCurrentY;
+
+			mCurrentX = x;
+			mCurrentY = y;
+
+			this.invalidate();
+		}
+		return true;
 	}
 }
