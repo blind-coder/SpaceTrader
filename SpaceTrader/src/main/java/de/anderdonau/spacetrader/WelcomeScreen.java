@@ -220,6 +220,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnCommanderStatus(null);
 				break;
 			case 9: // "Galactic Chart"
+				btnGalacticChart(null);
 				break;
 			case 10: // "Short Range Chart"
 				btnShortRangeChart(null);
@@ -1841,7 +1842,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnSellCargo(null);
 	}
 	public void btnGalacticChart(View view){
-		alertDialog("TODO", "Not implemneted.", "Sorry :-(");
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new GalacticChartFragment()).commit();
+		mCurrentState = "GalacticChart";
 	}
 	public void btnShortRangeChart(View view){
 		FragmentManager fragmentManager = getFragmentManager();
@@ -2134,6 +2137,204 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void btnDumpDone(View view){
 		btnPlunderForm(null);
+	}
+	public void btnGalacticChartFind(View view){
+		inputTextDialog("Find System", "Please enter the system name to find:", "System", "",
+		                new IFinputTextDialogCallback() {
+			                @Override
+			                public void execute(EditText editText) {
+				                String buf = editText.getText().toString();
+				                if (buf.length() < 2){
+					                return;
+				                }
+
+				                if (buf.equals("Moolah")) {
+					                mGameState.Credits += 100000;
+					                return;
+				                }
+				                else if (buf.startsWith("Go ") && buf.length() > 3) {
+					                int i = 0;
+					                while (i < GameState.MAXSOLARSYSTEM) {
+						                if (mGameState.SolarSystemName[i].equals(buf.substring(3)))
+							                break;
+						                ++i;
+					                }
+					                if (i < GameState.MAXSOLARSYSTEM) {
+						                mGameState.Mercenary[0].curSystem = i;
+						                btnGalacticChart(null);
+					                }
+					                return;
+				                } else if (buf.equals("Quests")) {
+					                String questbuf = "";
+
+					                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
+						                SolarSystem s = mGameState.SolarSystem[i];
+						                switch (s.special){
+							                case GameState.DRAGONFLY:
+							                  questbuf += String.format("Dragonfly: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                break;
+							                case GameState.SPACEMONSTER:
+								                questbuf += String.format("Spacemonster: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.JAPORIDISEASE:
+							                  questbuf += String.format("Disease: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.ALIENARTIFACT:
+							                  questbuf += String.format("Artifact: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+						                  case GameState.ARTIFACTDELIVERY:
+							                  if (mGameState.ArtifactOnBoard)
+							                    questbuf += String.format("Berger: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.TRIBBLE:
+								                questbuf += String.format("Tribbles: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.GETREACTOR:
+								                questbuf += String.format("Get reactor: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.AMBASSADORJAREK:
+								                questbuf += String.format("Jarek: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.ALIENINVASION:
+								                questbuf += String.format("Invasion: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.EXPERIMENT:
+								                questbuf += String.format("Experiment: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+							                case GameState.TRANSPORTWILD:
+								                questbuf += String.format("Wild: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+							                  break;
+						                  case GameState.SCARAB:
+								                questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                break;
+							                case GameState.SCARABDESTROYED:
+								                if (mGameState.ScarabStatus > 0 && mGameState.ScarabStatus < 2)
+								                  questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                break;
+						                }
+					                }
+					                alertDialog("Quests", questbuf, "");
+				                } else {
+					                int i = 0;
+					                while (i < GameState.MAXSOLARSYSTEM) {
+						                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
+							                break;
+						                ++i;
+					                }
+					                if (i >= GameState.MAXSOLARSYSTEM) {
+						                i = mGameState.Mercenary[0].curSystem;
+					                }
+					                mGameState.WarpSystem = i;
+					                WarpSystem = mGameState.SolarSystem[i];
+					                btnGalacticChart(null);
+				                }
+			                }
+	                  }
+		);
+  /*
+     } else if (strstr(buf, "Very rare") == buf) {
+     frm = FrmInitForm( RareCheatForm );
+
+     SetCheckBox( frm, RareCheatMarieCheckbox, VeryRareEncounter & (Byte)ALREADYMARIE );
+     SetCheckBox( frm, RareCheatHuieCheckbox, VeryRareEncounter & (Byte)ALREADYHUIE );
+     SetCheckBox( frm, RareCheatAhabCheckbox, VeryRareEncounter & (Byte)ALREADYAHAB );
+     SetCheckBox( frm, RareCheatConradCheckbox, VeryRareEncounter & (Byte)ALREADYCONRAD );
+     SetCheckBox( frm, RareCheatGoodTonicCheckbox, VeryRareEncounter & (Byte)ALREADYBOTTLEGOOD );
+     SetCheckBox( frm, RareCheatBadTonicCheckbox, VeryRareEncounter & (Byte)ALREADYBOTTLEOLD );
+     StrIToA( SBuf, ChanceOfVeryRareEncounter );
+     SystemH = (Handle) SetField( frm, RareCheatChancesField, SBuf, 5, true );
+     StrIToA( SBuf, ChanceOfTradeInOrbit );
+     SystemH2 = (Handle) SetField( frm, RareCheatTradeField, SBuf, 5, true );
+
+     d = FrmDoDialog( frm );
+     GetField( frm, RareCheatChancesField, SBuf, SystemH );
+     if (SBuf[0] != '\0')
+     {
+     ChanceOfVeryRareEncounter = StrAToI(SBuf);
+     }
+     GetField( frm, RareCheatTradeField, SBuf, SystemH2 );
+     if (SBuf[0] != '\0')
+     {
+     ChanceOfTradeInOrbit = StrAToI(SBuf);
+     }
+
+     VeryRareEncounter = 0;
+     if (GetCheckBox( frm, RareCheatMarieCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYMARIE;
+     if (GetCheckBox( frm, RareCheatHuieCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYHUIE;
+     if (GetCheckBox( frm, RareCheatAhabCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYAHAB;
+     if (GetCheckBox( frm, RareCheatConradCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYCONRAD;
+     if (GetCheckBox( frm, RareCheatGoodTonicCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYBOTTLEGOOD;
+     if (GetCheckBox( frm, RareCheatBadTonicCheckbox))
+     VeryRareEncounter |= (Byte)ALREADYBOTTLEOLD;
+
+     FrmDeleteForm( frm );
+     }
+     *//* Cheats come later
+          else if (StrCompare( FindSystem, "Cheetah" ) == 0)
+          {
+          CheatCounter = 3;
+          }
+#ifdef BETATEST
+else if (StrCompare( FindSystem, "Load" ) == 0)
+#else
+else if (StrCompare( FindSystem, "Timewarp" ) == 0)
+#endif
+{
+DontLoad = false;
+if (!GameLoaded)
+{
+if (FrmAlert( DisableScoringAlert ) != DisableScoringYes)
+DontLoad = true;
+}
+else if (FrmAlert( ReallyLoadAlert ) != ReallyLoadYes)
+DontLoad = true;
+if (!DontLoad)
+{
+if (LoadGame( 1 ))
+{
+GameLoaded = true;
+FrmGotoForm( CurForm );
+}
+}
+}
+*/
+	}
+	public void SuperWarpButtonCallback(){
+		if (mGameState.TrackedSystem < 0) {
+			alertDialog("No System Selected",
+			            "To use the Portable Singularity, track a system before clicking on this button. (You can't use the Singularity to enter a Wormhole).", ""
+			);
+			return;
+		} else if (mGameState.TrackedSystem == mGameState.Mercenary[0].curSystem) {
+			alertDialog("Cannot Jump",
+			            "You are tracking the system where you are currently located. It's useless to jump to your current location.",
+			            "Track another system than the one where you are currently are located, then tap the Singularity button to jump."
+			);
+			return;
+		} else {
+			ConfirmDialog("Use Singularity?",
+			              "Do you wish to use the Portable Singularity to transport immediately to " + mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex] + "?",
+			              "", "Jump!", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						mGameState.WarpSystem = mGameState.TrackedSystem;
+						WarpSystem = mGameState.SolarSystem[mGameState.TrackedSystem];
+						mGameState.CanSuperWarp = false;
+						DoWarp(true);
+					}
+				}, "Stay", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+
+					}
+				}
+			);
+		}
 	}
 
 	public void BuyCargo(int Index,int Amount) {
@@ -3397,7 +3598,7 @@ SeekBar.OnSeekBarChangeListener() {
 					shortRangeChart.mDrawWormhole = -1;
 					shortRangeChart.invalidate();
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-						final int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
+						int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						if (system >= 0){
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
@@ -3410,32 +3611,24 @@ SeekBar.OnSeekBarChangeListener() {
 							} else {
 								btnWarpSystemInformation(null);
 							}
-						/*
-						TODO: Move this to Galactic chart later.
-							if (system == shortRangeChart.mSelectedSystem){
-								ConfirmDialog("Track system", "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
-								              "", "Yes", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-										mGameState.TrackedSystem = system;
-										btnShortRangeChart(null);
-									}
-								}, "No", new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialogInterface, int i) {
-
-										}
-									}
-								);
-							}
-							*/
 							shortRangeChart.mSelectedSystem = system;
 							shortRangeChart.invalidate();
 						} else {
 							final int wormhole = shortRangeChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-							if (wormhole >= 0){
-								shortRangeChart.mDrawWormhole = wormhole;
-								shortRangeChart.invalidate();
+							if (wormhole < 0){
+								return true;
+							}
+							system = mGameState.Wormhole[wormhole];
+							mGameState.WarpSystem = system;
+							WarpSystem = mGameState.SolarSystem[system];
+							if (!mGameState.AlwaysInfo &&
+								    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
+									     mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
+								    mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
+								){
+								btnAveragePricesForm(null);
+							} else {
+								btnWarpSystemInformation(null);
 							}
 						}
 					}
@@ -3449,6 +3642,99 @@ SeekBar.OnSeekBarChangeListener() {
 				tv.setVisibility(View.VISIBLE);
 				tv.setText(String.format("Distance to %s: %d parsec", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex], mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[mGameState.TrackedSystem])));
 			}
+			return rootView;
+		}
+	}
+	public class GalacticChartFragment extends Fragment {
+		public GalacticChartFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
+			GalacticChart galacticChart = (GalacticChart) rootView.findViewById(R.id.GalacticChart);
+			galacticChart.setGameState(mGameState);
+
+			TextView tv;
+			if (mGameState.WarpSystem <= 0){
+				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
+				tv.setVisibility(View.INVISIBLE);
+				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
+				tv.setVisibility(View.INVISIBLE);
+				tv = (TextView) rootView.findViewById(R.id.galChartName);
+				tv.setVisibility(View.INVISIBLE);
+			} else {
+				SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
+				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size], mGameState.techLevel[s.techLevel], mGameState.Politics.mPolitics[s.politics].name));
+				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(String.format("%d parsecs", mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], s)));
+				tv = (TextView) rootView.findViewById(R.id.galChartName);
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(mGameState.SolarSystemName[s.nameIndex]);
+				galacticChart.mSelectedSystem = mGameState.WarpSystem;
+			}
+			galacticChart.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent) {
+					final GalacticChart galacticChart = (GalacticChart) view;
+					galacticChart.mDrawWormhole = -1;
+					galacticChart.invalidate();
+					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+						final int system = galacticChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
+						if (system >= 0){
+							TextView tv;
+							mGameState.WarpSystem = system;
+							WarpSystem = mGameState.SolarSystem[system];
+							SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
+							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
+							tv.setVisibility(View.VISIBLE);
+							tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size], mGameState.techLevel[s.techLevel], mGameState.Politics.mPolitics[s.politics].name));
+							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
+							tv.setVisibility(View.VISIBLE);
+							tv.setText(String.format("%d parsecs", mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], s)));
+							tv = (TextView) rootView.findViewById(R.id.galChartName);
+							tv.setVisibility(View.VISIBLE);
+							tv.setText(mGameState.SolarSystemName[s.nameIndex]);
+							if (system == galacticChart.mSelectedSystem){
+								ConfirmDialog("Track system", "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
+								              "", "Yes", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
+										mGameState.TrackedSystem = system;
+										galacticChart.invalidate();
+									}
+								}, "No", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialogInterface, int i) {
+
+										}
+									}
+								);
+							} else {
+								galacticChart.mSelectedSystem = system;
+								galacticChart.invalidate();
+							}
+						} else {
+							final int wormhole = galacticChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
+							if (wormhole >= 0){
+								galacticChart.mDrawWormhole = wormhole;
+								galacticChart.invalidate();
+								TextView tv;
+								tv = (TextView) rootView.findViewById(R.id.galChartDetails);
+								tv.setVisibility(View.VISIBLE);
+								tv.setText(String.format("Wormhole to %s", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]));
+								tv = (TextView) rootView.findViewById(R.id.galChartDistance);
+								tv.setVisibility(View.INVISIBLE);
+								tv = (TextView) rootView.findViewById(R.id.galChartName);
+								tv.setVisibility(View.INVISIBLE);
+							}
+						}
+					}
+					return false;
+				}
+			});
 			return rootView;
 		}
 	}
@@ -3814,6 +4100,51 @@ SeekBar.OnSeekBarChangeListener() {
 			});
 		}
 	}
+	public interface IFinputTextDialogCallback {
+		public void execute(EditText editText);
+	}
+	public void inputTextDialog(String title, String content, String hint, final String help, final IFinputTextDialogCallback cb){
+		final EditText input = new EditText(WelcomeScreen.this);
+		input.setHint(hint);
+		final LinearLayout linearLayout = new LinearLayout(WelcomeScreen.this);
+		input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		linearLayout.addView(input);
+
+		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
+				.setTitle(title)
+				.setMessage(content)
+				.setView(linearLayout)
+				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						cb.execute(input);
+					}
+				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Do nothing.
+					}
+				});
+		if (help.length() > 0){
+			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+		}
+		AlertDialog dialog = confirm.create();
+		dialog.show();
+		if (help.length() > 0){
+			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
+					// dialog.dismiss();
+				}
+			});
+		}
+	}
 	public interface IFinputDialogCallback {
 		public void execute(SeekBar seekBar);
 	}
@@ -3847,18 +4178,18 @@ SeekBar.OnSeekBarChangeListener() {
 		});
 
 		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
-				.setTitle(title)
-				.setMessage(content)
-				.setView(linearLayout)
-				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						cb.execute(seekBar);
-					}
-				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// Do nothing.
-					}
-				});
+			                              .setTitle(title)
+			                              .setMessage(content)
+			                              .setView(linearLayout)
+			                              .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				                              public void onClick(DialogInterface dialog, int whichButton) {
+					                              cb.execute(seekBar);
+				                              }
+			                              }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Do nothing.
+				}
+			});
 		if (help.length() > 0){
 			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
 				@Override
