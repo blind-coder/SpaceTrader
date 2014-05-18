@@ -178,17 +178,13 @@ public class ShortRangeChart extends View {
 		}
 	}
 
-	public void scrollBy(float x, float y){
-		mOffsetX += x;
-		mOffsetY += y;
-	}
-
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			mCurrentX = event.getRawX();
 			mCurrentY = event.getRawY();
-		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			return true;
+		}/* else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			float x = event.getRawX();
 			float y = event.getRawY();
 
@@ -200,7 +196,8 @@ public class ShortRangeChart extends View {
 			mCurrentY = y;
 
 			this.invalidate();
-		}
-		return true;
+			return true;
+		}*/
+		return false;
 	}
 }
