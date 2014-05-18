@@ -416,6 +416,7 @@
 			android:id="@+id/btnPlunderDump"
 			android:layout_above="@+id/btnPlunderDone"
 			android:layout_alignRight="@+id/btnPlunderDone"
-			android:layout_alignEnd="@+id/btnPlunderDone"/>
+			android:layout_alignEnd="@+id/btnPlunderDone"
+			android:onClick="btnDumpForm"/>
 
 </RelativeLayout>

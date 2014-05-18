@@ -1016,15 +1016,21 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			alertDialog("No debt.", "You don't have a loan to pay back.", "");
 			return;
 		}
-		inputDialog("Payback Loan", String.format("You have a debt of %d credits.\nHow much do you want to pay back?", mGameState.Debt),
-		            "Credits", "", mGameState.Debt, new IFinputDialogCallback() {
+		inputDialog("Payback Loan",
+		            String.format("You have a debt of %d credits.\nHow much do you want to pay back?",
+		                          mGameState.Debt
+		            ), "Credits", "", mGameState.Debt, new IFinputDialogCallback() {
 			@Override
 			public void execute(SeekBar seekBar) {
 				int amount = seekBar.getProgress();
-				if (amount > 0){
+				if (amount > 0) {
 					amount = Math.min(mGameState.Debt, amount);
-					if (amount > mGameState.Credits){
-						alertDialog("Not enough credits!", String.format("You only have %d credits. You can't pay back more than that!", mGameState.Credits), "");
+					if (amount > mGameState.Credits) {
+						alertDialog("Not enough credits!", String
+							                                   .format("You only have %d credits. You can't pay back more than that!",
+							                                           mGameState.Credits
+							                                   ), ""
+						);
 						return;
 					}
 					mGameState.Credits -= amount;
@@ -1032,7 +1038,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					btnBank(null);
 				}
 			}
-		});
+		}
+		);
 	}
 	public void btnBankBuyInsurance(View view){
 		if (mGameState.Insurance){
@@ -1080,18 +1087,17 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnShipyardBuyFuel(View view){
 		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
 		            "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
-								mGameState.Credits,
-		            new IFinputDialogCallback() {
-			            @Override
-			            public void execute(SeekBar seekBar) {
-				            try {
-					            int amount = seekBar.getProgress();
-					            btnShipyardBuyFuel(amount);
-				            } catch (NumberFormatException e) {
-					            alertDialog("Error", e.getLocalizedMessage(), "");
-				            }
-			            }
-		            }
+		            mGameState.Credits, new IFinputDialogCallback() {
+			@Override
+			public void execute(SeekBar seekBar) {
+				try {
+					int amount = seekBar.getProgress();
+					btnShipyardBuyFuel(amount);
+				} catch (NumberFormatException e) {
+					alertDialog("Error", e.getLocalizedMessage(), "");
+				}
+			}
+		}
 		);
 	}
 	public void btnShipyardBuyMaxFuel(View view){
@@ -1114,14 +1120,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnShipyardBuyRepairs(View view){
 		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits",
 		            "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
-								mGameState.Credits,
-		            new IFinputDialogCallback() {
-			            @Override
-			            public void execute(SeekBar seekBar) {
-				            int amount = seekBar.getProgress();
-				            btnShipyardBuyRepairs(amount);
-			            }
-		            }
+		            mGameState.Credits, new IFinputDialogCallback() {
+			@Override
+			public void execute(SeekBar seekBar) {
+				int amount = seekBar.getProgress();
+				btnShipyardBuyRepairs(amount);
+			}
+		}
 		);
 	}
 	public void btnShipyardBuyFullRepairs(View view){
@@ -2019,12 +2024,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			);
 		} else {
 			final int idx = Index;
-			inputDialog("Plunder",
-			            String.format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
-			                          GameState.Tradeitems.mTradeitems[idx].name, mGameState.Opponent.cargo[idx]),
-			            "",
-			            "",
-			            mGameState.Opponent.cargo[idx],
+			inputDialog("Plunder", String
+				                       .format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
+				                               GameState.Tradeitems.mTradeitems[idx].name,
+				                               mGameState.Opponent.cargo[idx]
+				                       ), "", "", mGameState.Opponent.cargo[idx],
 			            new IFinputDialogCallback() {
 				            @Override
 				            public void execute(SeekBar seekBar) {
@@ -2033,8 +2037,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						            PlunderCargo(idx, Amount);
 				            }
 			            }
-      );
+			);
 		}
+	}
+	public void btnDumpForm(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new DumpCargoFragment()).commit();
+		mCurrentState = "DumpCargo";
 	}
 	public void btnDumpAllCargoQty(View view){
 		int Index = -1;
@@ -3309,6 +3318,9 @@ SeekBar.OnSeekBarChangeListener() {
 		}
 	}
 	public class PlunderCargoFragment extends Fragment {
+		public PlunderCaoFragment() {}
+
+		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_plunder_cargo, container, false);
 			TextView tv;
@@ -3332,6 +3344,38 @@ SeekBar.OnSeekBarChangeListener() {
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtPlunderCargoBays);
+			tv.setText(String.format("%d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+
+			return rootView;
+		}
+	}
+	public class DumpCargoFragment extends Fragment {
+		public DumpCargoFragment() {}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_dump_cargo, container, false);
+			TextView tv;
+			Button btn;
+			int i;
+
+			for (i=0; i<GameState.MAXTRADEITEM; i++){
+				btn = (Button) rootView.findViewById(
+					                                    i == 0 ? R.id.btnDumpCargo1 :
+					                                    i == 1 ? R.id.btnDumpCargo2 :
+					                                    i == 2 ? R.id.btnDumpCargo3 :
+					                                    i == 3 ? R.id.btnDumpCargo4 :
+					                                    i == 4 ? R.id.btnDumpCargo5 :
+					                                    i == 5 ? R.id.btnDumpCargo6 :
+					                                    i == 6 ? R.id.btnDumpCargo7 :
+					                                    i == 7 ? R.id.btnDumpCargo8 :
+					                                    i == 8 ? R.id.btnDumpCargo9 :
+					                           /*i == 9 ?*/ R.id.btnDumpCargo10
+				);
+				btn.setText(String.format("%2d", mGameState.Ship.cargo[i]));
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtDumpCargoBays);
 			tv.setText(String.format("%d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
 
 			return rootView;
