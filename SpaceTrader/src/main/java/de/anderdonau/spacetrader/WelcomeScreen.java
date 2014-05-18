@@ -1923,6 +1923,209 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+	public void btnPlunderForm(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new PlunderCargoFragment()).commit();
+		mCurrentState = "PlunderCargo";
+	}
+	public void PlunderCargo(int Index, int Amount) {
+		// *************************************************************************
+		// Plunder amount of cargo
+		// *************************************************************************
+		int ToPlunder;
+
+		if (mGameState.Opponent.cargo[Index] <= 0) {
+			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.", "You can only steal what your victim actually has.");
+			return;
+		}
+
+		if (mGameState.TotalCargoBays() - mGameState.FilledCargoBays() <= 0){
+			alertDialog("Cargo Bays Full", "You have no empty cargo bays. Dump some cargo or leave the victims cargo in his bays.", "");
+			return;
+		}
+
+		ToPlunder = Math.min(Amount, mGameState.Opponent.cargo[Index] );
+		ToPlunder = Math.min(ToPlunder, mGameState.TotalCargoBays() - mGameState.FilledCargoBays());
+
+		mGameState.Ship.cargo[Index] += ToPlunder;
+		mGameState.Opponent.cargo[Index] -= ToPlunder;
+
+		if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER && Index == GameState.NARCOTICS && Amount > 0)
+			mGameState.JustLootedMarie = true;
+	}
+	public void btnPlunderAllCargoQty(View view){
+		int Index = -1;
+
+		switch (view.getId()){
+			case R.id.btnPlunderCargoAll10:
+				Index++;
+			case R.id.btnPlunderCargoAll9:
+				Index++;
+			case R.id.btnPlunderCargoAll8:
+				Index++;
+			case R.id.btnPlunderCargoAll7:
+				Index++;
+			case R.id.btnPlunderCargoAll6:
+				Index++;
+			case R.id.btnPlunderCargoAll5:
+				Index++;
+			case R.id.btnPlunderCargoAll4:
+				Index++;
+			case R.id.btnPlunderCargoAll3:
+				Index++;
+			case R.id.btnPlunderCargoAll2:
+				Index++;
+			case R.id.btnPlunderCargoAll1:
+				Index++;
+				break;
+		}
+		if (mGameState.Opponent.cargo[Index] <= 0){
+			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			            "You can only steal what your victim actually has."
+			);
+		} else {
+      PlunderCargo(Index, 999);
+		}
+	}
+	public void btnPlunderCargoQty(View view){
+		int Index = -1;
+
+		switch (view.getId()){
+			case R.id.btnPlunderCargo10:
+				Index++;
+			case R.id.btnPlunderCargo9:
+				Index++;
+			case R.id.btnPlunderCargo8:
+				Index++;
+			case R.id.btnPlunderCargo7:
+				Index++;
+			case R.id.btnPlunderCargo6:
+				Index++;
+			case R.id.btnPlunderCargo5:
+				Index++;
+			case R.id.btnPlunderCargo4:
+				Index++;
+			case R.id.btnPlunderCargo3:
+				Index++;
+			case R.id.btnPlunderCargo2:
+				Index++;
+			case R.id.btnPlunderCargo1:
+				Index++;
+				break;
+		}
+		if (mGameState.Opponent.cargo[Index] <= 0){
+			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			            "You can only steal what your victim actually has."
+			);
+		} else {
+			final int idx = Index;
+			inputDialog("Plunder",
+			            String.format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
+			                          GameState.Tradeitems.mTradeitems[idx].name, mGameState.Opponent.cargo[idx]),
+			            "",
+			            "",
+			            mGameState.Opponent.cargo[idx],
+			            new IFinputDialogCallback() {
+				            @Override
+				            public void execute(SeekBar seekBar) {
+					            int Amount = seekBar.getProgress();
+					            if (Amount > 0)
+						            PlunderCargo(idx, Amount);
+				            }
+			            }
+      );
+		}
+	}
+	public void btnDumpAllCargoQty(View view){
+		int Index = -1;
+
+		switch (view.getId()){
+			case R.id.btnDumpCargoAll10:
+				Index++;
+			case R.id.btnDumpCargoAll9:
+				Index++;
+			case R.id.btnDumpCargoAll8:
+				Index++;
+			case R.id.btnDumpCargoAll7:
+				Index++;
+			case R.id.btnDumpCargoAll6:
+				Index++;
+			case R.id.btnDumpCargoAll5:
+				Index++;
+			case R.id.btnDumpCargoAll4:
+				Index++;
+			case R.id.btnDumpCargoAll3:
+				Index++;
+			case R.id.btnDumpCargoAll2:
+				Index++;
+			case R.id.btnDumpCargoAll1:
+				Index++;
+				break;
+		}
+		if (mGameState.Ship.cargo[Index] <= 0){
+			alertDialog("None to dump", "You have none of these goods.",
+			            "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any."
+			);
+		} else {
+			SellCargo(Index, 999, GameState.JETTISONCARGO);
+		}
+	}
+	public void btnDumpCargoQty(View view){
+		int Index = -1;
+
+		switch (view.getId()){
+			case R.id.btnDumpCargo10:
+				Index++;
+			case R.id.btnDumpCargo9:
+				Index++;
+			case R.id.btnDumpCargo8:
+				Index++;
+			case R.id.btnDumpCargo7:
+				Index++;
+			case R.id.btnDumpCargo6:
+				Index++;
+			case R.id.btnDumpCargo5:
+				Index++;
+			case R.id.btnDumpCargo4:
+				Index++;
+			case R.id.btnDumpCargo3:
+				Index++;
+			case R.id.btnDumpCargo2:
+				Index++;
+			case R.id.btnDumpCargo1:
+				Index++;
+				break;
+		}
+		if (mGameState.Ship.cargo[Index] <= 0){
+			alertDialog("None to dump", "You have none of these goods.",
+			            "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any."
+			);
+		} else {
+			final int idx = Index;
+			inputDialog("Discard Cargo",
+			            String.format("Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
+			                          GameState.Tradeitems.mTradeitems[idx].name, mGameState.Ship.cargo[idx],
+			                          mGameState.BuyingPrice[idx] / mGameState.Ship.cargo[idx]),
+			            "",
+			            "",
+			            mGameState.Opponent.cargo[idx],
+			            new IFinputDialogCallback() {
+				            @Override
+				            public void execute(SeekBar seekBar) {
+					            int Amount = seekBar.getProgress();
+					            if (Amount > 0)
+						            SellCargo(idx, Amount, GameState.JETTISONCARGO);
+				            }
+			            }
+			);
+		}
+	}
+	public void btnPlunderDone(View view){
+		Travel();
+	}
+	public void btnDumpDone(View view){
+		btnPlunderForm(null);
+	}
 
 	public void BuyCargo(int Index,int Amount) {
 		// *************************************************************************
@@ -2041,7 +2244,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	////////////////////////////////////////////////////////////////////////////
 	// Fragments -
 	//////////////////////////////////////////////////////////////////////		}
-	public static class StartNewGameFragment extends Fragment {
+	public class StartNewGameFragment extends Fragment {
 		public StartNewGameFragment() { }
 
 		@Override
@@ -2117,7 +2320,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class SystemInformationFragment extends Fragment {
+	public class SystemInformationFragment extends Fragment {
 		public SystemInformationFragment() { }
 
 		@Override
@@ -2240,7 +2443,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class PersonnelRosterFragment extends Fragment {
+	public class PersonnelRosterFragment extends Fragment {
 		View rootView;
 
 		public PersonnelRosterFragment() { }
@@ -2426,7 +2629,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class BankFragment extends Fragment {
+	public class BankFragment extends Fragment {
 		public BankFragment() { }
 
 		@Override
@@ -2478,7 +2681,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class ShipyardFragment extends Fragment {
+	public class ShipyardFragment extends Fragment {
 		public ShipyardFragment() { }
 
 		@Override
@@ -2677,7 +2880,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class ShipInfoFragment extends Fragment {
+	public class ShipInfoFragment extends Fragment {
 		private ShipTypes.ShipType mType;
 		public ShipInfoFragment(ShipTypes.ShipType t) {
 			mType = t;
@@ -2722,7 +2925,7 @@ SeekBar.OnSeekBarChangeListener() {
 		}
 
 	}
-	public static class BuyEquipmentFragment extends Fragment {
+	public class BuyEquipmentFragment extends Fragment {
 		public BuyEquipmentFragment() { }
 
 		@Override
@@ -2860,7 +3063,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class SellEquipmentFragment extends Fragment {
+	public class SellEquipmentFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 			final View rootView = inflater.inflate(R.layout.fragment_sell_equipment, container, false);
@@ -3105,6 +3308,35 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
+	public class PlunderCargoFragment extends Fragment {
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_plunder_cargo, container, false);
+			TextView tv;
+			Button btn;
+			int i;
+
+			for (i=0; i<GameState.MAXTRADEITEM; i++){
+				btn = (Button) rootView.findViewById(
+					                           i == 0 ? R.id.btnPlunderCargo1 :
+					                           i == 1 ? R.id.btnPlunderCargo2 :
+					                           i == 2 ? R.id.btnPlunderCargo3 :
+					                           i == 3 ? R.id.btnPlunderCargo4 :
+					                           i == 4 ? R.id.btnPlunderCargo5 :
+					                           i == 5 ? R.id.btnPlunderCargo6 :
+					                           i == 6 ? R.id.btnPlunderCargo7 :
+					                           i == 7 ? R.id.btnPlunderCargo8 :
+					                           i == 8 ? R.id.btnPlunderCargo9 :
+					                           /*i == 9 ?*/ R.id.btnPlunderCargo10
+				);
+				btn.setText(String.format("%2d", mGameState.Opponent.cargo[i]));
+			}
+
+			tv = (TextView) rootView.findViewById(R.id.txtPlunderCargoBays);
+			tv.setText(String.format("%d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+
+			return rootView;
+		}
+	}
 	public class ShortRangeChartFragment extends Fragment {
 		public ShortRangeChartFragment() { }
 
@@ -3341,7 +3573,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class EncounterFragment extends Fragment {
+	public class EncounterFragment extends Fragment {
 		public EncounterFragment() { }
 
 		@Override
@@ -3428,7 +3660,7 @@ SeekBar.OnSeekBarChangeListener() {
 			return rootView;
 		}
 	}
-	public static class OptionsFragment extends Fragment {
+	public class OptionsFragment extends Fragment {
 		public OptionsFragment() { }
 
 		@Override
@@ -4867,7 +5099,7 @@ SeekBar.OnSeekBarChangeListener() {
 			              "Yes", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
-						//TODO btnPlunderForm(null);
+						btnPlunderForm(null);
 					}
 				}, "No", new DialogInterface.OnClickListener() {
 					@Override
@@ -4887,7 +5119,7 @@ SeekBar.OnSeekBarChangeListener() {
 			mGameState.PoliceRecordScore += GameState.PLUNDERTRADERSCORE;
 		else
 			mGameState.PoliceRecordScore += GameState.PLUNDERPIRATESCORE;
-		// TODO btnPlunderForm(null);
+		btnPlunderForm(null);
 		return; // Travel() is called frow Done button in PlunderForm
 	}
 	public void EncounterButtonMeetCallback(View view) {
@@ -6192,7 +6424,7 @@ SeekBar.OnSeekBarChangeListener() {
 							for (i=0; i<GameState.MAXTRADEITEM; i++)
 								mGameState.Opponent.cargo[i] = 0;
 							mGameState.Opponent.cargo[item] = 1;
-							// TODO btnPlunderForm();// Travel() is called from PlunderDoneButton
+							btnPlunderForm(null);// Travel() is called from PlunderDoneButton
 						}
 					}, "Let go", new DialogInterface.OnClickListener() {
 							@Override

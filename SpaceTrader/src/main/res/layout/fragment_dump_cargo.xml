@@ -16,7 +16,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Buy Cargo"
+			android:text="Dump Cargo"
 			android:id="@+id/textView"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
@@ -29,7 +29,7 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
 			android:layout_alignParentRight="false"
-			>
+			android:layout_centerHorizontal="true">
 
 		<TableRow
 				android:layout_width="fill_parent"
@@ -40,10 +40,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="12"
-					android:id="@+id/btnBuyCargo1"
+					android:id="@+id/btnDumpCargo1"
 					android:layout_column="0"
 					style="@style/BuySellButtons"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -61,19 +61,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll1"
+					android:id="@+id/btnDumpCargoAll1"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
-
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="10 cr."
-					android:id="@+id/txtBuyCargoPrice1"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
 		</TableRow>
 
@@ -87,9 +78,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="23"
-					android:id="@+id/btnBuyCargo2"
+					android:id="@+id/btnDumpCargo2"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -105,19 +96,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll2"
+					android:id="@+id/btnDumpCargoAll2"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
-
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="20 cr."
-					android:id="@+id/txtBuyCargoPrice2"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
 		</TableRow>
 
@@ -131,9 +113,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="34"
-					android:id="@+id/btnBuyCargo3"
+					android:id="@+id/btnDumpCargo3"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -149,19 +131,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll3"
+					android:id="@+id/btnDumpCargoAll3"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
-
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="30 cr."
-					android:id="@+id/txtBuyCargoPrice3"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
 		</TableRow>
 
@@ -175,9 +148,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="45"
-					android:id="@+id/btnBuyCargo4"
+					android:id="@+id/btnDumpCargo4"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -193,19 +166,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll4"
+					android:id="@+id/btnDumpCargoAll4"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
-
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="40 cr."
-					android:id="@+id/txtBuyCargoPrice4"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
 		</TableRow>
 
@@ -219,9 +183,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="56"
-					android:id="@+id/btnBuyCargo5"
+					android:id="@+id/btnDumpCargo5"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -237,19 +201,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll5"
+					android:id="@+id/btnDumpCargoAll5"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
-
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="50 cr."
-					android:id="@+id/txtBuyCargoPrice5"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
 		</TableRow>
 
@@ -263,9 +218,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="67"
-					android:id="@+id/btnBuyCargo6"
+					android:id="@+id/btnDumpCargo6"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -281,19 +236,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll6"
+					android:id="@+id/btnDumpCargoAll6"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="60 cr."
-					android:id="@+id/txtBuyCargoPrice6"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 
 		<TableRow
@@ -306,9 +253,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="78"
-					android:id="@+id/btnBuyCargo7"
+					android:id="@+id/btnDumpCargo7"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -324,19 +271,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll7"
+					android:id="@+id/btnDumpCargoAll7"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="70 cr."
-					android:id="@+id/txtBuyCargoPrice7"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 
 		<TableRow
@@ -349,9 +288,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="89"
-					android:id="@+id/btnBuyCargo8"
+					android:id="@+id/btnDumpCargo8"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -367,19 +306,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll8"
+					android:id="@+id/btnDumpCargoAll8"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="80 cr."
-					android:id="@+id/txtBuyCargoPrice8"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 
 		<TableRow
@@ -392,9 +323,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="90"
-					android:id="@+id/btnBuyCargo9"
+					android:id="@+id/btnDumpCargo9"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -410,19 +341,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll9"
+					android:id="@+id/btnDumpCargoAll9"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="90 cr."
-					android:id="@+id/txtBuyCargoPrice9"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 
 		<TableRow
@@ -435,9 +358,9 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="01"
-					android:id="@+id/btnBuyCargo10"
+					android:id="@+id/btnDumpCargo10"
 					android:layout_column="0"
-					android:onClick="btnBuyCargoCallback"/>
+					android:onClick="btnDumpCargoQty"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -453,19 +376,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="Max"
-					android:id="@+id/btnBuyCargoAll10"
+					android:id="@+id/btnDumpCargoAll10"
 					android:layout_column="2"
 					android:layout_gravity="center_horizontal"
-					android:onClick="btnBuyCargoAllCallback"/>
+					android:onClick="btnDumpAllCargoQty"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="100 cr."
-					android:id="@+id/txtBuyCargoPrice10"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
 		</TableRow>
 
 	</TableLayout>
@@ -475,23 +390,22 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="Bays: 0/15"
-			android:id="@+id/txtBuyCargoBays"
+			android:id="@+id/txtDumpCargoBays"
 			android:layout_column="0"
 			android:layout_span="2"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"/>
 
-	<TextView
+	<Button
+			style="?android:attr/buttonStyleSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Cash: 11445 cr."
-			android:id="@+id/txtBuyCargoCash"
-			android:layout_span="3"
-			android:singleLine="true"
-			android:layout_gravity="right"
+			android:text="Done"
+			android:id="@+id/btnDumpDone"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentEnd="true"
+			android:onClick="btnDumpDone"/>
+
 </RelativeLayout>

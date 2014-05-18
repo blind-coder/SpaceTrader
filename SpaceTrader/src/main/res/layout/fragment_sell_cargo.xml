@@ -29,11 +29,12 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
 			android:layout_alignParentRight="false"
-			android:stretchColumns="3">
+			>
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					android:layout_width="wrap_content"
@@ -78,7 +79,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -121,7 +123,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -164,7 +167,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -207,7 +211,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -250,7 +255,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -292,7 +298,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -334,7 +341,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -376,7 +384,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
@@ -418,7 +427,8 @@
 
 		<TableRow
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="fill_parent"
+				android:gravity="center_horizontal">
 
 			<Button
 					style="@style/BuySellButtons"
