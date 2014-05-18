@@ -158,11 +158,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void onBackPressed() {
 		if (mCurrentState.equals("WelcomeScreen")) {
 			finish();
-			return;
 		} else
 		if (mCurrentState.equals("startup")) {
 			finish();
-			return;
 		} else
 		if (mCurrentState.equals("Encounter")){
 			ConfirmDialog("Can't save now",
@@ -176,7 +174,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 										}, "No", new DialogInterface.OnClickListener() {
 											@Override
 											public void onClick(DialogInterface dialogInterface, int i) {
-												return;
+
 											}
 										}
 			);
@@ -1873,7 +1871,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void btnDestroyed(){
 		mContext.deleteFile("savegame.txt");
-		finish();
+		EndOfGame(GameState.KILLED);
 	}
 	public void btnGameOptions(View view){
 		FragmentManager fragmentManager = getFragmentManager();
@@ -4323,7 +4321,6 @@ SeekBar.OnSeekBarChangeListener() {
 				EscapeWithPod();
 				return;
 			} else {
-				// TODO
 				alertDialog("You lose",
 				            "Your ship has been destroyed.",
 				            ""
@@ -5661,7 +5658,7 @@ SeekBar.OnSeekBarChangeListener() {
 	public boolean ExecuteAction(final Boolean CommanderFlees){
 		Boolean CommanderGotHit, OpponentGotHit;
 		long OpponentHull, ShipHull;
-		int y, i;
+		int i;
 		int PrevEncounterType;
 		Ship Ship = mGameState.Ship;
 		Ship Opponent = mGameState.Opponent;
@@ -5703,12 +5700,11 @@ SeekBar.OnSeekBarChangeListener() {
 
 			if (mGameState.EscapePod) {
 				EscapeWithPod();
-				return (false);
 			} else {
 				alertDialog("Both Destroyed", "You and your opponent have managed to destroy each other.", "");
 				btnDestroyed();
 			}
-			return (false);
+			return false;
 		} else if (Opponent.hull <= 0) {
 			mGameState.AutoAttack = false;
 			mGameState.AutoFlee = false;
@@ -5765,10 +5761,9 @@ SeekBar.OnSeekBarChangeListener() {
 
 			if (mGameState.EscapePod) {
 				EscapeWithPod();
-				return( false );
 			} else {
 				alertDialog("You Lose", "Your ship has been destroyed by your opponent.", "");
-				btnDestroyed();	
+				btnDestroyed();
 			}
 			return (false);
 		}
@@ -5940,16 +5935,18 @@ SeekBar.OnSeekBarChangeListener() {
 			Runnable r = new Runnable() {
 				@Override
 				public void run() {
-					if (mGameState.AutoAttack || mGameState.AutoFlee){
+					if (mGameState.AutoAttack || mGameState.AutoFlee){ // Need to check again, might have pressed Int. button
 						if (!ExecuteAction(CommanderFlees)){
-							Travel();
+							if (mGameState.Ship.hull > 0){
+								Travel();
+							}
 						}
 					}
 				}
 			};
 			delayHandler.postDelayed(r, 1500);
 		}
-		return (true);
+		return true;
 	}
 	// *************************************************************************
 	// An attack: Attacker attacks Defender, Flees indicates if Defender is fleeing
@@ -6376,6 +6373,7 @@ SeekBar.OnSeekBarChangeListener() {
 
 			case GameState.MOONBOUGHT:
 				// TODO btnMoonBought();
+				EndOfGame(GameState.MOON);
 				return;
 
 			case GameState.SKILLINCREASE:
