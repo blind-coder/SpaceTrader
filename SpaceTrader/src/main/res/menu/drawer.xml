@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+			android:id="@+id/menuGameOptions"
+			android:title="Game"
+			android:showAsAction="ifRoom|withText">
+		<menu>
+			<item
+					android:id="@+id/menuNewGame"
+					android:title="New game"
+					/>
+			<item
+					android:id="@+id/menuRetire"
+					android:title="Retire"
+					/>
+			<item
+					android:id="@+id/menuOptions"
+					android:title="Options"
+					/>
+			<item
+					android:id="@+id/menuShortcuts"
+					android:title="Shortcuts"
+					/>
+			<item
+					android:id="@+id/menuHighscores"
+					android:title="Highscores"
+					/>
+			<item
+					android:id="@+id/menuClearHighscore"
+					android:title="Clear Highscores"
+					/>
+		</menu>
+	</item>
+	<item
+			android:id="@+id/submenuHelp"
+			android:title="Help"
+			android:showAsAction="ifRoom|withText">
+		<menu>
+			<item
+					android:id="@+id/menuHelpCurrentScreen"
+					android:title="Current Screen"/>
+			<item
+					android:id="@+id/menuHelpMenu"
+					android:title="Menu"/>
+			<item
+					android:id="@+id/menuHelpHowToPlay"
+					android:title="How To Play"/>
+			<item
+					android:id="@+id/menuHelpTrading"
+					android:title="Trading"/>
+			<item
+					android:id="@+id/menuHelpTravelling"
+					android:title="Travelling"/>
+			<item
+					android:id="@+id/menuHelpShipEquipment"
+					android:title="Ship Equipment"/>
+			<item
+					android:id="@+id/menuHelpSkills"
+					android:title="Skill"/>
+			<item
+					android:id="@+id/menuHelpFirstSteps"
+					android:title="First Step"/>
+			<item
+					android:id="@+id/menuHelpAcknowledgements"
+					android:title="Acknowledgements"/>
+			<item
+					android:id="@+id/menuHelpAbout"
+					android:title="About"/>
+			<item
+					android:id="@+id/menuHelpLicense"
+					android:title="License"/>
+		</menu>
+	</item>
+
+</menu>

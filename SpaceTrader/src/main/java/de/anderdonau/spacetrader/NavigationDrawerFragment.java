@@ -231,6 +231,18 @@ public class NavigationDrawerFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// If the drawer is open, show the extra app actions in the action bar. See also
+		// showGlobalContextActionBar, which controls the top-left area of the action bar.
+		if (mDrawerLayout != null && isDrawerOpen()) {
+			inflater.inflate(R.menu.drawer, menu);
+			showGlobalContextActionBar();
+		} else {
+			super.onCreateOptionsMenu(menu, inflater);
+		}
+	}
+
 	/**
 	 * Per the navigation drawer design guidelines, updates the action bar to show the global app
 	 * 'context', rather than just what's in the current screen.

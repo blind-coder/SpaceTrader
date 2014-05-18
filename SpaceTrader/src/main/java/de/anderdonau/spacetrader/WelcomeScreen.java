@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -226,17 +227,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mCurrentState.equals("WelcomeScreen") && !mCurrentState.equals("startup") && !mCurrentState.equals("StartNewGame")) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.in_game, menu);
-
-		}
-		if (mNavigationDrawerFragment != null) {
-			if (!mNavigationDrawerFragment.isDrawerOpen()) {
-				// Only show items in the action bar relevant to this screen
-				// if the drawer is not showing. Otherwise, let the drawer
-				// decide what to show in the action bar.
-				// getMenuInflater().inflate(R.menu.welcome_screen, menu);
+		if (mNavigationDrawerFragment != null){
+			if (!mNavigationDrawerFragment.isDrawerOpen()){
+				if (!mCurrentState.equals("WelcomeScreen") &&
+					    !mCurrentState.equals("startup") &&
+					    !mCurrentState.equals("StartNewGame")) {
+					MenuInflater inflater = getMenuInflater();
+					inflater.inflate(R.menu.in_game, menu);
+				}
 				restoreActionBar();
 				return true;
 			}
@@ -263,6 +261,41 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.hotkey4:
 				call = mGameState.Shortcuts[mGameState.Shortcut4][0];
 				break;
+			case R.id.menuOptions:
+				btnGameOptions(null);
+				return true;
+			case R.id.menuNewGame:
+				return true;
+			case R.id.menuRetire:
+				return true;
+			case R.id.menuShortcuts:
+				return true;
+			case R.id.menuHighscores:
+				return true;
+			case R.id.menuClearHighscore:
+				return true;
+			case R.id.menuHelpCurrentScreen:
+				return true;
+			case R.id.menuHelpMenu:
+				return true;
+			case R.id.menuHelpHowToPlay:
+				return true;
+			case R.id.menuHelpTrading:
+				return true;
+			case R.id.menuHelpTravelling:
+				return true;
+			case R.id.menuHelpShipEquipment:
+				return true;
+			case R.id.menuHelpSkills:
+				return true;
+			case R.id.menuHelpFirstSteps:
+				return true;
+			case R.id.menuHelpAcknowledgements:
+				return true;
+			case R.id.menuHelpAbout:
+				return true;
+			case R.id.menuHelpLicense:
+				return true;
 		}
 		if (call.equals("B")){
 			btnBuyCargo(null);
@@ -1685,6 +1718,56 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnDestroyed(){
 		mContext.deleteFile("savegame.txt");
 		finish();
+	}
+	public void btnGameOptions(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new OptionsFragment()).commit();
+		mCurrentState = "Options";
+	}
+	public void btnSetOption(View view){
+		CheckBox checkBox = (CheckBox) view;
+
+		switch (checkBox.getId()){
+			case R.id.chkBoxIgnorePolice:
+				mGameState.AlwaysIgnorePolice = checkBox.isChecked();
+				break;
+			case R.id.chkBoxIgnorePiraces:
+				mGameState.AlwaysIgnorePirates = checkBox.isChecked();
+				break;
+			case R.id.chkBoxIgnoreTraders:
+				mGameState.AlwaysIgnoreTraders = checkBox.isChecked();
+				break;
+			case R.id.chkBoxIgnoreTradeOffers:
+				mGameState.AlwaysIgnoreTradeInOrbit = checkBox.isChecked();
+				break;
+			case R.id.chkBoxAutoFuel:
+				mGameState.AutoFuel  = checkBox.isChecked();
+				break;
+			case R.id.chkBoxAutoRepair:
+				mGameState.AutoRepair = checkBox.isChecked();
+				break;
+			case R.id.chkBoxAlwaysInfo:
+				mGameState.AlwaysInfo = checkBox.isChecked();
+				break;
+			case R.id.chkBoxReserveMoney:
+				mGameState.ReserveMoney = checkBox.isChecked();
+				break;
+			case R.id.chkBoxContinuous:
+				mGameState.Continuous = checkBox.isChecked();
+				break;
+			case R.id.chkBoxAttackFleeing:
+				mGameState.AttackFleeing = checkBox.isChecked();
+				break;
+			case R.id.chkBoxAutoPayNewspaper:
+				mGameState.NewsAutoPay = checkBox.isChecked();
+				break;
+			case R.id.chkBoxDebtReminder:
+				mGameState.RemindLoans = checkBox.isChecked();
+				break;
+			case R.id.chkBoxSaveOnArrival:
+				mGameState.SaveOnArrival = checkBox.isChecked();
+				break;
+		}
 	}
 
 	public void BuyCargo(int Index,int Amount) {
@@ -3224,6 +3307,56 @@ SeekBar.OnSeekBarChangeListener() {
 			for (i=0; i<d; ++i) {
 				/* TODO: Draw tribbles */
 			}
+			return rootView;
+		}
+	}
+	public static class OptionsFragment extends Fragment {
+		public OptionsFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_game_options, container, false);
+			CheckBox checkBox;
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnorePolice);
+			checkBox.setChecked(mGameState.AlwaysIgnorePolice);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnorePiraces);
+			checkBox.setChecked(mGameState.AlwaysIgnorePirates);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnoreTraders);
+			checkBox.setChecked(mGameState.AlwaysIgnoreTraders);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnoreTradeOffers);
+			checkBox.setChecked(mGameState.AlwaysIgnoreTradeInOrbit);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoFuel);
+			checkBox.setChecked(mGameState.AutoFuel);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoRepair);
+			checkBox.setChecked(mGameState.AutoRepair);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAlwaysInfo);
+			checkBox.setChecked(mGameState.AlwaysInfo);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxReserveMoney);
+			checkBox.setChecked(mGameState.ReserveMoney);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxContinuous);
+			checkBox.setChecked(mGameState.Continuous);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAttackFleeing);
+			checkBox.setChecked(mGameState.AttackFleeing);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoPayNewspaper);
+			checkBox.setChecked(mGameState.NewsAutoPay);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxDebtReminder);
+			checkBox.setChecked(mGameState.RemindLoans);
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxSaveOnArrival);
+			checkBox.setChecked(mGameState.SaveOnArrival);
+
 			return rootView;
 		}
 	}
