@@ -3318,7 +3318,7 @@ SeekBar.OnSeekBarChangeListener() {
 		}
 	}
 	public class PlunderCargoFragment extends Fragment {
-		public PlunderCaoFragment() {}
+		public PlunderCargoFragment() {}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
