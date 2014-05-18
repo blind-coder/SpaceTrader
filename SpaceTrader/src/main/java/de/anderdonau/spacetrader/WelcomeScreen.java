@@ -211,7 +211,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle(mCurrentState);
+		actionBar.setTitle("Commands");
 	}
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -302,24 +302,130 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.menuHelpCurrentScreen:
 				return true;
 			case R.id.menuHelpMenu:
+				alertDialog("Tips",
+				            "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n"+
+				              "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n"+
+					            "\"\"Game\" gives access to game functions:\n"+
+					            "- \"New Game\" starts a new game.\n" +
+					            "- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n"+
+					            "- \"Options\" gives access to the game preferences.\n"+
+					            "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n"+
+					            "- \"High Scores\" shows the high-score list.\n"+
+					            "- \"Clear High Scores\" wipes the current high-score list.",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpHowToPlay:
+				alertDialog("How to play",
+					"Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
+						"The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
+						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
+						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
+						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
+					""
+				);
 				return true;
 			case R.id.menuHelpTrading:
+				alertDialog("Trading",
+					"Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
+						"The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
+						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
+						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
+						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
+				  ""
+				);
 				return true;
 			case R.id.menuHelpTravelling:
+				alertDialog("Travelling",
+				            "To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
+											"When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
+											"During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
+											"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
+											"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
+											"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpShipEquipment:
+				alertDialog("Ship Equipment",
+				            "There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
+											"Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
+											"The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n"+
+											"As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
+											"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
+											"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
+											"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpSkills:
+				alertDialog("Skills",
+				            "As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
+											"The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
+											"The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
+											"The Trader skill influences the price you have to pay for goods and equipment. A good trader pays considerably less than a bad trader.\n\n" +
+											"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
+											"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
+											"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
+                     ""
+				);
 				return true;
 			case R.id.menuHelpFirstSteps:
+				alertDialog("First Steps",
+				            "Here I will describe the steps you will undertake the first days as a trader:\n" +
+											"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n"+
+											"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
+											"If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
+											"After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
+											"Then switch to the Short Range Chart to select your next target. Tap any system within the maximum range circle to get information on that system. Try to select a system which hasn't got too many pirates (unless to aspire a career as a bounty hunter), and which has a tech level which is opposite the tech level of your current system. That is, from an agricultural system you best travel to an industrial system to sell natural goods, while from an industrial system you best sell technologies to more backward systems. Use the Average Price List button to get an indication on the prices you might expect to sell your goods for. Goods that are displayed bold have an average selling price that is higher than the price you have to pay for those goods in the current system. Note that this isn't a guarantee, but it's better than nothing.\n\n" +
+											"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
+											"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
+											"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpAcknowledgements:
+				alertDialog("Acknowledgements",
+				            "Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
+											"This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
+											"I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
+											"A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
+											"I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
+											"A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
+											"Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n"+
+											"Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
+											"DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
+											"Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
+											"Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
+											"Thank you all. You were a tremendous help, and I am very grateful for that.\n"+
+											"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
+											"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpAbout:
+				alertDialog("About",
+				             "Android port Copyright 2014 by Benjamin Schieder\n"+
+				              "Linux port Copyright 2010 by Benjamin Schieder\n"+
+					            "Original Copyright 2000-2002 by Pieter Spronck\n"+
+					            "Design and programming: Pieter Spronck\"\n"+
+					            "Additional design and programming: Samuel Goldstein, Sam Anderson\n"+
+					            "Graphics: Alexander Lawrence\n" +
+					            "Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
+					            "Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
+					            "David J. Webb for \"Solar Wars\"\n" +
+					            "Matt Lee for \"Dope Wars\"\n" +
+					            "DrWowe for solving the \"Special\" bug\n" +
+					            "All the beta testers\nAnd all the players that sent me their ideas\n" +
+					            "Space Trader is released under a GNU General Public License",
+				            ""
+				);
 				return true;
 			case R.id.menuHelpLicense:
+				alertDialog("License",
+				            "The game code is licensed under the GPLv2",
+				            ""
+				);
 				return true;
 		}
 		if (call.equals("B")){
