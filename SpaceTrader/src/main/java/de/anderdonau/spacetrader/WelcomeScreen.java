@@ -3588,36 +3588,19 @@ SeekBar.OnSeekBarChangeListener() {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
-			ShortRangeChart shortRangeChart = (ShortRangeChart) rootView.findViewById(R.id.ShortRangeChart);
-			shortRangeChart.setGameState(mGameState);
+			final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.ShortRangeChart);
+			navigationChart.setGameState(mGameState);
+			navigationChart.setShortRange(true);
 
-			shortRangeChart.setOnTouchListener(new View.OnTouchListener() {
+			navigationChart.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent motionEvent) {
-					ShortRangeChart shortRangeChart = (ShortRangeChart) view;
-					shortRangeChart.mDrawWormhole = -1;
-					shortRangeChart.invalidate();
+					navigationChart.mDrawWormhole = -1;
+					navigationChart.invalidate();
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-						int system = shortRangeChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
-						if (system >= 0){
-							mGameState.WarpSystem = system;
-							WarpSystem = mGameState.SolarSystem[system];
-							if (!mGameState.AlwaysInfo &&
-							    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
-										 mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
-										mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
-							    ){
-								btnAveragePricesForm(null);
-							} else {
-								btnWarpSystemInformation(null);
-							}
-							shortRangeChart.mSelectedSystem = system;
-							shortRangeChart.invalidate();
-						} else {
-							final int wormhole = shortRangeChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-							if (wormhole < 0){
-								return true;
-							}
+						int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
+						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
+						if (wormhole >= 0){
 							system = mGameState.Wormhole[wormhole];
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
@@ -3630,6 +3613,20 @@ SeekBar.OnSeekBarChangeListener() {
 							} else {
 								btnWarpSystemInformation(null);
 							}
+						} else if (system >= 0){
+							mGameState.WarpSystem = system;
+							WarpSystem = mGameState.SolarSystem[system];
+							if (!mGameState.AlwaysInfo &&
+							    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
+										 mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
+										mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
+							    ){
+								btnAveragePricesForm(null);
+							} else {
+								btnWarpSystemInformation(null);
+							}
+						} else {
+							navigationChart.onTouchEvent(motionEvent);
 						}
 					}
 					return false;
@@ -3651,8 +3648,9 @@ SeekBar.OnSeekBarChangeListener() {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
-			GalacticChart galacticChart = (GalacticChart) rootView.findViewById(R.id.GalacticChart);
-			galacticChart.setGameState(mGameState);
+			final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.GalacticChart);
+			navigationChart.setGameState(mGameState);
+			navigationChart.setShortRange(false);
 
 			TextView tv;
 			if (mGameState.WarpSystem <= 0){
@@ -3673,17 +3671,28 @@ SeekBar.OnSeekBarChangeListener() {
 				tv = (TextView) rootView.findViewById(R.id.galChartName);
 				tv.setVisibility(View.VISIBLE);
 				tv.setText(mGameState.SolarSystemName[s.nameIndex]);
-				galacticChart.mSelectedSystem = mGameState.WarpSystem;
+				navigationChart.mSelectedSystem = mGameState.WarpSystem;
 			}
-			galacticChart.setOnTouchListener(new View.OnTouchListener() {
+			navigationChart.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent motionEvent) {
-					final GalacticChart galacticChart = (GalacticChart) view;
-					galacticChart.mDrawWormhole = -1;
-					galacticChart.invalidate();
+					navigationChart.mDrawWormhole = -1;
+					navigationChart.invalidate();
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-						final int system = galacticChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
-						if (system >= 0){
+						final int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
+						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
+						if (wormhole >= 0){
+							navigationChart.mDrawWormhole = wormhole;
+							navigationChart.invalidate();
+							TextView tv;
+							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
+							tv.setVisibility(View.VISIBLE);
+							tv.setText(String.format("Wormhole to %s", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]));
+							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
+							tv.setVisibility(View.INVISIBLE);
+							tv = (TextView) rootView.findViewById(R.id.galChartName);
+							tv.setVisibility(View.INVISIBLE);
+						} else if (system >= 0){
 							TextView tv;
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
@@ -3694,16 +3703,17 @@ SeekBar.OnSeekBarChangeListener() {
 							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 							tv.setVisibility(View.VISIBLE);
 							tv.setText(String.format("%d parsecs", mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], s)));
+
 							tv = (TextView) rootView.findViewById(R.id.galChartName);
 							tv.setVisibility(View.VISIBLE);
 							tv.setText(mGameState.SolarSystemName[s.nameIndex]);
-							if (system == galacticChart.mSelectedSystem){
+							if (system == navigationChart.mSelectedSystem){
 								ConfirmDialog("Track system", "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
 								              "", "Yes", new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
 										mGameState.TrackedSystem = system;
-										galacticChart.invalidate();
+										navigationChart.invalidate();
 									}
 								}, "No", new DialogInterface.OnClickListener() {
 										@Override
@@ -3713,23 +3723,11 @@ SeekBar.OnSeekBarChangeListener() {
 									}
 								);
 							} else {
-								galacticChart.mSelectedSystem = system;
-								galacticChart.invalidate();
+								navigationChart.mSelectedSystem = system;
+								navigationChart.invalidate();
 							}
 						} else {
-							final int wormhole = galacticChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-							if (wormhole >= 0){
-								galacticChart.mDrawWormhole = wormhole;
-								galacticChart.invalidate();
-								TextView tv;
-								tv = (TextView) rootView.findViewById(R.id.galChartDetails);
-								tv.setVisibility(View.VISIBLE);
-								tv.setText(String.format("Wormhole to %s", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]));
-								tv = (TextView) rootView.findViewById(R.id.galChartDistance);
-								tv.setVisibility(View.INVISIBLE);
-								tv = (TextView) rootView.findViewById(R.id.galChartName);
-								tv.setVisibility(View.INVISIBLE);
-							}
+							navigationChart.onTouchEvent(motionEvent);
 						}
 					}
 					return false;

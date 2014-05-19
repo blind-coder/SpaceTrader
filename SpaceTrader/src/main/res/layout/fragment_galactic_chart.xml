@@ -25,7 +25,7 @@
 	<view
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			class="de.anderdonau.spacetrader.GalacticChart"
+			class="de.anderdonau.spacetrader.NavigationChart"
 			android:id="@+id/GalacticChart"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
