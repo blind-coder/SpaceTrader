@@ -2401,6 +2401,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER && Index == GameState.NARCOTICS && Amount > 0)
 			mGameState.JustLootedMarie = true;
+		btnPlunderForm(null);
 	}
 	public void btnPlunderAllCargoQty(View view){
 		int Index = -1;
