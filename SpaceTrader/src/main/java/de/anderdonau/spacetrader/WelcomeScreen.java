@@ -1844,11 +1844,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			default: return;
 		}
 		final int Index = idx;
-		ConfirmDialog("Sell Item", "Are you sure you want to sell this item?",
-		              "Selling an item will return to you about 75% of what you first paid for it. If you sell a ship as a whole, all items on it will automatically be sold.",
-		              "Yes", new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialogInterface, int i) {
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  "Sell Item",
+		                  "Are you sure you want to sell this item?",
+		                  "Selling an item will return to you about 75% of what you first paid for it. If you sell a ship as a whole, all items on it will automatically be sold.",
+		              "Sell Item", "Don't sell item",
+		              new Popup.buttonCallback() {
+			              @Override
+			              public void execute(Popup popup, View view) {
 											if (Index < GameState.MAXWEAPONTYPE){
 												mGameState.Credits += mGameState.WEAPONSELLPRICE(Index);
 												for (i=Index+1; i<GameState.MAXWEAPON; ++i)
@@ -1865,24 +1869,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
 												if (mGameState.Ship.gadget[Index - GameState.MAXWEAPON - GameState.MAXSHIELD]==GameState.EXTRABAYS){
 													if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 5){
-														alertDialog("Cargo Bays Full",
-														            "The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
-														            "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.");
+														Popup popup1;
+														popup1 = new Popup(getApplicationContext(),
+														                   "Cargo Bays Full",
+														                   "The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
+														                   "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.",
+														                   "OK", cbShowNextPopup
+														);
+														showNextPopup();
 														return;
 													}
 												}
 												mGameState.Credits += mGameState.GADGETSELLPRICE( Index - GameState.MAXWEAPON - GameState.MAXSHIELD);
-												for (i=Index-GameState.MAXWEAPON-GameState.MAXSHIELD+1;i<GameState.MAXGADGET; ++i)
+												for (int i=Index-GameState.MAXWEAPON-GameState.MAXSHIELD+1;i<GameState.MAXGADGET; ++i)
 													mGameState.Ship.gadget[i-1] = mGameState.Ship.gadget[i];
 												mGameState.Ship.gadget[GameState.MAXGADGET-1] = -1;
 											}
 											btnSellEquipment(null);
-										}
-									}, "No", new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialogInterface, int i) { }
-									}
+											showNextPopup();
+			              }
+									}, cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBuyCargo(View view){
 		FragmentManager fragmentManager = getFragmentManager();
@@ -1893,6 +1902,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int idx;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+		Popup popup;
 
 		idx = -1;
 		switch (view.getId()){
@@ -1927,62 +1937,100 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnBuyCargo1:
 				idx++;
 				break;
-			default: alertDialog("Error", "No cargo selected.", ""); return;
+			default:
+				popup = new Popup(getApplicationContext(),
+				                  "Error", "No cargo selected.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				return;
 		}
 
 		final int Index = idx;
 		if (mGameState.Debt > GameState.DEBTTOOLARGE) {
-			alertDialog("You Have A Debt", "You can't buy that as long as you have debts.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "You Have A Debt",
+			                  "You can't buy that as long as you have debts.", "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (CURSYSTEM.qty[Index] <= 0 || mGameState.BuyPrice[Index] <= 0) {
-			alertDialog("Nothing Available", "None of these goods are available.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "Nothing Available", "None of these goods are available.", "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.TotalCargoBays() - mGameState.FilledCargoBays() - mGameState.LeaveEmpty <= 0) {
-			alertDialog("No Empty Bays", "You don't have any empty cargo holds available at the moment",
-			            ""
+			popup = new Popup(getApplicationContext(),
+			                  "No Empty Bays", "You don't have any empty cargo holds available at the moment",
+			            "", "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.ToSpend() < mGameState.BuyPrice[Index] ) {
-			alertDialog("Not Enough Money", "You don't have enough money to spend on any of these goods.",
-			            "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries."
+			popup = new Popup(getApplicationContext(),
+			                  "Not Enough Money", "You don't have enough money to spend on any of these goods.",
+			                  "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
-		inputDialog("Buy Cargo",
-		            String.format("How many do you want to buy?\nAt %d cr. each you can afford %d.",
+		popup = new Popup(getApplicationContext(),
+		                  "Buy Cargo",
+		                  String.format("How many do you want to buy?\nAt %d cr. each you can afford %d.",
 		                          mGameState.BuyPrice[idx],
-		                          Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index])),
-                "Amount",
-		            "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
-								Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index]),
-		            new IFinputDialogCallback() {
-			            @Override
-			            public void execute(SeekBar seekBar) {
-				            int Amount;
-				            Amount = seekBar.getProgress();
-				            if (Amount > 0) {
-					            BuyCargo(Index, Amount);
-					            if (mCurrentState.equals("AveragePrices")){
-						            btnAveragePricesForm(null);
-					            } else {
-					              btnBuyCargo(null);
-					            }
-				            }
-			            }
-		            }
+		                          Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index])
+		                  ),
+		                  "Amount",
+		                  "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
+		                  Math.min(mGameState.ToSpend() / mGameState.BuyPrice[Index], CURSYSTEM.qty[Index]),
+		                  "Buy", "Don't buy",
+											new Popup.buttonCallback() {
+												@Override
+												public void execute(Popup popup, View view) {
+													int Amount;
+													SeekBar seekBar = (SeekBar)view;
+							            Amount = seekBar.getProgress();
+							            if (Amount > 0) {
+								            BuyCargo(Index, Amount);
+								            if (mCurrentState.equals("AveragePrices")){
+									            btnAveragePricesForm(null);
+								            } else {
+								              btnBuyCargo(null);
+								            }
+								            showNextPopup();
+							            }
+						            }
+					            }, cbShowNextPopup,
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  BuyCargo(Index, popup.max);
+				                  showNextPopup();
+				                  btnBuyCargo(null);
+			                  }
+		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBuyCargoAllCallback(View view){
 		int idx;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
+		Popup popup;
 
 		idx = -1;
 		switch (view.getId()){
@@ -2007,31 +2055,54 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnBuyCargoAll1:
 				idx++;
 				break;
-			default: alertDialog("Error", "No cargo selected.", ""); return;
+			default:
+				popup = new Popup(getApplicationContext(),
+				                  "Error", "No cargo selected.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				return;
 		}
 
 		final int Index = idx;
 		if (mGameState.Debt > GameState.DEBTTOOLARGE) {
-			alertDialog("You Have A Debt", "You can't buy that as long as you have debts.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "You Have A Debt", "You can't buy that as long as you have debts.", "",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (CURSYSTEM.qty[Index] <= 0 || mGameState.BuyPrice[Index] <= 0) {
-			alertDialog("Nothing Available", "None of these goods are available.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "Nothing Available", "None of these goods are available.", "", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.TotalCargoBays() - mGameState.FilledCargoBays() - mGameState.LeaveEmpty <= 0) {
-			alertDialog("No Empty Bays", "You don't have any empty cargo holds available at the moment",
-			            ""
+			popup = new Popup(getApplicationContext(),
+			                  "No Empty Bays", "You don't have any empty cargo holds available at the moment",
+			                  "", "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.ToSpend() < mGameState.BuyPrice[Index] ) {
-			alertDialog("Not Enough Money", "You don't have enough money to spend on any of these goods.",
-			            "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries."
+			popup = new Popup(getApplicationContext(),
+			                  "Not Enough Money", "You don't have enough money to spend on any of these goods.",
+			                  "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
@@ -2045,6 +2116,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void btnSellCargoCallback(View view){
 		int Index;
+		Popup popup;
 
 		Index = -1;
 		switch (view.getId()){
@@ -2069,51 +2141,78 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnSellCargo1:
 				Index++;
 				break;
-			default: alertDialog("Error", "No cargo selected.", ""); return;
+			default:
+				popup = new Popup(getApplicationContext(), "Error", "No cargo selected.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				return;
 		}
 
 
 		if (mGameState.Ship.cargo[Index] <= 0){
-			alertDialog("None To Sell", "You have none of these goods in your cargo bays.",
-			            "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything."
+			popup = new Popup(getApplicationContext(),
+			                  "None To Sell", "You have none of these goods in your cargo bays.",
+			                  "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 		if (mGameState.SellPrice[Index] <= 0)
 		{
-			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.",
-			            "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them."
+			popup = new Popup(getApplicationContext(),
+			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
+			                  "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		final int idx = Index;
-		inputDialog("Sell Cargo", String
-			                          .format("How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.",
-			                                  mGameState.Ship.cargo[Index], mGameState.SellPrice[Index],
-			                                  mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ?
-			                                  "loss" : "profit", Math
-				                                                     .abs(mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] - mGameState.SellPrice[Index]),
-			                                  mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ?
-			                                  (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index]) - mGameState.SellPrice[Index] :
-			                                  mGameState.SellPrice[Index] - (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index])
-			                          ), "Amount",
-		            "If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
-								mGameState.Ship.cargo[Index],
-		            new IFinputDialogCallback() {
-			            @Override
-			            public void execute(SeekBar seekBar) {
-				            int Amount;
-				            Amount = seekBar.getProgress();
-				            if (Amount > 0){
-					            SellCargo(idx, Amount, GameState.SELLCARGO);
-					            btnSellCargo(null);
-				            }
-			            }
-		            }
+		popup = new Popup(getApplicationContext(),
+		                  "Sell Cargo",
+		                  String.format("How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.",
+		                                mGameState.Ship.cargo[Index], mGameState.SellPrice[Index],
+		                                mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ? "loss" : "profit",
+		                                Math.abs(mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] - mGameState.SellPrice[Index]),
+		                                mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index] > mGameState.SellPrice[Index] ? (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index]) - mGameState.SellPrice[Index] :
+		                                mGameState.SellPrice[Index] - (mGameState.BuyingPrice[Index] / mGameState.Ship.cargo[Index])
+			                          ),
+		                  "Amount",
+		                  "If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
+		                  mGameState.Ship.cargo[Index],
+		                  "Sell cargo", "Don't sell cargo",
+											new Popup.buttonCallback() {
+												@Override
+												public void execute(Popup popup, View view) {
+							            int Amount;
+													SeekBar seekBar = (SeekBar) view;
+							            Amount = seekBar.getProgress();
+							            if (Amount > 0){
+								            SellCargo(idx, Amount, GameState.SELLCARGO);
+								            btnSellCargo(null);
+								            showNextPopup();
+							            }
+						            }
+											}, cbShowNextPopup,
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  SellCargo(idx, 999, GameState.SELLCARGO);
+				                  btnSellCargo(null);
+				                  showNextPopup();
+			                  }
+		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnSellCargoAllCallback(View view){
+		Popup popup;
 		int Index;
 
 		Index = -1;
@@ -2139,20 +2238,31 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnSellCargoAll1:
 				Index++;
 				break;
-			default: alertDialog("Error", "No cargo selected.", ""); return;
+			default:
+				popup = new Popup(getApplicationContext(), "Error", "No cargo selected.", "", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return;
 		}
 
 		if (mGameState.Ship.cargo[Index] <= 0){
-			alertDialog("None To Sell", "You have none of these goods in your cargo bays.",
-			            "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything."
+			popup = new Popup(getApplicationContext(), "None To Sell",
+			                  "You have none of these goods in your cargo bays.",
+			                  "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
-		if (mGameState.SellPrice[Index] <= 0)
-		{
-			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.",
-			            "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them."
+		if (mGameState.SellPrice[Index] <= 0){
+			popup = new Popup(getApplicationContext(),
+			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
+			                  "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
@@ -2259,14 +2369,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Plunder amount of cargo
 		// *************************************************************************
 		int ToPlunder;
+		Popup popup;
 
 		if (mGameState.Opponent.cargo[Index] <= 0) {
-			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.", "You can only steal what your victim actually has.");
+			popup = new Popup(getApplicationContext(),
+			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.TotalCargoBays() - mGameState.FilledCargoBays() <= 0){
-			alertDialog("Cargo Bays Full", "You have no empty cargo bays. Dump some cargo or leave the victims cargo in his bays.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "Cargo Bays Full",
+			                  "You have no empty cargo bays. Dump some cargo or leave the victims cargo in his bays.",
+			                  "",  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
