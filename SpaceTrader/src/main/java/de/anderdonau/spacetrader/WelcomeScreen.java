@@ -6304,37 +6304,51 @@ SeekBar.OnSeekBarChangeListener() {
 		showNextPopup();
 	}
 	public void EncounterButtonSurrenderCallback(View view) {
+		Popup popup;
 		mGameState.AutoAttack = false;
 		mGameState.AutoFlee = false;
 
 		if (mGameState.Opponent.type == GameState.MANTISTYPE) {
 			if (mGameState.ArtifactOnBoard) {
-				ConfirmDialog("Surrender",
-				              "If you surrender to the aliens, they will steal the artifact. Are you sure you wish to do that?",
-				              "The aliens are only after the artifact. They will let you live, and even let you keep your cargo, but you won't be able to finish your quest.",
-				              "Surrender", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						alertDialog("Artifact Relinquished", "The aliens take the artifact from you.",
-						            "The aliens have taken the artifact from you. Well, it's rightfully theirs, so you probably shouldn't complain. You won't receive any reward from professor Berger, though."
-						);
-						mGameState.ArtifactOnBoard = false;
-						return;
-					}
-				}, "Fight", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							return;
-						}
-					}
+				popup = new Popup(getApplicationContext(),
+				                  "Surrender",
+				                  "If you surrender to the aliens, they will steal the artifact. Are you sure you wish to do that?",
+				                  "The aliens are only after the artifact. They will let you live, and even let you keep your cargo, but you won't be able to finish your quest.",
+				                  "Surrender", "Fight",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+															Popup popup1;
+						                  popup1 = new Popup(getApplicationContext(),
+						                                     "Artifact Relinquished", "The aliens take the artifact from you.",
+						                                     "The aliens have taken the artifact from you. Well, it's rightfully theirs, so you probably shouldn't complain. You won't receive any reward from professor Berger, though.",
+						                                     "OK", cbShowNextPopup
+															);
+						                  popupQueue.push(popup1);
+						                  mGameState.ArtifactOnBoard = false;
+						                  showNextPopup();
+														}
+													}, cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
-				alertDialog("To the death!", "Surrender? Hah! We want your HEAD!", "");
+				popup = new Popup(getApplicationContext(),
+				                  "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 		} else if (mGameState.ENCOUNTERPOLICE(mGameState.EncounterType)) {
 			if (mGameState.PoliceRecordScore <= GameState.PSYCHOPATHSCORE) {
-				alertDialog("To the death!", "Surrender? Hah! We want your HEAD!", "");
+				popup = new Popup(getApplicationContext(),
+				                  "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			} else {
 				String buf = "";
@@ -6346,18 +6360,18 @@ SeekBar.OnSeekBarChangeListener() {
 					buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?", "", "");
 				}
 
-				ConfirmDialog("Surrender", buf, "", "Surrender", new DialogInterface.OnClickListener() {
-					              @Override
-					              public void onClick(DialogInterface dialogInterface, int i) {
-						              Arrested();
-					              }
-				              }, "Fight!", new DialogInterface.OnClickListener() {
-					              @Override
-					              public void onClick(DialogInterface dialogInterface, int i) {
-
-					              }
-				              }
+				popup = new Popup(getApplicationContext(),
+				                  "Surrender", buf, "", "Surrender", "Fight",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+								              Arrested();
+						                  showNextPopup();
+							              }
+						              }, cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 		} else {
@@ -6369,10 +6383,14 @@ SeekBar.OnSeekBarChangeListener() {
 				TotalCargo += mGameState.Ship.cargo[i];
 			if (TotalCargo <= 0) {
 				Blackmail = Math.min( 25000, Math.max( 500, mGameState.CurrentWorth() / 20 ) );
-				alertDialog("Pirates Find No Cargo",
-				            "The pirates are very angry that they find no cargo on your ship. To stop them from destroying you, you have no choice but to pay them an amount equal to 5% of your current worth.",
-				            "If you have nothing in your cargo holds, the pirates will blow up your ship unless you pay them some money, equal to 5% of your current worth, which will be subtracted from your cash, unless you don't have enough of that, in which case it will be added to your debt. At least it's better than dying."
+				popup = new Popup(getApplicationContext(),
+				                  "Pirates Find No Cargo",
+				                  "The pirates are very angry that they find no cargo on your ship. To stop them from destroying you, you have no choice but to pay them an amount equal to 5% of your current worth.",
+				                  "If you have nothing in your cargo holds, the pirates will blow up your ship unless you pay them some money, equal to 5% of your current worth, which will be subtracted from your cash, unless you don't have enough of that, in which case it will be added to your debt. At least it's better than dying.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				if (mGameState.Credits >= Blackmail)
 					mGameState.Credits -= Blackmail;
 				else {
@@ -6380,10 +6398,14 @@ SeekBar.OnSeekBarChangeListener() {
 					mGameState.Credits = 0;
 				}
 			} else {
-				alertDialog("Looting",
-				            "The pirates board your ship and transfer as much of your cargo to their own ship as their cargo bays can hold.",
-				            "The pirates steal from you what they can carry, but at least you get out of it alive."
+				popup = new Popup(getApplicationContext(),
+				                  "Looting",
+				                  "The pirates board your ship and transfer as much of your cargo to their own ship as their cargo bays can hold.",
+				                  "The pirates steal from you what they can carry, but at least you get out of it alive.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 
 				Bays = mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays;
 				for (i=0; i<GameState.MAXGADGET; ++i)
@@ -6413,86 +6435,103 @@ SeekBar.OnSeekBarChangeListener() {
 			if ((mGameState.WildStatus == 1) && (mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].crewQuarters > 1)) {
 				// Wild hops onto Pirate Ship
 				mGameState.WildStatus = 0;
-				alertDialog("Wild Goes with Pirates",
-				            "The Pirate Captain turns out to be an old associate of Jonathan Wild's, and invites him to go to Kravat aboard the Pirate ship. Wild accepts the offer and thanks you for the ride.",
-				            "Jonathan Wild figures that it's probably safer to get a ride home with his old associate than stay on your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police?"
+				popup = new Popup(getApplicationContext(),
+				                  "Wild Goes with Pirates",
+				                  "The Pirate Captain turns out to be an old associate of Jonathan Wild's, and invites him to go to Kravat aboard the Pirate ship. Wild accepts the offer and thanks you for the ride.",
+				                  "Jonathan Wild figures that it's probably safer to get a ride home with his old associate than stay on your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police?",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else if (mGameState.WildStatus == 1) {
 				// no room on pirate ship
-				alertDialog("Wild Chats with Pirates",
-				            "The Pirate Captain turns out to be an old associate of Jonathan Wild's. They talk about old times, and you get the feeling that Wild would switch ships if the Pirates had any quarters available.",
-				            "Jonathan Wild would have preferred to get a ride home with his old associate than stay in your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police? But the Pirates have no quarters available, so he grudgingly stays aboard your ship."
+				popup = new Popup(getApplicationContext(),
+				                  "Wild Chats with Pirates",
+				                  "The Pirate Captain turns out to be an old associate of Jonathan Wild's. They talk about old times, and you get the feeling that Wild would switch ships if the Pirates had any quarters available.",
+				                  "Jonathan Wild would have preferred to get a ride home with his old associate than stay in your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police? But the Pirates have no quarters available, so he grudgingly stays aboard your ship.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			}
 			if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
 				// pirates puzzled by reactor
-				alertDialog("Pirates Examine Reactor",
-				            "The Pirates poke around the Ion Reactor while trying to figure out if it's valuable. They finally conclude that the Reactor is worthless, not to mention dangerous, and leave it on your ship.",
-				            "The good news is that you still have the Ion Reactor. The bad news is that you still have to worry about managing its depleting fuel store."
+				popup = new Popup(getApplicationContext(),
+				                  "Pirates Examine Reactor",
+				                  "The Pirates poke around the Ion Reactor while trying to figure out if it's valuable. They finally conclude that the Reactor is worthless, not to mention dangerous, and leave it on your ship.",
+				                  "The good news is that you still have the Ion Reactor. The bad news is that you still have to worry about managing its depleting fuel store.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			}
 		}
 		Travel();
 	}
 	public void EncounterButtonAttackCallback(View view) {
+		Popup popup;
 		mGameState.AutoAttack = false;
 		mGameState.AutoFlee = false;
 
 		if (mGameState.TotalWeapons(mGameState.Ship, -1, -1 ) <= 0) {
-			alertDialog("No Weapons", "You can't attack without weapons!",
-			            "You either are flying a ship without any weapon slots, so your only option is to flee from fights, or you haven't bought any weapons yet. Sorry, no weapons, no attacking."
+			popup = new Popup(getApplicationContext(),
+			                  "No Weapons", "You can't attack without weapons!",
+			                  "You either are flying a ship without any weapon slots, so your only option is to flee from fights, or you haven't bought any weapons yet. Sorry, no weapons, no attacking.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.EncounterType == GameState.POLICEINSPECTION &&
 			    mGameState.Ship.cargo[GameState.FIREARMS] <= 0 &&
 			    mGameState.Ship.cargo[GameState.NARCOTICS] <= 0){
-			ConfirmDialog("You Have Nothing Illegal",
-			              "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
-			              "",
-			              "Attack", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					EncounterButtonAttackCallbackStep2();
-				}
-			}, "Stay", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						return;
-					}
-				}
+			popup = new Popup(getApplicationContext(),
+			                  "You Have Nothing Illegal",
+			                  "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
+			                  "", "Attack", "Stay",
+			              new Popup.buttonCallback() {
+				              @Override
+				              public void execute(Popup popup, View view) {
+												EncounterButtonAttackCallbackStep2();
+					              showNextPopup();
+											}
+										}, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 		EncounterButtonAttackCallbackStep2();
 	}
 	public void EncounterButtonAttackCallbackStep2(){
+		Popup popup;
 		if (mGameState.ENCOUNTERPOLICE(mGameState.EncounterType) || mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
 			if (mGameState.PoliceRecordScore > GameState.CRIMINALSCORE){
-				ConfirmDialog("Attack Police",
-				              "Are you sure you wish to attack the police? This will turn you into a criminal!",
-				              "If you attack the police, they know you are a die-hard criminal and will immediately label you as such.",
-				              "Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						if (mGameState.PoliceRecordScore > GameState.CRIMINALSCORE)
-							mGameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+				popup = new Popup(getApplicationContext(),
+				                  "Attack Police",
+				                  "Are you sure you wish to attack the police? This will turn you into a criminal!",
+				                  "If you attack the police, they know you are a die-hard criminal and will immediately label you as such.",
+				                  "Attack", "Don't attack",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+															if (mGameState.PoliceRecordScore > GameState.CRIMINALSCORE)
+																mGameState.PoliceRecordScore = GameState.CRIMINALSCORE;
 
-						mGameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
+															mGameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
 
-						if (mGameState.EncounterType == GameState.POLICEIGNORE || mGameState.EncounterType == GameState.POLICEINSPECTION || mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-							mGameState.EncounterType = GameState.POLICEATTACK;
-						}
-						EncounterButtonAttackCallbackStartAttack();
-					}
-				}, "No", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-
-						}
-					}
+															if (mGameState.EncounterType == GameState.POLICEIGNORE || mGameState.EncounterType == GameState.POLICEINSPECTION || mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+																mGameState.EncounterType = GameState.POLICEATTACK;
+															}
+															EncounterButtonAttackCallbackStartAttack();
+						                  showNextPopup();
+														}
+													}, cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 			/* Duplicated from Yes Callback */
@@ -6512,30 +6551,30 @@ SeekBar.OnSeekBarChangeListener() {
 		} else if (mGameState.ENCOUNTERTRADER(mGameState.EncounterType)) {
 			if (mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.TRADERBUY || mGameState.EncounterType == GameState.TRADERSELL) {
 				if (mGameState.PoliceRecordScore >= GameState.CLEANSCORE) {
-					ConfirmDialog("Attack Trader",
-					              "Are you sure you wish to attack the trader? This will immediately set your police record to dubious!",
-					              "While attacking a trader is not considered to be as bad as attacking the police (since no police is present, they cannot judge the exact circumstances of the attack), it will make the police suspicious of you.",
-					              "Yes", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-							if (mGameState.EncounterType != GameState.TRADERFLEE) {
-								if (mGameState.TotalWeapons(mGameState.Opponent, -1, -1) <= 0)
-									mGameState.EncounterType = GameState.TRADERFLEE;
-								else if (mGameState.GetRandom(GameState.ELITESCORE) <= (mGameState.ReputationScore * 10) / (1 + mGameState.Opponent.type))
-									mGameState.EncounterType = GameState.TRADERFLEE;
-								else
-									mGameState.EncounterType = GameState.TRADERATTACK;
-							}
-							EncounterButtonAttackCallbackStartAttack();
-						}
-					}, "No", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-
-							}
-						}
+					popup = new Popup(getApplicationContext(),
+					                  "Attack Trader",
+					                  "Are you sure you wish to attack the trader? This will immediately set your police record to dubious!",
+					                  "While attacking a trader is not considered to be as bad as attacking the police (since no police is present, they cannot judge the exact circumstances of the attack), it will make the police suspicious of you.",
+					                  "Attack", "Don't attack",
+					                  new Popup.buttonCallback() {
+						                  @Override
+						                  public void execute(Popup popup, View view) {
+																mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+																if (mGameState.EncounterType != GameState.TRADERFLEE) {
+																	if (mGameState.TotalWeapons(mGameState.Opponent, -1, -1) <= 0)
+																		mGameState.EncounterType = GameState.TRADERFLEE;
+																	else if (mGameState.GetRandom(GameState.ELITESCORE) <= (mGameState.ReputationScore * 10) / (1 + mGameState.Opponent.type))
+																		mGameState.EncounterType = GameState.TRADERFLEE;
+																	else
+																		mGameState.EncounterType = GameState.TRADERATTACK;
+																}
+																EncounterButtonAttackCallbackStartAttack();
+							                  showNextPopup();
+															}
+														}, cbShowNextPopup
 					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else {
 					mGameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
@@ -6561,32 +6600,32 @@ SeekBar.OnSeekBarChangeListener() {
 				mGameState.EncounterType = GameState.SCARABATTACK;
 		} else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType)) {
 			if (mGameState.EncounterType != GameState.FAMOUSCAPATTACK){
-				ConfirmDialog("Really attack?",
-				              "Famous Captains get famous by, among other things, destroying everyone who attacks them. Do you really want to attack?",
-				              "You grew up on stories of the adventures of the Great Captains. You heard how they explored the galaxy, invented technologies... and destroyed many, many pirates and villains in combat. Are you sure you want to attack one of these greats?",
-				              "Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						if (mGameState.PoliceRecordScore > GameState.VILLAINSCORE)
-							mGameState.PoliceRecordScore = GameState.VILLAINSCORE;
-						mGameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
-						if (mGameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
-							addNewsEvent(GameState.CAPTAINHUIEATTACKED);
-						else if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
-							addNewsEvent(GameState.CAPTAINAHABATTACKED);
-						else if (mGameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
-							addNewsEvent(GameState.CAPTAINCONRADATTACKED);
+				popup = new Popup(getApplicationContext(),
+				                  "Really attack?",
+				                  "Famous Captains get famous by, among other things, destroying everyone who attacks them. Do you really want to attack?",
+				                  "You grew up on stories of the adventures of the Great Captains. You heard how they explored the galaxy, invented technologies... and destroyed many, many pirates and villains in combat. Are you sure you want to attack one of these greats?",
+				                  "Yes", "No",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+															if (mGameState.PoliceRecordScore > GameState.VILLAINSCORE)
+																mGameState.PoliceRecordScore = GameState.VILLAINSCORE;
+															mGameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
+															if (mGameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
+																addNewsEvent(GameState.CAPTAINHUIEATTACKED);
+															else if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
+																addNewsEvent(GameState.CAPTAINAHABATTACKED);
+															else if (mGameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
+																addNewsEvent(GameState.CAPTAINCONRADATTACKED);
 
-						mGameState.EncounterType = GameState.FAMOUSCAPATTACK;
-						EncounterButtonAttackCallbackStartAttack();
-					}
-				}, "No", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-
-						}
-					}
+															mGameState.EncounterType = GameState.FAMOUSCAPATTACK;
+															EncounterButtonAttackCallbackStartAttack();
+						                  showNextPopup();
+														}
+													}, cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 		}
@@ -6608,32 +6647,33 @@ SeekBar.OnSeekBarChangeListener() {
 		Travel();
 	}
 	public void EncounterButtonFleeCallback(View view) {
+		Popup popup;
 		mGameState.AutoAttack = false;
 		mGameState.AutoFlee = false;
 
 		if (mGameState.EncounterType == GameState.POLICEINSPECTION && mGameState.Ship.cargo[GameState.FIREARMS] <= 0 &&
 			    mGameState.Ship.cargo[GameState.NARCOTICS] <= 0 && mGameState.WildStatus != 1 &&
 			    (mGameState.ReactorStatus == 0 || mGameState.ReactorStatus == 21)){
-			ConfirmDialog("You Have Nothing Illegal",
-			              "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
-			              "",
-			              "Flee", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					EncounterButtonFleeCallbackStep2();
-				}
-			}, "Stay", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-
-					}
-				}
+			popup = new Popup(getApplicationContext(),
+			                  "You Have Nothing Illegal",
+			                  "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
+			                  "", "Flee", "Stay",
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+														EncounterButtonFleeCallbackStep2();
+					                  showNextPopup();
+													}
+												}, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 		EncounterButtonFleeCallbackStep2();
 	}
 	public void EncounterButtonFleeCallbackStep2(){
+		Popup popup;
 		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
 			mGameState.EncounterType = GameState.POLICEATTACK;
 			if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
@@ -6641,26 +6681,25 @@ SeekBar.OnSeekBarChangeListener() {
 			else
 				mGameState.PoliceRecordScore += GameState.FLEEFROMINSPECTION;
 		} else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			ConfirmDialog("Criminal Act!",
-			              "Are you sure you want to do that? The Customs Police know you have engaged in criminal activity, and will report it!",
-			              "",
-			              "Flee", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					mGameState.EncounterType = GameState.POLICEATTACK;
-					if (mGameState.PoliceRecordScore >= GameState.CRIMINALSCORE)
-						mGameState.PoliceRecordScore = GameState.CRIMINALSCORE;
-					else
-						mGameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
-					EncounterButtonFleeCallbackStartFleeing();
-				}
-			}, "Stay", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-
-					}
-				}
+			popup = new Popup(getApplicationContext(),
+			                  "Criminal Act!",
+			                  "Are you sure you want to do that? The Customs Police know you have engaged in criminal activity, and will report it!",
+			                  "", "Flee", "Stay",
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+														mGameState.EncounterType = GameState.POLICEATTACK;
+														if (mGameState.PoliceRecordScore >= GameState.CRIMINALSCORE)
+															mGameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+														else
+															mGameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
+														EncounterButtonFleeCallbackStartFleeing();
+														showNextPopup();
+													}
+												}, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 		EncounterButtonFleeCallbackStartFleeing();
 	}
@@ -6674,6 +6713,7 @@ SeekBar.OnSeekBarChangeListener() {
 		Travel();
 	}
 	public void EncounterButtonSubmitCallback(View view){
+		Popup popup;
 		mGameState.AutoAttack = false;
 		mGameState.AutoFlee = false;
 
@@ -6702,69 +6742,82 @@ SeekBar.OnSeekBarChangeListener() {
 				buf = "illegal goods";
 				buf2 = "";
 			}
-			ConfirmDialog("You Have Illegal Goods",
-			              String.format("Are you sure you want to let the police search you? You are carrying %s! %s", buf, buf2),
-			              "Only when you are carrying illegal goods, the police will do something you don't like, so if you aren't carrying anything illegal, you usually should just submit, and not try to attack, flee or bribe.\nIf you are carrying illegal goods and the police searches you, they will impound the goods and fine you. You normally don't want to let the police search you when you are carrying illegal goods (firearms and narcotics), unless you are afraid they might kill you if you try to do something else.",
-			              "Yes", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					if ((mGameState.Ship.cargo[GameState.FIREARMS] > 0) ||
-						    (mGameState.Ship.cargo[GameState.NARCOTICS] > 0)) {
-						int Fine;
-						// If you carry illegal goods, they are impounded and you are fined
-						mGameState.Ship.cargo[GameState.FIREARMS] = 0;
-						mGameState.BuyingPrice[GameState.FIREARMS] = 0;
-						mGameState.Ship.cargo[GameState.NARCOTICS] = 0;
-						mGameState.BuyingPrice[GameState.NARCOTICS] = 0;
-						Fine = mGameState.CurrentWorth() / ((GameState.IMPOSSIBLE+2-GameState.getDifficulty()) * 10);
-						if (Fine % 50 != 0)
-							Fine += (50 - (Fine % 50));
-						Fine = Math.max(100, Math.min(Fine, 10000));
-						if (mGameState.Credits >= Fine)
-							mGameState.Credits -= Fine;
-						else {
-							mGameState.Debt += (Fine - mGameState.Credits);
-							mGameState.Credits = 0;
-						}
+			popup = new Popup(getApplicationContext(),
+			                  "You Have Illegal Goods",
+			                  String.format("Are you sure you want to let the police search you? You are carrying %s! %s", buf, buf2),
+			                  "Only when you are carrying illegal goods, the police will do something you don't like, so if you aren't carrying anything illegal, you usually should just submit, and not try to attack, flee or bribe.\nIf you are carrying illegal goods and the police searches you, they will impound the goods and fine you. You normally don't want to let the police search you when you are carrying illegal goods (firearms and narcotics), unless you are afraid they might kill you if you try to do something else.",
+			                  "Yes", "No",
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+														if ((mGameState.Ship.cargo[GameState.FIREARMS] > 0) ||
+															    (mGameState.Ship.cargo[GameState.NARCOTICS] > 0)) {
+															int Fine;
+															// If you carry illegal goods, they are impounded and you are fined
+															mGameState.Ship.cargo[GameState.FIREARMS] = 0;
+															mGameState.BuyingPrice[GameState.FIREARMS] = 0;
+															mGameState.Ship.cargo[GameState.NARCOTICS] = 0;
+															mGameState.BuyingPrice[GameState.NARCOTICS] = 0;
+															Fine = mGameState.CurrentWorth() / ((GameState.IMPOSSIBLE+2-GameState.getDifficulty()) * 10);
+															if (Fine % 50 != 0)
+																Fine += (50 - (Fine % 50));
+															Fine = Math.max(100, Math.min(Fine, 10000));
+															if (mGameState.Credits >= Fine)
+																mGameState.Credits -= Fine;
+															else {
+																mGameState.Debt += (Fine - mGameState.Credits);
+																mGameState.Credits = 0;
+															}
 
-						alertDialog("Caught", String
-							                      .format("The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
-							                              Fine
-							                      ),
-						            "Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt."
-						);
-						mGameState.PoliceRecordScore += GameState.TRAFFICKING;
-					}
-					if (mGameState.WildStatus == 1) {
-						// Jonathan Wild Captured, and your status damaged.
-						Arrested();
-						return;
-					}
-					if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
-						// Police confiscate the Reactor.
-						// Of course, this can only happen if somehow your
-						// reactor on board -- otherwise you'll be arrested
-						// before we get to this point. (no longer true - 25 August 2002)
-						alertDialog("Police Confiscate Reactor",
-						            "The Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.",
-						            "The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store."
-						);
-						mGameState.ReactorStatus = 0;
-					}
-					Travel();
-				}
-			}, "No", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-
-					}
-				}
+															Popup popup1;
+															popup1 = new Popup(getApplicationContext(),
+															                   "Caught",
+															                   String.format("The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
+															                                 Fine
+															                   ),
+															                   "Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt.",
+															                   "OK", cbShowNextPopup
+															);
+															popupQueue.push(popup1);
+															showNextPopup();
+															mGameState.PoliceRecordScore += GameState.TRAFFICKING;
+														}
+														if (mGameState.WildStatus == 1) {
+															// Jonathan Wild Captured, and your status damaged.
+															Arrested();
+															return;
+														}
+														if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+															// Police confiscate the Reactor.
+															// Of course, this can only happen if somehow your
+															// reactor on board -- otherwise you'll be arrested
+															// before we get to this point. (no longer true - 25 August 2002)
+															Popup popup1;
+															popup1 = new Popup(getApplicationContext(),
+															                   "Police Confiscate Reactor",
+															                   "The Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.",
+															                   "The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store.",
+															                   "OK", cbShowNextPopup
+															);
+															popupQueue.push(popup1);
+															showNextPopup();
+															mGameState.ReactorStatus = 0;
+														}
+														Travel();
+					                  showNextPopup();
+													}
+												}, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
-			alertDialog("Nothing Found",
-			            "The police find nothing illegal in your cargo holds, and apologize for the inconvenience.",
-			            ""
+			popup = new Popup(getApplicationContext(),
+			                  "Nothing Found",
+			                  "The police find nothing illegal in your cargo holds, and apologize for the inconvenience.",
+			                  "", "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.PoliceRecordScore -= GameState.TRAFFICKING;
 			Travel();
 		}
