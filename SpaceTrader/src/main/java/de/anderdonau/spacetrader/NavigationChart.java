@@ -154,17 +154,6 @@ public class NavigationChart extends View {
 			);
 			radius = Math.min(getWidth(), getHeight()) / 100;
 		}
-		if (!mOffsetsDefined) {
-			mOffsetX = -CURSYSTEM.x * Multiplicator + getWidth() / 2;
-			mOffsetY = -CURSYSTEM.y * Multiplicator + getHeight() / 2;
-			mOffsetsDefined = true;
-			sanitizeOffsets();
-		}
-		canvas.translate(mOffsetX, mOffsetY);
-		paint.setTextSize(isShortRange ? 40 : 20);
-		paint.setStrokeWidth(0);
-		paint.setTextAlign(Paint.Align.CENTER);
-		paint.setStyle(Paint.Style.FILL);
 
 		if (mSelectedSystem < 0) {
 			mSelectedSystem = mGameState.Mercenary[0].curSystem;
@@ -173,8 +162,27 @@ public class NavigationChart extends View {
 		x = s.x * Multiplicator;
 		y = s.y * Multiplicator;
 
+		if (!mOffsetsDefined) {
+			/* Short range chart always focuses on CURSYSTEM.
+			 * Long range chart may focus on mSelectedSystem by using "Find" button.
+			 */
+			if (!isShortRange){
+				mOffsetX = -s.x * Multiplicator + getWidth() / 2;
+				mOffsetY = -s.y * Multiplicator + getHeight() / 2;
+			} else {
+				mOffsetX = -CURSYSTEM.x * Multiplicator + getWidth() / 2;
+				mOffsetY = -CURSYSTEM.y * Multiplicator + getHeight() / 2;
+			}
+			mOffsetsDefined = true;
+			sanitizeOffsets();
+		}
+		canvas.translate(mOffsetX, mOffsetY);
+		paint.setTextSize(isShortRange ? 40 : 20);
+		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setStyle(Paint.Style.FILL);
+
 		paint.setColor(Color.BLACK);
-		paint.setStrokeWidth(2);
+		paint.setStrokeWidth(3);
 
 		if (isShortRange){
 			canvas.drawLine(x - (radius * 1.25f), y, x + (radius * 1.25f), y, paint);
@@ -184,11 +192,15 @@ public class NavigationChart extends View {
 			canvas.drawLine(x, y - (radius * 2), x, y + (radius * 2), paint);
 		}
 
+		paint.setStrokeWidth(0);
+
 		for (int i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			s = mGameState.SolarSystem[i];
 			x = s.x * Multiplicator;
 			y = s.y * Multiplicator;
-			if (s.visited) {
+			if (i == mSelectedSystem){
+				paint.setColor(Color.RED);
+			} else if (s.visited) {
 				paint.setColor(Color.BLUE);
 			} else {
 				paint.setColor(Color.GREEN);
