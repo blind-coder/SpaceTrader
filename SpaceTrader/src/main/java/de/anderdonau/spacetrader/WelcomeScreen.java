@@ -1855,12 +1855,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			              public void execute(Popup popup, View view) {
 											if (Index < GameState.MAXWEAPONTYPE){
 												mGameState.Credits += mGameState.WEAPONSELLPRICE(Index);
-												for (i=Index+1; i<GameState.MAXWEAPON; ++i)
+												for (int i=Index+1; i<GameState.MAXWEAPON; ++i)
 													mGameState.Ship.weapon[i-1] = mGameState.Ship.weapon[i];
 												mGameState.Ship.weapon[GameState.MAXWEAPON-1] = -1;
 											} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
 												mGameState.Credits += mGameState.SHIELDSELLPRICE(Index - GameState.MAXWEAPON);
-												for (i=Index-GameState.MAXWEAPON+1; i<GameState.MAXSHIELD; ++i){
+												for (int i=Index-GameState.MAXWEAPON+1; i<GameState.MAXSHIELD; ++i){
 													mGameState.Ship.shield[i-1] = mGameState.Ship.shield[i];
 													mGameState.Ship.shieldStrength[i-1] = mGameState.Ship.shieldStrength[i];
 												}
@@ -2430,9 +2430,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 		if (mGameState.Opponent.cargo[Index] <= 0){
-			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.",
-			            "You can only steal what your victim actually has."
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK",
+			                  cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
       PlunderCargo(Index, 999);
 		}
@@ -2464,25 +2469,45 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 		if (mGameState.Opponent.cargo[Index] <= 0){
-			alertDialog("Victim hasn't got any", "Your victim hasn't got any of these goods.",
-			            "You can only steal what your victim actually has."
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK",
+			                  cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
 			final int idx = Index;
-			inputDialog("Plunder", String
-				                       .format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
-				                               GameState.Tradeitems.mTradeitems[idx].name,
-				                               mGameState.Opponent.cargo[idx]
-				                       ), "", "", mGameState.Opponent.cargo[idx],
-			            new IFinputDialogCallback() {
-				            @Override
-				            public void execute(SeekBar seekBar) {
-					            int Amount = seekBar.getProgress();
-					            if (Amount > 0)
-						            PlunderCargo(idx, Amount);
-				            }
-			            }
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Plunder",
+			                  String.format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
+			                                GameState.Tradeitems.mTradeitems[idx].name,
+				                              mGameState.Opponent.cargo[idx]
+			                  ), "Amount", "",
+			                  mGameState.Opponent.cargo[idx],
+			                  "Steal", "Don't steal",
+												new Popup.buttonCallback() {
+													@Override
+													public void execute(Popup popup, View view) {
+														SeekBar seekBar = (SeekBar) view;
+														int Amount = seekBar.getProgress();
+								            if (Amount > 0)
+									            PlunderCargo(idx, Amount);
+														showNextPopup();
+							            }
+						            }, cbShowNextPopup,
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+					                  PlunderCargo(idx, popup.max);
+					                  showNextPopup();
+				                  }
+			                  }
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 	}
 	public void btnDumpForm(View view){
@@ -2517,15 +2542,21 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 		if (mGameState.Ship.cargo[Index] <= 0){
-			alertDialog("None to dump", "You have none of these goods.",
-			            "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any."
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "None to dump", "You have none of these goods.",
+			                  "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
 			SellCargo(Index, 999, GameState.JETTISONCARGO);
 		}
 	}
 	public void btnDumpCargoQty(View view){
 		int Index = -1;
+		Popup popup;
 
 		switch (view.getId()){
 			case R.id.btnDumpCargo10:
@@ -2551,27 +2582,44 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 		if (mGameState.Ship.cargo[Index] <= 0){
-			alertDialog("None to dump", "You have none of these goods.",
-			            "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any."
+			popup = new Popup(getApplicationContext(),
+			                  "None to dump", "You have none of these goods.",
+			                  "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
 			final int idx = Index;
-			inputDialog("Discard Cargo",
-			            String.format("Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
-			                          GameState.Tradeitems.mTradeitems[idx].name, mGameState.Ship.cargo[idx],
-			                          mGameState.BuyingPrice[idx] / mGameState.Ship.cargo[idx]),
-			            "",
-			            "",
-			            mGameState.Opponent.cargo[idx],
-			            new IFinputDialogCallback() {
-				            @Override
-				            public void execute(SeekBar seekBar) {
-					            int Amount = seekBar.getProgress();
-					            if (Amount > 0)
-						            SellCargo(idx, Amount, GameState.JETTISONCARGO);
-				            }
-			            }
+			popup = new Popup(getApplicationContext(),
+			                  "Discard Cargo",
+			                  String.format("Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
+			                                GameState.Tradeitems.mTradeitems[idx].name, mGameState.Ship.cargo[idx],
+			                                mGameState.BuyingPrice[idx] / mGameState.Ship.cargo[idx]
+			                  ),
+			                  "Amount", "",
+			                  mGameState.Ship.cargo[idx],
+			                  "Discard", "Keep",
+			                  new Popup.buttonCallback(){
+				                  @Override
+													public void execute(Popup popup, View view){
+					                  SeekBar seekBar = (SeekBar) view;
+								            int Amount = seekBar.getProgress();
+								            if (Amount > 0)
+									            SellCargo(idx, Amount, GameState.JETTISONCARGO);
+					                  showNextPopup();
+							            }
+						            }, cbShowNextPopup,
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+					                  SellCargo(idx, popup.max, GameState.JETTISONCARGO);
+					                  showNextPopup();
+				                  }
+			                  }
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 	}
 	public void btnPlunderDone(View view){
@@ -2581,97 +2629,108 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnPlunderForm(null);
 	}
 	public void btnGalacticChartFind(View view){
-		inputTextDialog("Find System", "Please enter the system name to find:", "System", "",
-		                new IFinputTextDialogCallback() {
-			                @Override
-			                public void execute(EditText editText) {
-				                String buf = editText.getText().toString();
-				                if (buf.length() < 2){
-					                return;
-				                }
-
-				                if (buf.equals("Moolah")) {
-					                mGameState.Credits += 100000;
-					                return;
-				                }
-				                else if (buf.startsWith("Go ") && buf.length() > 3) {
-					                int i = 0;
-					                while (i < GameState.MAXSOLARSYSTEM) {
-						                if (mGameState.SolarSystemName[i].equals(buf.substring(3)))
-							                break;
-						                ++i;
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  "Find System",
+		                  "Please enter the system name to find:", "System", "",
+		                  "Find", "Cancel",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  EditText editText = (EditText) view;
+					                String buf = editText.getText().toString();
+					                if (buf.length() < 2){
+						                showNextPopup();
+						                return;
 					                }
-					                if (i < GameState.MAXSOLARSYSTEM) {
-						                mGameState.Mercenary[0].curSystem = i;
+
+					                if (buf.equals("Moolah")) {
+						                mGameState.Credits += 100000;
+					                } else
+					                if (buf.startsWith("Go ") && buf.length() > 3) {
+						                int i = 0;
+						                while (i < GameState.MAXSOLARSYSTEM) {
+							                if (mGameState.SolarSystemName[i].equals(buf.substring(3)))
+								                break;
+							                ++i;
+						                }
+						                if (i < GameState.MAXSOLARSYSTEM) {
+							                mGameState.Mercenary[0].curSystem = i;
+							                btnGalacticChart(null);
+						                }
+					                } else
+				                  if (buf.equals("Quests")) {
+						                String questbuf = "";
+
+						                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
+							                SolarSystem s = mGameState.SolarSystem[i];
+							                switch (s.special){
+								                case GameState.DRAGONFLY:
+								                  questbuf += String.format("Dragonfly: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                break;
+								                case GameState.SPACEMONSTER:
+									                questbuf += String.format("Spacemonster: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.JAPORIDISEASE:
+								                  questbuf += String.format("Disease: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.ALIENARTIFACT:
+								                  questbuf += String.format("Artifact: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+							                  case GameState.ARTIFACTDELIVERY:
+								                  if (mGameState.ArtifactOnBoard)
+								                    questbuf += String.format("Berger: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.TRIBBLE:
+									                questbuf += String.format("Tribbles: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.GETREACTOR:
+									                questbuf += String.format("Get reactor: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.AMBASSADORJAREK:
+									                questbuf += String.format("Jarek: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.ALIENINVASION:
+									                questbuf += String.format("Invasion: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.EXPERIMENT:
+									                questbuf += String.format("Experiment: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+								                case GameState.TRANSPORTWILD:
+									                questbuf += String.format("Wild: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+								                  break;
+							                  case GameState.SCARAB:
+									                questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                break;
+								                case GameState.SCARABDESTROYED:
+									                if (mGameState.ScarabStatus > 0 && mGameState.ScarabStatus < 2)
+									                  questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                break;
+							                }
+						                }
+						                Popup popup1 = new Popup(getApplicationContext(),
+						                                         "Quests", questbuf, "", "OK", cbShowNextPopup
+						                );
+					                  popupQueue.push(popup1);
+					                  showNextPopup();
+				                  } else {
+						                int i = 0;
+						                while (i < GameState.MAXSOLARSYSTEM) {
+							                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
+								                break;
+							                ++i;
+						                }
+						                if (i >= GameState.MAXSOLARSYSTEM) {
+							                i = mGameState.Mercenary[0].curSystem;
+						                }
+						                mGameState.WarpSystem = i;
+						                WarpSystem = mGameState.SolarSystem[i];
 						                btnGalacticChart(null);
 					                }
-					                return;
-				                } else if (buf.equals("Quests")) {
-					                String questbuf = "";
-
-					                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
-						                SolarSystem s = mGameState.SolarSystem[i];
-						                switch (s.special){
-							                case GameState.DRAGONFLY:
-							                  questbuf += String.format("Dragonfly: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                break;
-							                case GameState.SPACEMONSTER:
-								                questbuf += String.format("Spacemonster: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.JAPORIDISEASE:
-							                  questbuf += String.format("Disease: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.ALIENARTIFACT:
-							                  questbuf += String.format("Artifact: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-						                  case GameState.ARTIFACTDELIVERY:
-							                  if (mGameState.ArtifactOnBoard)
-							                    questbuf += String.format("Berger: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.TRIBBLE:
-								                questbuf += String.format("Tribbles: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.GETREACTOR:
-								                questbuf += String.format("Get reactor: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.AMBASSADORJAREK:
-								                questbuf += String.format("Jarek: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.ALIENINVASION:
-								                questbuf += String.format("Invasion: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.EXPERIMENT:
-								                questbuf += String.format("Experiment: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-							                case GameState.TRANSPORTWILD:
-								                questbuf += String.format("Wild: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-							                  break;
-						                  case GameState.SCARAB:
-								                questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                break;
-							                case GameState.SCARABDESTROYED:
-								                if (mGameState.ScarabStatus > 0 && mGameState.ScarabStatus < 2)
-								                  questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                break;
-						                }
-					                }
-					                alertDialog("Quests", questbuf, "");
-				                } else {
-					                int i = 0;
-					                while (i < GameState.MAXSOLARSYSTEM) {
-						                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
-							                break;
-						                ++i;
-					                }
-					                if (i >= GameState.MAXSOLARSYSTEM) {
-						                i = mGameState.Mercenary[0].curSystem;
-					                }
-					                mGameState.WarpSystem = i;
-					                WarpSystem = mGameState.SolarSystem[i];
-					                btnGalacticChart(null);
+				                  showNextPopup();
 				                }
-			                }
-	                  }
+		                  },
+		                  cbShowNextPopup
 		);
   /*
      } else if (strstr(buf, "Very rare") == buf) {
@@ -2747,35 +2806,42 @@ FrmGotoForm( CurForm );
 */
 	}
 	public void SuperWarpButtonCallback(){
+		Popup popup;
 		if (mGameState.TrackedSystem < 0) {
-			alertDialog("No System Selected",
-			            "To use the Portable Singularity, track a system before clicking on this button. (You can't use the Singularity to enter a Wormhole).", ""
+			popup = new Popup(getApplicationContext(),
+			                  "No System Selected",
+			                  "To use the Portable Singularity, track a system before clicking on this button. (You can't use the Singularity to enter a Wormhole).",
+			                  "", "OK", cbShowNextPopup
 			);
-			return;
+			popupQueue.push(popup);
+			showNextPopup();
 		} else if (mGameState.TrackedSystem == mGameState.Mercenary[0].curSystem) {
-			alertDialog("Cannot Jump",
-			            "You are tracking the system where you are currently located. It's useless to jump to your current location.",
-			            "Track another system than the one where you are currently are located, then tap the Singularity button to jump."
+			popup = new Popup(getApplicationContext(),
+			                  "Cannot Jump",
+			                  "You are tracking the system where you are currently located. It's useless to jump to your current location.",
+			                  "Track another system than the one where you are currently are located, then tap the Singularity button to jump.",
+			                  "OK", cbShowNextPopup
 			);
-			return;
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
-			ConfirmDialog("Use Singularity?",
-			              "Do you wish to use the Portable Singularity to transport immediately to " + mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex] + "?",
-			              "", "Jump!", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						mGameState.WarpSystem = mGameState.TrackedSystem;
-						WarpSystem = mGameState.SolarSystem[mGameState.TrackedSystem];
-						mGameState.CanSuperWarp = false;
-						DoWarp(true);
-					}
-				}, "Stay", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-
-					}
-				}
+			popup = new Popup(getApplicationContext(),
+			                  "Use Singularity?",
+			                  "Do you wish to use the Portable Singularity to transport immediately to " + mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex] + "?",
+			                  "", "Jump!", "Stay",
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+														mGameState.WarpSystem = mGameState.TrackedSystem;
+														WarpSystem = mGameState.SolarSystem[mGameState.TrackedSystem];
+														mGameState.CanSuperWarp = false;
+														DoWarp(true);
+					                  showNextPopup();
+													}
+												}, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 	}
 
@@ -2803,17 +2869,31 @@ FrmGotoForm( CurForm );
 		int ToSell;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		Ship Ship = mGameState.Ship;
+		Popup popup;
 
 		if (Ship.cargo[Index] <= 0) {
 			if (Operation == GameState.SELLCARGO)
-				alertDialog("None To Sell", "You have none of these goods in your cargo bays.", "");
+				popup = new Popup(getApplicationContext(),
+				                  "None To Sell", "You have none of these goods in your cargo bays.", "",
+				                  "OK", cbShowNextPopup
+				);
 			else
-				alertDialog("None To Dump", "You have none of these goods in your cargo bays.", "");
+				popup = new Popup(getApplicationContext(),
+				                  "None To Dump", "You have none of these goods in your cargo bays.", "",
+				                  "OK", cbShowNextPopup
+				);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.SellPrice[Index] <= 0 && Operation == GameState.SELLCARGO) {
-			alertDialog("Not Interested", "Nobody in this system is interested in buying these goods.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
@@ -2823,28 +2903,27 @@ FrmGotoForm( CurForm );
 		if (Operation == GameState.JETTISONCARGO) {
 			if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE && !mGameState.LitterWarning) {
 				mGameState.LitterWarning = true;
-				ConfirmDialog("Space Littering",
-				              "Dumping cargo in space is considered littering. If the police finds your dumped goods and tracks them to you, this will influence your record. Do you really wish to dump?",
-				              "Space litterers will at least be considered dubious. If you are already a dubious character, space littering will only add to your list of offences.",
-				              "Yes", new DialogInterface.OnClickListener() {
-												@Override
-												public void onClick(DialogInterface dialogInterface, int i) {
-													mGameState.Ship.cargo[Index] -= ToJettison;
-													if (mGameState.GetRandom(10) < GameState.getDifficulty() + 1) {
-														if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
-															mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-														else
-															--mGameState.PoliceRecordScore;
-														addNewsEvent(GameState.CAUGHTLITTERING);
-													}
-												}
-											}, "No", new DialogInterface.OnClickListener() {
-												@Override
-												public void onClick(DialogInterface dialogInterface, int i) {
-
-												}
-											}
+				popup = new Popup(getApplicationContext(),
+				                  "Space Littering",
+				                  "Dumping cargo in space is considered littering. If the police finds your dumped goods and tracks them to you, this will influence your record. Do you really wish to dump?",
+				                  "Space litterers will at least be considered dubious. If you are already a dubious character, space littering will only add to your list of offences.",
+				                  "Yes", "No",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+															mGameState.Ship.cargo[Index] -= ToJettison;
+															if (mGameState.GetRandom(10) < GameState.getDifficulty() + 1) {
+																if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
+																	mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+																else
+																	--mGameState.PoliceRecordScore;
+																addNewsEvent(GameState.CAUGHTLITTERING);
+															}
+														}
+													}, cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 			mGameState.Ship.cargo[Index] -= ToJettison;
@@ -3525,7 +3604,15 @@ SeekBar.OnSeekBarChangeListener() {
 			}
 
 			if (mGameState.Ship.tribbles > 0 && !mGameState.TribbleMessage) {
-				WelcomeScreen.this.alertDialog("You've Got Tribbles", "Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.", "Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.");
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "You've Got Tribbles",
+				                  "Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.",
+				                  "Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.TribbleMessage = true;
 			}
 
@@ -4150,20 +4237,22 @@ SeekBar.OnSeekBarChangeListener() {
 							tv.setVisibility(View.VISIBLE);
 							tv.setText(mGameState.SolarSystemName[s.nameIndex]);
 							if (system == navigationChart.mSelectedSystem){
-								ConfirmDialog("Track system", "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
-								              "", "Yes", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-										mGameState.TrackedSystem = system;
-										navigationChart.invalidate();
-									}
-								}, "No", new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialogInterface, int i) {
-
-										}
-									}
+								Popup popup;
+								popup = new Popup(getApplicationContext(),
+								                  "Track system",
+								                  "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
+								                  "", "Yes", "No",
+								                  new Popup.buttonCallback() {
+									                  @Override
+									                  public void execute(Popup popup, View view) {
+																			mGameState.TrackedSystem = system;
+																			navigationChart.invalidate();
+										                  showNextPopup();
+																		}
+																	}, cbShowNextPopup
 								);
+								popupQueue.push(popup);
+								showNextPopup();
 							} else {
 								navigationChart.mSelectedSystem = system;
 								navigationChart.invalidate();
