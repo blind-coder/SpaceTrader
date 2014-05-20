@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -6882,6 +6881,7 @@ SeekBar.OnSeekBarChangeListener() {
 		Ship Ship = mGameState.Ship;
 		Ship Opponent = mGameState.Opponent;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
+		Popup popup;
 
 		CommanderGotHit = false;
 		OpponentHull = Opponent.hull;
@@ -6920,7 +6920,12 @@ SeekBar.OnSeekBarChangeListener() {
 			if (mGameState.EscapePod) {
 				EscapeWithPod();
 			} else {
-				alertDialog("Both Destroyed", "You and your opponent have managed to destroy each other.", "");
+				popup = new Popup(getApplicationContext(), "Both Destroyed",
+				                  "You and your opponent have managed to destroy each other.",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				btnDestroyed();
 			}
 			return false;
@@ -6929,12 +6934,19 @@ SeekBar.OnSeekBarChangeListener() {
 			mGameState.AutoFlee = false;
 
 			if (mGameState.ENCOUNTERPIRATE(mGameState.EncounterType) && Opponent.type != GameState.MANTISTYPE && mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) {
-				alertDialog("Bounty received",
-				            String.format("You earned a bounty of %d cr.", GetBounty(Opponent)),
-			              ""
+				popup = new Popup(getApplicationContext(),
+				                  "Bounty received",
+				                  String.format("You earned a bounty of %d cr.", GetBounty(Opponent)),
+				                  "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
-				alertDialog("You win", "You have destroyed your opponent.", "");
+				popup = new Popup(getApplicationContext(), "You win", "You have destroyed your opponent.",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 			}
 			if (mGameState.ENCOUNTERPOLICE( mGameState.EncounterType )) {
 				++mGameState.PoliceKills;
@@ -6981,7 +6993,12 @@ SeekBar.OnSeekBarChangeListener() {
 			if (mGameState.EscapePod) {
 				EscapeWithPod();
 			} else {
-				alertDialog("You Lose", "Your ship has been destroyed by your opponent.", "");
+				popup = new Popup(getApplicationContext(), "You Lose",
+				                  "Your ship has been destroyed by your opponent.", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				btnDestroyed();
 			}
 			return (false);
@@ -6993,7 +7010,12 @@ SeekBar.OnSeekBarChangeListener() {
 				mGameState.AutoAttack = false;
 				mGameState.AutoFlee = false;
 
-				alertDialog("Escaped", "You have managed to escape your opponent.", "Just because this is Beginner level.");
+				popup = new Popup(getApplicationContext(), "Escaped",
+				                  "You have managed to escape your opponent.",
+				                  "Just because this is Beginner level.", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				if (mGameState.ENCOUNTERMONSTER(mGameState.EncounterType))
 					mGameState.MonsterHull = Opponent.hull;
 
@@ -7008,9 +7030,20 @@ SeekBar.OnSeekBarChangeListener() {
           cp = (ControlPtr)FrmGetObjectPtr( frmP, objindex );
           CtlDrawControl( cp ); */
 					}
-					alertDialog("You Escaped", "You got hit, but still managed to escape.", "");
-				} else
-					alertDialog("Escaped", "You have managed to escape your opponent.", "");
+					popup = new Popup(getApplicationContext(), "You Escaped",
+					                  "You got hit, but still managed to escape.", "", "OK",
+					                  cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
+				} else {
+					popup = new Popup(getApplicationContext(), "Escaped",
+					                  "You have managed to escape your opponent.", "", "OK",
+					                  cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
+				}
 				if (mGameState.ENCOUNTERMONSTER( mGameState.EncounterType ))
 					mGameState.MonsterHull = Opponent.hull;
 
@@ -7024,7 +7057,12 @@ SeekBar.OnSeekBarChangeListener() {
 				    mGameState.GetRandom( (7 + (mGameState.PilotSkill(Opponent) / 3))) * 2){
 				mGameState.AutoAttack = false;
 				mGameState.AutoFlee = false;
-				alertDialog("Opponent Escaped", "Your opponent has managed to escape.", "");
+				popup = new Popup(getApplicationContext(), "Opponent Escaped",
+				                  "Your opponent has managed to escape.", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return (false);
 			}
 		}
@@ -7309,12 +7347,16 @@ SeekBar.OnSeekBarChangeListener() {
 	// Your escape pod ejects you
 	// *************************************************************************
 	void EscapeWithPod() {
+		Popup popup;
 		mGameState.AutoAttack = mGameState.AutoFlee = false;
 
-		alertDialog("Escape Pod activated",
-		            "Just before the final demise of your ship, your escape pod gets activated and ejects you. After a few days, the Space Corps picks you up and drops you off at a nearby space port.",
-		            ""
+		popup = new Popup(getApplicationContext(),
+		                  "Escape Pod activated",
+		                  "Just before the final demise of your ship, your escape pod gets activated and ejects you. After a few days, the Space Corps picks you up and drops you off at a nearby space port.",
+		                  "", "OK", cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 
 		if (mGameState.ScarabStatus == 3)
 			mGameState.ScarabStatus = 0;
@@ -7322,46 +7364,88 @@ SeekBar.OnSeekBarChangeListener() {
 		Arrival();
 
 		if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
-			alertDialog("Reactor Destroyed", "The destruction of your ship was made much more spectacular by the added explosion of the Ion Reactor.", "");
+			popup = new Popup(getApplicationContext(), "Reactor Destroyed",
+			                  "The destruction of your ship was made much more spectacular by the added explosion of the Ion Reactor.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.ReactorStatus = 0;
 		}
 
 		if (mGameState.JaporiDiseaseStatus == 1) {
-			alertDialog("Antidote destroyed", "The antidote for the Japori system has been destroyed with your ship. You should get some more.", "The antidote for the Japori system was destroyed with your ship. But they probably have some new antidote in the system where you originally got it.");
+			popup = new Popup(getApplicationContext(), "Antidote destroyed",
+			                  "The antidote for the Japori system has been destroyed with your ship. You should get some more.",
+			                  "The antidote for the Japori system was destroyed with your ship. But they probably have some new antidote in the system where you originally got it.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.JaporiDiseaseStatus = 0;
 		}
 
 		if (mGameState.ArtifactOnBoard) {
-			alertDialog("Artifact Lost", "The alien artifact has been lost in the wreckage of your ship.", "You couldn't take the artifact with you in the escape pod, so now it's lost in the wreckage. The aliens will probably pick it up there.");
+			popup = new Popup(getApplicationContext(), "Artifact Lost",
+			                  "The alien artifact has been lost in the wreckage of your ship.",
+			                  "You couldn't take the artifact with you in the escape pod, so now it's lost in the wreckage. The aliens will probably pick it up there.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.ArtifactOnBoard = false;
 		}
 
 		if (mGameState.JarekStatus == 1) {
-			alertDialog("Jarek Taken Home", "The Space Corps decides to give ambassador Jarek a lift home to Devidia.", "");
+			popup = new Popup(getApplicationContext(), "Jarek Taken Home",
+			                  "The Space Corps decides to give ambassador Jarek a lift home to Devidia.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.JarekStatus = 0;
 		}
 
 		if (mGameState.WildStatus == 1) {
-			alertDialog("Wild Arrested", "Jonathan Wild is arrested, and taken away to stand trial.", "");
-			mGameState.PoliceRecordScore += mGameState.CAUGHTWITHWILDSCORE;
+			popup = new Popup(getApplicationContext(), "Wild Arrested",
+			                  "Jonathan Wild is arrested, and taken away to stand trial.", "", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			mGameState.PoliceRecordScore += GameState.CAUGHTWITHWILDSCORE;
 			addNewsEvent(GameState.WILDARRESTED);
 			mGameState.WildStatus = 0;
 		}
 
 		if (mGameState.Ship.tribbles > 0) {
-			alertDialog("Tribbles killed", "Your tribbles all died in the explosion.", "Don't be too sad. They were incredibly annoying, weren't they?");
+			popup = new Popup(getApplicationContext(), "Tribbles killed",
+			                  "Your tribbles all died in the explosion.",
+			                  "Don't be too sad. They were incredibly annoying, weren't they?", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.Ship.tribbles = 0;
 		}
 
 		if (mGameState.Insurance) {
-			alertDialog("Insurance", "Since your ship was insured, the bank pays you the total worth of the destroyed ship.", "");
+			popup = new Popup(getApplicationContext(), "Insurance",
+			                  "Since your ship was insured, the bank pays you the total worth of the destroyed ship.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			mGameState.Credits += mGameState.CurrentShipPriceWithoutCargo(true);
 		}
 
-		alertDialog("Flea built",
-		            "In 3 days and with 500 credits, you manage to convert your pod into a Flea.",
-		            "Your ship has been destroyed, but luckily, you are clever enough to convert your pod into a Flea type of ship, so you can continue your journey, or trade it in for a better ship."
+		popup = new Popup(getApplicationContext(),
+		                  "Flea built",
+		                  "In 3 days and with 500 credits, you manage to convert your pod into a Flea.",
+		                  "Your ship has been destroyed, but luckily, you are clever enough to convert your pod into a Flea type of ship, so you can continue your journey, or trade it in for a better ship.",
+		                  "OK", cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 
 		if (mGameState.Credits > 500)
 			mGameState.Credits -= 500;
@@ -7382,6 +7466,7 @@ SeekBar.OnSeekBarChangeListener() {
 	// You can pick up cannisters left by a destroyed ship
 	// *************************************************************************
 	public void Scoop() {
+		Popup popup;
 		int d;
 
 		// Chance 50% to pick something up on Normal level, 33% on Hard level, 25% on
@@ -7396,43 +7481,42 @@ SeekBar.OnSeekBarChangeListener() {
 			d = mGameState.GetRandom(GameState.MAXTRADEITEM);
 
 		final int item = d;
-		ConfirmDialog("Scoop Canister",
-		              String.format("A canister from the destroyed ship, labeled %s, drifts within range of your scoops.", GameState.Tradeitems.mTradeitems[d].name),
-		              "",
-		              "Pick up", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				if (mGameState.FilledCargoBays() >= mGameState.TotalCargoBays()) {
-					ConfirmDialog("No Room To Scoop",
-					              "You don't have any room in your cargo holds. Do you wish to jettison goods to make room, or just let it go?",
-					              "", "Make room", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							for (i=0; i<GameState.MAXTRADEITEM; i++)
-								mGameState.Opponent.cargo[i] = 0;
-							mGameState.Opponent.cargo[item] = 1;
-							btnPlunderForm(null);// Travel() is called from PlunderDoneButton
-						}
-					}, "Let go", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
+		popup = new Popup(getApplicationContext(),
+		                  "Scoop Canister",
+		                  String.format("A canister from the destroyed ship, labeled %s, drifts within range of your scoops.", GameState.Tradeitems.mTradeitems[d].name),
+		                  "", "Pick up", "Let go",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+													if (mGameState.FilledCargoBays() >= mGameState.TotalCargoBays()) {
+														Popup popup1;
+														popup1 = new Popup(getApplicationContext(),
+														                   "No Room To Scoop",
+														                   "You don't have any room in your cargo holds. Do you wish to jettison goods to make room, or just let it go?",
+														                   "", "Make room", "Let go",
+														                   new Popup.buttonCallback() {
+															                   @Override
+															                   public void execute(Popup popup, View view) {
+																									 for (int i=0; i<GameState.MAXTRADEITEM; i++)
+																										 mGameState.Opponent.cargo[i] = 0;
+																									 mGameState.Opponent.cargo[item] = 1;
+																									 btnPlunderForm(null);// Travel() is called from PlunderDoneButton
+																                   showNextPopup();
+																								}
+																							}, cbShowNextPopup
+														);
+														popupQueue.push(popup1);
+														showNextPopup();
+														return;
+													}
 
-							}
-						}
-					);
-					return;
-				}
-
-				if (mGameState.FilledCargoBays() < mGameState.TotalCargoBays())
-					++mGameState.Ship.cargo[item];
-			}
-		}, "Let go", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			}
+													if (mGameState.FilledCargoBays() < mGameState.TotalCargoBays())
+														++mGameState.Ship.cargo[item];
+												}
+											}, cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void Arrival() {
 		mGameState.Clicks = 0;
@@ -7449,25 +7533,27 @@ SeekBar.OnSeekBarChangeListener() {
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
 		SpecialEvents.SpecialEvent Event = mGameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+		Popup popup;
 
 		if (Event.justAMessage) {
-			alertDialog(Event.title, Event.questStringID, "");
+			popup = new Popup(getApplicationContext(),
+			                  Event.title, Event.questStringID, "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			btnSpecialCallbackStep2();
 		} else {
-			ConfirmDialog(Event.title, Event.questStringID, "", "Yes",
-			              new DialogInterface.OnClickListener() {
-				              @Override
-				              public void onClick(DialogInterface dialogInterface, int i) {
-					              btnSpecialCallbackStep2();
-				              }
-			              }, "No",
-			              new DialogInterface.OnClickListener() {
-				              @Override
-				              public void onClick(DialogInterface dialogInterface, int i) {
-
-				              }
-			              }
+			popup = new Popup(getApplicationContext(),
+			                  Event.title, Event.questStringID, "", "Yes", "No",
+					              new Popup.buttonCallback() {
+						              @Override
+						              public void execute(Popup popup, View view) {
+							              btnSpecialCallbackStep2();
+						              }
+					              }, cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 	}
 	public void btnSpecialCallbackStep2(){
@@ -7475,44 +7561,52 @@ SeekBar.OnSeekBarChangeListener() {
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
 		SpecialEvents.SpecialEvent Event = mGameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+		Popup popup;
 
 		if (mGameState.ToSpend() < Event.price){
-			alertDialog("Not Enough Money", "You don't have enough cash to spend to accept this offer.",
-			            ""
+			popup = new Popup(getApplicationContext(), "Not Enough Money",
+			                  "You don't have enough cash to spend to accept this offer.", "", "OK",
+			                  cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		switch (CURSYSTEM.special) {
 			case GameState.GETREACTOR:
 				if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 15) {
-					alertDialog("Not Enough Bays", "You don't have enough empty cargo bays at the moment.",
-					            ""
+					popup = new Popup(getApplicationContext(), "Not Enough Bays",
+					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
+					                  cbShowNextPopup
 					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else if (mGameState.WildStatus == 1) {
-					ConfirmDialog("Wild Won't Stay Aboard", String
-						                                        .format("Jonathan Wild isn't willing to go with you if you bring that Reactor on board. He'd rather take his chances hiding out here on %s.",
-						                                                mGameState.SolarSystemName[CURSYSTEM.nameIndex]
-						                                        ),
-					              "", "Goodbye Wild",
-					              new DialogInterface.OnClickListener() {
-						              @Override
-						              public void onClick(DialogInterface dialogInterface, int i) {
-							              mGameState.WildStatus = 0;
-							              alertDialog("Say Goodbye to Wild",
-							                          "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
-							                          ""
-							              );
-							              mGameState.ReactorStatus = 1;
-						              }
-					              }, "Leave Reactor",
-					              new DialogInterface.OnClickListener() {
-						              @Override
-						              public void onClick(DialogInterface dialogInterface, int i) {
-						              }
-					              }
+					popup = new Popup(getApplicationContext(),
+					                  "Wild Won't Stay Aboard",
+					                  String.format("Jonathan Wild isn't willing to go with you if you bring that Reactor on board. He'd rather take his chances hiding out here on %s.",
+					                                mGameState.SolarSystemName[CURSYSTEM.nameIndex]
+					                  ),
+					                  "", "Goodbye Wild", "Leave Reactor",
+					                  new Popup.buttonCallback() {
+						                  @Override
+						                  public void execute(Popup popup, View view) {
+									              mGameState.WildStatus = 0;
+									              Popup popup1 = new Popup(getApplicationContext(),
+									                                       "Say Goodbye to Wild",
+									                                       "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
+									                                       "", "OK", cbShowNextPopup
+									              );
+									              mGameState.ReactorStatus = 1;
+							                  popupQueue.push(popup);
+							                  showNextPopup();
+						                  }
+							              }, cbShowNextPopup
 					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				}
 				break;
@@ -7532,10 +7626,13 @@ SeekBar.OnSeekBarChangeListener() {
 				btnSystemInformation(null);
 				return;
 			case GameState.GETHULLUPGRADED:
-				alertDialog("Hull Upgraded",
-				            "Technicians spend the day retrofitting the hull of your ship.",
-				            "Technicians spent the day replacing welds and bolts, and adding materials to your ship. When they're done, they tell you your ship should be significantly sturdier."
+				popup = new Popup(getApplicationContext(), "Hull Upgraded",
+				                  "Technicians spend the day retrofitting the hull of your ship.",
+				                  "Technicians spent the day replacing welds and bolts, and adding materials to your ship. When they're done, they tell you your ship should be significantly sturdier.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.Ship.hull += GameState.UPGRADEDHULL;
 				mGameState.ScarabStatus = 3;
 				break;
@@ -7585,9 +7682,12 @@ SeekBar.OnSeekBarChangeListener() {
 
 			case GameState.MOONFORSALE:
 				mGameState.MoonBought = true;
-				alertDialog("Moon Bought", "You bought a moon in the Utopia system. Go there to claim it.",
-				            ""
+				popup = new Popup(getApplicationContext(), "Moon Bought",
+				                  "You bought a moon in the Utopia system. Go there to claim it.", "", "OK",
+				                  cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				break;
 
 			case GameState.MOONBOUGHT:
@@ -7596,28 +7696,43 @@ SeekBar.OnSeekBarChangeListener() {
 				return;
 
 			case GameState.SKILLINCREASE:
-				alertDialog("Skill Increase", "The alien increases one of your skills.", "");
+				popup = new Popup(getApplicationContext(), "Skill Increase",
+				                  "The alien increases one of your skills.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.IncreaseRandomSkill();
 				break;
 
 			case GameState.TRIBBLE:
-				alertDialog("A Tribble", "You are now the proud owner of a little, cute, furry tribble.",
-				            "The merchant prince sold you a cute, furry tribble. You can see your new acquisition on the Commander Status screen."
+				popup = new Popup(getApplicationContext(), "A Tribble",
+				                  "You are now the proud owner of a little, cute, furry tribble.",
+				                  "The merchant prince sold you a cute, furry tribble. You can see your new acquisition on the Commander Status screen.",
+				                  "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.Ship.tribbles = 1;
 				break;
 
 			case GameState.BUYTRIBBLE:
-				alertDialog("No More Tribbles",
-				            "The alien uses his alien technology to beam over your whole collection of tribbles to his ship.",
-				            "No more tribbles!"
+				popup = new Popup(getApplicationContext(), "No More Tribbles",
+				                  "The alien uses his alien technology to beam over your whole collection of tribbles to his ship.",
+				                  "No more tribbles!", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.Credits += (mGameState.Ship.tribbles >> 1);
 				mGameState.Ship.tribbles = 0;
 				break;
 
 			case GameState.ERASERECORD:
-				alertDialog("Clean Record", "The hacker resets your police record to Clean.", "");
+				popup = new Popup(getApplicationContext(), "Clean Record",
+				                  "The hacker resets your police record to Clean.", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.PoliceRecordScore = GameState.CLEANSCORE;
 				mGameState.RecalculateSellPrices();
 				break;
@@ -7632,40 +7747,59 @@ SeekBar.OnSeekBarChangeListener() {
 
 			case GameState.AMBASSADORJAREK:
 				if (mGameState.Ship.crew[mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].crewQuarters-1] >= 0) {
-					alertDialog("No Quarters Available",
-					            "You do not have any crew quarters available for Ambassador Jarek.", ""
+					popup = new Popup(getApplicationContext(), "No Quarters Available",
+					                  "You do not have any crew quarters available for Ambassador Jarek.",
+					                  "", "OK", cbShowNextPopup
 					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				}
-				alertDialog("Passenger On Board", "You have taken Ambassador Jarek on board.", "");
+				popup = new Popup(getApplicationContext(), "Passenger On Board",
+				                  "You have taken Ambassador Jarek on board.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				mGameState.JarekStatus = 1;
 				break;
 
 			case GameState.TRANSPORTWILD:
 				if (mGameState.Ship.crew[mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].crewQuarters-1] >= 0) {
-					alertDialog("No Quarters Available",
-					            "You do not have any crew quarters available for Jonathan Wild.", ""
+					popup = new Popup(getApplicationContext(), "No Quarters Available",
+					                  "You do not have any crew quarters available for Jonathan Wild.", "",
+					                  "OK", cbShowNextPopup
 					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				}
 				if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)) {
-				alertDialog("Wild Won't Stay Aboard", String
-					                                      .format("Jonathan Wild isn't about to go with you if you're not armed with at least a Beam Laser. He'd rather take his chances hiding out here on %s.",
-					                                              mGameState.SolarSystemName[CURSYSTEM.nameIndex]
-					                                      ), ""
+					popup = new Popup(getApplicationContext(),
+				                    "Wild Won't Stay Aboard",
+				                    String.format("Jonathan Wild isn't about to go with you if you're not armed with at least a Beam Laser. He'd rather take his chances hiding out here on %s.", mGameState.SolarSystemName[CURSYSTEM.nameIndex]),
+				                    "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
+					return;
+				}
+				if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
+					popup = new Popup(getApplicationContext(), "Wild Won't Board Ship",
+					                  "Jonathan Wild doesn't like the looks of that Ion Reactor. He thinks it's too dangerous, and won't get on board.",
+					                  "The Ion Reactor is known to be unstable, and Jonathan Wild is trying to get to safety. He's not willing to get on the ship le the Reactor's on board.",
+					                  "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
+					return;
+				}
+				popup = new Popup(getApplicationContext(), "Passenger On Board",
+				                  "You have taken Jonathan Wild on board.", "", "OK", cbShowNextPopup
 				);
-				return;
-			}
-			if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
-				alertDialog("Wild Won't Board Ship",
-				            "Jonathan Wild doesn't like the looks of that Ion Reactor. He thinks it's too dangerous, and won't get on board.",
-				            "The Ion Reactor is known to be unstable, and Jonathan Wild is trying to get to safety. He's not willing to get on the ship le the Reactor's on board."
-				);
-				return;
-			}
-			alertDialog("Passenger On Board", "You have taken Jonathan Wild on board.", "");
-			mGameState.WildStatus = 1;
-			break;
+				popupQueue.push(popup);
+				showNextPopup();
+				mGameState.WildStatus = 1;
+				break;
 
 			case GameState.ALIENINVASION:
 				mGameState.InvasionStatus = 1;
@@ -7719,7 +7853,12 @@ SeekBar.OnSeekBarChangeListener() {
 			break;
 
 			case GameState.CARGOFORSALE:
-				alertDialog("Sealed Canisters", "You bought the sealed canisters and put them in your cargo bays.", "");
+				popup = new Popup(getApplicationContext(), "Sealed Canisters",
+				                  "You bought the sealed canisters and put them in your cargo bays.", "",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				i = mGameState.GetRandom(GameState.MAXTRADEITEM);
 				mGameState.Ship.cargo[i] += 3;
 				mGameState.BuyingPrice[i] += Event.price;
@@ -7728,10 +7867,20 @@ SeekBar.OnSeekBarChangeListener() {
 			case GameState.INSTALLLIGHTNINGSHIELD:
 				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots, mGameState.Ship.shield);
 				if (FirstEmptySlot < 0){
-					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					popup = new Popup(getApplicationContext(), "Not Enough Slots",
+					                  "You have already filled all of your available slots for this type of item.",
+					                  "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else {
-					alertDialog("Lightning Shield", "You now have one lightning shield installed on your ship.", "");
+					popup = new Popup(getApplicationContext(), "Lightning Shield",
+					                  "You now have one lightning shield installed on your ship.", "", "OK",
+					                  cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					mGameState.Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
 					mGameState.Ship.shieldStrength[FirstEmptySlot] = mGameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
 				}
@@ -7740,10 +7889,20 @@ SeekBar.OnSeekBarChangeListener() {
 			case GameState.GETSPECIALLASER:
 				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].weaponSlots, mGameState.Ship.weapon);
 				if (FirstEmptySlot < 0){
-					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					popup = new Popup(getApplicationContext(), "Not Enough Slots",
+					                  "You have already filled all of your available slots for this type of item.",
+					                  "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else {
-					alertDialog("Morgan's Laser", "You now have Henry Morgan's special laser installed on your ship.", "");
+					popup = new Popup(getApplicationContext(), "Morgan's Laser",
+					                  "You now have Henry Morgan's special laser installed on your ship.",
+					                  "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					mGameState.Ship.weapon[FirstEmptySlot] = GameState.MORGANLASERWEAPON;
 				}
 				break;
@@ -7751,10 +7910,20 @@ SeekBar.OnSeekBarChangeListener() {
 			case GameState.GETFUELCOMPACTOR:
 				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget);
 				if (FirstEmptySlot < 0){
-					alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
+					popup = new Popup(getApplicationContext(), "Not Enough Slots",
+					                  "You have already filled all of your available slots for this type of item.",
+					                  "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else {
-					alertDialog("Fuel Compactor", "You now have a fuel compactor installed on your ship.", "");
+					popup = new Popup(getApplicationContext(), "Fuel Compactor",
+					                  "You now have a fuel compactor installed on your ship.", "", "OK",
+					                  cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					mGameState.Ship.gadget[FirstEmptySlot] = GameState.FUELCOMPACTOR;
 					mGameState.Ship.fuel = mGameState.GetFuelTanks();
 				}
@@ -7762,10 +7931,20 @@ SeekBar.OnSeekBarChangeListener() {
 
 			case GameState.JAPORIDISEASE:
 				if (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 10) {
-					alertDialog("Not Enough Bays", "You don't have enough empty cargo bays at the moment.", "");
+					popup = new Popup(getApplicationContext(), "Not Enough Bays",
+					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
+					                  cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					return;
 				} else {
-					alertDialog("Antidote", "Ten of your cargo bays now contain antidote for the Japori system.", "");
+					popup = new Popup(getApplicationContext(), "Antidote",
+					                  "Ten of your cargo bays now contain antidote for the Japori system.",
+					                  "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup);
+					showNextPopup();
 					mGameState.JaporiDiseaseStatus = 1;
 				}
 				break;
@@ -7795,6 +7974,7 @@ SeekBar.OnSeekBarChangeListener() {
 		Boolean Scored;
 		long a, b;
 		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
+		Popup popup;
 
 		Scored = false;
 		a = GetScore(EndStatus, mGameState.Days, mGameState.CurrentWorth(), GameState.getDifficulty());
@@ -7843,16 +8023,13 @@ SeekBar.OnSeekBarChangeListener() {
 			buf = "Alas! This is not enough to enter";
 			buf2 = "the high-score list.";
 		}
-		alertDialog("Final score",
-		            String.format("You achieved a score of %d.%d%%.\n" +
-			                          "After %d Days you %s.\n%s\n%s", (a / 50), ((a%50)/5),
-		                          mGameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
-		                                            (EndStatus == GameState.RETIRED ? "retired on a barren moon" :
-		                                             "retired on an utopian moon")),
-		                          buf,
-		                          buf2),
-		            ""
+		popup = new Popup(getApplicationContext(),
+		                  "Final score",
+		                  String.format("You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (a / 50), ((a%50)/5), mGameState.Days, (EndStatus == GameState.KILLED ? "got killed" : (EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon")), buf, buf2),
+		                  "", "OK", cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 
 		if (Scored && !mGameState.GameLoaded)
 			ViewHighScores();
@@ -7867,6 +8044,7 @@ SeekBar.OnSeekBarChangeListener() {
 		int i;
 		int Percentage;
 		String msg = "";
+		Popup popup;
 
 		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
 		for (i=0; i<GameState.MAXHIGHSCORE; i++){
@@ -7895,6 +8073,8 @@ SeekBar.OnSeekBarChangeListener() {
 			                     mGameState.levelDesc[Hscores[i].getDifficulty()]
 			);
 		}
-		alertDialog("Highscores", msg, "");
+		popup = new Popup(getApplicationContext(), "Highscores", msg, "", "OK", cbShowNextPopup);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 }
