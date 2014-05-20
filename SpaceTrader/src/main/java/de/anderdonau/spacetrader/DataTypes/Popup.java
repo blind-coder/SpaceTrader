@@ -159,18 +159,18 @@ public class Popup {
 	}
 
 	public void showTextInput() {
-		final EditText input = new EditText(context);
+		final EditText input;
 		final LinearLayout linearLayout = new LinearLayout(context);
+		View view;
 
+		view = inflater.inflate(R.layout.view_input_dialog_text, linearLayout, false);
+		assert view != null;
+
+		input = (EditText) view.findViewById(R.id.view_input_dialog_text);
 		input.setHint(hint);
-		input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-		                                                    LinearLayout.LayoutParams.WRAP_CONTENT
-		)
-		);
-		linearLayout.addView(input);
 
 		AlertDialog.Builder confirm =
-			new AlertDialog.Builder(context).setTitle(title).setMessage(content).setView(linearLayout)
+			new AlertDialog.Builder(context).setTitle(title).setMessage(content).setView(view)
 				.setPositiveButton(positive, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dialog.dismiss();
@@ -285,7 +285,7 @@ public class Popup {
 		this.wasShown = true;
 		if (this.cbNegative == null && this.max == -1) {
 			this.showMessage();
-		} else if (this.cbNegative != null && this.cbPositive != null && this.max == -1) {
+		} else if (this.cbNegative != null && this.cbPositive != null && this.max == -1 && this.hint.equals("")) {
 			this.showConfirm();
 		} else if (this.max == -1) {
 			this.showTextInput();
