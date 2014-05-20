@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+	<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="Shortcuts"
+				android:id="@+id/textView"
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true"
+				android:textStyle="bold"/>
+
+		<TableLayout
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"
+				android:layout_below="@+id/textView"
+				android:stretchColumns="1">
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="1"
+						android:id="@+id/textView3"
+						android:layout_column="2"
+						android:layout_gravity="center_horizontal"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="2"
+						android:id="@+id/textView4"
+						android:layout_gravity="center_horizontal"
+						android:layout_column="3"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="3"
+						android:id="@+id/textView5"
+						android:layout_gravity="center_horizontal"
+						android:layout_column="4"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="4"
+						android:id="@+id/textView6"
+						android:layout_gravity="center_horizontal"
+						android:layout_column="5"/>
+
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Buy Cargo"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="B"
+						android:id="@+id/btnShortcut1BuyCargo"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="B"
+						android:id="@+id/btnShortcut2BuyCargo"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="B"
+						android:id="@+id/btnShortcut3BuyCargo"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="B"
+						android:id="@+id/btnShortcut4BuyCargo"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Sell Cargo"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="S"
+						android:id="@+id/btnShortcut1SellCargo"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="S"
+						android:id="@+id/btnShortcut2SellCargo"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="S"
+						android:id="@+id/btnShortcut3SellCargo"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="S"
+						android:id="@+id/btnShortcut4SellCargo"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Ship Yard"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Y"
+						android:id="@+id/btnShortcut1ShipYard"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Y"
+						android:id="@+id/btnShortcut2ShipYard"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Y"
+						android:id="@+id/btnShortcut3ShipYard"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Y"
+						android:id="@+id/btnShortcut4ShipYard"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Buy Equipment"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="E"
+						android:id="@+id/btnShortcut1BuyEquipment"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="E"
+						android:id="@+id/btnShortcut2BuyEquipment"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="E"
+						android:id="@+id/btnShortcut3BuyEquipment"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="E"
+						android:id="@+id/btnShortcut4BuyEquipment"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Sell Equipment"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Q"
+						android:id="@+id/btnShortcut1SellEquipment"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Q"
+						android:id="@+id/btnShortcut2SellEquipment"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Q"
+						android:id="@+id/btnShortcut3SellEquipment"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Q"
+						android:id="@+id/btnShortcut4SellEquipment"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Personnel"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="P"
+						android:id="@+id/btnShortcut1Personnel"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="P"
+						android:id="@+id/btnShortcut2Personnel"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="P"
+						android:id="@+id/btnShortcut3Personnel"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="P"
+						android:id="@+id/btnShortcut4Personnel"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Bank"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="K"
+						android:id="@+id/btnShortcut1Bank"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="K"
+						android:id="@+id/btnShortcut2Bank"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="K"
+						android:id="@+id/btnShortcut3Bank"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="K"
+						android:id="@+id/btnShortcut4Bank"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="System Info"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="I"
+						android:id="@+id/btnShortcut1SystemInfo"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="I"
+						android:id="@+id/btnShortcut2SystemInfo"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="I"
+						android:id="@+id/btnShortcut3SystemInfo"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="I"
+						android:id="@+id/btnShortcut4SystemInfo"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Commander Status"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="C"
+						android:id="@+id/btnShortcut1CommanderStatus"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="C"
+						android:id="@+id/btnShortcut2CommanderStatus"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="C"
+						android:id="@+id/btnShortcut3CommanderStatus"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="C"
+						android:id="@+id/btnShortcut4CommanderStatus"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Galactic Chart"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="G"
+						android:id="@+id/btnShortcut1GalacticChart"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="G"
+						android:id="@+id/btnShortcut2GalacticChart"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="G"
+						android:id="@+id/btnShortcut3GalacticChart"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="G"
+						android:id="@+id/btnShortcut4GalacticChart"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Warp Chart"
+						android:id="@+id/textView2"
+						android:layout_column="1"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="W"
+						android:id="@+id/btnShortcut1WarpChart"
+						android:layout_column="2"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="W"
+						android:id="@+id/btnShortcut2WarpChart"
+						android:layout_column="3"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="W"
+						android:id="@+id/btnShortcut3WarpChart"
+						android:layout_column="4"
+						android:onClick="btnSetShortcut"/>
+
+				<Button
+						style="?android:attr/buttonStyleSmall"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="W"
+						android:id="@+id/btnShortcut4WarpChart"
+						android:layout_column="5"
+						android:onClick="btnSetShortcut"/>
+			</TableRow>
+
+		</TableLayout>
+	</RelativeLayout>
+</ScrollView>

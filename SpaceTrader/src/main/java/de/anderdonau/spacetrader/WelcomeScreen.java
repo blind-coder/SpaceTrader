@@ -336,6 +336,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				return true;
 			case R.id.menuShortcuts:
+				btnShortcutOptions(null);
 				return true;
 			case R.id.menuHighscores:
 				ViewHighScores();
@@ -2293,6 +2294,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		fragmentManager.beginTransaction().replace(R.id.container, new OptionsFragment()).commit();
 		mCurrentState = "Options";
 	}
+	public void btnShortcutOptions(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new ShortcutsFragment()).commit();
+		mCurrentState = "Shortcuts";
+	}
 	public void btnSetOption(View view){
 		CheckBox checkBox = (CheckBox) view;
 
@@ -2817,6 +2823,99 @@ FrmGotoForm( CurForm );
 			popupQueue.push(popup);
 			showNextPopup();
 		}
+	}
+	public void btnSetShortcut(View view){
+		switch (view.getId()){
+			case R.id.btnShortcut1BuyCargo:
+				mGameState.Shortcut1 = 0; break;
+			case R.id.btnShortcut2BuyCargo:
+				mGameState.Shortcut2 = 0; break;
+			case R.id.btnShortcut3BuyCargo:
+				mGameState.Shortcut3 = 0; break;
+			case R.id.btnShortcut4BuyCargo:
+				mGameState.Shortcut4 = 0; break;
+			case R.id.btnShortcut1SellCargo:
+				mGameState.Shortcut1 = 1; break;
+			case R.id.btnShortcut2SellCargo:
+				mGameState.Shortcut2 = 1; break;
+			case R.id.btnShortcut3SellCargo:
+				mGameState.Shortcut3 = 1; break;
+			case R.id.btnShortcut4SellCargo:
+				mGameState.Shortcut4 = 1; break;
+			case R.id.btnShortcut1ShipYard:
+				mGameState.Shortcut1 = 2; break;
+			case R.id.btnShortcut2ShipYard:
+				mGameState.Shortcut2 = 2; break;
+			case R.id.btnShortcut3ShipYard:
+				mGameState.Shortcut3 = 2; break;
+			case R.id.btnShortcut4ShipYard:
+				mGameState.Shortcut4 = 2; break;
+			case R.id.btnShortcut1BuyEquipment:
+				mGameState.Shortcut1 = 3; break;
+			case R.id.btnShortcut2BuyEquipment:
+				mGameState.Shortcut2 = 3; break;
+			case R.id.btnShortcut3BuyEquipment:
+				mGameState.Shortcut3 = 3; break;
+			case R.id.btnShortcut4BuyEquipment:
+				mGameState.Shortcut4 = 3; break;
+			case R.id.btnShortcut1SellEquipment:
+				mGameState.Shortcut1 = 4; break;
+			case R.id.btnShortcut2SellEquipment:
+				mGameState.Shortcut2 = 4; break;
+			case R.id.btnShortcut3SellEquipment:
+				mGameState.Shortcut3 = 4; break;
+			case R.id.btnShortcut4SellEquipment:
+				mGameState.Shortcut4 = 4; break;
+			case R.id.btnShortcut1Personnel:
+				mGameState.Shortcut1 = 5; break;
+			case R.id.btnShortcut2Personnel:
+				mGameState.Shortcut2 = 5; break;
+			case R.id.btnShortcut3Personnel:
+				mGameState.Shortcut3 = 5; break;
+			case R.id.btnShortcut4Personnel:
+				mGameState.Shortcut4 = 5; break;
+			case R.id.btnShortcut1Bank:
+				mGameState.Shortcut1 = 6; break;
+			case R.id.btnShortcut2Bank:
+				mGameState.Shortcut2 = 6; break;
+			case R.id.btnShortcut3Bank:
+				mGameState.Shortcut3 = 6; break;
+			case R.id.btnShortcut4Bank:
+				mGameState.Shortcut4 = 6; break;
+			case R.id.btnShortcut1SystemInfo:
+				mGameState.Shortcut1 = 7; break;
+			case R.id.btnShortcut2SystemInfo:
+				mGameState.Shortcut2 = 7; break;
+			case R.id.btnShortcut3SystemInfo:
+				mGameState.Shortcut3 = 7; break;
+			case R.id.btnShortcut4SystemInfo:
+				mGameState.Shortcut4 = 7; break;
+			case R.id.btnShortcut1CommanderStatus:
+				mGameState.Shortcut1 = 8; break;
+			case R.id.btnShortcut2CommanderStatus:
+				mGameState.Shortcut2 = 8; break;
+			case R.id.btnShortcut3CommanderStatus:
+				mGameState.Shortcut3 = 8; break;
+			case R.id.btnShortcut4CommanderStatus:
+				mGameState.Shortcut4 = 8; break;
+			case R.id.btnShortcut1GalacticChart:
+				mGameState.Shortcut1 = 9; break;
+			case R.id.btnShortcut2GalacticChart:
+				mGameState.Shortcut2 = 9; break;
+			case R.id.btnShortcut3GalacticChart:
+				mGameState.Shortcut3 = 9; break;
+			case R.id.btnShortcut4GalacticChart:
+				mGameState.Shortcut4 = 9; break;
+			case R.id.btnShortcut1WarpChart:
+				mGameState.Shortcut1 = 10; break;
+			case R.id.btnShortcut2WarpChart:
+				mGameState.Shortcut2 = 10; break;
+			case R.id.btnShortcut3WarpChart:
+				mGameState.Shortcut3 = 10; break;
+			case R.id.btnShortcut4WarpChart:
+				mGameState.Shortcut4 = 10; break;
+		}
+		invalidateOptionsMenu();
 	}
 
 	public void BuyCargo(int Index,int Amount) {
@@ -4536,6 +4635,16 @@ SeekBar.OnSeekBarChangeListener() {
 
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxSaveOnArrival);
 			checkBox.setChecked(mGameState.SaveOnArrival);
+
+			return rootView;
+		}
+	}
+	public class ShortcutsFragment extends Fragment {
+		public ShortcutsFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_shortcuts, container, false);
 
 			return rootView;
 		}
