@@ -29,7 +29,8 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
 			android:layout_alignParentRight="false"
-			android:layout_centerHorizontal="true">
+			android:layout_centerHorizontal="true"
+			android:id="@+id/tableLayout">
 
 		<TableRow
 				android:layout_width="fill_parent"

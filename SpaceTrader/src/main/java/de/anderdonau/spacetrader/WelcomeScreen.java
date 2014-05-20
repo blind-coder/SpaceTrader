@@ -13,7 +13,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +33,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -4584,9 +4588,31 @@ SeekBar.OnSeekBarChangeListener() {
 				EncounterText.setText(buf += EncounterText.getText().toString());
 			}
 
+			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
 			d = (int)Math.ceil(Math.sqrt( Ship.tribbles/250 ));
-			for (i=0; i<d; ++i) {
-				/* TODO: Draw tribbles */
+			d = Math.min(d, GameState.TRIBBLESONSCREEN);
+			for (i=0; i<=d; ++i) {
+				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+				ImageView imageView = (ImageView) rootView.findViewById(resID);
+				if (imageView == null){
+					continue;
+				}
+				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView.getLayoutParams());
+				marginParams.setMargins(mGameState.GetRandom(container.getWidth()-tribble.getWidth()),
+				                        mGameState.GetRandom(container.getHeight()-tribble.getHeight()),
+				                        0, 0);
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
+				imageView.setLayoutParams(layoutParams);
+
+				imageView.setVisibility(View.VISIBLE);
+			}
+			for (; i<=GameState.TRIBBLESONSCREEN; ++i){
+				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+				ImageView imageView = (ImageView) rootView.findViewById(resID);
+				if (imageView == null){
+					continue;
+				}
+				imageView.setVisibility(View.GONE);
 			}
 			return rootView;
 		}
@@ -6896,6 +6922,13 @@ SeekBar.OnSeekBarChangeListener() {
 	public void EncounterButtonIntCallback(View view){
 		mGameState.AutoFlee = mGameState.AutoAttack = false;
 		btnInt.setVisibility(View.INVISIBLE);
+		pBarEncounter.setVisibility(View.INVISIBLE);
+	}
+	public void EncounterButtonTribbleCallback(View view){
+		Popup popup;
+		popup = new Popup(this, "Squeek!", "Squeek!", "Squeek! Squeek!", "Squeek!", cbShowNextPopup);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void ShuffleStatus() {
 		int i;
@@ -6979,6 +7012,21 @@ SeekBar.OnSeekBarChangeListener() {
 
 		if (CommanderGotHit) {
 			playerShipNeedsUpdate = true;
+			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
+			ViewGroup container = (ViewGroup) findViewById(R.id.container);
+			for (i=0; i<=GameState.TRIBBLESONSCREEN; ++i) {
+				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+				ImageView imageView = (ImageView) container.findViewById(resID);
+				if (imageView == null){
+					continue;
+				}
+				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView.getLayoutParams());
+				marginParams.setMargins(mGameState.GetRandom(container.getWidth()-tribble.getWidth()),
+				                        mGameState.GetRandom(container.getHeight()-tribble.getHeight()),
+				                        0, 0);
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
+				imageView.setLayoutParams(layoutParams);
+			}
 		}
 		if (OpponentGotHit) {
 			opponentShipNeedsUpdate = true;
@@ -7096,12 +7144,6 @@ SeekBar.OnSeekBarChangeListener() {
 				mGameState.AutoAttack = false;
 				mGameState.AutoFlee = false;
 				if (CommanderGotHit) {
-					for (i=0; i<GameState.TRIBBLESONSCREEN; ++i) {
-          /* TODO Draw Tribbles
-          objindex = FrmGetObjectIndex( frmP, EncounterTribble0Button + i );
-          cp = (ControlPtr)FrmGetObjectPtr( frmP, objindex );
-          CtlDrawControl( cp ); */
-					}
 					popup = new Popup(this, "You Escaped",
 					                  "You got hit, but still managed to escape.", "", "OK",
 					                  cbShowNextPopup
@@ -7252,12 +7294,6 @@ SeekBar.OnSeekBarChangeListener() {
 
 		buf = EncounterText.getText().toString() + "\n" + buf;
 		EncounterText.setText(buf);
-		for (i=0; i<GameState.TRIBBLESONSCREEN; ++i) {
-    /* TODO Draw tribbles
-    objindex = FrmGetObjectIndex( frmP, EncounterTribble0Button + i );
-    cp = (ControlPtr)FrmGetObjectPtr( frmP, objindex );
-    CtlDrawControl( cp ); */
-		}
 
 		if (mGameState.Continuous && (mGameState.AutoAttack || mGameState.AutoFlee)){
 			Handler delayHandler = new Handler();
