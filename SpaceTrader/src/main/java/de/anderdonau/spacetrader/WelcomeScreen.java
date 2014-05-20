@@ -5535,12 +5535,10 @@ SeekBar.OnSeekBarChangeListener() {
 		else if (mGameState.EncounterType == GameState.POLICEFLEE ||
 			         mGameState.EncounterType == GameState.TRADERFLEE ||
 			         mGameState.EncounterType == GameState.PIRATEFLEE){
-			EncounterText.setText("You opponent is fleeing.");
+			EncounterText.setText("Your opponent is fleeing.");
 		}
 		else if (mGameState.EncounterType == GameState.PIRATEATTACK ||
 			         mGameState.EncounterType == GameState.POLICEATTACK ||
-			         mGameState.EncounterType == GameState.TRADERATTACK ||
-			         mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
 			         mGameState.EncounterType == GameState.TRADERATTACK ||
 			         mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
 			         mGameState.EncounterType == GameState.DRAGONFLYATTACK ||
@@ -7117,12 +7115,12 @@ SeekBar.OnSeekBarChangeListener() {
 		buf += buf2;
 		if (CommanderGotHit) {
 			buf += " hits you.";
-		}
-
-		if (!(PrevEncounterType == GameState.POLICEFLEE || PrevEncounterType == GameState.TRADERFLEE || PrevEncounterType == GameState.PIRATEFLEE) && !CommanderGotHit) {
+		} else if (!(PrevEncounterType == GameState.POLICEFLEE || PrevEncounterType == GameState.TRADERFLEE || PrevEncounterType == GameState.PIRATEFLEE) && !CommanderGotHit) {
 			buf += " missed you.";
+		} else {
+			buf = "";
 		}
-
+		
 		if (OpponentGotHit) {
 			buf +=  "\nYou hit the "+buf2+".";
 		}
