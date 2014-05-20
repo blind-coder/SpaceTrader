@@ -2705,6 +2705,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		                  },
 		                  cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
   /*
      } else if (strstr(buf, "Very rare") == buf) {
      frm = FrmInitForm( RareCheatForm );
@@ -7120,7 +7122,7 @@ SeekBar.OnSeekBarChangeListener() {
 		} else {
 			buf = "";
 		}
-		
+
 		if (OpponentGotHit) {
 			buf +=  "\nYou hit the "+buf2+".";
 		}
