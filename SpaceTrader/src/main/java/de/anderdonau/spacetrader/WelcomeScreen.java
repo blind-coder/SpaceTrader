@@ -4179,8 +4179,6 @@ SeekBar.OnSeekBarChangeListener() {
 			navigationChart.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent motionEvent) {
-					navigationChart.mDrawWormhole = -1;
-					navigationChart.invalidate();
 					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 						final int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
