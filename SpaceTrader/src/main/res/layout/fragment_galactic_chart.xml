@@ -75,4 +75,14 @@
 			style="@style/BuySellButtons"
 			android:onClick="btnGalacticChartFind"/>
 
+	<Button
+			style="@style/BuySellButtons"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="J"
+			android:id="@+id/btnJump"
+			android:layout_alignBottom="@+id/galChartFind"
+			android:layout_toLeftOf="@+id/galChartFind"
+			android:onClick="SuperWarpButtonCallback"/>
+
 </RelativeLayout>

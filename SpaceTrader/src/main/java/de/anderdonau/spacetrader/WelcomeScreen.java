@@ -2786,7 +2786,7 @@ FrmGotoForm( CurForm );
 }
 */
 	}
-	public void SuperWarpButtonCallback(){
+	public void SuperWarpButtonCallback(View view){
 		Popup popup;
 		if (mGameState.TrackedSystem < 0) {
 			popup = new Popup(this,
@@ -4251,6 +4251,8 @@ SeekBar.OnSeekBarChangeListener() {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
 			final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.GalacticChart);
+			Button button = (Button) rootView.findViewById(R.id.btnJump);
+			button.setVisibility(mGameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 			navigationChart.setGameState(mGameState);
 			navigationChart.setShortRange(false);
 
