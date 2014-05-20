@@ -10,7 +10,6 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,12 +30,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,6 +45,8 @@ import java.util.Random;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.HighScore;
 import de.anderdonau.spacetrader.DataTypes.Politics;
+import de.anderdonau.spacetrader.DataTypes.Popup;
+import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -70,6 +68,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
 	public static ProgressBar pBarEncounter;
 
+	public PopupQueue           popupQueue    = new PopupQueue();
+	final  Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
+		@Override
+		public void execute(Popup popup, View view) {
+			WelcomeScreen.this.showNextPopup();
+		}
+	};
+
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
 	////////////////////////////////////////////////////
@@ -77,31 +83,35 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (mGameState.NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1)
 			mGameState.NewsEvents[mGameState.NewsSpecialEventCount++] = eventFlag;
 	}
-	public static boolean isNewsEvent(int eventFlag){
+
+	public static boolean isNewsEvent(int eventFlag) {
 		int i;
 
-		for (i=0;i<mGameState.NewsSpecialEventCount; i++) {
+		for (i = 0; i < mGameState.NewsSpecialEventCount; i++) {
 			if (mGameState.NewsEvents[i] == eventFlag)
 				return true;
 		}
 		return false;
 	}
-	public static int latestNewsEvent(){
+
+	public static int latestNewsEvent() {
 		if (mGameState.NewsSpecialEventCount == 0)
 			return -1;
 		else
 			return mGameState.NewsEvents[mGameState.NewsSpecialEventCount - 1];
 	}
-	public static void resetNewsEvents(){
+
+	public static void resetNewsEvents() {
 		mGameState.NewsSpecialEventCount = 0;
 	}
-	public static void replaceNewsEvent(int originalEventFlag, int replacementEventFlag){
+
+	public static void replaceNewsEvent(int originalEventFlag, int replacementEventFlag) {
 		int i;
 
 		if (originalEventFlag == -1) {
 			addNewsEvent(replacementEventFlag);
 		} else {
-			for (i=0;i<mGameState.NewsSpecialEventCount; i++) {
+			for (i = 0; i < mGameState.NewsSpecialEventCount; i++) {
 				if (mGameState.NewsEvents[i] == originalEventFlag)
 					mGameState.NewsEvents[i] = replacementEventFlag;
 			}
@@ -122,7 +132,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		// Set up the drawer.
 		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mNavigationDrawerFragment = (NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+		mNavigationDrawerFragment =
+			(NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
 		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 
@@ -163,21 +174,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			finish();
 		} else
 		if (mCurrentState.equals("Encounter")){
-			ConfirmDialog("Can't save now",
-			              "You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!\nAre you sure you want to quit?",
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Can't save now",
+			                  "You are in an encounter at the moment. During this the game cannot " +
+				                  "be saved! You will lose all your progress since the last save!\n" +
+				                  "Are you sure you want to quit?",
 			              "",
-			              "Yes", new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(DialogInterface dialogInterface, int i) {
-												finish();
-											}
-										}, "No", new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(DialogInterface dialogInterface, int i) {
-
-											}
-										}
+			              "Yes", "No",
+			              new Popup.buttonCallback() {
+				              @Override
+				              public void execute(Popup popup, View view) {
+					              finish();
+				              }
+			              },
+			              cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
 			Log.d("onBackPressed", "unhandled state: " + mCurrentState);
 			saveGame();
@@ -268,6 +282,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		String call = "";
+		Popup popup;
 		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer_layout.closeDrawers();
 		switch (id){
@@ -287,44 +302,39 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnGameOptions(null);
 				return true;
 			case R.id.menuNewGame:
-				ConfirmDialog("Really start new game?",
-				              "If you start a new game your current game will be deleted!\n"+
-											"You will not be added to the high score table!",
-				              "",
-				              "Yes",
-				              new DialogInterface.OnClickListener() {
+				popup = new Popup(getApplicationContext(),
+				                  "Really start new game?",
+				                  "If you start a new game your current game will be deleted!\n"+
+					                  "You will not be added to the high score table!",
+				              "", "Yes", "No",
+				              new Popup.buttonCallback() {
 					              @Override
-					              public void onClick(DialogInterface dialogInterface, int i) {
+					              public void execute(Popup popup, View view) {
 						              WelcomeScreen.mContext.deleteFile("savegame.txt");
 						              FragmentManager fragmentManager = getFragmentManager();
 						              fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
 						              fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 						              mCurrentState = "WelcomeScreen";
+						              popupQueue.clear();
 					              }
 				              },
-				              "No",
-				              new DialogInterface.OnClickListener() {
-					              @Override
-					              public void onClick(DialogInterface dialogInterface, int i) {
-
-					              }
-				              }
+				              cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuRetire:
-				ConfirmDialog("Retire", "Do you really want to retire?", "", "Yes",
-				              new DialogInterface.OnClickListener() {
+				popup = new  Popup(getApplicationContext(),
+				                   "Retire", "Do you really want to retire?", "", "Yes", "No",
+				              new Popup.buttonCallback() {
 					              @Override
-					              public void onClick(DialogInterface dialogInterface, int i) {
+					              public void execute(Popup popup, View view) {
 						              EndOfGame(GameState.RETIRED);
+						              showNextPopup();
 					              }
-				              }, "No", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-
-						}
-					}
-				);
+				              }, cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuShortcuts:
 				return true;
@@ -336,7 +346,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.menuHelpCurrentScreen:
 				return true;
 			case R.id.menuHelpMenu:
-				alertDialog("Tips",
+				popup = new Popup(getApplicationContext(),
+				                  "Tips",
 				            "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n"+
 				              "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n"+
 					            "\"\"Game\" gives access to game functions:\n"+
@@ -346,42 +357,51 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					            "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n"+
 					            "- \"High Scores\" shows the high-score list.\n"+
 					            "- \"Clear High Scores\" wipes the current high-score list.",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpHowToPlay:
-				alertDialog("How to play",
+				popup = new Popup(getApplicationContext(),
+				                  "How to play",
 					"Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
 						"The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
 						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
 						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
 						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
-					""
+					"", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpTrading:
-				alertDialog("Trading",
+				popup = new Popup(getApplicationContext(), "Trading",
 					"Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
 						"The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
 						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
 						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
 						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
-				  ""
+				  "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpTravelling:
-				alertDialog("Travelling",
+				popup = new Popup(getApplicationContext(), "Travelling",
 				            "To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
 											"When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
 											"During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
 											"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
 											"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
 											"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpShipEquipment:
-				alertDialog("Ship Equipment",
+				popup = new Popup(getApplicationContext(), "Ship Equipment",
 				            "There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
 											"Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
 											"The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n"+
@@ -389,11 +409,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
 											"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
 											"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpSkills:
-				alertDialog("Skills",
+				popup = new Popup(getApplicationContext(), "Skills",
 				            "As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
 											"The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
 											"The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
@@ -401,11 +423,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
 											"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
 											"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
-                     ""
+                     "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpFirstSteps:
-				alertDialog("First Steps",
+				popup = new Popup(getApplicationContext(), "First Steps",
 				            "Here I will describe the steps you will undertake the first days as a trader:\n" +
 											"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n"+
 											"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
@@ -415,11 +439,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
 											"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
 											"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpAcknowledgements:
-				alertDialog("Acknowledgements",
+				popup = new Popup(getApplicationContext(), "Acknowledgements",
 				            "Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
 											"This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
 											"I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
@@ -434,11 +460,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											"Thank you all. You were a tremendous help, and I am very grateful for that.\n"+
 											"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
 											"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpAbout:
-				alertDialog("About",
+				popup = new Popup(getApplicationContext(), "About",
 				             "Android port Copyright 2014 by Benjamin Schieder\n"+
 				              "Linux port Copyright 2010 by Benjamin Schieder\n"+
 					            "Original Copyright 2000-2002 by Pieter Spronck\n"+
@@ -452,14 +480,18 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					            "DrWowe for solving the \"Special\" bug\n" +
 					            "All the beta testers\nAnd all the players that sent me their ideas\n" +
 					            "Space Trader is released under a GNU General Public License",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpLicense:
-				alertDialog("License",
+				popup = new Popup(getApplicationContext(), "License",
 				            "The game code is licensed under the GPLv2",
-				            ""
+				            "", "OK", cbShowNextPopup
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 		}
 		if (call.equals("B")){
@@ -490,6 +522,21 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		return true;
 	}
 
+	public void showNextPopup(){
+		if (popupQueue.isEmpty())
+			return;
+
+		Popup popup = popupQueue.peek();
+		if (popup.dialog.isShowing())
+			return;
+		popupQueue.pop();
+		if (popupQueue.isEmpty())
+			return;
+
+		popup = popupQueue.peek();
+		showNextPopup();
+		popup.show();
+	}
 	////////////////////////////////////////////////////
 	// Button Callbacks
 	////////////////////////////////////////////////////
@@ -519,22 +566,31 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		mCurrentState = "SystemInformation";
 	}
 	public void btnSystemInformationNewspaper(View view){
+		Popup popup;
 		if (!mGameState.AlreadyPaidForNewspaper && mGameState.ToSpend() < (GameState.getDifficulty() + 1)){
-			alertDialog("Not enough money!", String.format("A newspaper costs %d credits in this system. You don't have enough money!", GameState.getDifficulty() + 1), "");
+			popup = new Popup(getApplicationContext(),
+			                  "Not enough money!",
+			                  String.format("A newspaper costs %d credits in this system. You don't have enough money!", GameState.getDifficulty() + 1),
+			                  "", "OK", cbShowNextPopup);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else if (!mGameState.AlreadyPaidForNewspaper){
 			if (!mGameState.NewsAutoPay && !mGameState.AlreadyPaidForNewspaper){
-				ConfirmDialog("Buy newspaper", String.format("The local newspaper costs %d credits. Do you wish to buy a copy?", GameState.getDifficulty() + 1), "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
-          "Yes", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								SystemInformationShowNewspaper();
-							}
-						}, "No", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-
-							}
-						});
+				popup = new Popup(getApplicationContext(),
+				                  "Buy newspaper",
+				                  String.format("The local newspaper costs %d credits. Do you wish to buy a copy?", GameState.getDifficulty() + 1),
+				                  "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+													"Yes", "No",
+													new Popup.buttonCallback() {
+														@Override
+														public void execute(Popup popup, View view) {
+															SystemInformationShowNewspaper();
+															showNextPopup();
+														}
+													}, cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
 				SystemInformationShowNewspaper();
 			}
@@ -780,7 +836,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			news = news.substring(1);
 
 		mGameState.rand = new Random(seed);
-		alertDialog(masthead, news, "The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"");
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  masthead, news,
+		                  "The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"",
+	                    "OK", cbShowNextPopup
+		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnPersonnelRoster(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
@@ -882,7 +945,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (quests.length() == 0)
 			quests = "There are no open quests.\n";
 
-		alertDialog("Open Quests", quests, "");
+		Popup popup = new Popup(getApplicationContext(),
+		                        "Open Quests", quests, "", "OK", cbShowNextPopup
+		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnCommanderStatusSpecialCargo(View view) {
 		String buf = "";
@@ -916,7 +983,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			buf = "No special cargo.";
 		}
 
-		alertDialog("Special Cargo", buf, "");
+		Popup popup = new Popup(getApplicationContext(), "Special Cargo", buf, "", "OK", cbShowNextPopup);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnCommanderStatusShip(View view){
 		int i, j, k, FirstEmptySlot;
@@ -984,7 +1053,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				buf += String.format("%d gadget slot%s\n", mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots - FirstEmptySlot, (mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
 		}
-		alertDialog("Ship Status", buf, "");
+		Popup popup = new Popup(getApplicationContext(), "Ship Status", buf, "", "OK", cbShowNextPopup);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBank(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
@@ -992,74 +1063,125 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		mCurrentState = "Bank";
 	}
 	public void btnBankGetLoan(View view){
+		Popup popup;
 		if (mGameState.Debt >= mGameState.MaxLoan()){
-			alertDialog("Debt too high!", "Your debt is too high to get another loan.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "Debt too high!", "Your debt is too high to get another loan.", "", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
-		inputDialog("Get Loan", String.format("How much do you want?\nYou can borrow up to %d credits.",
-		                                      mGameState.MaxLoan()
-		), "Credits", "", mGameState.MaxLoan(), new IFinputDialogCallback() {
-			@Override
-			public void execute(SeekBar seekBar) {
-				int amount = seekBar.getProgress();
-				if (amount > 0) {
-					amount = Math.min(mGameState.MaxLoan(), amount);
-					mGameState.Credits += amount;
-					mGameState.Debt += amount;
-					btnBank(null);
-				}
-			}
-		}
+		popup = new Popup(getApplicationContext(),
+		                  "Get Loan",
+		                  String.format("How much do you want?\nYou can borrow up to %d credits.", mGameState.MaxLoan()),
+		                  "Credits", "", mGameState.MaxLoan(), "Get loan", "Don't get loan",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  SeekBar seekBar = (SeekBar) view;
+				                  int amount = seekBar.getProgress();
+				                  if (amount > 0) {
+					                  amount = Math.min(mGameState.MaxLoan(), amount);
+					                  mGameState.Credits += amount;
+					                  mGameState.Debt += amount;
+					                  btnBank(null);
+					                  showNextPopup();
+				                  }
+			                  }
+		                  },
+		                  cbShowNextPopup,
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  mGameState.Credits += mGameState.MaxLoan();
+				                  mGameState.Debt += mGameState.MaxLoan();
+				                  btnBank(null);
+				                  showNextPopup();
+			                  }
+		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBankPaybackLoan(View view){
+		Popup popup;
 		if (mGameState.Debt <= 0){
-			alertDialog("No debt.", "You don't have a loan to pay back.", "");
+			popup = new Popup(getApplicationContext(),
+			                  "No debt.", "You don't have a loan to pay back.", "", "OK", cbShowNextPopup);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
-		inputDialog("Payback Loan",
-		            String.format("You have a debt of %d credits.\nHow much do you want to pay back?",
-		                          mGameState.Debt
-		            ), "Credits", "", mGameState.Debt, new IFinputDialogCallback() {
-			@Override
-			public void execute(SeekBar seekBar) {
-				int amount = seekBar.getProgress();
-				if (amount > 0) {
-					amount = Math.min(mGameState.Debt, amount);
-					if (amount > mGameState.Credits) {
-						alertDialog("Not enough credits!", String
-							                                   .format("You only have %d credits. You can't pay back more than that!",
-							                                           mGameState.Credits
-							                                   ), ""
-						);
-						return;
-					}
-					mGameState.Credits -= amount;
-					mGameState.Debt -= amount;
-					btnBank(null);
-				}
-			}
-		}
+		popup = new Popup(getApplicationContext(),
+		                  "Payback Loan",
+		                  String.format("You have a debt of %d credits.\nHow much do you want to pay back?", mGameState.Debt),
+		                  "Credits", "", mGameState.Debt, "Pay back", "Don't pay back",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  SeekBar seekBar = (SeekBar) view;
+													int amount = seekBar.getProgress();
+													if (amount > 0) {
+														amount = Math.min(mGameState.Debt, amount);
+														if (amount > mGameState.Credits) {
+															Popup popup1 = new Popup(getApplicationContext(),
+															                         "Not enough credits!",
+															                         String.format("You only have %d credits. You can't pay back more than that!",
+															                                       mGameState.Credits
+															                         ),
+															                         "", "OK", cbShowNextPopup
+															);
+															popupQueue.push(popup1);
+															showNextPopup();
+															return;
+														}
+														mGameState.Credits -= amount;
+														mGameState.Debt -= amount;
+														btnBank(null);
+													}
+												}
+											}, cbShowNextPopup,
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  int amount = Math.min(mGameState.Debt, mGameState.Credits);
+				                  mGameState.Credits -= amount;
+				                  mGameState.Debt -= amount;
+				                  showNextPopup();
+				                  btnBank(null);
+			                  }
+		                  }
 		);
 	}
 	public void btnBankBuyInsurance(View view){
+		Popup popup;
 		if (mGameState.Insurance){
-			ConfirmDialog("Stop Insurance", "Do you really wish to stop your insurance and lose your no-claim?", "", "Yes", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					mGameState.Insurance = false;
-					mGameState.NoClaim = 0;
-					btnBank(null);
-				}
-			}, "No", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			});
+			popup = new Popup(getApplicationContext(),
+			                  "Stop Insurance",
+			                  "Do you really wish to stop your insurance and lose your no-claim?", "",
+			                  "Yes", "No",
+			                  new Popup.buttonCallback() {
+													@Override
+													public void execute(Popup popup, View view) {
+														mGameState.Insurance = false;
+														mGameState.NoClaim = 0;
+														btnBank(null);
+														showNextPopup();
+													}
+												},
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
 			if (!mGameState.EscapePod){
-				alertDialog("No Escape Pod", "Insurance isn't useful for you, since you don't have an escape pod.", "");
+				popup = new Popup(getApplicationContext(),
+				                  "No Escape Pod", "Insurance isn't useful for you, since you don't have an escape pod.",
+				                  "", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 			mGameState.Insurance = true;
@@ -1086,20 +1208,37 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnShipyard(null);
 	}
 	public void btnShipyardBuyFuel(View view){
-		inputDialog("Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
-		            "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
-		            mGameState.Credits, new IFinputDialogCallback() {
-			@Override
-			public void execute(SeekBar seekBar) {
-				try {
-					int amount = seekBar.getProgress();
-					btnShipyardBuyFuel(amount);
-				} catch (NumberFormatException e) {
-					alertDialog("Error", e.getLocalizedMessage(), "");
-				}
-			}
-		}
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  "Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
+		                  "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
+		                  mGameState.Credits, "Buy fuel", "Don't buy fuel",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  SeekBar seekBar = (SeekBar) view;
+				                  try {
+					                  int amount = seekBar.getProgress();
+					                  btnShipyardBuyFuel(amount);
+				                  } catch (NumberFormatException e) {
+					                  Popup popup1 = new Popup(getApplicationContext(),
+					                                           "Error", e.getLocalizedMessage(), "", "OK",
+					                                           cbShowNextPopup);
+					                  popupQueue.push(popup1);
+				                  }
+				                  showNextPopup();
+			                  }
+		                  }, cbShowNextPopup,
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  btnShipyardBuyMaxFuel(null);
+				                  showNextPopup();
+			                  }
+		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnShipyardBuyMaxFuel(View view){
 		btnShipyardBuyFuel(mGameState.Credits);
@@ -1119,35 +1258,56 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		btnShipyard(null);
 	}
 	public void btnShipyardBuyRepairs(View view){
-		inputDialog("Buy Repairs", "How much do you want to spend maximally on repairs?", "Credits",
-		            "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
-		            mGameState.Credits, new IFinputDialogCallback() {
-			@Override
-			public void execute(SeekBar seekBar) {
-				int amount = seekBar.getProgress();
-				btnShipyardBuyRepairs(amount);
-			}
-		}
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  "Buy Repairs",
+		                  "How much do you want to spend maximally on repairs?",
+		                  "Credits",
+		                  "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
+		                  mGameState.Credits,
+		                  "Buy Repairs", "Don't buy repairs",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  SeekBar seekBar = (SeekBar) view;
+				                  int amount = seekBar.getProgress();
+				                  btnShipyardBuyRepairs(amount);
+				                  showNextPopup();
+			                  }
+		                  }, cbShowNextPopup,
+		                  new Popup.buttonCallback(){
+			                  @Override
+		                  public void execute(Popup popup, View view){
+				                  btnShipyardBuyRepairs(popup.max);
+				                  showNextPopup();
+			                  }
+		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnShipyardBuyFullRepairs(View view){
 		btnShipyardBuyRepairs(mGameState.Credits);
 	}
 	public void btnShipyardBuyEscapePod(View view){
-		ConfirmDialog("Buy Escape Pod", "Do you want to buy an escape pod for 2000 credits?",
-		              "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
-		              "No", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) { }
-			}, "Yes", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					mGameState.Credits -= 2000;
-					mGameState.EscapePod = true;
-					btnShipyard(null);
-				}
-			}
+		Popup popup;
+		popup = new Popup(getApplicationContext(),
+		                  "Buy Escape Pod",
+		                  "Do you want to buy an escape pod for 2000 credits?",
+		                  "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
+		                  "Buy pod", "Don't buy pod",
+		                  new Popup.buttonCallback() {
+			                  @Override
+			                  public void execute(Popup popup, View view) {
+				                  mGameState.Credits -= 2000;
+				                  mGameState.EscapePod = true;
+				                  btnShipyard(null);
+				                  showNextPopup();
+			                  }
+		                  }, cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBuyNewShip(View view){
 		FragmentManager fragmentManager = getFragmentManager();
@@ -1237,30 +1397,83 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (mGameState.Ship.crew[i] >= 0)
 				++j;
 		if (j > mGameState.ShipTypes.ShipTypes[Index].crewQuarters){
-			alertDialog("Too Many Crewmembers", "The new ship you picked doesn't have enough quarters for all of your crewmembers. First you will have to fire one or more of them.", "");
+			Popup popup = new Popup(getApplicationContext(),
+			                        "Too Many Crewmembers",
+			                        "The new ship you picked doesn't have enough quarters for all of your crewmembers. First you will have to fire one or more of them.",
+			                        "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
 		if (mGameState.ShipPrice[Index] == 0){
-			alertDialog("Ship Not Available", "That type of ship is not available in the current system.", "");
+			Popup popup = new Popup(getApplicationContext(),
+			                        "Ship Not Available",
+			                        "That type of ship is not available in the current system.",
+			                        "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if ((mGameState.ShipPrice[Index] > 0) && (mGameState.Debt > 0)){
-			alertDialog("You Are In Debt", "You can't buy that as long as you have debts.", "Before you can buy a new ship or new equipment, you must settle your debts at the bank.");
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "You Are In Debt",
+			                  "You can't buy that as long as you have debts.",
+			                  "Before you can buy a new ship or new equipment, you must settle your debts at the bank.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if (mGameState.ShipPrice[Index] > mGameState.ToSpend()){
-			alertDialog("Not Enough Money", "You don't have enough money to buy this ship.", "");
+			Popup popup = new Popup(getApplicationContext(),
+			                        "Not Enough Money",
+			                        "You don't have enough money to buy this ship.", "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if ((mGameState.JarekStatus == 1) && (mGameState.WildStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 3)){
-			alertDialog("Passengers Needs Quarters", "You must get a ship with enough crew quarters so that Ambassador Jarek and Jonathan Wild can stay on board.", "");
+			Popup popup = new Popup(getApplicationContext(),
+			                        "Passengers Needs Quarters",
+			                        "You must get a ship with enough crew quarters so that Ambassador Jarek and Jonathan Wild can stay on board.",
+			                        "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if ((mGameState.JarekStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 2)) {
-			alertDialog("Passenger Needs Quarters", "You must get a ship with enough crew quarters so that Ambassador Jarek can stay on board.", "");
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Passenger Needs Quarters",
+			                  "You must get a ship with enough crew quarters so that Ambassador Jarek can stay on board.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if ((mGameState.WildStatus == 1) && (mGameState.ShipTypes.ShipTypes[Index].crewQuarters < 2)){
-			alertDialog("Passenger Needs Quarters", "You must get a ship with enough crew quarters so that Jonathan Wild can stay on board.", "");
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Passenger Needs Quarters",
+			                  "You must get a ship with enough crew quarters so that Jonathan Wild can stay on board.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		} else if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21){
-			alertDialog("Shipyard Engineer", "Sorry! We can't take your ship as a trade-in. That Ion Reactor looks dangerous, and we have no way of removing it. Come back when you've gotten rid of it.", "You can't sell your ship as long as you have an Ion Reactor on board. Deliver the Reactor to Nix, and then you'll be able to get a new ship.");
+			Popup popup;
+			popup = new Popup(getApplicationContext(),
+			                  "Shipyard Engineer",
+			                  "Sorry! We can't take your ship as a trade-in. That Ion Reactor looks dangerous, and we have no way of removing it. Come back when you've gotten rid of it.",
+			                  "You can't sell your ship as long as you have an Ion Reactor on board. Deliver the Reactor to Nix, and then you'll be able to get a new ship.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 			return;
 		}
 
@@ -1268,32 +1481,59 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (i > 0) {
 			if (mGameState.ShipTypes.ShipTypes[Index].shieldSlots < i){
 				// can't transfer the Lightning Shields. How often would this happen?
-				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer your Lightning Shield because the new ship has insufficient shield slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+				Popup popup = new Popup(getApplicationContext(),
+				                        "Can't Transfer Item",
+				                        String.format("If you trade your ship in for a %s, you won't be able to transfer your Lightning Shield because the new ship has insufficient shield slots!", mGameState.ShipTypes.ShipTypes[Index].name),
+				                        "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			} else {
+				hasLightning = true;
+				extra += i*30000;
 			}
-			hasLightning = true;
-			extra += i*30000;
 		}
 
 		if (mGameState.HasGadget(mGameState.Ship, GameState.FUELCOMPACTOR)) {
 			if (mGameState.ShipTypes.ShipTypes[Index].gadgetSlots == 0) {
 				// can't transfer the Fuel Compactor
-				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer your Fuel Compactor because the new ship has insufficient gadget slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+				Popup popup = new Popup(getApplicationContext(),
+				                        "Can't Transfer Item",
+				                        String.format("If you trade your ship in for a %s, you won't be able to transfer your Fuel Compactor because the new ship has insufficient gadget slots!", mGameState.ShipTypes.ShipTypes[Index].name),
+				                        "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			} else {
+				hasCompactor = true;
+				extra += 20000;
 			}
-			hasCompactor = true;
-			extra += 20000;
 		}
 
 		if (mGameState.HasWeapon(mGameState.Ship, GameState.MORGANLASERWEAPON, true)) {
 			if (mGameState.ShipTypes.ShipTypes[Index].weaponSlots == 0) {
 				// can't transfer the Laser
-				alertDialog("Can't Transfer Item", String.format("If you trade your ship in for a %s, you won't be able to transfer Morgans Laser because the new ship has insufficient weapon slots!", mGameState.ShipTypes.ShipTypes[Index].name), "");
+				Popup popup = new Popup(getApplicationContext(),
+				                        "Can't Transfer Item",
+				                        String.format("If you trade your ship in for a %s, you won't be able to transfer Morgans Laser because the new ship has insufficient weapon slots!", mGameState.ShipTypes.ShipTypes[Index].name),
+				                        "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			} else {
+				extra += 33333;
+				hasMorganLaser = true;
 			}
-			extra += 33333;
-			hasMorganLaser = true;
 		}
 
 		if (mGameState.ShipPrice[Index] + extra > mGameState.ToSpend()) {
-			alertDialog("Not Enough Money", "You won't have enough money to buy this ship and pay the cost to transfer all of your unique equipment. You should choose carefully which items you wish to transfer!", "");
+			Popup popup = new Popup(getApplicationContext(),
+			                        "Not Enough Money",
+			                        "You won't have enough money to buy this ship and pay the cost to transfer all of your unique equipment. You should choose carefully which items you wish to transfer!",
+			                        "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 		extra = 0;
 
@@ -1305,115 +1545,158 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		extra[0] = ex;
 		if (hasLightning && mGameState.ShipTypes.ShipTypes[Index].shieldSlots > 0) {
 			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
-				ConfirmDialog("Transfer Lightning Shield",
-          "I see you have a lightning shield. I'll transfer it to your new ship for 30000 credits.",
-          "For the sum of 30000 credits, you get to keep your unique lightning shield! This may seem to be a lot of money, but you must remember that this is the exact amount the shield is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
-					"Yes", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							extra[0] += 30000;
-							btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], true, hasCompactor, hasMorganLaser);
-						}
-					},
-					"No", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
-						}
-				 }
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "Transfer Lightning Shield",
+				                  "I see you have a lightning shield. I'll transfer it to your new ship for 30000 credits.",
+				                  "For the sum of 30000 credits, you get to keep your unique lightning shield! This may seem to be a lot of money, but you must remember that this is the exact amount the shield is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+				                  "Transfer shield", "Leave shield",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  extra[0] += 30000;
+						                  btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], true, hasCompactor, hasMorganLaser);
+						                  showNextPopup();
+					                  }
+				                  },
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+						                  showNextPopup();
+					                  }
+				                  }
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
-				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!", "");
+				Popup popup = new Popup(getApplicationContext(),
+				                        "Can't Transfer Item",
+				                        "Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!",
+				                        "", "OK", cbShowNextPopup
+				);
+				btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+				popupQueue.push(popup);
+				showNextPopup();
 			}
 		}
-		btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
 	}
 	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final boolean addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasCompactor && mGameState.ShipTypes.ShipTypes[Index].gadgetSlots > 0) {
 			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
-				ConfirmDialog("Transfer Fuel Compactor",
-          "I see you have a fuel compactor. I'll transfer it to your new ship for 20000 credits.",
-          "For the sum of 20000 credits, you get to keep your unique fuel compactor! This may seem to be a lot of money, but you must remember that this is the exact amount the fuel compactor is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
-					"Yes", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							extra[0] += 20000;
-							btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true,
-							                                    hasMorganLaser
-							);
-						}
-					},
-					"No", new DialogInterface.OnClickListener() {
-					 @Override
-					 public void onClick(DialogInterface dialogInterface, int i) {
-						 btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false,
-						                                     hasMorganLaser
-						 );
-					 }
-				 }
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "Transfer Fuel Compactor",
+				                  "I see you have a fuel compactor. I'll transfer it to your new ship for 20000 credits.",
+				                  "For the sum of 20000 credits, you get to keep your unique fuel compactor! This may seem to be a lot of money, but you must remember that this is the exact amount the fuel compactor is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+				                  "Transfer Fuel Compactor", "Leave Fuel Compactor",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  extra[0] += 20000;
+						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true,
+						                                                      hasMorganLaser
+						                  );
+						                  showNextPopup();
+					                  }
+				                  },
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false,
+						                                                      hasMorganLaser
+						                  );
+						                  showNextPopup();
+					                  }
+				                  }
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
-				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer your Fuel Compactor to the new ship!", "");
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "Can't Transfer Item",
+				                  "Unfortunately, if you make this trade, you won't be able to afford to transfer your Fuel Compactor to the new ship!",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 			}
 		}
-		btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 	}
 	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final boolean addLightning, final boolean addCompactor, boolean hasMorganLaser){
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasMorganLaser && mGameState.ShipTypes.ShipTypes[Index].weaponSlots > 0) {
 			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
-				ConfirmDialog("Transfer Morgan's Laser",
-          "I see you have a customized laser. I'll transfer it to your new ship for 33333 credits.", "For the sum of 33333 credits, you get to keep the laser given to you by Henry Morgan! This may seem to be a lot of money, but you must remember that this is the exact amount the laser is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
-					"Yes", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialogInterface, int i) {
-							extra[0] += 33333;
-							btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, true);
-						}
-					},
-					"No", new DialogInterface.OnClickListener() {
-					 @Override
-					 public void onClick(DialogInterface dialogInterface, int i) {
-						 btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
-					 }
-				 }
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "Transfer Morgan's Laser",
+				                  "I see you have a customized laser. I'll transfer it to your new ship for 33333 credits.", "For the sum of 33333 credits, you get to keep the laser given to you by Henry Morgan! This may seem to be a lot of money, but you must remember that this is the exact amount the laser is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+				                  "Transfer Laser", "Leave Laser",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+															extra[0] += 33333;
+															btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, true);
+						                  showNextPopup();
+														}
+													},
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
+						                  showNextPopup();
+					                  }
+				                  }
 				);
+				popupQueue.push(popup);
+				showNextPopup();
 			} else {
-				alertDialog("Can't Transfer Item", "Unfortunately, if you make this trade, you won't be able to afford to transfer Morgan's Laser to the new ship!", "");
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "Can't Transfer Item",
+				                  "Unfortunately, if you make this trade, you won't be able to afford to transfer Morgan's Laser to the new ship!",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 			}
 		}
-		btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 	}
 	public void btnBuyNewShipStep2(final int Index, final int extra, final boolean addLightning, final boolean addCompactor, final boolean addMorganLaser){
-		ConfirmDialog("Buy New Ship",
+		Popup popup = new Popup(getApplicationContext(),
+		                        "Buy New Ship",
 		              String.format("Are you sure you wish to trade in your %s for a new %s%s?",
 		                            mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name,
 		                            mGameState.ShipTypes.ShipTypes[Index].name,
 		                            (addCompactor || addLightning || addMorganLaser) ?
 		                            ", and transfer your unique equipment to the new ship" : ""
-		              ), "", "Yes", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					mGameState.BuyShip(Index);
-					mGameState.Credits -= extra;
-					if (addCompactor)
-						mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
-					if (addLightning)
-						mGameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
-					if (addMorganLaser)
-						mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
-					mGameState.Ship.tribbles = 0;
-					btnBuyNewShip(null);
-				}
-			}, "No", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-				}
-			}
+		              ), "",
+		              "Buy ship", "Don't buy ship",
+		              new Popup.buttonCallback() {
+			              @Override
+			              public void execute(Popup popup, View view) {
+											mGameState.BuyShip(Index);
+											mGameState.Credits -= extra;
+											if (addCompactor)
+												mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
+											if (addLightning)
+												mGameState.Ship.shield[0] = GameState.LIGHTNINGSHIELD;
+											if (addMorganLaser)
+												mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
+											mGameState.Ship.tribbles = 0;
+											btnBuyNewShip(null);
+				              showNextPopup();
+										}
+									}, cbShowNextPopup
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
 	public void btnBuyEquipment(View view){
 		FragmentManager fragmentManager = getFragmentManager();
@@ -1454,7 +1737,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].shieldSlots, mGameState.Ship.shield, mGameState.BASESHIELDPRICE(Index-GameState.MAXWEAPONTYPE), mGameState.Shields.mShields[Index-GameState.MAXWEAPONTYPE].name, Index-GameState.MAXWEAPONTYPE);
 		} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
 			if (mGameState.HasGadget(mGameState.Ship, Index-(GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE))){
-				alertDialog("You Already Have One", "It's not useful to buy more than one of this item.", "");
+				Popup popup;
+				popup = new Popup(getApplicationContext(),
+				                  "You Already Have One",
+				                  "It's not useful to buy more than one of this item.", "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
 				return;
 			}
 			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget, mGameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)), mGameState.Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)].name, Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE));
@@ -1468,32 +1757,61 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Name is the name of the item and ItemIndex is the item type number
 		// *************************************************************************
 		final int FirstEmptySlot;
+		Popup popup;
 
 		FirstEmptySlot = mGameState.GetFirstEmptySlot(Slots, Item);
 
 		if (Price <= 0){
-			alertDialog("Not Available", "That item is not available in this system.", "Each item is only available in a system which has the technological development needed to produce it.");
-		} else if (mGameState.Debt > 0) {
-			alertDialog("You Have A Debt", "You can't buy that as long as you have debts.", "");
-		} else if (Price > mGameState.ToSpend()){
-			alertDialog("Not enough money", "You do not have enough money to buy this item.", "If you can't pay the price mentioned to the right of an item, you can't get it. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.");
-		} else if (FirstEmptySlot < 0){
-			alertDialog("Not Enough Slots", "You have already filled all of your available slots for this type of item.", "");
-		} else {
-			ConfirmDialog("Buy " + Name, String.format("Do you wish to buy this item for %d credits?", Price), "Tap Yes if you want to buy the item in the title for the price mentioned.",
-				"Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						Item[FirstEmptySlot] = ItemIndex;
-						mGameState.Credits -= Price;
-						btnBuyEquipment(null);
-					}
-				},
-				"No", new DialogInterface.OnClickListener() {
-				 @Override
-				 public void onClick(DialogInterface dialogInterface, int i) { }
-			 }
+			popup = new Popup(getApplicationContext(),
+			                  "Not Available",
+			                  "That item is not available in this system.",
+			                  "Each item is only available in a system which has the technological development needed to produce it.",
+			                  "OK", cbShowNextPopup
 			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else if (mGameState.Debt > 0) {
+			popup = new Popup(getApplicationContext(),
+			                  "You Have A Debt",
+			                  "You can't buy that as long as you have debts.", "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else if (Price > mGameState.ToSpend()){
+			popup = new Popup(getApplicationContext(),
+			                  "Not enough money",
+			                  "You do not have enough money to buy this item.",
+			                  "If you can't pay the price mentioned to the right of an item, you can't get it. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else if (FirstEmptySlot < 0){
+			popup = new Popup(getApplicationContext(),
+			                  "Not Enough Slots",
+			                  "You have already filled all of your available slots for this type of item.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else {
+			popup = new Popup(getApplicationContext(),
+			                  "Buy " + Name,
+			                  String.format("Do you wish to buy this item for %d credits?", Price),
+			                  "Tap Yes if you want to buy the item in the title for the price mentioned.",
+			                  "Buy", "Don't buy",
+			                  new Popup.buttonCallback() {
+				                  @Override
+				                  public void execute(Popup popup, View view) {
+														Item[FirstEmptySlot] = ItemIndex;
+														mGameState.Credits -= Price;
+														btnBuyEquipment(null);
+					                  showNextPopup();
+													}
+												}, cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 		}
 	}
 	public void btnSellEquipment(View view){
@@ -4041,175 +4359,6 @@ SeekBar.OnSeekBarChangeListener() {
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////
-	public void ConfirmDialog(String title, String content, final String help, String positiveText, DialogInterface.OnClickListener positiveCallback, String negativeText, DialogInterface.OnClickListener negativeCallback) {
-		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this);
-		confirm.setTitle(title);
-		confirm.setMessage(content);
-		confirm.setPositiveButton(positiveText, positiveCallback);
-		confirm.setNegativeButton(negativeText, negativeCallback);
-		if (help.length() > 0){
-			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			});
-		}
-		final AlertDialog dialog = confirm.create();
-		dialog.show();
-		if (help.length() > 0){
-			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-				Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
-				// dialog.dismiss();
-				}
-			});
-		}
-	}
-	public void alertDialog(String title, String content, final String help){
-		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this);
-		confirm.setTitle(title);
-		confirm.setMessage(content).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) { }
-		});
-		if (help.length() > 0){
-			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			});
-		}
-		final AlertDialog dialog = confirm.create();
-		dialog.show();
-		if (help.length() > 0){
-			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
-					// dialog.dismiss();
-				}
-			});
-		}
-	}
-	public interface IFinputTextDialogCallback {
-		public void execute(EditText editText);
-	}
-	public void inputTextDialog(String title, String content, String hint, final String help, final IFinputTextDialogCallback cb){
-		final EditText input = new EditText(WelcomeScreen.this);
-		input.setHint(hint);
-		final LinearLayout linearLayout = new LinearLayout(WelcomeScreen.this);
-		input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-		linearLayout.addView(input);
-
-		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
-				.setTitle(title)
-				.setMessage(content)
-				.setView(linearLayout)
-				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						cb.execute(input);
-					}
-				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// Do nothing.
-					}
-				});
-		if (help.length() > 0){
-			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			});
-		}
-		AlertDialog dialog = confirm.create();
-		dialog.show();
-		if (help.length() > 0){
-			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
-					// dialog.dismiss();
-				}
-			});
-		}
-	}
-	public interface IFinputDialogCallback {
-		public void execute(SeekBar seekBar);
-	}
-	public void inputDialog(String title, String content, String hint, final String help, final int max, final IFinputDialogCallback cb){
-		final EditText input = new EditText(WelcomeScreen.this);
-		input.setHint(hint);
-		input.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
-		final LinearLayout linearLayout = new LinearLayout(WelcomeScreen.this);
-		final SeekBar seekBar = new SeekBar(WelcomeScreen.this);
-		seekBar.setMax(max);
-		final TextView textView = new TextView(WelcomeScreen.this);
-		textView.setText("0");
-		seekBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-		linearLayout.addView(textView);
-		linearLayout.addView(seekBar);
-		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-				textView.setText(String.format("%d", seekBar.getProgress()));
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-
-			}
-		});
-
-		AlertDialog.Builder confirm = new AlertDialog.Builder(WelcomeScreen.this)
-			                              .setTitle(title)
-			                              .setMessage(content)
-			                              .setView(linearLayout)
-			                              .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				                              public void onClick(DialogInterface dialog, int whichButton) {
-					                              cb.execute(seekBar);
-				                              }
-			                              }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					// Do nothing.
-				}
-			});
-		if (help.length() > 0){
-			confirm.setNeutralButton("Help", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-
-				}
-			});
-		}
-		AlertDialog dialog = confirm.create();
-		dialog.show();
-		if (help.length() > 0){
-			dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					Toast.makeText(WelcomeScreen.this, help, Toast.LENGTH_LONG).show();
-					// dialog.dismiss();
-				}
-			});
-		}
-	}
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
 		int i;
 		for (i = 0; mGameState.SolarSystem[i] != Current; i++);
