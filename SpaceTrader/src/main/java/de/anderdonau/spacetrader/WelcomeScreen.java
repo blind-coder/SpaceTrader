@@ -20,7 +20,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -2697,70 +2700,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						                );
 					                  popupQueue.push(popup1);
 					                  showNextPopup();
-				                  } else {
-						                int i = 0;
-						                while (i < GameState.MAXSOLARSYSTEM) {
-							                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
-								                break;
-							                ++i;
+			                    } else if (buf.equals("Very rare")) {
+					                  btnVeryRareForm(null);
+				                  }
+				                  else {
+							                int i = 0;
+							                while (i < GameState.MAXSOLARSYSTEM) {
+								                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
+									                break;
+								                ++i;
+							                }
+							                if (i >= GameState.MAXSOLARSYSTEM) {
+								                i = mGameState.Mercenary[0].curSystem;
+							                }
+							                mGameState.WarpSystem = i;
+							                WarpSystem = mGameState.SolarSystem[i];
+							                btnGalacticChart(null);
 						                }
-						                if (i >= GameState.MAXSOLARSYSTEM) {
-							                i = mGameState.Mercenary[0].curSystem;
-						                }
-						                mGameState.WarpSystem = i;
-						                WarpSystem = mGameState.SolarSystem[i];
-						                btnGalacticChart(null);
 					                }
-				                }
-		                  },
-		                  cbShowNextPopup
+			                  },
+			                  cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
-  /*
-     } else if (strstr(buf, "Very rare") == buf) {
-     frm = FrmInitForm( RareCheatForm );
-
-     SetCheckBox( frm, RareCheatMarieCheckbox, VeryRareEncounter & (Byte)ALREADYMARIE );
-     SetCheckBox( frm, RareCheatHuieCheckbox, VeryRareEncounter & (Byte)ALREADYHUIE );
-     SetCheckBox( frm, RareCheatAhabCheckbox, VeryRareEncounter & (Byte)ALREADYAHAB );
-     SetCheckBox( frm, RareCheatConradCheckbox, VeryRareEncounter & (Byte)ALREADYCONRAD );
-     SetCheckBox( frm, RareCheatGoodTonicCheckbox, VeryRareEncounter & (Byte)ALREADYBOTTLEGOOD );
-     SetCheckBox( frm, RareCheatBadTonicCheckbox, VeryRareEncounter & (Byte)ALREADYBOTTLEOLD );
-     StrIToA( SBuf, ChanceOfVeryRareEncounter );
-     SystemH = (Handle) SetField( frm, RareCheatChancesField, SBuf, 5, true );
-     StrIToA( SBuf, ChanceOfTradeInOrbit );
-     SystemH2 = (Handle) SetField( frm, RareCheatTradeField, SBuf, 5, true );
-
-     d = FrmDoDialog( frm );
-     GetField( frm, RareCheatChancesField, SBuf, SystemH );
-     if (SBuf[0] != '\0')
-     {
-     ChanceOfVeryRareEncounter = StrAToI(SBuf);
-     }
-     GetField( frm, RareCheatTradeField, SBuf, SystemH2 );
-     if (SBuf[0] != '\0')
-     {
-     ChanceOfTradeInOrbit = StrAToI(SBuf);
-     }
-
-     VeryRareEncounter = 0;
-     if (GetCheckBox( frm, RareCheatMarieCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYMARIE;
-     if (GetCheckBox( frm, RareCheatHuieCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYHUIE;
-     if (GetCheckBox( frm, RareCheatAhabCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYAHAB;
-     if (GetCheckBox( frm, RareCheatConradCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYCONRAD;
-     if (GetCheckBox( frm, RareCheatGoodTonicCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYBOTTLEGOOD;
-     if (GetCheckBox( frm, RareCheatBadTonicCheckbox))
-     VeryRareEncounter |= (Byte)ALREADYBOTTLEOLD;
-
-     FrmDeleteForm( frm );
-     }
-     *//* Cheats come later
+     /* Cheats come later
           else if (StrCompare( FindSystem, "Cheetah" ) == 0)
           {
           CheatCounter = 3;
@@ -2920,6 +2883,75 @@ FrmGotoForm( CurForm );
 				mGameState.Shortcut4 = 10; break;
 		}
 		invalidateOptionsMenu();
+	}
+	public void btnVeryRareForm(View view){
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container, new VeryRareFragment()).commit();
+		mCurrentState = "VeryRare";
+	}
+	public void btnVeryRareCheckboxCallback(View view){
+		CheckBox checkBox = (CheckBox) view;
+		switch (checkBox.getId()){
+			case R.id.chkBoxCheatAhab:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYAHAB;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYAHAB;
+				}
+				break;
+			case R.id.chkBoxCheatHuie:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYHUIE;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYHUIE;
+				}
+				break;
+			case R.id.chkBoxCheatConrad:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYCONRAD;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYCONRAD;
+				}
+				break;
+			case R.id.chkBoxCheatGoodTonic:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEGOOD;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYBOTTLEGOOD;
+				}
+				break;
+			case R.id.chkBoxCheatBadTonic:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEOLD;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYBOTTLEOLD;
+				}
+				break;
+			case R.id.chkBoxCheatMarieCeleste:
+				if (checkBox.isChecked()){
+					mGameState.VeryRareEncounter |= GameState.ALREADYMARIE;
+				} else {
+					mGameState.VeryRareEncounter ^= GameState.ALREADYMARIE;
+				}
+				break;
+		}
+	}
+	public void numVeryRareChanceCallback(View view){
+		EditText editText = (EditText) view;
+		int amount;
+		try {
+			amount = Integer.parseInt(editText.getText().toString());
+		} catch (Exception e){
+			return;
+		}
+		switch (editText.getId()){
+			case R.id.numCheatRareEncounter:
+				mGameState.ChanceOfVeryRareEncounter = amount;
+				break;
+			case R.id.numCheatOrbitTrade:
+				mGameState.ChanceOfTradeInOrbit = amount;
+				break;
+		}
 	}
 
 	public void BuyCargo(int Index,int Amount) {
@@ -3102,7 +3134,7 @@ FrmGotoForm( CurForm );
 				}
 			};
 			SeekBar.OnSeekBarChangeListener levelChangeListener = new
-SeekBar.OnSeekBarChangeListener() {
+			SeekBar.OnSeekBarChangeListener() {
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 					TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
@@ -4673,6 +4705,69 @@ SeekBar.OnSeekBarChangeListener() {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_shortcuts, container, false);
+
+			return rootView;
+		}
+	}
+	public class VeryRareFragment extends Fragment {
+		public VeryRareFragment() { }
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			final View rootView = inflater.inflate(R.layout.fragment_rare_encounter_cheats, container, false);
+			CheckBox checkBox;
+
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatAhab);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYAHAB) == GameState.ALREADYAHAB);
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatHuie);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYHUIE) == GameState.ALREADYHUIE);
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatConrad);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYCONRAD) == GameState.ALREADYCONRAD);
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatMarieCeleste);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) == GameState.ALREADYMARIE);
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatGoodTonic);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) == GameState.ALREADYBOTTLEGOOD);
+			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatBadTonic);
+			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) == GameState.ALREADYBOTTLEOLD);
+
+			final EditText editText;
+			editText = (EditText) rootView.findViewById(R.id.numCheatRareEncounter);
+			editText.setText(String.valueOf(mGameState.ChanceOfVeryRareEncounter));
+			editText.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable editable) {
+					numVeryRareChanceCallback(editText);
+				}
+			});
+
+			final EditText editText1 = (EditText) rootView.findViewById(R.id.numCheatOrbitTrade);
+			editText1.setText(String.valueOf(mGameState.ChanceOfTradeInOrbit));
+			editText1.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable editable) {
+					numVeryRareChanceCallback(editText1);
+				}
+			});
 
 			return rootView;
 		}
