@@ -227,6 +227,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton1"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -234,6 +235,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton2"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -242,12 +244,14 @@
 			android:id="@+id/tribbleButton3"
 			android:src="@drawable/tribble"
 			android:onClick="EncounterButtonTribbleCallback"
+			android:visibility="gone"
 			android:clickable="true"/>
 	<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton4"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -255,6 +259,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton5"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -262,6 +267,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton6"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -269,6 +275,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton7"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -276,6 +283,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton8"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -283,6 +291,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton9"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -290,6 +299,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton10"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -297,6 +307,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton11"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -304,6 +315,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton12"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -311,6 +323,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton13"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -318,6 +331,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton14"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -325,6 +339,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton15"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -332,6 +347,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton16"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -339,6 +355,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton17"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -346,6 +363,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton18"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -353,6 +371,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton19"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -360,6 +379,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton20"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -367,6 +387,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton21"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -374,6 +395,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton22"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -381,6 +403,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton23"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -388,6 +411,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton24"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -395,6 +419,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton25"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -402,6 +427,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton26"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -409,6 +435,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton27"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -416,6 +443,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton28"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -423,6 +451,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton29"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -430,6 +459,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton30"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 	<ImageView
@@ -437,6 +467,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton31"
 			android:src="@drawable/tribble"
+			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
 </RelativeLayout>
