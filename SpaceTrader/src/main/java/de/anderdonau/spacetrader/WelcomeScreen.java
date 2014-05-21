@@ -162,7 +162,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			foundSaveGame = false;
 		}
 		if (foundSaveGame) {
-			ObjectInputStream ois = null;
+			ObjectInputStream ois;
 			try {
 				ois = new ObjectInputStream(fis);
 				SaveGame s = (SaveGame) ois.readObject();
@@ -260,10 +260,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	public void restoreActionBar() {
 		ActionBar actionBar = getActionBar();
+		assert actionBar != null;
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle("Commands");
 	}
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		try {
@@ -1362,7 +1364,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int Index;
 		int i, j;
 		int extra = 0;
-		boolean hasLightning = false;
+		int numLightning = 0;
 		boolean hasCompactor = false;
 		boolean hasMorganLaser = false;
 
@@ -1497,7 +1499,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				hasLightning = true;
+				numLightning = i;
 				extra += i*30000;
 			}
 		}
@@ -1545,13 +1547,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		extra = 0;
 
-		btnBuyNewShipStep1CheckLightningShields(Index, extra, hasLightning, hasCompactor, hasMorganLaser);
+		btnBuyNewShipStep1CheckLightningShields(Index, extra, 0, 0, hasCompactor, hasMorganLaser);
 	}
-	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final boolean hasLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final int cntLightning, final int numLightning, final boolean hasCompactor, final boolean hasMorganLaser){
 		final int[] extra = new int[1];
-		// TODO: might be multiple lightning shields after all!
 		extra[0] = ex;
-		if (hasLightning && mGameState.ShipTypes.ShipTypes[Index].shieldSlots > 0) {
+		if (cntLightning < mGameState.HasShield(mGameState.Ship, GameState.LIGHTNINGSHIELD)
+			    && mGameState.ShipTypes.ShipTypes[Index].shieldSlots - (numLightning+1) > 0) {
 			if (mGameState.ShipPrice[Index] + extra[0] <= mGameState.ToSpend()) {
 				Popup popup;
 				popup = new Popup(this,
@@ -1563,13 +1565,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                  @Override
 					                  public void execute(Popup popup, View view) {
 						                  extra[0] += 30000;
-						                  btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], true, hasCompactor, hasMorganLaser);
+						                  btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning+1, hasCompactor, hasMorganLaser);
 					                  }
 				                  },
 				                  new Popup.buttonCallback() {
 					                  @Override
 					                  public void execute(Popup popup, View view) {
-						                  btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+						                  btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning, hasCompactor, hasMorganLaser);
 					                  }
 				                  }
 				);
@@ -1581,14 +1583,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				                        "Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!",
 				                        "", "OK", cbShowNextPopup
 				);
-				btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
+				btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning, hasCompactor, hasMorganLaser);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
+		} else {
+			btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], numLightning, hasCompactor, hasMorganLaser);
 		}
-		btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
 	}
-	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final boolean addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final int addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasCompactor && mGameState.ShipTypes.ShipTypes[Index].gadgetSlots > 0) {
@@ -1633,7 +1636,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 	}
-	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final boolean addLightning, final boolean addCompactor, boolean hasMorganLaser){
+	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final int addLightning, final boolean addCompactor, boolean hasMorganLaser){
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasMorganLaser && mGameState.ShipTypes.ShipTypes[Index].weaponSlots > 0) {
@@ -1673,13 +1676,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 	}
-	public void btnBuyNewShipStep2(final int Index, final int extra, final boolean addLightning, final boolean addCompactor, final boolean addMorganLaser){
+	public void btnBuyNewShipStep2(final int Index, final int extra, final int addLightning, final boolean addCompactor, final boolean addMorganLaser){
 		Popup popup = new Popup(this,
 		                        "Buy New Ship",
 		              String.format("Are you sure you wish to trade in your %s for a new %s%s?",
 		                            mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].name,
 		                            mGameState.ShipTypes.ShipTypes[Index].name,
-		                            (addCompactor || addLightning || addMorganLaser) ?
+		                            (addCompactor || addLightning > 0 || addMorganLaser) ?
 		                            ", and transfer your unique equipment to the new ship" : ""
 		              ), "",
 		              "Buy ship", "Don't buy ship",
@@ -1690,8 +1693,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 											mGameState.Credits -= extra;
 											if (addCompactor)
 												mGameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
-											if (addLightning)
-												mGameState.Ship.shield[0] = GameState.LIGHTNINGSHIELD;
+				              for (int i=0; i < addLightning; i++)
+												mGameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
 											if (addMorganLaser)
 												mGameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
 											mGameState.Ship.tribbles = 0;
@@ -2657,6 +2660,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						                }
 						                if (i < GameState.MAXSOLARSYSTEM) {
 							                mGameState.Mercenary[0].curSystem = i;
+							                mGameState.RecalculateBuyPrices(i);
 							                btnGalacticChart(null);
 						                }
 					                } else
@@ -7898,7 +7902,6 @@ FrmGotoForm( CurForm );
 				break;
 
 			case GameState.MOONBOUGHT:
-				// TODO btnMoonBought();
 				EndOfGame(GameState.MOON);
 				return;
 
