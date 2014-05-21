@@ -225,13 +225,6 @@
 	<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/tribbleButton0"
-			android:src="@drawable/tribble"
-			android:onClick="EncounterButtonTribbleCallback"
-			android:clickable="true"/>
-	<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
 			android:id="@+id/tribbleButton1"
 			android:src="@drawable/tribble"
 			android:onClick="EncounterButtonTribbleCallback"
