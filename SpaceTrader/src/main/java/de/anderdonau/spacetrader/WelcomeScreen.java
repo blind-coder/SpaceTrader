@@ -12,7 +12,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -21,7 +23,6 @@ import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,8 +37,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,39 +57,46 @@ import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
-import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
-public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-	static GameState mGameState;
-	private static String mCurrentState = "startup";
-	private static Context mContext;
-	private static boolean foundSaveGame = false;
-	private NavigationDrawerFragment mNavigationDrawerFragment;
-	public static SolarSystem WarpSystem;
-	public static boolean playerShipNeedsUpdate, opponentShipNeedsUpdate;
-	public static RenderShip EncounterPlayerShip, EncounterOpponentShip;
-	public static TextView EncounterText;
-	public static Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard,
-		btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
-	public static ProgressBar pBarEncounter;
+import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
-	public PopupQueue           popupQueue    = new PopupQueue();
-	final  Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
+public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+	private enum FRAGMENTS {
+		NEW_GAME, SYSTEM_INFORMATION, ENCOUNTER, 		BUY_CARGO, SELL_CARGO, SHIPYARD, BUY_EQUIPMENT,
+		SELL_EQUIPMENT, PERSONNEL_ROSTER, BANK, COMMANDER_STATUS, GALACTIC_CHART, SHORT_RANGE_CHART,
+		BUY_NEW_SHIP
+	}
+	private AdView adView = null;
+	private Fragment currentFragment = null;
+	private NavigationDrawerFragment mNavigationDrawerFragment;
+	private static Context mContext;
+	private static FRAGMENTS currentState = FRAGMENTS.NEW_GAME;
+	public static Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
+	public static ProgressBar pBarEncounter;
+	public static RenderShip EncounterPlayerShip, EncounterOpponentShip;
+	public static SolarSystem WarpSystem;
+	public static TextView EncounterText;
+	public static boolean playerShipNeedsUpdate, opponentShipNeedsUpdate;
+	static GameState mGameState;
+
+
+	public       PopupQueue           popupQueue      = new PopupQueue();
+	final Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
 		@Override
 		public void execute(Popup popup, View view) {
 			WelcomeScreen.this.showNextPopup();
 		}
 	};
 
-	Handler delayHandler = new Handler();
+	Handler  delayHandler  = new Handler();
 	Runnable delayRunnable = new Runnable() {
 		@Override
 		public void run() {
-			if (mGameState.AutoAttack || mGameState.AutoFlee){ // Need to check again, might have pressed Int. button
-				if (!ExecuteAction(mGameState.CommanderFlees)){
-					if (mGameState.Ship.hull > 0){
+			if (mGameState.AutoAttack || mGameState.AutoFlee) { // Need to check again, might have pressed Int. button
+				if (!ExecuteAction(mGameState.CommanderFlees)) {
+					if (mGameState.Ship.hull > 0) {
 						Travel();
 					}
 				}
@@ -93,171 +104,134 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	};
 
-	////////////////////////////////////////////////////
-	// Helper functions for Newspaper
-	////////////////////////////////////////////////////
-	public static void addNewsEvent(int eventFlag) {
-		if (mGameState.NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1)
-			mGameState.NewsEvents[mGameState.NewsSpecialEventCount++] = eventFlag;
-	}
-
-	public static boolean isNewsEvent(int eventFlag) {
-		int i;
-
-		for (i = 0; i < mGameState.NewsSpecialEventCount; i++) {
-			if (mGameState.NewsEvents[i] == eventFlag)
-				return true;
-		}
-		return false;
-	}
-
-	public static int latestNewsEvent() {
-		if (mGameState.NewsSpecialEventCount == 0)
-			return -1;
-		else
-			return mGameState.NewsEvents[mGameState.NewsSpecialEventCount - 1];
-	}
-
-	public static void resetNewsEvents() {
-		mGameState.NewsSpecialEventCount = 0;
-	}
-
-	public static void replaceNewsEvent(int originalEventFlag, int replacementEventFlag) {
-		int i;
-
-		if (originalEventFlag == -1) {
-			addNewsEvent(replacementEventFlag);
-		} else {
-			for (i = 0; i < mGameState.NewsSpecialEventCount; i++) {
-				if (mGameState.NewsEvents[i] == originalEventFlag)
-					mGameState.NewsEvents[i] = replacementEventFlag;
-			}
-		}
-	}
 
 	////////////////////////////////////////////////////
 	// Overrides and Android UI support functions
 	////////////////////////////////////////////////////
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		WelcomeScreen.mContext = getApplicationContext();
-		assert WelcomeScreen.mContext != null;
 
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
 
 		// Set up the drawer.
 		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mNavigationDrawerFragment =
-			(NavigationDrawerFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+		mNavigationDrawerFragment = (NavigationDrawerFragment) fragmentManager.findFragmentById(
+			R.id.navigation_drawer
+		);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
 		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
 
-		FileInputStream fis = null;
-		try {
-			fis = mContext.openFileInput("savegame.txt");
-			foundSaveGame = true;
-		} catch (FileNotFoundException e) {
-			foundSaveGame = false;
+		/**
+		 * Check for possibility of displaying ads
+		 */
+		if (adView == null) {
+			adView = (AdView) findViewById(R.id.adView);
 		}
-		if (foundSaveGame) {
-			ObjectInputStream ois;
-			try {
-				ois = new ObjectInputStream(fis);
-				SaveGame s = (SaveGame) ois.readObject();
-				mGameState = new GameState(s);
-				ois.close();
-				fis.close();
-				fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
-				btnSystemInformation(null);
-				return;
-			} catch (Exception e) {
-				e.printStackTrace();
-				mGameState = new GameState("Jameson");
-				foundSaveGame = false;
+		if (adView != null) {
+			int check = isGooglePlayServicesAvailable(this);
+			if (check != 0) {
+				GooglePlayServicesUtil.getErrorDialog(check, this, 0);
+			} else {
+	      /* additional check for cheatcode */
+				SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
+				final boolean hideAds = settings.getBoolean("hideAds", false);
+
+				if (hideAds) {
+					adView.setVisibility(View.GONE);
+				} else {
+					// Initiate a generic request.
+					AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+						.build();
+
+					// Load the adView with the ad request.
+					adView.loadAd(adRequest);
+				}
 			}
 		}
-		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
-		mCurrentState = "StartNewGame";
+
+		try {
+			FileInputStream fis = mContext.openFileInput("savegame.txt");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			SaveGame s = (SaveGame) ois.readObject();
+			mGameState = new GameState(s);
+			ois.close();
+			fis.close();
+			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+		} catch (Exception e) {
+			mGameState = new GameState("Jameson");
+			changeFragment(FRAGMENTS.NEW_GAME);
+		}
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (mCurrentState.equals("WelcomeScreen")) {
-			finish();
-		} else
-		if (mCurrentState.equals("startup")) {
-			finish();
-		} else
-		if (mCurrentState.equals("Encounter")){
-			Popup popup;
-			popup = new Popup(this,
-			                  "Can't save now",
-			                  "You are in an encounter at the moment. During this the game cannot " +
-				                  "be saved! You will lose all your progress since the last save!\n" +
-				                  "Are you sure you want to quit?",
-			              "",
-			              "Yes", "No",
-			              new Popup.buttonCallback() {
-				              @Override
-				              public void execute(Popup popup, View view) {
-					              finish();
-				              }
-			              },
-			              cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		} else {
-			Log.d("onBackPressed", "unhandled state: " + mCurrentState);
-			saveGame();
-			finish();
+		switch (currentState) {
+			case NEW_GAME:
+				finish();
+				break;
+			case ENCOUNTER:
+				Popup popup;
+				popup = new Popup(this, "Can't save now",
+				                  "You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!\nAre you sure you want to quit?",
+				                  "", "Yes", "No", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						finish();
+					}
+				}, cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				break;
+			default:
+				saveGame();
+				finish();
+				break;
 		}
 	}
+
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		// update the main content by replacing fragments
-		//FragmentManager fragmentManager = getFragmentManager();
-		//fragmentManager.beginTransaction().replace(R.id.container, WelcomeScreenFragment.newInstance(position + 1)).commit();
-		if (mCurrentState.equals("Encounter")){
+		if (currentState == FRAGMENTS.ENCOUNTER || mGameState == null) {
 			return;
 		}
-		if (mGameState == null) // game not loaded yet
-			return;
 		switch (position) {
 			case 0: //"Buy Cargo"
-				btnBuyCargo(null);
+				changeFragment(FRAGMENTS.BUY_CARGO);
 				break;
 			case 1: //"Sell Cargo"
-				btnSellCargo(null);
+				changeFragment(FRAGMENTS.SELL_CARGO);
 				break;
 			case 2: // "Shipyard"
-				btnShipyard(null);
+				changeFragment(FRAGMENTS.SHIPYARD);
 				break;
 			case 3: // "Buy Equipment"
-				btnBuyEquipment(null);
+				changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 				break;
 			case 4: // "Sell Equipment"
-				btnSellEquipment(null);
+				changeFragment(FRAGMENTS.SELL_EQUIPMENT);
 				break;
 			case 5: // "Personnel Roster"
-				btnPersonnelRoster(null);
+				changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
 				break;
 			case 6: // "Bank"
-				btnBank(null);
+				changeFragment(FRAGMENTS.BANK);
 				break;
 			case 7: // "System Information"
-				btnSystemInformation(null);
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				break;
 			case 8: // "Commander Status"
-				btnCommanderStatus(null);
+				changeFragment(FRAGMENTS.COMMANDER_STATUS);
 				break;
 			case 9: // "Galactic Chart"
-				btnGalacticChart(null);
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
 				break;
 			case 10: // "Short Range Chart"
-				btnShortRangeChart(null);
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
 				break;
 		}
 	}
@@ -285,9 +259,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (mNavigationDrawerFragment != null){
 			if (!mNavigationDrawerFragment.isDrawerOpen()){
-				if (!mCurrentState.equals("WelcomeScreen") &&
-					    !mCurrentState.equals("startup") &&
-					    !mCurrentState.equals("StartNewGame")) {
+				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER){
 					MenuInflater inflater = getMenuInflater();
 					inflater.inflate(R.menu.in_game, menu);
 				}
@@ -302,14 +274,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		if (mCurrentState.equals("Encounter")){
+		if (currentState == FRAGMENTS.ENCOUNTER){
 			return true;
 		}
 		int id = item.getItemId();
 		String call = "";
 		Popup popup;
 		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer_layout.closeDrawers();
+		if (id != R.id.submenuGame && id != R.id.submenuHelp) {
+			drawer_layout.closeDrawers();
+		}
 		switch (id){
 			case R.id.hotkey1:
 				call = mGameState.Shortcuts[mGameState.Shortcut1][0];
@@ -329,35 +303,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.menuNewGame:
 				popup = new Popup(this,
 				                  "Really start new game?",
-				                  "If you start a new game your current game will be deleted!\n"+
-					                  "You will not be added to the high score table!",
-				              "", "Yes", "No",
-				              new Popup.buttonCallback() {
-					              @Override
-					              public void execute(Popup popup, View view) {
-						              WelcomeScreen.mContext.deleteFile("savegame.txt");
-						              FragmentManager fragmentManager = getFragmentManager();
-						              fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
-						              fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
-						              mCurrentState = "WelcomeScreen";
-						              popupQueue.clear();
-					              }
-				              },
-				              cbShowNextPopup
+				                  "If you start a new game your current game will be deleted!\nYou will not be added to the high score table!",
+				                  "", "Yes", "No",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  WelcomeScreen.mContext.deleteFile("savegame.txt");
+						                  changeFragment(FRAGMENTS.NEW_GAME);
+						                  popupQueue.clear();
+					                  }
+				                  }, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuRetire:
-				popup = new  Popup(this,
-				                   "Retire", "Do you really want to retire?", "", "Yes", "No",
-				              new Popup.buttonCallback() {
-					              @Override
-					              public void execute(Popup popup, View view) {
-													popupQueue.clear();
-						              EndOfGame(GameState.RETIRED);
-					              }
-				              }, cbShowNextPopup);
+				popup = new Popup(this, "Retire", "Do you really want to retire?", "", "Yes", "No",
+				                  new Popup.buttonCallback() {
+					                  @Override
+					                  public void execute(Popup popup, View view) {
+						                  popupQueue.clear();
+						                  EndOfGame(GameState.RETIRED);
+					                  }
+				                  }, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -372,182 +341,179 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.menuHelpCurrentScreen:
 				return true;
 			case R.id.menuHelpMenu:
-				popup = new Popup(this,
-				                  "Tips",
-				            "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n"+
-				              "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n"+
-					            "\"\"Game\" gives access to game functions:\n"+
-					            "- \"New Game\" starts a new game.\n" +
-					            "- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n"+
-					            "- \"Options\" gives access to the game preferences.\n"+
-					            "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n"+
-					            "- \"High Scores\" shows the high-score list.\n"+
-					            "- \"Clear High Scores\" wipes the current high-score list.",
-				            "", "OK", cbShowNextPopup
+				popup = new Popup(this, "Tips",
+				                  "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n"+
+					                  "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n"+
+					                  "\"\"Game\" gives access to game functions:\n"+
+					                  "- \"New Game\" starts a new game.\n" +
+					                  "- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n"+
+					                  "- \"Options\" gives access to the game preferences.\n"+
+					                  "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n"+
+					                  "- \"High Scores\" shows the high-score list.\n"+
+					                  "- \"Clear High Scores\" wipes the current high-score list.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpHowToPlay:
-				popup = new Popup(this,
-				                  "How to play",
-					"Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
-						"The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
-						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
-						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
-						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
-					"", "OK", cbShowNextPopup
+				popup = new Popup(this, "How to play",
+				                  "Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
+					                  "The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
+					                  "You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
+					                  "At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
+					                  "When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpTrading:
 				popup = new Popup(this, "Trading",
-					"Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
-						"The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
-						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
-						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
-						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
-				  "", "OK", cbShowNextPopup
+				                  "Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
+					                  "The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
+					                  "Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
+					                  "On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
+					                  "Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpTravelling:
 				popup = new Popup(this, "Travelling",
-				            "To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
-											"When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
-											"During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
-											"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
-											"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
-											"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
-				            "", "OK", cbShowNextPopup
+				                  "To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
+					                  "When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
+					                  "During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
+					                  "Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
+					                  "Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
+					                  "Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpShipEquipment:
 				popup = new Popup(this, "Ship Equipment",
-				            "There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
-											"Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
-											"The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n"+
-											"As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
-											"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
-											"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
-											"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
-				            "", "OK", cbShowNextPopup
+				                  "There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
+					                  "Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
+					                  "The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n"+
+					                  "As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
+					                  "Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
+					                  "Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
+					                  "When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpSkills:
 				popup = new Popup(this, "Skills",
-				            "As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
-											"The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
-											"The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
-											"The Trader skill influences the price you have to pay for goods and equipment. A good trader pays considerably less than a bad trader.\n\n" +
-											"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
-											"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
-											"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
-                     "", "OK", cbShowNextPopup
+				                  "As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
+					                  "The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
+					                  "The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
+					                  "The Trader skill influences the price you have to pay for goods and equipment. A good trader pays considerably less than a bad trader.\n\n" +
+					                  "Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
+					                  "If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
+					                  "Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpFirstSteps:
 				popup = new Popup(this, "First Steps",
-				            "Here I will describe the steps you will undertake the first days as a trader:\n" +
-											"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n"+
-											"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
-											"If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
-											"After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
-											"Then switch to the Short Range Chart to select your next target. Tap any system within the maximum range circle to get information on that system. Try to select a system which hasn't got too many pirates (unless to aspire a career as a bounty hunter), and which has a tech level which is opposite the tech level of your current system. That is, from an agricultural system you best travel to an industrial system to sell natural goods, while from an industrial system you best sell technologies to more backward systems. Use the Average Price List button to get an indication on the prices you might expect to sell your goods for. Goods that are displayed bold have an average selling price that is higher than the price you have to pay for those goods in the current system. Note that this isn't a guarantee, but it's better than nothing.\n\n" +
-											"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
-											"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
-											"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
-				            "", "OK", cbShowNextPopup
+				                  "Here I will describe the steps you will undertake the first days as a trader:\n" +
+					                  "You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n"+
+					                  "Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
+					                  "If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
+					                  "After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
+					                  "Then switch to the Short Range Chart to select your next target. Tap any system within the maximum range circle to get information on that system. Try to select a system which hasn't got too many pirates (unless to aspire a career as a bounty hunter), and which has a tech level which is opposite the tech level of your current system. That is, from an agricultural system you best travel to an industrial system to sell natural goods, while from an industrial system you best sell technologies to more backward systems. Use the Average Price List button to get an indication on the prices you might expect to sell your goods for. Goods that are displayed bold have an average selling price that is higher than the price you have to pay for those goods in the current system. Note that this isn't a guarantee, but it's better than nothing.\n\n" +
+					                  "When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
+					                  "While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
+					                  "There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpAcknowledgements:
 				popup = new Popup(this, "Acknowledgements",
-				            "Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
-											"This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
-											"I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
-											"A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
-											"I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
-											"A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
-											"Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n"+
-											"Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
-											"DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
-											"Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
-											"Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
-											"Thank you all. You were a tremendous help, and I am very grateful for that.\n"+
-											"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
-											"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
-				            "", "OK", cbShowNextPopup
+				                  "Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
+					                  "This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
+					                  "I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
+					                  "A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
+					                  "I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
+					                  "A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
+					                  "Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n"+
+					                  "Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
+					                  "DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
+					                  "Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
+					                  "Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
+					                  "Thank you all. You were a tremendous help, and I am very grateful for that.\n"+
+					                  "Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
+					                  "An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpAbout:
 				popup = new Popup(this, "About",
-				             "Android port Copyright 2014 by Benjamin Schieder\n"+
-				              "Linux port Copyright 2010 by Benjamin Schieder\n"+
-					            "Original Copyright 2000-2002 by Pieter Spronck\n"+
-					            "Design and programming: Pieter Spronck\"\n"+
-					            "Additional design and programming: Samuel Goldstein, Sam Anderson\n"+
-					            "Graphics: Alexander Lawrence\n" +
-					            "Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
-					            "Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
-					            "David J. Webb for \"Solar Wars\"\n" +
-					            "Matt Lee for \"Dope Wars\"\n" +
-					            "DrWowe for solving the \"Special\" bug\n" +
-					            "All the beta testers\nAnd all the players that sent me their ideas\n" +
-					            "Space Trader is released under a GNU General Public License",
-				            "", "OK", cbShowNextPopup
+				                  "Android port Copyright 2014 by Benjamin Schieder\n"+
+					                  "Linux port Copyright 2010 by Benjamin Schieder\n"+
+					                  "Original Copyright 2000-2002 by Pieter Spronck\n"+
+					                  "Design and programming: Pieter Spronck\"\n"+
+					                  "Additional design and programming: Samuel Goldstein, Sam Anderson\n"+
+					                  "Graphics: Alexander Lawrence\n" +
+					                  "Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
+					                  "Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
+					                  "David J. Webb for \"Solar Wars\"\n" +
+					                  "Matt Lee for \"Dope Wars\"\n" +
+					                  "DrWowe for solving the \"Special\" bug\n" +
+					                  "All the beta testers\nAnd all the players that sent me their ideas\n" +
+					                  "Space Trader is released under a GNU General Public License",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpLicense:
 				popup = new Popup(this, "License",
-				            "The game code is licensed under the GPLv2",
-				            "", "OK", cbShowNextPopup
+				                  "The game code is licensed under the GPLv2",
+				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 		}
 		if (call.equals("B")){
-			btnBuyCargo(null);
+			changeFragment(FRAGMENTS.BUY_CARGO);
 		} else if (call.equals("S")){
-			btnSellCargo(null);
+			changeFragment(FRAGMENTS.SELL_CARGO);
 		} else if (call.equals("Y")){
-			btnShipyard(null);
+			changeFragment(FRAGMENTS.SHIPYARD);
 		} else if (call.equals("E")){
-			btnBuyEquipment(null);
+			changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 		} else if (call.equals("Q")){
-			btnSellEquipment(null);
+			changeFragment(FRAGMENTS.SELL_EQUIPMENT);
 		} else if (call.equals("P")){
-			btnPersonnelRoster(null);
+			changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
 		} else if (call.equals("K")){
-			btnBank(null);
+			changeFragment(FRAGMENTS.BANK);
 		} else if (call.equals("I")){
-			btnSystemInformation(null);
+			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		} else if (call.equals("C")){
-			btnCommanderStatus(null);
+			changeFragment(FRAGMENTS.COMMANDER_STATUS);
 		} else if (call.equals("G")){
-			btnGalacticChart(null);
+			changeFragment(FRAGMENTS.GALACTIC_CHART);
 		} else if (call.equals("W")){
-			btnShortRangeChart(null);
+			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
 	}
-
 	public void showNextPopup(){
 		if (popupQueue.isEmpty())
 			return;
@@ -563,33 +529,43 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popup = popupQueue.peek();
 		popup.show();
 	}
+	public void addPopup(Popup popup){
+		popupQueue.push(popup);
+		showNextPopup();
+	}
 	////////////////////////////////////////////////////
 	// Button Callbacks
 	////////////////////////////////////////////////////
-	public void btnStartNewGame(View view) {
-		EditText t = (EditText) findViewById(R.id.strNameCommander);
-		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
-		mGameState = new GameState(t.getText().toString());
-		mGameState.DeterminePrices(mGameState.Mercenary[0].curSystem);
+	public void changeFragment(FRAGMENTS fragment){
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-		GameState.setDifficulty(s.getProgress());
-		s = (SeekBar) findViewById(R.id.skillPilot);
-		mGameState.Mercenary[0].pilot = s.getProgress()+1;
-		s = (SeekBar) findViewById(R.id.skillFighter);
-		mGameState.Mercenary[0].fighter = s.getProgress()+1;
-		s = (SeekBar) findViewById(R.id.skillTrader);
-		mGameState.Mercenary[0].trader = s.getProgress()+1;
-		s = (SeekBar) findViewById(R.id.skillEngineer);
-		mGameState.Mercenary[0].engineer = s.getProgress()+1;
-		this.saveGame();
-		btnSystemInformation(view);
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().show(mNavigationDrawerFragment).commit();
+		if (fragment == FRAGMENTS.NEW_GAME){
+			transaction.show(mNavigationDrawerFragment).commit();
+		} else {
+			transaction.hide(mNavigationDrawerFragment).commit();
+		}
+		switch (fragment){
+			case NEW_GAME:
+				currentFragment = new FragmentStartNewGame();
+				break;
+			case SYSTEM_INFORMATION:
+				currentFragment = new FragmentSystemInformation(mGameState);
+				break;
+			case PERSONNEL_ROSTER:
+				currentFragment = new FragmentPersonnelRoster(mGameState);
+			default:
+				return;
+		}
+		transaction.replace(R.id.container, currentFragment);
+		transaction.commit();
+		currentState = fragment;
 	}
-	public void btnSystemInformation(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new SystemInformationFragment()).commit();
-		mCurrentState = "SystemInformation";
+
+	public void btnStartNewGame(View view) {
+		mGameState = ((FragmentStartNewGame)currentFragment).getGameState();
+		this.saveGame();
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	public void btnSystemInformationNewspaper(View view){
 		Popup popup;
@@ -649,65 +625,65 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		
 		// Special Events get to go first, crowding out other news
-		if  (isNewsEvent(GameState.CAPTAINHUIEATTACKED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINHUIEATTACKED))
 			news += "\nFamed Captain Huie Attacked by Brigand!";
-		if  (isNewsEvent(GameState.EXPERIMENTPERFORMED))
+		if  (mGameState.isNewsEvent(GameState.EXPERIMENTPERFORMED))
 			news += "\nTravelers Report Timespace Damage, Warp Problems!";
-		if  (isNewsEvent(GameState.CAPTAINHUIEDESTROYED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINHUIEDESTROYED))
 			news += "\nCitizens Mourn Destruction of Captain Huie's Ship!";
-		if  (isNewsEvent(GameState.CAPTAINAHABATTACKED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINAHABATTACKED))
 			news += "\nThug Assaults Captain Ahab!";
-		if  (isNewsEvent(GameState.CAPTAINAHABDESTROYED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINAHABDESTROYED))
 			news += "\nDestruction of Captain Ahab's Ship Causes Anger!";
-		if  (isNewsEvent(GameState.CAPTAINCONRADATTACKED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINCONRADATTACKED))
 			news += "\nCaptain Conrad Comes Under Attack By Criminal!";
-		if  (isNewsEvent(GameState.CAPTAINCONRADDESTROYED))
+		if  (mGameState.isNewsEvent(GameState.CAPTAINCONRADDESTROYED))
 			news += "\nCaptain Conrad's Ship Destroyed by Villain!";
-		if  (isNewsEvent(GameState.MONSTERKILLED))
+		if  (mGameState.isNewsEvent(GameState.MONSTERKILLED))
 			news += "\nHero Slays Space Monster! Parade, Honors Planned for Today.";
-		if  (isNewsEvent(GameState.WILDARRESTED))
+		if  (mGameState.isNewsEvent(GameState.WILDARRESTED))
 			news += "\nNotorious Criminal Jonathan Wild Arrested!";
 		if  (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus == 1)
 			news += "\nSpace Monster Threatens Homeworld!";
 		if  (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus == 1)
 			news += "\nWormhole Travelers Harassed by Unusual Ship!";
-		if (isNewsEvent(GameState.EXPERIMENTSTOPPED))
+		if (mGameState.isNewsEvent(GameState.EXPERIMENTSTOPPED))
 			news += "\nScientists Cancel High-profile Test! Committee to Investigate Design.";
-		if (isNewsEvent(GameState.EXPERIMENTNOTSTOPPED))
+		if (mGameState.isNewsEvent(GameState.EXPERIMENTNOTSTOPPED))
 			news += "\nHuge Explosion Reported at Research Facility.";
-		if (isNewsEvent(GameState.DRAGONFLY))
+		if (mGameState.isNewsEvent(GameState.DRAGONFLY))
 			news += "\nExperimental Craft Stolen! Critics Demand Security Review.";
-		if (isNewsEvent(GameState.SCARAB))
+		if (mGameState.isNewsEvent(GameState.SCARAB))
 			news += "\nSecurity Scandal: Test Craft Confirmed Stolen.";
-		if (isNewsEvent(GameState.FLYBARATAS))
+		if (mGameState.isNewsEvent(GameState.FLYBARATAS))
 			news += "\nInvestigators Report Strange Craft.";
-		if (isNewsEvent(GameState.FLYMELINA))
+		if (mGameState.isNewsEvent(GameState.FLYMELINA))
 			news += "\nRumors Continue: Melina Orbitted by Odd Starcraft.";
-		if (isNewsEvent(GameState.FLYREGULAS))
+		if (mGameState.isNewsEvent(GameState.FLYREGULAS))
 			news += "\nStrange Ship Observed in Regulas Orbit.";
-		if (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus == 4 && !isNewsEvent(GameState.DRAGONFLYDESTROYED))
+		if (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus == 4 && !mGameState.isNewsEvent(GameState.DRAGONFLYDESTROYED))
 			news += "\nUnidentified Ship: A Threat to Zalkon?";
-		if (isNewsEvent(GameState.DRAGONFLYDESTROYED))
+		if (mGameState.isNewsEvent(GameState.DRAGONFLYDESTROYED))
 			news += "\nSpectacular Display as Stolen Ship Destroyed in Fierce Space Battle.";
-		if (isNewsEvent(GameState.SCARABDESTROYED))
+		if (mGameState.isNewsEvent(GameState.SCARABDESTROYED))
 			news += "\nWormhole Traffic Delayed as Stolen Craft Destroyed.";
-		if (isNewsEvent(GameState.MEDICINEDELIVERY))
+		if (mGameState.isNewsEvent(GameState.MEDICINEDELIVERY))
 			news += "\nDisease Antidotes Arrive! Health Officials Optimistic.";
-		if (isNewsEvent(GameState.JAPORIDISEASE))
+		if (mGameState.isNewsEvent(GameState.JAPORIDISEASE))
 			news += "\nEditorial: We Must Help Japori!";
-		if (isNewsEvent(GameState.ARTIFACTDELIVERY))
+		if (mGameState.isNewsEvent(GameState.ARTIFACTDELIVERY))
 			news += "\nScientist Adds Alien Artifact to Museum Collection.";
-		if (isNewsEvent(GameState.JAREKGETSOUT))
+		if (mGameState.isNewsEvent(GameState.JAREKGETSOUT))
 			news += "\nAmbassador Jarek Returns from Crisis.";
-		if (isNewsEvent(GameState.WILDGETSOUT))
+		if (mGameState.isNewsEvent(GameState.WILDGETSOUT))
 			news += "\nRumors Suggest Known Criminal J. Wild May Come to Kravat!";
-		if (isNewsEvent(GameState.GEMULONRESCUED))
+		if (mGameState.isNewsEvent(GameState.GEMULONRESCUED))
 			news += "\nInvasion Imminent! Plans in Place to Repel Hostile Invaders.";
-		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !isNewsEvent(GameState.GEMULONRESCUED) && mGameState.InvasionStatus > 0)
+		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !mGameState.isNewsEvent(GameState.GEMULONRESCUED) && mGameState.InvasionStatus > 0)
 			news += "\nAlien Invasion Devastates Planet!";
-		if (isNewsEvent(GameState.ALIENINVASION))
+		if (mGameState.isNewsEvent(GameState.ALIENINVASION))
 			news += "\nEditorial: Who Will Warn Gemulon?";
-		if (isNewsEvent(GameState.ARRIVALVIASINGULARITY))
+		if (mGameState.isNewsEvent(GameState.ARRIVALVIASINGULARITY))
 			news += "\nTravelers Claim Sighting of Ship Materializing in Orbit!";
 
 		// local system status information
@@ -771,7 +747,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		// caught littering?
-		if  (isNewsEvent(GameState.CAUGHTLITTERING))
+		if  (mGameState.isNewsEvent(GameState.CAUGHTLITTERING))
 			news += "\nPolice Trace Orbiting Space Litter to "+mGameState.NameCommander+".";
 		// and now, finally, useful news (if any)
 		// base probability of a story showing up is (50 / MAXTECHLEVEL) * Current Tech Level
@@ -871,14 +847,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		showNextPopup();
 	}
 	public void btnPersonnelRoster(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new PersonnelRosterFragment()).commit();
-		mCurrentState = "PersonnelRoster";
-	}
-	public void btnCommanderStatus(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new CommanderStatusFragment()).commit();
-		mCurrentState = "CommanderStatus";
+		changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
 	}
 	public void btnCommanderStatusQuests(View view){
 		String quests = "";
@@ -970,9 +939,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (quests.length() == 0)
 			quests = "There are no open quests.\n";
 
-		Popup popup = new Popup(this,
-		                        "Open Quests", quests, "", "OK", cbShowNextPopup
-		);
+		Popup popup = new Popup(this, "Open Quests", quests, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -1082,11 +1049,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
-	public void btnBank(View view) {
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new BankFragment()).commit();
-		mCurrentState = "Bank";
-	}
 	public void btnBankGetLoan(View view){
 		Popup popup;
 		if (mGameState.Debt >= mGameState.MaxLoan()){
@@ -1111,7 +1073,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                  amount = Math.min(mGameState.MaxLoan(), amount);
 					                  mGameState.Credits += amount;
 					                  mGameState.Debt += amount;
-					                  btnBank(null);
+					                  changeFragment(FRAGMENTS.BANK);
 				                  }
 			                  }
 		                  },
@@ -1121,7 +1083,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                  public void execute(Popup popup, View view) {
 				                  mGameState.Credits += mGameState.MaxLoan();
 				                  mGameState.Debt += mGameState.MaxLoan();
-				                  btnBank(null);
+				                  changeFragment(FRAGMENTS.BANK);
 				                  showNextPopup();
 			                  }
 		                  }
@@ -1162,7 +1124,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 														}
 														mGameState.Credits -= amount;
 														mGameState.Debt -= amount;
-														btnBank(null);
+														changeFragment(FRAGMENTS.BANK);
 													}
 												}
 											}, cbShowNextPopup,
@@ -1172,7 +1134,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				                  int amount = Math.min(mGameState.Debt, mGameState.Credits);
 				                  mGameState.Credits -= amount;
 				                  mGameState.Debt -= amount;
-				                  btnBank(null);
+				                  changeFragment(FRAGMENTS.BANK);
 			                  }
 		                  }
 		);
@@ -1189,7 +1151,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 													public void execute(Popup popup, View view) {
 														mGameState.Insurance = false;
 														mGameState.NoClaim = 0;
-														btnBank(null);
+														changeFragment(FRAGMENTS.BANK);
 													}
 												},
 			                  cbShowNextPopup
@@ -1206,13 +1168,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				return;
 			}
 			mGameState.Insurance = true;
-			btnBank(view);
+			changeFragment(FRAGMENTS.BANK);
 		}
-	}
-	public void btnShipyard(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new ShipyardFragment()).commit();
-		mCurrentState = "Shipyard";
 	}
 	public void btnShipyardBuyFuel(int amount){
 		int MaxFuel;
@@ -1226,7 +1183,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		mGameState.Ship.fuel += Parsecs;
 		mGameState.Credits -= Parsecs * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].costOfFuel;
-		btnShipyard(null);
+		changeFragment(FRAGMENTS.SHIPYARD);
 	}
 	public void btnShipyardBuyFuel(View view){
 		Popup popup;
@@ -1274,7 +1231,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		mGameState.Ship.hull += Percentage;
 		mGameState.Credits -= Percentage * mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].repairCosts;
-		btnShipyard(null);
+		changeFragment(FRAGMENTS.SHIPYARD);
 	}
 	public void btnShipyardBuyRepairs(View view){
 		Popup popup;
@@ -1318,7 +1275,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                  public void execute(Popup popup, View view) {
 				                  mGameState.Credits -= 2000;
 				                  mGameState.EscapePod = true;
-				                  btnShipyard(null);
+				                  changeFragment(FRAGMENTS.SHIPYARD);
 			                  }
 		                  }, cbShowNextPopup
 		);
@@ -1326,51 +1283,38 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		showNextPopup();
 	}
 	public void btnBuyNewShip(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new BuyNewShipFragment()).commit();
-		mCurrentState = "BuyNewShip";
+		changeFragment(FRAGMENTS.BUY_NEW_SHIP);
 	}
 	public void btnBuyNewShipInfo(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		mCurrentState = "BuyNewShip";
+		mGameState.ShipInfoId = -1;
 		switch (view.getId()){
 			case R.id.btnInfoFlea:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[0])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoGnat:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[1])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoFirefly:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[2])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoMosquito:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[3])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoBumblebee:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[4])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoBeetle:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[5])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoHornet:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[6])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoGrasshopper:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[7])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoTermite:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[8])).commit();
-				break;
+				mGameState.ShipInfoId++;
 			case R.id.btnInfoWasp:
-				fragmentManager.beginTransaction().replace(R.id.container, new ShipInfoFragment(mGameState.ShipTypes.ShipTypes[9])).commit();
-				break;
+				mGameState.ShipInfoId++;
 		}
+		changeFragment(FRAGMENTS.BUY_NEW_SHIP);
 	}
 	public void btnBuyNewShipStep1(View view){
 		int Index;
 		int i, j;
 		int extra = 0;
-		int numLightning = 0;
 		boolean hasCompactor = false;
 		boolean hasMorganLaser = false;
 
@@ -3129,329 +3073,6 @@ FrmGotoForm( CurForm );
 	////////////////////////////////////////////////////////////////////////////
 	// Fragments -
 	////////////////////////////////////////////////////////////////////////////
-	public class StartNewGameFragment extends Fragment {
-		public StartNewGameFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);
-			TextView textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
-			mGameState = new GameState("Jameson");
-			textView.setText(String.format("%d", mGameState.SkillPointsLeft));
-
-			SeekBar.OnSeekBarChangeListener skillChangeListener = new SeekBar.OnSeekBarChangeListener() {
-				@Override
-				public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-					int skillPilot = ((SeekBar) rootView.findViewById(R.id.skillPilot)).getProgress();
-					int skillFighter = ((SeekBar) rootView.findViewById(R.id.skillFighter)).getProgress();
-					int skillTrader = ((SeekBar) rootView.findViewById(R.id.skillTrader)).getProgress();
-					int skillEngineer = ((SeekBar) rootView.findViewById(R.id.skillEngineer)).getProgress();
-					TextView textView = (TextView) rootView.findViewById(R.id.numSkillEngineer);
-					textView.setText(String.format("%d", 1 + skillEngineer));
-					textView = (TextView) rootView.findViewById(R.id.numSkillPilot);
-					textView.setText(String.format("%d", 1 + skillPilot));
-					textView = (TextView) rootView.findViewById(R.id.numSkillFighter);
-					textView.setText(String.format("%d", 1 + skillFighter));
-					textView = (TextView) rootView.findViewById(R.id.numSkillTrader);
-					textView.setText(String.format("%d", 1 + skillTrader));
-					textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
-					textView.setText(String.format("%d", mGameState.SkillPointsLeft - (skillPilot + skillFighter + skillTrader + skillEngineer)));
-				}
-
-				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {
-
-				}
-
-				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {
-					int skillPilot = ((SeekBar) rootView.findViewById(R.id.skillPilot)).getProgress();
-					int skillFighter = ((SeekBar) rootView.findViewById(R.id.skillFighter)).getProgress();
-					int skillTrader = ((SeekBar) rootView.findViewById(R.id.skillTrader)).getProgress();
-					int skillEngineer = ((SeekBar) rootView.findViewById(R.id.skillEngineer)).getProgress();
-					int sum = skillEngineer + skillFighter + skillPilot + skillTrader;
-					if (sum > mGameState.SkillPointsLeft) {
-						seekBar.setProgress(seekBar.getProgress() - (sum - mGameState.SkillPointsLeft));
-						sum = mGameState.SkillPointsLeft;
-					}
-					Button btn = (Button) (rootView.findViewById(R.id.btnStartGame));
-					btn.setEnabled(sum == mGameState.SkillPointsLeft);
-				}
-			};
-			SeekBar.OnSeekBarChangeListener levelChangeListener = new
-			SeekBar.OnSeekBarChangeListener() {
-				@Override
-				public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-					TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
-					textview.setText(mGameState.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar)).getProgress()]);
-				}
-
-				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {
-
-				}
-
-				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {
-
-				}
-			};
-			((SeekBar) rootView.findViewById(R.id.skillEngineer)).setOnSeekBarChangeListener(skillChangeListener);
-			((SeekBar) rootView.findViewById(R.id.skillPilot)).setOnSeekBarChangeListener(skillChangeListener);
-			((SeekBar) rootView.findViewById(R.id.skillFighter)).setOnSeekBarChangeListener(skillChangeListener);
-			((SeekBar) rootView.findViewById(R.id.skillTrader)).setOnSeekBarChangeListener(skillChangeListener);
-			((SeekBar) rootView.findViewById(R.id.levelBar)).setOnSeekBarChangeListener(levelChangeListener);
-
-			return rootView;
-		}
-	}
-	public class SystemInformationFragment extends Fragment {
-		public SystemInformationFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
-			SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
-			CURSYSTEM.visited = true;
-
-			TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
-			textView.setText(mGameState.SolarSystemName[CURSYSTEM.nameIndex]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
-			textView.setText(mGameState.SystemSize[CURSYSTEM.size]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoTechLevel);
-			textView.setText(mGameState.techLevel[CURSYSTEM.techLevel]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoGovernment);
-			textView.setText(Politics.mPolitics[CURSYSTEM.politics].name);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoResources);
-			textView.setText(mGameState.SpecialResources[CURSYSTEM.specialResources]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
-			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
-			textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
-			textView.setText(mGameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
-			textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
-			textView.setText(mGameState.Status[CURSYSTEM.status]);
-
-			Button btn = (Button) rootView.findViewById(R.id.btnSpecialEvent);
-			if (CURSYSTEM.special > 0 && mGameState.OpenQuests() < 3) {
-				btn.setVisibility(View.VISIBLE);
-			} else {
-				btn.setVisibility(View.INVISIBLE);
-			}
-
-			if ((CURSYSTEM.special < 0) ||
-							    (CURSYSTEM.special == GameState.BUYTRIBBLE && mGameState.Ship.tribbles <= 0) ||
-							    (CURSYSTEM.special == GameState.ERASERECORD && mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) ||
-							    (CURSYSTEM.special == GameState.CARGOFORSALE && (mGameState.FilledCargoBays() > mGameState.TotalCargoBays() - 3)) ||
-							    ((CURSYSTEM.special == GameState.DRAGONFLY || CURSYSTEM.special == GameState.JAPORIDISEASE ||
-											      CURSYSTEM.special == GameState.ALIENARTIFACT || CURSYSTEM.special == GameState.AMBASSADORJAREK ||
-											      CURSYSTEM.special == GameState.EXPERIMENT) && (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE)) ||
-							    (CURSYSTEM.special == GameState.TRANSPORTWILD && (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE)) ||
-							    (CURSYSTEM.special == GameState.GETREACTOR && (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE || mGameState.ReputationScore < GameState.AVERAGESCORE || mGameState.ReactorStatus != 0)) ||
-							    (CURSYSTEM.special == GameState.REACTORDELIVERED && !(mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21)) ||
-							    (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus < 2) ||
-							    (CURSYSTEM.special == GameState.EXPERIMENTSTOPPED && !(mGameState.ExperimentStatus >= 1 && mGameState.ExperimentStatus < 12)) ||
-							    (CURSYSTEM.special == GameState.FLYBARATAS && mGameState.DragonflyStatus < 1) ||
-							    (CURSYSTEM.special == GameState.FLYMELINA && mGameState.DragonflyStatus < 2) ||
-							    (CURSYSTEM.special == GameState.FLYREGULAS && mGameState.DragonflyStatus < 3) ||
-							    (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus < 5) ||
-							    (CURSYSTEM.special == GameState.SCARAB && (mGameState.ReputationScore < GameState.AVERAGESCORE || mGameState.ScarabStatus != 0)) ||
-							    (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus != 2) ||
-							    (CURSYSTEM.special == GameState.GETHULLUPGRADED && mGameState.ScarabStatus != 2) ||
-							    (CURSYSTEM.special == GameState.MEDICINEDELIVERY && mGameState.JaporiDiseaseStatus != 1) ||
-							    (CURSYSTEM.special == GameState.JAPORIDISEASE && (mGameState.JaporiDiseaseStatus != 0)) ||
-							    (CURSYSTEM.special == GameState.ARTIFACTDELIVERY && !mGameState.ArtifactOnBoard) ||
-							    (CURSYSTEM.special == GameState.JAREKGETSOUT && mGameState.JarekStatus != 1) ||
-							    (CURSYSTEM.special == GameState.WILDGETSOUT && mGameState.WildStatus != 1) ||
-							    (CURSYSTEM.special == GameState.GEMULONRESCUED && !(mGameState.InvasionStatus >= 1 && mGameState.InvasionStatus <= 7)) ||
-							    (CURSYSTEM.special == GameState.MOONFORSALE && (mGameState.MoonBought || mGameState.CurrentWorth() < (GameState.COSTMOON * 4) / 5)) ||
-							    (CURSYSTEM.special == GameState.MOONBOUGHT && !mGameState.MoonBought)) {
-				btn.setVisibility(View.INVISIBLE);
-			} else if (mGameState.OpenQuests() > 3 && (CURSYSTEM.special == GameState.TRIBBLE ||
-							                                           CURSYSTEM.special == GameState.SPACEMONSTER ||
-							                                           CURSYSTEM.special == GameState.DRAGONFLY ||
-							                                           CURSYSTEM.special == GameState.JAPORIDISEASE ||
-							                                           CURSYSTEM.special == GameState.ALIENARTIFACT ||
-							                                           CURSYSTEM.special == GameState.AMBASSADORJAREK ||
-							                                           CURSYSTEM.special == GameState.ALIENINVASION ||
-							                                           CURSYSTEM.special == GameState.EXPERIMENT ||
-							                                           CURSYSTEM.special == GameState.TRANSPORTWILD ||
-							                                           CURSYSTEM.special == GameState.GETREACTOR ||
-							                                           CURSYSTEM.special == GameState.SCARAB)) {
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-
-			if (CURSYSTEM.special > -1) {
-				if (CURSYSTEM.special == GameState.MONSTERKILLED && mGameState.MonsterStatus == 2)
-					addNewsEvent(GameState.MONSTERKILLED);
-				else if (CURSYSTEM.special == GameState.DRAGONFLY)
-					addNewsEvent(GameState.DRAGONFLY);
-				else if (CURSYSTEM.special == GameState.SCARAB)
-					addNewsEvent(GameState.SCARAB);
-				else if (CURSYSTEM.special == GameState.SCARABDESTROYED && mGameState.ScarabStatus == 2)
-					addNewsEvent(GameState.SCARABDESTROYED);
-				else if (CURSYSTEM.special == GameState.FLYBARATAS && mGameState.DragonflyStatus == 1)
-					addNewsEvent(GameState.FLYBARATAS);
-				else if (CURSYSTEM.special == GameState.FLYMELINA && mGameState.DragonflyStatus == 2)
-					addNewsEvent(GameState.FLYMELINA);
-				else if (CURSYSTEM.special == GameState.FLYREGULAS && mGameState.DragonflyStatus == 3)
-					addNewsEvent(GameState.FLYREGULAS);
-				else if (CURSYSTEM.special == GameState.DRAGONFLYDESTROYED && mGameState.DragonflyStatus == 5)
-					addNewsEvent(GameState.DRAGONFLYDESTROYED);
-				else if (CURSYSTEM.special == GameState.MEDICINEDELIVERY && mGameState.JaporiDiseaseStatus == 1)
-					addNewsEvent(GameState.MEDICINEDELIVERY);
-				else if (CURSYSTEM.special == GameState.ARTIFACTDELIVERY && mGameState.ArtifactOnBoard)
-					addNewsEvent(GameState.ARTIFACTDELIVERY);
-				else if (CURSYSTEM.special == GameState.JAPORIDISEASE && mGameState.JaporiDiseaseStatus == 0)
-					addNewsEvent(GameState.JAPORIDISEASE);
-				else if (CURSYSTEM.special == GameState.JAREKGETSOUT && mGameState.JarekStatus == 1)
-					addNewsEvent(GameState.JAREKGETSOUT);
-				else if (CURSYSTEM.special == GameState.WILDGETSOUT && mGameState.WildStatus == 1)
-					addNewsEvent(GameState.WILDGETSOUT);
-				else if (CURSYSTEM.special == GameState.GEMULONRESCUED && mGameState.InvasionStatus > 0 && mGameState.InvasionStatus < 8)
-					addNewsEvent(GameState.GEMULONRESCUED);
-				else if (CURSYSTEM.special == GameState.ALIENINVASION)
-					addNewsEvent(GameState.ALIENINVASION);
-				else if (CURSYSTEM.special == GameState.EXPERIMENTSTOPPED && mGameState.ExperimentStatus > 0 && mGameState.ExperimentStatus < 12)
-					addNewsEvent(GameState.EXPERIMENTSTOPPED);
-				else if (CURSYSTEM.special == GameState.EXPERIMENTNOTSTOPPED)
-					addNewsEvent(GameState.EXPERIMENTNOTSTOPPED);
-			}
-
-			btn = (Button) rootView.findViewById(R.id.btnMercenaryForHire);
-			if (mGameState.GetForHire() > -1) {
-				btn.setVisibility(View.VISIBLE);
-			} else {
-				btn.setVisibility(View.INVISIBLE);
-			}
-			return rootView;
-		}
-	}
-	public class PersonnelRosterFragment extends Fragment {
-		View rootView;
-
-		public PersonnelRosterFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			int i;
-			TableLayout tl;
-			TextView tv;
-			Button btn;
-			rootView = inflater.inflate(R.layout.fragment_personnel_roster, container, false);
-
-			for (i = 0; i < 2; ++i) {
-				if ((mGameState.JarekStatus == 1 || mGameState.WildStatus == 1) && i < 2) {
-					if (mGameState.JarekStatus == 1 && i == 0) { /* Jarek is always in 1st crew slot */
-						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
-						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
-						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
-						tl.setVisibility(View.INVISIBLE);
-						tv.setText("Jarek's quarters");
-						btn.setVisibility(View.INVISIBLE);
-						continue;
-					} else if (mGameState.JarekStatus == 1 && mGameState.WildStatus == 1 && i == 1) { /* Wild is in 2nd crew slot if Jarek is here, too */
-						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
-						tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
-						btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
-						tl.setVisibility(View.INVISIBLE);
-						tv.setText("Wild's quarters");
-						btn.setVisibility(View.INVISIBLE);
-						continue;
-					} else if (mGameState.WildStatus == 1 && i == 0) {/* Wild is in 1st crew slot if Jarek is not here */
-						tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
-						tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
-						btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
-						tl.setVisibility(View.INVISIBLE);
-						tv.setText("Wild's quarters");
-						btn.setVisibility(View.INVISIBLE);
-						continue;
-					}
-					Log.e("PersonnelRoster", String.format("Impossible Error: Jarek is %d, Wild is %d, here anyway...", mGameState.JarekStatus, mGameState.WildStatus));
-				}
-
-				if (i == 0) {
-					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew1);
-					tv = (TextView) rootView.findViewById(R.id.txtNameCrew1);
-					btn = (Button) rootView.findViewById(R.id.btnFireCrew1);
-				} else {
-					tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrew2);
-					tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
-					btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
-				}
-				ShipTypes.ShipType Ship = mGameState.ShipTypes.ShipTypes[mGameState.Ship.type];
-				if (Ship.crewQuarters <= i + 1) {
-					tl.setVisibility(View.INVISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					tv.setText("No quarters available");
-					continue;
-				}
-
-				if (mGameState.Ship.crew[i + 1] < 0) {
-					tl.setVisibility(View.INVISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					tv.setText("Vacancy");
-					continue;
-				}
-
-				tl.setVisibility(View.VISIBLE);
-				btn.setVisibility(View.VISIBLE);
-				DrawMercenary(i, mGameState.Ship.crew[i + 1]); /* Crew idx 0 is the player */
-			}
-
-			int ForHire = mGameState.GetForHire();
-			tl = (TableLayout) rootView.findViewById(R.id.tableLayoutCrewNew);
-			tv = (TextView) rootView.findViewById(R.id.txtNameCrewNew);
-			btn = (Button) rootView.findViewById(R.id.btnHireCrewNew);
-			if (ForHire < 0) {
-				tl.setVisibility(View.INVISIBLE);
-				tv.setText("No one for hire");
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				tl.setVisibility(View.VISIBLE);
-				btn.setVisibility(View.VISIBLE);
-				DrawMercenary(2, ForHire);
-			}
-
-			return rootView;
-		}
-
-		public void DrawMercenary(int i, int idxCrewMember) {
-			TextView txtPilot;
-			TextView txtEngineer;
-			TextView txtTrader;
-			TextView txtFighter;
-			TextView txtName;
-
-			CrewMember c = mGameState.Mercenary[idxCrewMember];
-
-			if (i == 0) {
-				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew1);
-				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew1);
-				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew1);
-				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew1);
-				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew1);
-			} else if (i == 1) {
-				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrew2);
-				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrew2);
-				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrew2);
-				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrew2);
-				txtName = (TextView) rootView.findViewById(R.id.txtNameCrew2);
-			} else /* if (i == 2) */ {
-				txtPilot = (TextView) rootView.findViewById(R.id.txtPilotCrewNew);
-				txtEngineer = (TextView) rootView.findViewById(R.id.txtEngineerCrewNew);
-				txtTrader = (TextView) rootView.findViewById(R.id.txtTraderCrewNew);
-				txtFighter = (TextView) rootView.findViewById(R.id.txtFighterCrewNew);
-				txtName = (TextView) rootView.findViewById(R.id.txtNameCrewNew);
-			}
-			txtPilot.setText(String.format("%d", c.pilot));
-			txtFighter.setText(String.format("%d", c.fighter));
-			txtEngineer.setText(String.format("%d", c.engineer));
-			txtTrader.setText(String.format("%d", c.trader));
-			txtName.setText(mGameState.MercenaryName[c.nameIndex]);
-		}
-	}
 	public class CommanderStatusFragment extends Fragment {
 		public CommanderStatusFragment() { }
 
@@ -3476,7 +3097,10 @@ FrmGotoForm( CurForm );
 			tv.setText(String.format("%d [%d]", COMMANDER.engineer, mGameState.EngineerSkill(Ship)));
 
 			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusKills);
-			tv.setText(String.format("%d", mGameState.PirateKills + mGameState.PoliceKills + mGameState.TraderKills));
+			tv.setText(String.format("%d",
+			                         mGameState.PirateKills + mGameState.PoliceKills + mGameState.TraderKills
+			)
+			);
 
 			i = 0;
 			while (i < GameState.MAXPOLICERECORD && mGameState.PoliceRecordScore >= mGameState.PoliceRecord.minScore[i])
@@ -3514,6 +3138,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class BankFragment extends Fragment {
 		public BankFragment() { }
 
@@ -3528,7 +3153,7 @@ FrmGotoForm( CurForm );
 			btn = (Button) rootView.findViewById(R.id.btnBankGetLoan);
 			if (mGameState.Debt <= 0) {
 				btn.setText("Get Loan");
-			}	else {
+			} else {
 				btn.setText("Payback Loan");
 			}
 
@@ -3542,7 +3167,7 @@ FrmGotoForm( CurForm );
 			tv = (TextView) rootView.findViewById(R.id.txtBankDebt);
 			tv.setText(String.format("%d cr.", mGameState.Debt));
 			btn = (Button) rootView.findViewById(R.id.btnBankPaybackLoan);
-			if (mGameState.Debt <= 0){
+			if (mGameState.Debt <= 0) {
 				btn.setVisibility(View.INVISIBLE);
 			} else {
 				btn.setVisibility(View.VISIBLE);
@@ -3555,7 +3180,10 @@ FrmGotoForm( CurForm );
 			tv.setText(String.format("%d cr.", mGameState.CurrentShipPriceWithoutCargo(true)));
 
 			tv = (TextView) rootView.findViewById(R.id.txtBankNoClaim);
-			tv.setText(String.format("%d%%%s", Math.min(mGameState.NoClaim, 90), mGameState.NoClaim==90 ? " (maximum)" : ""));
+			tv.setText(String.format("%d%%%s", Math.min(mGameState.NoClaim, 90),
+			                         mGameState.NoClaim == 90 ? " (maximum)" : ""
+			)
+			);
 
 			tv = (TextView) rootView.findViewById(R.id.txtBankCost);
 			tv.setText(String.format("%d cr. daily", mGameState.InsuranceMoney()));
@@ -3566,6 +3194,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class ShipyardFragment extends Fragment {
 		public ShipyardFragment() { }
 
@@ -3610,34 +3239,47 @@ FrmGotoForm( CurForm );
 			}
 
 			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyEscapePod);
-			if (mGameState.EscapePod || mGameState.ToSpend() < 2000 || CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
+			if (mGameState.EscapePod || mGameState
+				                            .ToSpend() < 2000 || CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
 				btn.setVisibility(View.INVISIBLE);
 			} else {
 				btn.setVisibility(View.VISIBLE);
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelReserve);
-			tv.setText(String.format("You have fuel to fly %d parsec%s.", mGameState.GetFuel(), mGameState.GetFuel() == 1 ? "" : "s"));
+			tv.setText(String.format("You have fuel to fly %d parsec%s.", mGameState.GetFuel(),
+			                         mGameState.GetFuel() == 1 ? "" : "s"
+			)
+			);
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelCost);
 			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
-				tv.setText(String.format("A full tank costs %d cr.", (mGameState.GetFuelTanks() - mGameState.GetFuel()) * mGameState.ShipTypes.ShipTypes[Ship.type].costOfFuel));
+				tv.setText(String.format("A full tank costs %d cr.", (mGameState.GetFuelTanks() - mGameState
+					                                                                                  .GetFuel()) * mGameState.ShipTypes.ShipTypes[Ship.type].costOfFuel
+				)
+				);
 			} else {
 				tv.setText("Your tank cannot hold more fuel.");
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardHullStrength);
-			tv.setText(String.format("Your hull strength is at %d%%.", (Ship.hull * 100) / mGameState.GetHullStrength()));
+			tv.setText(String.format("Your hull strength is at %d%%.",
+			                         (Ship.hull * 100) / mGameState.GetHullStrength()
+			)
+			);
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardRepairsNeeded);
 			if (Ship.hull < mGameState.GetHullStrength()) {
-				tv.setText(String.format("Full repair will cost %d cr.", (mGameState.GetHullStrength() - Ship.hull) * mGameState.ShipTypes.ShipTypes[Ship.type].repairCosts));
+				tv.setText(String.format("Full repair will cost %d cr.", (mGameState
+					                                                          .GetHullStrength() - Ship.hull) * mGameState.ShipTypes.ShipTypes[Ship.type].repairCosts
+				)
+				);
 			} else {
 				tv.setText("No repairs are needed.");
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardNewShipsForSale);
-			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel){
+			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
 				tv.setText("There are new ships for sale.");
 			} else {
 				tv.setText("No new ships are for sale.");
@@ -3647,11 +3289,11 @@ FrmGotoForm( CurForm );
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			tv = (TextView) rootView.findViewById(R.id.txtShipyardBuyEscapePod);
-			if (mGameState.EscapePod){
+			if (mGameState.EscapePod) {
 				tv.setText("You have an escape pod installed.");
-			} else if (CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel){
+			} else if (CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
 				tv.setText("No escape pods are for sale.");
-			} else if (mGameState.ToSpend() < 2000){
+			} else if (mGameState.ToSpend() < 2000) {
 				tv.setText("You need 2000 cr. for an escape pod.");
 			} else {
 				tv.setText("You can buy an escape pod for 2000 cr.");
@@ -3660,164 +3302,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
-	public class BuyNewShipFragment extends Fragment {
-		public BuyNewShipFragment() { }
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_buy_new_ship, container, false);
-			TextView tv;
-			Button btn;
-			int i;
-
-			mGameState.DetermineShipPrices();
-
-			tv = (TextView) rootView.findViewById(R.id.txtBuyShipCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			i = -1;
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceFlea);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyFlea);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceGnat);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyGnat);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceFirefly);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyFirefly);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceMosquito);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyMosquito);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceBumblebee);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyBumblebee);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceBeetle);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyBeetle);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceHornet);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyHornet);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceGrasshopper);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyGrasshopper);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceTermite);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyTermite);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNewShipPriceWasp);
-			tv.setText(mGameState.ShipPrice[++i] == 0 ? "not sold" : mGameState.Ship.type == i ? "got one" : String.format("%d cr.", mGameState.ShipPrice[i]));
-			btn = (Button) rootView.findViewById(R.id.btnBuyWasp);
-			if (mGameState.ShipPrice[i] == 0){
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-
-			if (mGameState.Ship.tribbles > 0 && !mGameState.TribbleMessage) {
-				Popup popup;
-				popup = new Popup(WelcomeScreen.this,
-				                  "You've Got Tribbles",
-				                  "Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.",
-				                  "Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.",
-				                  "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				mGameState.TribbleMessage = true;
-			}
-
-			return rootView;
-		}
-	}
-	public class ShipInfoFragment extends Fragment {
-		private ShipTypes.ShipType mType;
-		public ShipInfoFragment(ShipTypes.ShipType t) {
-			mType = t;
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_ship_info, container, false);
-			TextView tv;
-			ImageView img;
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoTitle);
-			tv.setText(mType.name);
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoSize);
-			tv.setText(mGameState.SystemSize[mType.size]);
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoCargoBays);
-			tv.setText(String.format("%d", mType.cargoBays));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoRange);
-			tv.setText(String.format("%d parsecs", mType.fuelTanks));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoHull);
-			tv.setText(String.format("%d", mType.hullStrength));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoWeapons);
-			tv.setText(String.format("%d", mType.weaponSlots));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoShields);
-			tv.setText(String.format("%d", mType.shieldSlots));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoGadgets);
-			tv.setText(String.format("%d", mType.gadgetSlots));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipInfoQuarters);
-			tv.setText(String.format("%d", mType.crewQuarters));
-
-			img = (ImageView) rootView.findViewById(R.id.imgShipInfoShip);
-			img.setImageDrawable(getResources().getDrawable(mType.drawable));
-			return rootView;
-		}
-
-	}
 	public class BuyEquipmentFragment extends Fragment {
 		public BuyEquipmentFragment() { }
 
@@ -3850,7 +3335,7 @@ FrmGotoForm( CurForm );
 
 			i = -1;
 			btn = (Button) rootView.findViewById(R.id.btnBuyEnergyShield);
-			if (mGameState.BASESHIELDPRICE(++i)> 0)
+			if (mGameState.BASESHIELDPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
@@ -3862,46 +3347,46 @@ FrmGotoForm( CurForm );
 
 			i = -1;
 			btn = (Button) rootView.findViewById(R.id.btnBuy5CargoBays);
-			if (mGameState.BASEGADGETPRICE(++i)> 0)
+			if (mGameState.BASEGADGETPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnBuyAutoRepairSystem);
-			if (mGameState.BASEGADGETPRICE(++i)> 0)
+			if (mGameState.BASEGADGETPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnBuyNavigationSystem);
-			if (mGameState.BASEGADGETPRICE(++i)> 0)
+			if (mGameState.BASEGADGETPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnBuyTargetingSystem);
-			if (mGameState.BASEGADGETPRICE(++i)> 0)
+			if (mGameState.BASEGADGETPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnBuyCloakingSystem);
-			if (mGameState.BASEGADGETPRICE(++i)> 0)
+			if (mGameState.BASEGADGETPRICE(++i) > 0)
 				btn.setVisibility(View.VISIBLE);
 			else
 				btn.setVisibility(View.INVISIBLE);
 
 			i = -1;
 			tv = (TextView) rootView.findViewById(R.id.txtBuyPulseLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyBeamLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyMilitaryLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0){
+			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
 			} else {
 				tv.setText("not sold");
@@ -3909,13 +3394,13 @@ FrmGotoForm( CurForm );
 
 			i = -1;
 			tv = (TextView) rootView.findViewById(R.id.txtBuyEnergyShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0){
+			if (mGameState.BASESHIELDPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyReflectiveShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0){
+			if (mGameState.BASESHIELDPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
 			} else {
 				tv.setText("not sold");
@@ -3923,31 +3408,31 @@ FrmGotoForm( CurForm );
 
 			i = -1;
 			tv = (TextView) rootView.findViewById(R.id.txtBuy5CargoBays);
-			if (mGameState.BASEGADGETPRICE(++i) > 0){
+			if (mGameState.BASEGADGETPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyAutoRepairSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0){
+			if (mGameState.BASEGADGETPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyNavigationSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0){
+			if (mGameState.BASEGADGETPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyTargetingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0){
+			if (mGameState.BASEGADGETPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
 			} else {
 				tv.setText("not sold");
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyCloakingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0){
+			if (mGameState.BASEGADGETPRICE(++i) > 0) {
 				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
 			} else {
 				tv.setText("not sold");
@@ -3956,9 +3441,10 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class SellEquipmentFragment extends Fragment {
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_sell_equipment, container, false);
 			TextView tv;
 			Button btn;
@@ -3968,67 +3454,112 @@ FrmGotoForm( CurForm );
 			tv = (TextView) rootView.findViewById(R.id.txtSellEquipmentCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
-			for (i=0; i<GameState.MAXWEAPON; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentWeapon1: i == 1 ? R.id.btnSellEquipmentWeapon2: R.id.btnSellEquipmentWeapon3);
+			for (i = 0; i < GameState.MAXWEAPON; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentWeapon1 :
+				                                     i == 1 ? R.id.btnSellEquipmentWeapon2 :
+				                                     R.id.btnSellEquipmentWeapon3
+				);
 				if (Ship.weapon[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 : i == 1 ? R.id.txtSellEquipmentWeapon2 : R.id.txtSellEquipmentWeapon3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 :
+					                                      i == 1 ? R.id.txtSellEquipmentWeapon2 :
+					                                      R.id.txtSellEquipmentWeapon3
+					);
 					tv.setText(mGameState.Weapons.mWeapons[Ship.weapon[i]].name);
 					tv.setVisibility(View.VISIBLE);
 
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 : i == 1 ? R.id.txtSellEquipmentPriceWeapon2 : R.id.txtSellEquipmentPriceWeapon3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceWeapon2 :
+					                                      R.id.txtSellEquipmentPriceWeapon3
+					);
 					tv.setText(String.format("%d cr.", mGameState.WEAPONSELLPRICE(i)));
 					tv.setVisibility(View.VISIBLE);
 
 					btn.setVisibility(View.VISIBLE);
 				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 : i == 1 ? R.id.txtSellEquipmentPriceWeapon2 : R.id.txtSellEquipmentPriceWeapon3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceWeapon2 :
+					                                      R.id.txtSellEquipmentPriceWeapon3
+					);
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 : i == 1 ? R.id.txtSellEquipmentWeapon2 : R.id.txtSellEquipmentWeapon3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 :
+					                                      i == 1 ? R.id.txtSellEquipmentWeapon2 :
+					                                      R.id.txtSellEquipmentWeapon3
+					);
 					tv.setVisibility(View.INVISIBLE);
 					tv.setText("");
 				}
 			}
 
-			for (i=0; i<GameState.MAXSHIELD; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentShield1 : i == 1 ? R.id.btnSellEquipmentShield2 : R.id.btnSellEquipmentShield3);
+			for (i = 0; i < GameState.MAXSHIELD; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentShield1 :
+				                                     i == 1 ? R.id.btnSellEquipmentShield2 :
+				                                     R.id.btnSellEquipmentShield3
+				);
 				if (Ship.shield[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 : i == 1 ? R.id.txtSellEquipmentShield2 : R.id.txtSellEquipmentShield3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 :
+					                                      i == 1 ? R.id.txtSellEquipmentShield2 :
+					                                      R.id.txtSellEquipmentShield3
+					);
 					tv.setText(mGameState.Shields.mShields[Ship.shield[i]].name);
 					tv.setVisibility(View.VISIBLE);
 
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 : i == 1 ? R.id.txtSellEquipmentPriceShield2 : R.id.txtSellEquipmentPriceShield3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceShield2 :
+					                                      R.id.txtSellEquipmentPriceShield3
+					);
 					tv.setText(String.format("%d cr.", mGameState.SHIELDSELLPRICE(i)));
 					tv.setVisibility(View.VISIBLE);
 
 					btn.setVisibility(View.VISIBLE);
 				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 : i == 1 ? R.id.txtSellEquipmentPriceShield2 : R.id.txtSellEquipmentPriceShield3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceShield2 :
+					                                      R.id.txtSellEquipmentPriceShield3
+					);
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 : i == 1 ? R.id.txtSellEquipmentShield2 : R.id.txtSellEquipmentShield3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 :
+					                                      i == 1 ? R.id.txtSellEquipmentShield2 :
+					                                      R.id.txtSellEquipmentShield3
+					);
 					tv.setVisibility(View.INVISIBLE);
 					tv.setText("");
 				}
 			}
 
-			for (i=0; i<GameState.MAXGADGET; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentGadget1 : i == 1 ? R.id.btnSellEquipmentGadget2 : R.id.btnSellEquipmentGadget3);
+			for (i = 0; i < GameState.MAXGADGET; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentGadget1 :
+				                                     i == 1 ? R.id.btnSellEquipmentGadget2 :
+				                                     R.id.btnSellEquipmentGadget3
+				);
 				if (Ship.gadget[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 : i == 1 ? R.id.txtSellEquipmentGadget2 : R.id.txtSellEquipmentGadget3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 :
+					                                      i == 1 ? R.id.txtSellEquipmentGadget2 :
+					                                      R.id.txtSellEquipmentGadget3
+					);
 					tv.setText(mGameState.Gadgets.mGadgets[Ship.gadget[i]].name);
 					tv.setVisibility(View.VISIBLE);
 
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 : i == 1 ? R.id.txtSellEquipmentPriceGadget2 : R.id.txtSellEquipmentPriceGadget3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceGadget2 :
+					                                      R.id.txtSellEquipmentPriceGadget3
+					);
 					tv.setText(String.format("%d cr.", mGameState.GADGETSELLPRICE(i)));
 					tv.setVisibility(View.VISIBLE);
 
 					btn.setVisibility(View.VISIBLE);
 				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 : i == 1 ? R.id.txtSellEquipmentPriceGadget2 : R.id.txtSellEquipmentPriceGadget3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 :
+					                                      i == 1 ? R.id.txtSellEquipmentPriceGadget2 :
+					                                      R.id.txtSellEquipmentPriceGadget3
+					);
 					tv.setVisibility(View.INVISIBLE);
 					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 : i == 1 ? R.id.txtSellEquipmentGadget2 : R.id.txtSellEquipmentGadget3);
+					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 :
+					                                      i == 1 ? R.id.txtSellEquipmentGadget2 :
+					                                      R.id.txtSellEquipmentGadget3
+					);
 					tv.setText("");
 					tv.setVisibility(View.INVISIBLE);
 				}
@@ -4037,6 +3568,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class BuyCargoFragment extends Fragment {
 		public BuyCargoFragment() { }
 
@@ -4052,44 +3584,41 @@ FrmGotoForm( CurForm );
 			Button btnAll;
 			int i;
 
-			for (i=0; i<GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(
-					                                    i == 0 ? R.id.btnBuyCargo1 :
-					                                    i == 1 ? R.id.btnBuyCargo2 :
-					                                    i == 2 ? R.id.btnBuyCargo3 :
-					                                    i == 3 ? R.id.btnBuyCargo4 :
-					                                    i == 4 ? R.id.btnBuyCargo5 :
-					                                    i == 5 ? R.id.btnBuyCargo6 :
-					                                    i == 6 ? R.id.btnBuyCargo7 :
-					                                    i == 7 ? R.id.btnBuyCargo8 :
-					                                    i == 8 ? R.id.btnBuyCargo9 :
+			for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnBuyCargo1 :
+				                                     i == 1 ? R.id.btnBuyCargo2 :
+				                                     i == 2 ? R.id.btnBuyCargo3 :
+				                                     i == 3 ? R.id.btnBuyCargo4 :
+				                                     i == 4 ? R.id.btnBuyCargo5 :
+				                                     i == 5 ? R.id.btnBuyCargo6 :
+				                                     i == 6 ? R.id.btnBuyCargo7 :
+				                                     i == 7 ? R.id.btnBuyCargo8 :
+				                                     i == 8 ? R.id.btnBuyCargo9 :
 					                                    /*i == 9 ? */R.id.btnBuyCargo10
 				);
-				btnAll = (Button) rootView.findViewById(
-					                                       i == 0 ? R.id.btnBuyCargoAll1 :
-					                                       i == 1 ? R.id.btnBuyCargoAll2 :
-					                                       i == 2 ? R.id.btnBuyCargoAll3 :
-					                                       i == 3 ? R.id.btnBuyCargoAll4 :
-					                                       i == 4 ? R.id.btnBuyCargoAll5 :
-					                                       i == 5 ? R.id.btnBuyCargoAll6 :
-					                                       i == 6 ? R.id.btnBuyCargoAll7 :
-					                                       i == 7 ? R.id.btnBuyCargoAll8 :
-					                                       i == 8 ? R.id.btnBuyCargoAll9 :
+				btnAll = (Button) rootView.findViewById(i == 0 ? R.id.btnBuyCargoAll1 :
+				                                        i == 1 ? R.id.btnBuyCargoAll2 :
+				                                        i == 2 ? R.id.btnBuyCargoAll3 :
+				                                        i == 3 ? R.id.btnBuyCargoAll4 :
+				                                        i == 4 ? R.id.btnBuyCargoAll5 :
+				                                        i == 5 ? R.id.btnBuyCargoAll6 :
+				                                        i == 6 ? R.id.btnBuyCargoAll7 :
+				                                        i == 7 ? R.id.btnBuyCargoAll8 :
+				                                        i == 8 ? R.id.btnBuyCargoAll9 :
 					                                    /*i == 9 ? */R.id.btnBuyCargoAll10
 				);
-				tv = (TextView) rootView.findViewById(
-					                                     i == 0 ? R.id.txtBuyCargoPrice1 :
-					                                     i == 1 ? R.id.txtBuyCargoPrice2 :
-					                                     i == 2 ? R.id.txtBuyCargoPrice3 :
-					                                     i == 3 ? R.id.txtBuyCargoPrice4 :
-					                                     i == 4 ? R.id.txtBuyCargoPrice5 :
-					                                     i == 5 ? R.id.txtBuyCargoPrice6 :
-					                                     i == 6 ? R.id.txtBuyCargoPrice7 :
-					                                     i == 7 ? R.id.txtBuyCargoPrice8 :
-					                                     i == 8 ? R.id.txtBuyCargoPrice9 :
+				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtBuyCargoPrice1 :
+				                                      i == 1 ? R.id.txtBuyCargoPrice2 :
+				                                      i == 2 ? R.id.txtBuyCargoPrice3 :
+				                                      i == 3 ? R.id.txtBuyCargoPrice4 :
+				                                      i == 4 ? R.id.txtBuyCargoPrice5 :
+				                                      i == 5 ? R.id.txtBuyCargoPrice6 :
+				                                      i == 6 ? R.id.txtBuyCargoPrice7 :
+				                                      i == 7 ? R.id.txtBuyCargoPrice8 :
+				                                      i == 8 ? R.id.txtBuyCargoPrice9 :
 					                                     /*i == 9 ? */R.id.txtBuyCargoPrice10
 				);
-				if (mGameState.BuyPrice[i] > 0){
+				if (mGameState.BuyPrice[i] > 0) {
 					btn.setText(String.format("%d", CURSYSTEM.qty[i]));
 					tv.setText(String.format("%d cr.", mGameState.BuyPrice[i]));
 					tv.setVisibility(View.VISIBLE);
@@ -4103,13 +3632,17 @@ FrmGotoForm( CurForm );
 				}
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
+			                         mGameState.TotalCargoBays()
+			)
+			);
 			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			return rootView;
 		}
 	}
+
 	public class SellCargoFragment extends Fragment {
 		public SellCargoFragment() { }
 
@@ -4126,61 +3659,57 @@ FrmGotoForm( CurForm );
 			Button btnAll;
 			int i;
 
-			for (i=0; i<GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(
-					                                    i == 0 ? R.id.btnSellCargo1 :
-					                                    i == 1 ? R.id.btnSellCargo2 :
-					                                    i == 2 ? R.id.btnSellCargo3 :
-					                                    i == 3 ? R.id.btnSellCargo4 :
-					                                    i == 4 ? R.id.btnSellCargo5 :
-					                                    i == 5 ? R.id.btnSellCargo6 :
-					                                    i == 6 ? R.id.btnSellCargo7 :
-					                                    i == 7 ? R.id.btnSellCargo8 :
-					                                    i == 8 ? R.id.btnSellCargo9 :
+			for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellCargo1 :
+				                                     i == 1 ? R.id.btnSellCargo2 :
+				                                     i == 2 ? R.id.btnSellCargo3 :
+				                                     i == 3 ? R.id.btnSellCargo4 :
+				                                     i == 4 ? R.id.btnSellCargo5 :
+				                                     i == 5 ? R.id.btnSellCargo6 :
+				                                     i == 6 ? R.id.btnSellCargo7 :
+				                                     i == 7 ? R.id.btnSellCargo8 :
+				                                     i == 8 ? R.id.btnSellCargo9 :
 					                                    /*i == 9 ? */R.id.btnSellCargo10
 				);
-				btnAll = (Button) rootView.findViewById(
-					                                       i == 0 ? R.id.btnSellCargoAll1 :
-					                                       i == 1 ? R.id.btnSellCargoAll2 :
-					                                       i == 2 ? R.id.btnSellCargoAll3 :
-					                                       i == 3 ? R.id.btnSellCargoAll4 :
-					                                       i == 4 ? R.id.btnSellCargoAll5 :
-					                                       i == 5 ? R.id.btnSellCargoAll6 :
-					                                       i == 6 ? R.id.btnSellCargoAll7 :
-					                                       i == 7 ? R.id.btnSellCargoAll8 :
-					                                       i == 8 ? R.id.btnSellCargoAll9 :
+				btnAll = (Button) rootView.findViewById(i == 0 ? R.id.btnSellCargoAll1 :
+				                                        i == 1 ? R.id.btnSellCargoAll2 :
+				                                        i == 2 ? R.id.btnSellCargoAll3 :
+				                                        i == 3 ? R.id.btnSellCargoAll4 :
+				                                        i == 4 ? R.id.btnSellCargoAll5 :
+				                                        i == 5 ? R.id.btnSellCargoAll6 :
+				                                        i == 6 ? R.id.btnSellCargoAll7 :
+				                                        i == 7 ? R.id.btnSellCargoAll8 :
+				                                        i == 8 ? R.id.btnSellCargoAll9 :
 					                                    /*i == 9 ? */R.id.btnSellCargoAll10
 				);
-				tv = (TextView) rootView.findViewById(
-					                                     i == 0 ? R.id.txtSellCargoPrice1 :
-					                                     i == 1 ? R.id.txtSellCargoPrice2 :
-					                                     i == 2 ? R.id.txtSellCargoPrice3 :
-					                                     i == 3 ? R.id.txtSellCargoPrice4 :
-					                                     i == 4 ? R.id.txtSellCargoPrice5 :
-					                                     i == 5 ? R.id.txtSellCargoPrice6 :
-					                                     i == 6 ? R.id.txtSellCargoPrice7 :
-					                                     i == 7 ? R.id.txtSellCargoPrice8 :
-					                                     i == 8 ? R.id.txtSellCargoPrice9 :
+				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellCargoPrice1 :
+				                                      i == 1 ? R.id.txtSellCargoPrice2 :
+				                                      i == 2 ? R.id.txtSellCargoPrice3 :
+				                                      i == 3 ? R.id.txtSellCargoPrice4 :
+				                                      i == 4 ? R.id.txtSellCargoPrice5 :
+				                                      i == 5 ? R.id.txtSellCargoPrice6 :
+				                                      i == 6 ? R.id.txtSellCargoPrice7 :
+				                                      i == 7 ? R.id.txtSellCargoPrice8 :
+				                                      i == 8 ? R.id.txtSellCargoPrice9 :
 					                                     /*i == 9 ? */R.id.txtSellCargoPrice10
 				);
-        name = (TextView) rootView.findViewById(
-	                                             i == 0 ? R.id.txtSellName1 :
-	                                             i == 1 ? R.id.txtSellName2 :
-	                                             i == 2 ? R.id.txtSellName3 :
-	                                             i == 3 ? R.id.txtSellName4 :
-	                                             i == 4 ? R.id.txtSellName5 :
-	                                             i == 5 ? R.id.txtSellName6 :
-	                                             i == 6 ? R.id.txtSellName7 :
-	                                             i == 7 ? R.id.txtSellName8 :
-	                                             i == 8 ? R.id.txtSellName9 :
+				name = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellName1 :
+				                                        i == 1 ? R.id.txtSellName2 :
+				                                        i == 2 ? R.id.txtSellName3 :
+				                                        i == 3 ? R.id.txtSellName4 :
+				                                        i == 4 ? R.id.txtSellName5 :
+				                                        i == 5 ? R.id.txtSellName6 :
+				                                        i == 6 ? R.id.txtSellName7 :
+				                                        i == 7 ? R.id.txtSellName8 :
+				                                        i == 8 ? R.id.txtSellName9 :
 	                                             /*i == 9 ? */R.id.txtSellName10
 				);
-				if (mGameState.BuyingPrice[i] < mGameState.SellPrice[i] * mGameState.Ship.cargo[i]){
+				if (mGameState.BuyingPrice[i] < mGameState.SellPrice[i] * mGameState.Ship.cargo[i]) {
 					name.setTypeface(null, Typeface.BOLD);
 				} else {
 					name.setTypeface(null, Typeface.NORMAL);
 				}
-				if (mGameState.SellPrice[i] > 0){
+				if (mGameState.SellPrice[i] > 0) {
 					btn.setText(String.format("%d", mGameState.Ship.cargo[i]));
 					tv.setText(String.format("%d cr.", mGameState.SellPrice[i]));
 					tv.setVisibility(View.VISIBLE);
@@ -4194,13 +3723,17 @@ FrmGotoForm( CurForm );
 				}
 			}
 			tv = (TextView) rootView.findViewById(R.id.txtSellCargoBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
+			                         mGameState.TotalCargoBays()
+			)
+			);
 			tv = (TextView) rootView.findViewById(R.id.txtSellCargoCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
 			return rootView;
 		}
 	}
+
 	public class PlunderCargoFragment extends Fragment {
 		public PlunderCargoFragment() {}
 
@@ -4211,17 +3744,16 @@ FrmGotoForm( CurForm );
 			Button btn;
 			int i;
 
-			for (i=0; i<GameState.MAXTRADEITEM; i++){
-				btn = (Button) rootView.findViewById(
-					                           i == 0 ? R.id.btnPlunderCargo1 :
-					                           i == 1 ? R.id.btnPlunderCargo2 :
-					                           i == 2 ? R.id.btnPlunderCargo3 :
-					                           i == 3 ? R.id.btnPlunderCargo4 :
-					                           i == 4 ? R.id.btnPlunderCargo5 :
-					                           i == 5 ? R.id.btnPlunderCargo6 :
-					                           i == 6 ? R.id.btnPlunderCargo7 :
-					                           i == 7 ? R.id.btnPlunderCargo8 :
-					                           i == 8 ? R.id.btnPlunderCargo9 :
+			for (i = 0; i < GameState.MAXTRADEITEM; i++) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPlunderCargo1 :
+				                                     i == 1 ? R.id.btnPlunderCargo2 :
+				                                     i == 2 ? R.id.btnPlunderCargo3 :
+				                                     i == 3 ? R.id.btnPlunderCargo4 :
+				                                     i == 4 ? R.id.btnPlunderCargo5 :
+				                                     i == 5 ? R.id.btnPlunderCargo6 :
+				                                     i == 6 ? R.id.btnPlunderCargo7 :
+				                                     i == 7 ? R.id.btnPlunderCargo8 :
+				                                     i == 8 ? R.id.btnPlunderCargo9 :
 					                           /*i == 9 ?*/ R.id.btnPlunderCargo10
 				);
 				btn.setText(String.format("%2d", mGameState.Opponent.cargo[i]));
@@ -4233,6 +3765,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class DumpCargoFragment extends Fragment {
 		public DumpCargoFragment() {}
 
@@ -4243,17 +3776,16 @@ FrmGotoForm( CurForm );
 			Button btn;
 			int i;
 
-			for (i=0; i<GameState.MAXTRADEITEM; i++){
-				btn = (Button) rootView.findViewById(
-					                                    i == 0 ? R.id.btnDumpCargo1 :
-					                                    i == 1 ? R.id.btnDumpCargo2 :
-					                                    i == 2 ? R.id.btnDumpCargo3 :
-					                                    i == 3 ? R.id.btnDumpCargo4 :
-					                                    i == 4 ? R.id.btnDumpCargo5 :
-					                                    i == 5 ? R.id.btnDumpCargo6 :
-					                                    i == 6 ? R.id.btnDumpCargo7 :
-					                                    i == 7 ? R.id.btnDumpCargo8 :
-					                                    i == 8 ? R.id.btnDumpCargo9 :
+			for (i = 0; i < GameState.MAXTRADEITEM; i++) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnDumpCargo1 :
+				                                     i == 1 ? R.id.btnDumpCargo2 :
+				                                     i == 2 ? R.id.btnDumpCargo3 :
+				                                     i == 3 ? R.id.btnDumpCargo4 :
+				                                     i == 4 ? R.id.btnDumpCargo5 :
+				                                     i == 5 ? R.id.btnDumpCargo6 :
+				                                     i == 6 ? R.id.btnDumpCargo7 :
+				                                     i == 7 ? R.id.btnDumpCargo8 :
+				                                     i == 8 ? R.id.btnDumpCargo9 :
 					                           /*i == 9 ?*/ R.id.btnDumpCargo10
 				);
 				btn.setText(String.format("%2d", mGameState.Ship.cargo[i]));
@@ -4265,13 +3797,15 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class ShortRangeChartFragment extends Fragment {
 		public ShortRangeChartFragment() { }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
-			final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.ShortRangeChart);
+			final NavigationChart navigationChart =
+				(NavigationChart) rootView.findViewById(R.id.ShortRangeChart);
 			navigationChart.setGameState(mGameState);
 			navigationChart.setShortRange(true);
 
@@ -4280,30 +3814,44 @@ FrmGotoForm( CurForm );
 				public boolean onTouch(View view, MotionEvent motionEvent) {
 					navigationChart.mDrawWormhole = -1;
 					navigationChart.invalidate();
-					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 						int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-						if (wormhole >= 0){
+						if (wormhole >= 0) {
 							system = mGameState.Wormhole[wormhole];
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
 							if (!mGameState.AlwaysInfo &&
-								    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
-									     mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
-								    mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
-								){
+								    (mGameState
+									     .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+									                   mGameState.SolarSystem[system]
+									     ) <= mGameState.GetFuel() || mGameState
+										                                  .WormholeExists(mGameState.Mercenary[0].curSystem,
+										                                                  system
+										                                  )) &&
+								    mGameState
+									    .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+									                  mGameState.SolarSystem[system]
+									    ) > 0) {
 								btnAveragePricesForm(null);
 							} else {
 								btnWarpSystemInformation(null);
 							}
-						} else if (system >= 0){
+						} else if (system >= 0) {
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
 							if (!mGameState.AlwaysInfo &&
-							    (mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) <= mGameState.GetFuel() ||
-										 mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, system)) &&
-										mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[system]) > 0
-							    ){
+								    (mGameState
+									     .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+									                   mGameState.SolarSystem[system]
+									     ) <= mGameState.GetFuel() || mGameState
+										                                  .WormholeExists(mGameState.Mercenary[0].curSystem,
+										                                                  system
+										                                  )) &&
+								    mGameState
+									    .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+									                  mGameState.SolarSystem[system]
+									    ) > 0) {
 								btnAveragePricesForm(null);
 							} else {
 								btnWarpSystemInformation(null);
@@ -4314,31 +3862,41 @@ FrmGotoForm( CurForm );
 					}
 					return false;
 				}
-			});
+			}
+			);
 			TextView tv = (TextView) rootView.findViewById(R.id.txtShortRangeChartDistToTarget);
-			if (mGameState.TrackedSystem < 0){
+			if (mGameState.TrackedSystem < 0) {
 				tv.setVisibility(View.INVISIBLE);
 			} else {
 				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("Distance to %s: %d parsec", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex], mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], mGameState.SolarSystem[mGameState.TrackedSystem])));
+				tv.setText(String.format("Distance to %s: %d parsec",
+				                         mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex],
+				                         mGameState
+					                         .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+					                                       mGameState.SolarSystem[mGameState.TrackedSystem]
+					                         )
+				)
+				);
 			}
 			return rootView;
 		}
 	}
+
 	public class GalacticChartFragment extends Fragment {
 		public GalacticChartFragment() { }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
-			final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.GalacticChart);
+			final NavigationChart navigationChart =
+				(NavigationChart) rootView.findViewById(R.id.GalacticChart);
 			Button button = (Button) rootView.findViewById(R.id.btnJump);
 			button.setVisibility(mGameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 			navigationChart.setGameState(mGameState);
 			navigationChart.setShortRange(false);
 
 			TextView tv;
-			if (mGameState.WarpSystem <= 0){
+			if (mGameState.WarpSystem <= 0) {
 				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 				tv.setVisibility(View.INVISIBLE);
 				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
@@ -4349,10 +3907,19 @@ FrmGotoForm( CurForm );
 				SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
 				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size], mGameState.techLevel[s.techLevel], mGameState.Politics.mPolitics[s.politics].name));
+				tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size],
+				                         mGameState.techLevel[s.techLevel],
+				                         mGameState.Politics.mPolitics[s.politics].name
+				)
+				);
 				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("%d parsecs", mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], s)));
+				tv.setText(String.format("%d parsecs", mGameState
+					                                       .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+					                                                     s
+					                                       )
+				)
+				);
 				tv = (TextView) rootView.findViewById(R.id.galChartName);
 				tv.setVisibility(View.VISIBLE);
 				tv.setText(mGameState.SolarSystemName[s.nameIndex]);
@@ -4361,48 +3928,58 @@ FrmGotoForm( CurForm );
 			navigationChart.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent motionEvent) {
-					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 						final int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
 						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-						if (wormhole >= 0){
+						if (wormhole >= 0) {
 							navigationChart.mDrawWormhole = wormhole;
 							navigationChart.invalidate();
 							TextView tv;
 							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("Wormhole to %s", mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]));
+							tv.setText(String.format("Wormhole to %s",
+							                         mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]
+							)
+							);
 							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 							tv.setVisibility(View.INVISIBLE);
 							tv = (TextView) rootView.findViewById(R.id.galChartName);
 							tv.setVisibility(View.INVISIBLE);
-						} else if (system >= 0){
+						} else if (system >= 0) {
 							TextView tv;
 							mGameState.WarpSystem = system;
 							WarpSystem = mGameState.SolarSystem[system];
 							SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
 							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size], mGameState.techLevel[s.techLevel], mGameState.Politics.mPolitics[s.politics].name));
+							tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size],
+							                         mGameState.techLevel[s.techLevel],
+							                         mGameState.Politics.mPolitics[s.politics].name
+							)
+							);
 							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("%d parsecs", mGameState.RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem], s)));
+							tv.setText(String.format("%d parsecs", mGameState
+								                                       .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
+								                                                     s
+								                                       )
+							)
+							);
 
 							tv = (TextView) rootView.findViewById(R.id.galChartName);
 							tv.setVisibility(View.VISIBLE);
 							tv.setText(mGameState.SolarSystemName[s.nameIndex]);
-							if (system == navigationChart.mSelectedSystem){
+							if (system == navigationChart.mSelectedSystem) {
 								Popup popup;
-								popup = new Popup(WelcomeScreen.this,
-								                  "Track system",
-								                  "Do you want to track the distance to "+mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex]+"?",
-								                  "", "Yes", "No",
-								                  new Popup.buttonCallback() {
-									                  @Override
-									                  public void execute(Popup popup, View view) {
-																			mGameState.TrackedSystem = system;
-																			navigationChart.invalidate();
-																		}
-																	}, cbShowNextPopup
+								popup = new Popup(WelcomeScreen.this, "Track system",
+								                  "Do you want to track the distance to " + mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex] + "?",
+								                  "", "Yes", "No", new Popup.buttonCallback() {
+									@Override
+									public void execute(Popup popup, View view) {
+										mGameState.TrackedSystem = system;
+										navigationChart.invalidate();
+									}
+								}, cbShowNextPopup
 								);
 								popupQueue.push(popup);
 								showNextPopup();
@@ -4416,10 +3993,12 @@ FrmGotoForm( CurForm );
 					}
 					return false;
 				}
-			});
+			}
+			);
 			return rootView;
 		}
 	}
+
 	public class AveragePricesFragment extends Fragment {
 		public AveragePricesFragment() { }
 
@@ -4431,7 +4010,7 @@ FrmGotoForm( CurForm );
 			TextView tv, tvprice;
 			Button btn;
 
-			if (WarpSystem == null){
+			if (WarpSystem == null) {
 				WarpSystem = CURSYSTEM;
 			}
 
@@ -4446,7 +4025,7 @@ FrmGotoForm( CurForm );
 
 			tv = (TextView) rootView.findViewById(R.id.txtPriceListTitle);
 			btn = (Button) rootView.findViewById(R.id.btnPriceListDiffAvg);
-			if (mGameState.PriceDifferences){
+			if (mGameState.PriceDifferences) {
 				tv.setText("Price Differences");
 				btn.setText("Absolute Prices");
 			} else {
@@ -4455,56 +4034,57 @@ FrmGotoForm( CurForm );
 			}
 
 			tv = (TextView) rootView.findViewById(R.id.txtPriceListBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
+			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
+			                         mGameState.TotalCargoBays()
+			)
+			);
 
 			tv = (TextView) rootView.findViewById(R.id.txtPriceListCash);
 			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
 
-			for (int i=0; i<GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(
-					                                    i == 0 ? R.id.btnPriceListBuy1 :
-					                                    i == 1 ? R.id.btnPriceListBuy2 :
-					                                    i == 2 ? R.id.btnPriceListBuy3 :
-					                                    i == 3 ? R.id.btnPriceListBuy4 :
-					                                    i == 4 ? R.id.btnPriceListBuy5 :
-					                                    i == 5 ? R.id.btnPriceListBuy6 :
-					                                    i == 6 ? R.id.btnPriceListBuy7 :
-					                                    i == 7 ? R.id.btnPriceListBuy8 :
-					                                    i == 8 ? R.id.btnPriceListBuy9 :
+			for (int i = 0; i < GameState.MAXTRADEITEM; ++i) {
+				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPriceListBuy1 :
+				                                     i == 1 ? R.id.btnPriceListBuy2 :
+				                                     i == 2 ? R.id.btnPriceListBuy3 :
+				                                     i == 3 ? R.id.btnPriceListBuy4 :
+				                                     i == 4 ? R.id.btnPriceListBuy5 :
+				                                     i == 5 ? R.id.btnPriceListBuy6 :
+				                                     i == 6 ? R.id.btnPriceListBuy7 :
+				                                     i == 7 ? R.id.btnPriceListBuy8 :
+				                                     i == 8 ? R.id.btnPriceListBuy9 :
 					                                    /*i == 9 ?*/ R.id.btnPriceListBuy10
 				);
 				btn.setVisibility(mGameState.BuyPrice[i] <= 0 ? View.INVISIBLE : View.VISIBLE);
 				btn.setText(String.format("%d", CURSYSTEM.qty[i]));
-				tv = (TextView) rootView.findViewById(
-					                                     i == 0 ? R.id.txtPriceListName1 :
-					                                     i == 1 ? R.id.txtPriceListName2 :
-					                                     i == 2 ? R.id.txtPriceListName3 :
-					                                     i == 3 ? R.id.txtPriceListName4 :
-					                                     i == 4 ? R.id.txtPriceListName5 :
-					                                     i == 5 ? R.id.txtPriceListName6 :
-					                                     i == 6 ? R.id.txtPriceListName7 :
-					                                     i == 7 ? R.id.txtPriceListName8 :
-					                                     i == 8 ? R.id.txtPriceListName9 :
+				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListName1 :
+				                                      i == 1 ? R.id.txtPriceListName2 :
+				                                      i == 2 ? R.id.txtPriceListName3 :
+				                                      i == 3 ? R.id.txtPriceListName4 :
+				                                      i == 4 ? R.id.txtPriceListName5 :
+				                                      i == 5 ? R.id.txtPriceListName6 :
+				                                      i == 6 ? R.id.txtPriceListName7 :
+				                                      i == 7 ? R.id.txtPriceListName8 :
+				                                      i == 8 ? R.id.txtPriceListName9 :
 					                                     /*i == 9 ?*/ R.id.txtPriceListName10
 				);
-				tvprice = (TextView) rootView.findViewById(
-					                                          i == 0 ? R.id.txtPriceListPrice1 :
-					                                          i == 1 ? R.id.txtPriceListPrice2 :
-					                                          i == 2 ? R.id.txtPriceListPrice3 :
-					                                          i == 3 ? R.id.txtPriceListPrice4 :
-					                                          i == 4 ? R.id.txtPriceListPrice5 :
-					                                          i == 5 ? R.id.txtPriceListPrice6 :
-					                                          i == 6 ? R.id.txtPriceListPrice7 :
-					                                          i == 7 ? R.id.txtPriceListPrice8 :
-					                                          i == 8 ? R.id.txtPriceListPrice9 :
+				tvprice = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListPrice1 :
+				                                           i == 1 ? R.id.txtPriceListPrice2 :
+				                                           i == 2 ? R.id.txtPriceListPrice3 :
+				                                           i == 3 ? R.id.txtPriceListPrice4 :
+				                                           i == 4 ? R.id.txtPriceListPrice5 :
+				                                           i == 5 ? R.id.txtPriceListPrice6 :
+				                                           i == 6 ? R.id.txtPriceListPrice7 :
+				                                           i == 7 ? R.id.txtPriceListPrice8 :
+				                                           i == 8 ? R.id.txtPriceListPrice9 :
 					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10
 				);
 
-				int Price = mGameState.StandardPrice( i, WarpSystem.size,
-				                       WarpSystem.techLevel, WarpSystem.politics,
-				                       (WarpSystem.visited ? WarpSystem.specialResources : -1) );
+				int Price = mGameState.StandardPrice(i, WarpSystem.size, WarpSystem.techLevel,
+				                                     WarpSystem.politics,
+				                                     (WarpSystem.visited ? WarpSystem.specialResources : -1)
+				);
 
-				if (Price > mGameState.BuyPrice[i] && mGameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0){
+				if (Price > mGameState.BuyPrice[i] && mGameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0) {
 					tv.setTypeface(null, Typeface.BOLD);
 					tvprice.setTypeface(null, Typeface.BOLD);
 				} else {
@@ -4512,7 +4092,7 @@ FrmGotoForm( CurForm );
 					tvprice.setTypeface(null, Typeface.NORMAL);
 				}
 
-				if (Price <= 0 || (mGameState.PriceDifferences && mGameState.BuyPrice[i] <= 0)){
+				if (Price <= 0 || (mGameState.PriceDifferences && mGameState.BuyPrice[i] <= 0)) {
 					tvprice.setText("---");
 				} else {
 					if (mGameState.PriceDifferences)
@@ -4524,12 +4104,15 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class WarpSystemInformationFragment extends Fragment {
 		public WarpSystemInformationFragment() { }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container, false);
+			final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container,
+			                                       false
+			);
 			CrewMember COMMANDER = mGameState.Mercenary[0];
 			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
 			TextView tv;
@@ -4556,18 +4139,29 @@ FrmGotoForm( CurForm );
 				tv.setText(String.format("%d parsecs", Distance));
 
 			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
-			tv.setText(String.format("%d cr.", mGameState.InsuranceMoney() + mGameState.MercenaryMoney() + (mGameState.Debt > 0 ? Math.max(mGameState.Debt / 10, 1) : 0 ) + mGameState.WormholeTax(COMMANDER.curSystem, WarpSystem)));
+			tv.setText(String.format("%d cr.", mGameState.InsuranceMoney() + mGameState
+				                                                                 .MercenaryMoney() + (mGameState.Debt > 0 ?
+			                                                                                        Math
+				                                                                                        .max(mGameState.Debt / 10,
+				                                                                                             1
+				                                                                                        ) :
+			                                                                                        0) + mGameState
+				                                                                                             .WormholeTax(COMMANDER.curSystem,
+				                                                                                                          WarpSystem
+				                                                                                             )
+			)
+			);
 
-			if (Distance > 0){
+			if (Distance > 0) {
 				if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem
-				) || Distance <= mGameState.GetFuel()){
+				) || Distance <= mGameState.GetFuel()) {
 					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 					btn.setVisibility(View.VISIBLE);
 					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
 					btn.setVisibility(View.VISIBLE);
 					tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
 					tv.setVisibility(View.INVISIBLE);
-				} else if (Distance > mGameState.GetFuel()){
+				} else if (Distance > mGameState.GetFuel()) {
 					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 					btn.setVisibility(View.INVISIBLE);
 					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
@@ -4585,6 +4179,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class EncounterFragment extends Fragment {
 		public EncounterFragment() { }
 
@@ -4609,7 +4204,7 @@ FrmGotoForm( CurForm );
 			btnBribe = (Button) rootView.findViewById(R.id.btnBribe);
 			btnIgnore = (Button) rootView.findViewById(R.id.btnIgnore);
 			btnYield = (Button) rootView.findViewById(R.id.btnYield);
-			btnBoard  = (Button) rootView.findViewById(R.id.btnBoard);
+			btnBoard = (Button) rootView.findViewById(R.id.btnBoard);
 			btnPlunder = (Button) rootView.findViewById(R.id.btnPlunder);
 			btnSurrender = (Button) rootView.findViewById(R.id.btnSurrender);
 			btnDrink = (Button) rootView.findViewById(R.id.btnDrink);
@@ -4621,17 +4216,20 @@ FrmGotoForm( CurForm );
 
 			EncounterButtons();
 
-			playerShipNeedsUpdate=false;
-			opponentShipNeedsUpdate=false;
+			playerShipNeedsUpdate = false;
+			opponentShipNeedsUpdate = false;
 
 			//EncounterDisplayShips();
-			EncounterDisplayNextAction( true );
+			EncounterDisplayNextAction(true);
 
 			if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
 				EncounterText.setText("You encounter the Customs Police.");
 			} else {
 				String buf;
-				buf = String.format("At %d click%s from %s you encounter ", mGameState.Clicks, mGameState.Clicks == 1 ? "" : "s", mGameState.SolarSystemName[WarpSystem.nameIndex]);
+				buf = String.format("At %d click%s from %s you encounter ", mGameState.Clicks,
+				                    mGameState.Clicks == 1 ? "" : "s",
+				                    mGameState.SolarSystemName[WarpSystem.nameIndex]
+				);
 				if (mGameState.ENCOUNTERPOLICE(mGameState.EncounterType))
 					buf += "a police ";
 				else if (mGameState.ENCOUNTERPIRATE(mGameState.EncounterType)) {
@@ -4639,7 +4237,7 @@ FrmGotoForm( CurForm );
 						buf += "an alien ";
 					else
 						buf += "a pirate ";
-				} else if (mGameState.ENCOUNTERTRADER( mGameState.EncounterType ))
+				} else if (mGameState.ENCOUNTERTRADER(mGameState.EncounterType))
 					buf += "a trader ";
 				else if (mGameState.ENCOUNTERMONSTER(mGameState.EncounterType))
 					buf += "";
@@ -4657,7 +4255,7 @@ FrmGotoForm( CurForm );
 					buf += "a stolen ";
 				if (mGameState.EncounterType != GameState.MARIECELESTEENCOUNTER && mGameState.EncounterType != GameState.CAPTAINAHABENCOUNTER &&
 					    mGameState.EncounterType != GameState.CAPTAINCONRADENCOUNTER && mGameState.EncounterType != GameState.CAPTAINHUIEENCOUNTER &&
-					    mGameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && mGameState.EncounterType != GameState.BOTTLEGOODENCOUNTER){
+					    mGameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && mGameState.EncounterType != GameState.BOTTLEGOODENCOUNTER) {
 					buf += mGameState.ShipTypes.ShipTypes[Opponent.type].name;
 				}
 				buf += ".\n";
@@ -4666,27 +4264,34 @@ FrmGotoForm( CurForm );
 			}
 
 			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
-			d = (int)Math.ceil(Math.sqrt( Ship.tribbles/250 ));
+			d = (int) Math.ceil(Math.sqrt(Ship.tribbles / 250));
 			d = Math.min(d, GameState.TRIBBLESONSCREEN);
-			for (i=0; i<=d; ++i) {
-				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+			for (i = 0; i <= d; ++i) {
+				int resID = mContext.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
+				                                                  mContext.getPackageName()
+				);
 				ImageView imageView = (ImageView) rootView.findViewById(resID);
-				if (imageView == null){
+				if (imageView == null) {
 					continue;
 				}
-				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView.getLayoutParams());
-				marginParams.setMargins(mGameState.GetRandom(container.getWidth()-tribble.getWidth()),
-				                        mGameState.GetRandom(container.getHeight()-tribble.getHeight()),
-				                        0, 0);
+				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView
+					                                                                             .getLayoutParams()
+				);
+				marginParams.setMargins(mGameState.GetRandom(container.getWidth() - tribble.getWidth()),
+				                        mGameState.GetRandom(container.getHeight() - tribble.getHeight()),
+				                        0, 0
+				);
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
 				imageView.setLayoutParams(layoutParams);
 
 				imageView.setVisibility(View.VISIBLE);
 			}
-			for (; i<=GameState.TRIBBLESONSCREEN; ++i){
-				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+			for (; i <= GameState.TRIBBLESONSCREEN; ++i) {
+				int resID = mContext.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
+				                                                  mContext.getPackageName()
+				);
 				ImageView imageView = (ImageView) rootView.findViewById(resID);
-				if (imageView == null){
+				if (imageView == null) {
 					continue;
 				}
 				imageView.setVisibility(View.GONE);
@@ -4694,6 +4299,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class OptionsFragment extends Fragment {
 		public OptionsFragment() { }
 
@@ -4744,6 +4350,7 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class ShortcutsFragment extends Fragment {
 		public ShortcutsFragment() { }
 
@@ -4754,26 +4361,35 @@ FrmGotoForm( CurForm );
 			return rootView;
 		}
 	}
+
 	public class VeryRareFragment extends Fragment {
 		public VeryRareFragment() { }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_rare_encounter_cheats, container, false);
+			final View rootView = inflater.inflate(R.layout.fragment_rare_encounter_cheats, container,
+			                                       false
+			);
 			CheckBox checkBox;
 
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatAhab);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYAHAB) == GameState.ALREADYAHAB);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYAHAB) == GameState.ALREADYAHAB);
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatHuie);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYHUIE) == GameState.ALREADYHUIE);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYHUIE) == GameState.ALREADYHUIE);
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatConrad);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYCONRAD) == GameState.ALREADYCONRAD);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYCONRAD) == GameState.ALREADYCONRAD);
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatMarieCeleste);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) == GameState.ALREADYMARIE);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) == GameState.ALREADYMARIE);
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatGoodTonic);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) == GameState.ALREADYBOTTLEGOOD);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) == GameState.ALREADYBOTTLEGOOD);
 			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatBadTonic);
-			checkBox.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) == GameState.ALREADYBOTTLEOLD);
+			checkBox
+				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) == GameState.ALREADYBOTTLEOLD);
 
 			final EditText editText;
 			editText = (EditText) rootView.findViewById(R.id.numCheatRareEncounter);
@@ -4793,7 +4409,8 @@ FrmGotoForm( CurForm );
 				public void afterTextChanged(Editable editable) {
 					numVeryRareChanceCallback(editText);
 				}
-			});
+			}
+			);
 
 			final EditText editText1 = (EditText) rootView.findViewById(R.id.numCheatOrbitTrade);
 			editText1.setText(String.valueOf(mGameState.ChanceOfTradeInOrbit));
@@ -4812,23 +4429,26 @@ FrmGotoForm( CurForm );
 				public void afterTextChanged(Editable editable) {
 					numVeryRareChanceCallback(editText1);
 				}
-			});
+			}
+			);
 
 			return rootView;
 		}
 	}
+
 	////////////////////////////////////////////////////////////////////////////
 	// Helper Functions
 	////////////////////////////////////////////////////////////////////////////
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
 		int i;
-		for (i = 0; mGameState.SolarSystem[i] != Current; i++);
+		for (i = 0; mGameState.SolarSystem[i] != Current; i++)
+			;
 		CrewMember COMMANDER = mGameState.Mercenary[0];
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
 
 		if (Back)
 			--i;
-	  else
+		else
 			++i;
 
 		while (true) {
@@ -4842,7 +4462,8 @@ FrmGotoForm( CurForm );
 			if (mGameState.WormholeExists(COMMANDER.curSystem, i))
 				return i;
 			else if (mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]
-			) <= mGameState.GetFuel() && mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]) > 0)
+			) <= mGameState.GetFuel() && mGameState.RealDistance(CURSYSTEM, mGameState.SolarSystem[i]
+			) > 0)
 				return i;
 
 			if (Back)
@@ -4854,7 +4475,7 @@ FrmGotoForm( CurForm );
 		return -1;
 	}
 
-	public void btnPersonnelRosterHireCallback(View view){
+	public void btnPersonnelRosterHireCallback(View view) {
 		int ForHire = mGameState.GetForHire();
 		int FirstFree = -1;
 		int oldtraderskill;
@@ -4868,8 +4489,8 @@ FrmGotoForm( CurForm );
 
 		if ((FirstFree < 0) || (mGameState.AvailableQuarters() <= FirstFree)) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "No Free Quarters", "There are currently no free crew quarters on your ship.",
+			popup = new Popup(this, "No Free Quarters",
+			                  "There are currently no free crew quarters on your ship.",
 			                  "If you hire someone, you must give him or her quarters on your ship. Depending on the type of ship, you can hire zero, one or two mercenaries.",
 			                  "OK", cbShowNextPopup
 			);
@@ -4879,14 +4500,15 @@ FrmGotoForm( CurForm );
 		} else {
 			Ship.crew[FirstFree] = ForHire;
 		}
-		btnPersonnelRoster(null);
+		changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
 		if (oldtraderskill != mGameState.TraderSkill(Ship))
 			mGameState.RecalculateBuyPrices(mGameState.Mercenary[0].curSystem);
 	}
-	public void btnPersonnelRosterFireCallback(View view){
+
+	public void btnPersonnelRosterFireCallback(View view) {
 		final int i;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnFireCrew1:
 				i = 1;
 				break;
@@ -4898,25 +4520,23 @@ FrmGotoForm( CurForm );
 		}
 
 		Popup popup;
-		popup = new Popup(this,
-		                  "Fire Mercenary", "Are you sure you wish to fire this mercenary?",
-		                  "If you fire a mercenary, he or she returns to his or her home system",
-		                  "Yes", "No",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-						              Ship Ship = mGameState.Ship;
-						              int oldtraderskill;
-						              oldtraderskill = mGameState.TraderSkill(Ship);
-						              if (i == 1) {
-							              Ship.crew[1] = Ship.crew[2];
-						              }
-						              Ship.crew[2] = -1;
-						              btnPersonnelRoster(null);
-						              if (oldtraderskill != mGameState.TraderSkill(Ship))
-							              mGameState.RecalculateBuyPrices(mGameState.Mercenary[0].curSystem);
-					              }
-				              }, cbShowNextPopup
+		popup = new Popup(this, "Fire Mercenary", "Are you sure you wish to fire this mercenary?",
+		                  "If you fire a mercenary, he or she returns to his or her home system", "Yes",
+		                  "No", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				Ship Ship = mGameState.Ship;
+				int oldtraderskill;
+				oldtraderskill = mGameState.TraderSkill(Ship);
+				if (i == 1) {
+					Ship.crew[1] = Ship.crew[2];
+				}
+				Ship.crew[2] = -1;
+				changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
+				if (oldtraderskill != mGameState.TraderSkill(Ship))
+					mGameState.RecalculateBuyPrices(mGameState.Mercenary[0].curSystem);
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
@@ -4930,26 +4550,23 @@ FrmGotoForm( CurForm );
 
 		// if Wild is aboard, make sure ship is armed!
 		if (mGameState.WildStatus == 1) {
-			if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)){
-				popup = new Popup(this,
-				                  "Wild Won't Stay Aboard",
+			if (!mGameState.HasWeapon(mGameState.Ship, GameState.BEAMLASERWEAPON, false)) {
+				popup = new Popup(this, "Wild Won't Stay Aboard",
 				                  "Jonathan Wild isn't willing to go with you if you are not armed with at least a Beam Laser.",
-				                  "", "Stay here", "Goodbye Wild",
-				                  cbShowNextPopup,
+				                  "", "Stay here", "Goodbye Wild", cbShowNextPopup,
 				                  new Popup.buttonCallback() {
 					                  @Override
 					                  public void execute(Popup popup, View view) {
-															mGameState.WildStatus = 0;
-															Popup popup1;
-						                  popup1 = new Popup(popup.context,
-						                                     "Say Goodbye to Wild",
+						                  mGameState.WildStatus = 0;
+						                  Popup popup1;
+						                  popup1 = new Popup(popup.context, "Say Goodbye to Wild",
 						                                     "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
 						                                     "", "OK", cbShowNextPopup
-															);
+						                  );
 						                  popupQueue.push(popup1);
 						                  showNextPopup();
-														}
-													}
+					                  }
+				                  }
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -4959,8 +4576,7 @@ FrmGotoForm( CurForm );
 
 		// Check for Large Debt
 		if (mGameState.Debt > GameState.DEBTTOOLARGE) {
-			popup = new Popup(this,
-			                  "Large Debt",
+			popup = new Popup(this, "Large Debt",
 			                  "Your debt is too large.  You are not allowed to leave this system until your debt is lowered.",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -4971,8 +4587,7 @@ FrmGotoForm( CurForm );
 
 		// Check for enough money to pay Mercenaries
 		if (mGameState.MercenaryMoney() > mGameState.Credits) {
-			popup = new Popup(this,
-			                  "Pay Mercenaries",
+			popup = new Popup(this, "Pay Mercenaries",
 			                  "You don't have enough cash to pay your mercenaries to come with you on this trip. Fire them or make sure you have enough cash.",
 			                  "You must pay your mercenaries daily, that is, before you warp to another system. If you don't have the cash, you must either sell something so you have enough cash, or fire the mercenaries you can't pay. Until then, warping is out of the question.",
 			                  "OK", cbShowNextPopup
@@ -4985,8 +4600,8 @@ FrmGotoForm( CurForm );
 		// Check for enough money to pay Insurance
 		if (mGameState.Insurance) {
 			if (mGameState.InsuranceMoney() + mGameState.MercenaryMoney() > mGameState.Credits) {
-				popup = new Popup(this,
-				                  "Not Enough Money", "You don't have enough cash to pay for your insurance.",
+				popup = new Popup(this, "Not Enough Money",
+				                  "You don't have enough cash to pay for your insurance.",
 				                  "You can't leave if you haven't paid your insurance. If you have no way to pay, you should stop your insurance at the bank.",
 				                  "OK", cbShowNextPopup
 				);
@@ -4997,11 +4612,12 @@ FrmGotoForm( CurForm );
 		}
 
 		// Check for enough money to pay Wormhole Tax
-		if (mGameState.InsuranceMoney() + mGameState.MercenaryMoney() + mGameState.WormholeTax(COMMANDER.curSystem,
-		                                                                                       WarpSystem
-		) > mGameState.Credits) {
-			popup = new Popup(this,
-			                  "Wormhole Tax", "You don't have enough money to pay for the wormhole tax.",
+		if (mGameState.InsuranceMoney() + mGameState.MercenaryMoney() + mGameState
+			                                                                .WormholeTax(COMMANDER.curSystem,
+			                                                                             WarpSystem
+			                                                                ) > mGameState.Credits) {
+			popup = new Popup(this, "Wormhole Tax",
+			                  "You don't have enough money to pay for the wormhole tax.",
 			                  "Wormhole tax must be paid when you want to warp through a wormhole. It depends on the type of your ship.",
 			                  "OK", cbShowNextPopup
 			);
@@ -5016,10 +4632,11 @@ FrmGotoForm( CurForm );
 			mGameState.Credits -= mGameState.InsuranceMoney();
 		}
 
-		for (i=0; i<GameState.MAXSHIELD; ++i) {
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
 			if (mGameState.Ship.shield[i] < 0)
 				break;
-			mGameState.Ship.shieldStrength[i] = mGameState.Shields.mShields[mGameState.Ship.shield[i]].power;
+			mGameState.Ship.shieldStrength[i] =
+				mGameState.Shields.mShields[mGameState.Ship.shield[i]].power;
 		}
 
 		CURSYSTEM.countDown = GameState.CountDown;
@@ -5049,29 +4666,30 @@ FrmGotoForm( CurForm );
 		mGameState.LitterWarning = false;
 		mGameState.MonsterHull = (mGameState.MonsterHull * 105) / 100;
 		if (mGameState.MonsterHull > mGameState.ShipTypes.ShipTypes[mGameState.SpaceMonster.type].hullStrength)
-			mGameState.MonsterHull = mGameState.ShipTypes.ShipTypes[mGameState.SpaceMonster.type].hullStrength;
-		if (mGameState.Days%3 == 0) {
+			mGameState.MonsterHull =
+				mGameState.ShipTypes.ShipTypes[mGameState.SpaceMonster.type].hullStrength;
+		if (mGameState.Days % 3 == 0) {
 			if (mGameState.PoliceRecordScore > GameState.CLEANSCORE)
 				--mGameState.PoliceRecordScore;
 		}
-		if (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE){
+		if (mGameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
 			if (GameState.getDifficulty() <= GameState.NORMAL)
 				++mGameState.PoliceRecordScore;
-			else if (mGameState.Days%GameState.getDifficulty() == 0)
+			else if (mGameState.Days % GameState.getDifficulty() == 0)
 				++mGameState.PoliceRecordScore;
 		}
 
-		mGameState.PossibleToGoThroughRip=true;
+		mGameState.PossibleToGoThroughRip = true;
 
 		mGameState.DeterminePrices(mGameState.WarpSystem);
 		Travel();
 	}
+
 	public void IncDays(int Amount) {
 		mGameState.Days += Amount;
 		if (mGameState.InvasionStatus > 0 && mGameState.InvasionStatus < 8) {
 			mGameState.InvasionStatus += Amount;
-			if (mGameState.InvasionStatus >= 8)
-			{
+			if (mGameState.InvasionStatus >= 8) {
 				mGameState.SolarSystem[GameState.GEMULONSYSTEM].special = GameState.GEMULONINVADED;
 				mGameState.SolarSystem[GameState.GEMULONSYSTEM].techLevel = 0;
 				mGameState.SolarSystem[GameState.GEMULONSYSTEM].politics = GameState.ANARCHY;
@@ -5091,8 +4709,7 @@ FrmGotoForm( CurForm );
 				mGameState.SolarSystem[GameState.DALEDSYSTEM].special = GameState.EXPERIMENTNOTSTOPPED;
 				// in case Amount > 1
 				mGameState.ExperimentStatus = 12;
-				Popup popup = new Popup(this,
-				                        "Experiment Performed",
+				Popup popup = new Popup(this, "Experiment Performed",
 				                        "The galaxy is abuzz with news of a terrible malfunction in Dr. Fehler's laboratory. Evidently, he was not warned in time and he performed his experiment... with disastrous results!",
 				                        "", "OK", cbShowNextPopup
 				);
@@ -5104,6 +4721,7 @@ FrmGotoForm( CurForm );
 			mGameState.FabricRipProbability -= Amount;
 		}
 	}
+
 	public void Travel() {
 		int EncounterTest, StartClicks, i, j, Repairs, FirstEmptySlot, rareEncounter;
 		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard, EasterEgg;
@@ -5122,18 +4740,18 @@ FrmGotoForm( CurForm );
 
 		// if timespace is ripped, we may switch the warp system here.
 		if (mGameState.PossibleToGoThroughRip && mGameState.ExperimentStatus == 12 && mGameState.FabricRipProbability > 0 &&
-			    (mGameState.GetRandom(100) < mGameState.FabricRipProbability || mGameState.FabricRipProbability == 25)) {
-			popup = new Popup(this,
-			                        "Timespace Fabric Rip",
-			                        "You have flown through a tear in the timespace continuum caused by Dr. Fehler's failed experiment. You may not have reached your planned destination!",
-			                        "", "OK", cbShowNextPopup
+			    (mGameState
+				     .GetRandom(100) < mGameState.FabricRipProbability || mGameState.FabricRipProbability == 25)) {
+			popup = new Popup(this, "Timespace Fabric Rip",
+			                  "You have flown through a tear in the timespace continuum caused by Dr. Fehler's failed experiment. You may not have reached your planned destination!",
+			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			WarpSystem = mGameState.SolarSystem[mGameState.GetRandom(GameState.MAXSOLARSYSTEM)];
 		}
 
-		mGameState.PossibleToGoThroughRip=false;
+		mGameState.PossibleToGoThroughRip = false;
 
 		StartClicks = mGameState.Clicks;
 		--mGameState.Clicks;
@@ -5150,7 +4768,7 @@ FrmGotoForm( CurForm );
 
 			// Shields are easier to repair
 			Repairs = 2 * Repairs;
-			for (i=0; i<GameState.MAXSHIELD; ++i) {
+			for (i = 0; i < GameState.MAXSHIELD; ++i) {
 				if (Ship.shield[i] < 0)
 					break;
 				Ship.shieldStrength[i] += Repairs;
@@ -5218,30 +4836,25 @@ FrmGotoForm( CurForm );
 				if (Ship.type == 0)
 					EncounterTest *= 2;
 
-				if (EncounterTest < mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates &&
-					    !mGameState.Raided) // When you are already raided, other pirates have little to gain
+				if (EncounterTest < mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates && !mGameState.Raided) // When you are already raided, other pirates have little to gain
 					Pirate = true;
-				else if (EncounterTest <
-					         mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
-						         mGameState.STRENGTHPOLICE(WarpSystem))
+				else if (EncounterTest < mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates + mGameState
+					                                                                                              .STRENGTHPOLICE(WarpSystem))
 					// StrengthPolice adapts itself to your criminal record: you'll
 					// encounter more police if you are a hardened criminal.
 					Police = true;
-				else if (EncounterTest <
-					         mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
-						         mGameState.STRENGTHPOLICE(WarpSystem) +
-						         mGameState.Politics.mPolitics[WarpSystem.politics].strengthTraders)
+				else if (EncounterTest < mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
+					                         mGameState.STRENGTHPOLICE(WarpSystem) +
+					                         mGameState.Politics.mPolitics[WarpSystem.politics].strengthTraders)
 					Trader = true;
 				else if (mGameState.WildStatus == 1 && WarpSystem == mGameState.SolarSystem[GameState.KRAVATSYSTEM]) {
 					// if you're coming in to Kravat & you have Wild onboard, there'll be swarms o' cops.
 					rareEncounter = mGameState.GetRandom(100);
 					if (GameState.getDifficulty() <= GameState.EASY && rareEncounter < 25) {
 						Police = true;
-					}
-					else if (GameState.getDifficulty() == GameState.NORMAL && rareEncounter < 33) {
+					} else if (GameState.getDifficulty() == GameState.NORMAL && rareEncounter < 33) {
 						Police = true;
-					}
-					else if (GameState.getDifficulty() > GameState.NORMAL && rareEncounter < 50) {
+					} else if (GameState.getDifficulty() > GameState.NORMAL && rareEncounter < 50) {
 						Police = true;
 					}
 				}
@@ -5267,15 +4880,15 @@ FrmGotoForm( CurForm );
 					}
 					if (mGameState.ReputationScore < GameState.AVERAGESCORE)
 						mGameState.EncounterType = GameState.POLICEATTACK;
-					else if (mGameState.GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore / (1 + mGameState.Opponent.type)))
+					else if (mGameState
+						         .GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore / (1 + mGameState.Opponent.type)))
 						mGameState.EncounterType = GameState.POLICEATTACK;
 					else if (mGameState.Cloaked(mGameState.Opponent, Ship))
 						mGameState.EncounterType = GameState.POLICEIGNORE;
 					else
 						mGameState.EncounterType = GameState.POLICEFLEE;
-				}
-				else if (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE &&
-					         mGameState.PoliceRecordScore < GameState.CLEANSCORE && !mGameState.Inspected) {
+				} else if (mGameState.PoliceRecordScore >= GameState.DUBIOUSSCORE &&
+					           mGameState.PoliceRecordScore < GameState.CLEANSCORE && !mGameState.Inspected) {
 					// If you're reputation is dubious, the police will inspect you
 					mGameState.EncounterType = GameState.POLICEINSPECTION;
 					mGameState.Inspected = true;
@@ -5304,7 +4917,10 @@ FrmGotoForm( CurForm );
 				}
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
-				if (mGameState.EncounterType == GameState.POLICEIGNORE && mGameState.Cloaked(mGameState.Opponent, Ship)) {
+				if (mGameState.EncounterType == GameState.POLICEIGNORE && mGameState
+					                                                          .Cloaked(mGameState.Opponent,
+					                                                                   Ship
+					                                                          )) {
 					--mGameState.Clicks;
 					continue;
 				}
@@ -5312,8 +4928,7 @@ FrmGotoForm( CurForm );
 
 				// If you automatically don't want to confront someone who ignores you, the
 				// encounter may not take place
-				if (mGameState.AlwaysIgnorePolice && (mGameState.EncounterType == GameState.POLICEIGNORE ||
-				                                      mGameState.EncounterType == GameState.POLICEFLEE)) {
+				if (mGameState.AlwaysIgnorePolice && (mGameState.EncounterType == GameState.POLICEIGNORE || mGameState.EncounterType == GameState.POLICEFLEE)) {
 					--mGameState.Clicks;
 					continue;
 				}
@@ -5331,9 +4946,9 @@ FrmGotoForm( CurForm );
 				if (mGameState.Cloaked(Ship, mGameState.Opponent))
 					mGameState.EncounterType = GameState.PIRATEIGNORE;
 
-				// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
-				else if (mGameState.Opponent.type >= 7 ||
-					         mGameState.GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore * 4) / (1 + mGameState.Opponent.type))
+					// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
+				else if (mGameState.Opponent.type >= 7 || mGameState
+					                                          .GetRandom(GameState.ELITESCORE) > (mGameState.ReputationScore * 4) / (1 + mGameState.Opponent.type))
 					mGameState.EncounterType = GameState.PIRATEATTACK;
 				else
 					mGameState.EncounterType = GameState.PIRATEFLEE;
@@ -5343,18 +4958,19 @@ FrmGotoForm( CurForm );
 
 				// if Pirates are in a better ship, they won't flee, even if you have a very scary
 				// reputation.
-				if (mGameState.EncounterType == GameState.PIRATEFLEE && mGameState.Opponent.type > Ship.type)				{
+				if (mGameState.EncounterType == GameState.PIRATEFLEE && mGameState.Opponent.type > Ship.type) {
 					mGameState.EncounterType = GameState.PIRATEATTACK;
 				}
 
 				// If they ignore you or flee and you can't see them, the encounter doesn't take place
-				if ((mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.PIRATEFLEE) &&
-				    mGameState.Cloaked(mGameState.Opponent, Ship)) {
+				if ((mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.PIRATEFLEE) && mGameState
+					                                                                                                                .Cloaked(mGameState.Opponent,
+					                                                                                                                         Ship
+					                                                                                                                )) {
 					--mGameState.Clicks;
 					continue;
 				}
-				if (mGameState.AlwaysIgnorePirates && (mGameState.EncounterType == GameState.PIRATEIGNORE ||
-					                                       mGameState.EncounterType == GameState.PIRATEFLEE)){
+				if (mGameState.AlwaysIgnorePirates && (mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.PIRATEFLEE)) {
 					--mGameState.Clicks;
 					continue;
 				}
@@ -5368,9 +4984,10 @@ FrmGotoForm( CurForm );
 				// If you are cloaked, they don't see you
 				if (mGameState.Cloaked(Ship, mGameState.Opponent))
 					mGameState.EncounterType = GameState.TRADERIGNORE;
-				// If you're a criminal, traders tend to flee if you've got at least some reputation
+					// If you're a criminal, traders tend to flee if you've got at least some reputation
 				else if (mGameState.PoliceRecordScore <= GameState.CRIMINALSCORE) {
-					if (mGameState.GetRandom(GameState.ELITESCORE) <= (mGameState.ReputationScore * 10) / (1 + mGameState.Opponent.type)) {
+					if (mGameState
+						    .GetRandom(GameState.ELITESCORE) <= (mGameState.ReputationScore * 10) / (1 + mGameState.Opponent.type)) {
 						if (mGameState.Cloaked(mGameState.Opponent, Ship))
 							mGameState.EncounterType = GameState.TRADERIGNORE;
 						else
@@ -5379,32 +4996,37 @@ FrmGotoForm( CurForm );
 				}
 
 				// Will there be trade in orbit?
-				if (mGameState.EncounterType == GameState.TRADERIGNORE && (mGameState.GetRandom(1000) < mGameState.ChanceOfTradeInOrbit)) {
-					if (mGameState.FilledCargoBays() < mGameState.TotalCargoBays() &&
-						    mGameState.HasTradeableItems(mGameState.Opponent, WarpSystem, GameState.TRADERSELL))
+				if (mGameState.EncounterType == GameState.TRADERIGNORE && (mGameState
+					                                                           .GetRandom(1000) < mGameState.ChanceOfTradeInOrbit)) {
+					if (mGameState.FilledCargoBays() < mGameState.TotalCargoBays() && mGameState
+						                                                                  .HasTradeableItems(mGameState.Opponent,
+						                                                                                     WarpSystem,
+						                                                                                     GameState.TRADERSELL
+						                                                                  ))
 						mGameState.EncounterType = GameState.TRADERSELL;
 
 					// we fudge on whether the trader has capacity to carry the stuff he's buying.
-					if (mGameState.HasTradeableItems(Ship, WarpSystem, GameState.TRADERBUY) && mGameState.EncounterType != GameState.TRADERSELL)
+					if (mGameState.HasTradeableItems(Ship, WarpSystem, GameState.TRADERBUY
+					) && mGameState.EncounterType != GameState.TRADERSELL)
 						mGameState.EncounterType = GameState.TRADERBUY;
 				}
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
 				if ((mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.TRADERFLEE ||
-					     mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) &&
-					    mGameState.Cloaked(mGameState.Opponent, Ship)) {
+					     mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) && mGameState
+						                                                                                                             .Cloaked(mGameState.Opponent,
+						                                                                                                                      Ship
+						                                                                                                             )) {
 					--mGameState.Clicks;
 					continue;
 				}
 				// pay attention to user's prefs with regard to ignoring traders
-				if (mGameState.AlwaysIgnoreTraders && (mGameState.EncounterType == GameState.TRADERIGNORE ||
-					                                       mGameState.EncounterType == GameState.TRADERFLEE)) {
+				if (mGameState.AlwaysIgnoreTraders && (mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.TRADERFLEE)) {
 					--mGameState.Clicks;
 					continue;
 				}
 				// pay attention to user's prefs with regard to ignoring trade in orbit
-				if (mGameState.AlwaysIgnoreTradeInOrbit && (mGameState.EncounterType == GameState.TRADERBUY ||
-					                                            mGameState.EncounterType == GameState.TRADERSELL)) {
+				if (mGameState.AlwaysIgnoreTradeInOrbit && (mGameState.EncounterType == GameState.TRADERBUY || mGameState.EncounterType == GameState.TRADERSELL)) {
 					--mGameState.Clicks;
 					continue;
 				}
@@ -5420,19 +5042,21 @@ FrmGotoForm( CurForm );
 			//    will affect skills depending on game difficulty level.
 			// 6. Encounter a good bottle of Captain Marmoset's Skill Tonic, which will invoke
 			//    IncreaseRandomSkill one or two times, depending on game difficulty.
-			else if ((mGameState.Days > 10) && (mGameState.GetRandom(1000) < mGameState.ChanceOfVeryRareEncounter)){
+			else if ((mGameState.Days > 10) && (mGameState
+				                                    .GetRandom(1000) < mGameState.ChanceOfVeryRareEncounter)) {
 				rareEncounter = mGameState.GetRandom(GameState.MAXVERYRAREENCOUNTER);
 
 				switch (rareEncounter) {
 					case GameState.MARIECELESTE:
-						if ((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) != GameState.ALREADYMARIE){
+						if ((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) != GameState.ALREADYMARIE) {
 							mGameState.VeryRareEncounter |= GameState.ALREADYMARIE;
 							mGameState.EncounterType = GameState.MARIECELESTEENCOUNTER;
 							mGameState.GenerateOpponent(GameState.TRADER);
-							for (i=0;i<GameState.MAXTRADEITEM;i++) {
-								mGameState.Opponent.cargo[i]=0;
+							for (i = 0; i < GameState.MAXTRADEITEM; i++) {
+								mGameState.Opponent.cargo[i] = 0;
 							}
-							mGameState.Opponent.cargo[GameState.NARCOTICS] = Math.min(mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays,5);
+							mGameState.Opponent.cargo[GameState.NARCOTICS] =
+								Math.min(mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays, 5);
 							btnEncounter(null);
 							return;
 						}
@@ -5474,7 +5098,7 @@ FrmGotoForm( CurForm );
 						}
 						break;
 					case GameState.BOTTLEOLD:
-						if  ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) != GameState.ALREADYBOTTLEOLD) {
+						if ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) != GameState.ALREADYBOTTLEOLD) {
 							mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEOLD;
 							mGameState.EncounterType = GameState.BOTTLEOLDENCOUNTER;
 							mGameState.GenerateOpponent(GameState.TRADER);
@@ -5485,7 +5109,7 @@ FrmGotoForm( CurForm );
 						}
 						break;
 					case GameState.BOTTLEGOOD:
-						if  ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) != GameState.ALREADYBOTTLEGOOD) {
+						if ((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) != GameState.ALREADYBOTTLEGOOD) {
 							mGameState.VeryRareEncounter |= GameState.ALREADYBOTTLEGOOD;
 							mGameState.EncounterType = GameState.BOTTLEGOODENCOUNTER;
 							mGameState.GenerateOpponent(GameState.TRADER);
@@ -5511,37 +5135,34 @@ FrmGotoForm( CurForm );
 		}
 
 		// Arrival in the target system
-		if (StartClicks > 20){
-			popup = new Popup(this,
-			                  "Uneventful trip", "After an uneventful trip, you arrive at your destination.",
+		if (StartClicks > 20) {
+			popup = new Popup(this, "Uneventful trip",
+			                  "After an uneventful trip, you arrive at your destination.",
 			                  "Be glad you didn't encounter any pirates.", "OK", cbShowNextPopup
 			);
 		} else {
-			popup = new Popup(this,
-			                  "Arrival", "You arrive at your destination.", "Another trip you have survived.",
-			                  "OK", cbShowNextPopup
+			popup = new Popup(this, "Arrival", "You arrive at your destination.",
+			                  "Another trip you have survived.", "OK", cbShowNextPopup
 			);
 		}
 		popupQueue.push(popup);
 		showNextPopup();
 
 		// Check for Large Debt - 06/30/01 SRA
-		if (mGameState.Debt >= 75000){
-			popup = new Popup(this,
-			                  "Warning: Large Debt",
+		if (mGameState.Debt >= 75000) {
+			popup = new Popup(this, "Warning: Large Debt",
 			                  "Your debt is getting too large. Reduce it quickly or your ship will be put on a chain!",
-			                  "",  "OK", cbShowNextPopup
+			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 		// Debt Reminder
 		if (mGameState.Debt > 0 && mGameState.RemindLoans && mGameState.Days % 5 == 0) {
-			popup = new Popup(this,
-			                  "Loan Notification",
-			                  String.format("The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
-			                                mGameState.Debt
-			                  ),
+			popup = new Popup(this, "Loan Notification", String
+				                                             .format("The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
+				                                                     mGameState.Debt
+				                                             ),
 			                  "The Bank Officer will contact you every five days to remind you of your debt. You can turn off these warnings on the second page of Game Options.",
 			                  "OK", cbShowNextPopup
 			);
@@ -5553,19 +5174,17 @@ FrmGotoForm( CurForm );
 
 		// Reactor warnings:
 		// now they know the quest has a time constraint!
-		if (mGameState.ReactorStatus == 2){
-			popup = new Popup(this,
-			                  "Reactor Warning",
+		if (mGameState.ReactorStatus == 2) {
+			popup = new Popup(this, "Reactor Warning",
 			                  "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
-			// better deliver it soon!
-		else if (mGameState.ReactorStatus == 16){
-			popup = new Popup(this,
-			                  "Reactor Warning",
+		// better deliver it soon!
+		else if (mGameState.ReactorStatus == 16) {
+			popup = new Popup(this, "Reactor Warning",
 			                  "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -5573,9 +5192,8 @@ FrmGotoForm( CurForm );
 			showNextPopup();
 		}
 		// last warning!
-		else if (mGameState.ReactorStatus == 18){
-			popup = new Popup(this,
-			                  "Reactor Warning",
+		else if (mGameState.ReactorStatus == 18) {
+			popup = new Popup(this, "Reactor Warning",
 			                  "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -5583,8 +5201,7 @@ FrmGotoForm( CurForm );
 			showNextPopup();
 		}
 		if (mGameState.ReactorStatus == 20) {
-			popup = new Popup(this,
-			                  "Reactor Meltdown!",
+			popup = new Popup(this, "Reactor Meltdown!",
 			                  "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -5595,10 +5212,8 @@ FrmGotoForm( CurForm );
 				EscapeWithPod();
 				return;
 			} else {
-				popup = new Popup(this,
-				                  "You lose",
-				                  "Your ship has been destroyed.",
-				                  "", "OK", cbShowNextPopup
+				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -5618,16 +5233,14 @@ FrmGotoForm( CurForm );
 			Ship.tribbles /= 2;
 			if (Ship.tribbles < 10) {
 				Ship.tribbles = 0;
-				popup = new Popup(this,
-				                  "All the Tribbles Died",
+				popup = new Popup(this, "All the Tribbles Died",
 				                  "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
 				                  "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				popup = new Popup(this,
-				                  "Half the Tribbles Died",
+				popup = new Popup(this, "Half the Tribbles Died",
 				                  "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
 				                  "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
 				                  "OK", cbShowNextPopup
@@ -5639,24 +5252,23 @@ FrmGotoForm( CurForm );
 			Ship.tribbles = 1 + mGameState.GetRandom(3);
 			j = 1 + mGameState.GetRandom(3);
 			i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
-			mGameState.BuyingPrice[GameState.NARCOTICS] = (mGameState.BuyingPrice[GameState.NARCOTICS] *
-				                          (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
+			mGameState.BuyingPrice[GameState.NARCOTICS] =
+				(mGameState.BuyingPrice[GameState.NARCOTICS] * (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
 			Ship.cargo[GameState.NARCOTICS] -= i;
 			Ship.cargo[GameState.FURS] += i;
-			popup = new Popup(this,
-			                  "Tribbles ate Narcotics",
+			popup = new Popup(this, "Tribbles ate Narcotics",
 			                  "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
-			Ship.tribbles += 100 + mGameState.GetRandom(Ship.cargo[GameState.FOOD] * 100 );
+			Ship.tribbles += 100 + mGameState.GetRandom(Ship.cargo[GameState.FOOD] * 100);
 			i = mGameState.GetRandom(Ship.cargo[GameState.FOOD]);
-			mGameState.BuyingPrice[GameState.FOOD] = (mGameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[mGameState.FOOD];
+			mGameState.BuyingPrice[GameState.FOOD] =
+				(mGameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[mGameState.FOOD];
 			Ship.cargo[GameState.FOOD] = i;
-			popup = new Popup(this,
-			                  "Tribbles Ate Food",
+			popup = new Popup(this, "Tribbles Ate Food",
 			                  "You find that, instead of food, some of your cargo bays contain only tribbles!",
 			                  "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
 			                  "OK", cbShowNextPopup
@@ -5667,8 +5279,7 @@ FrmGotoForm( CurForm );
 		}
 
 		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES)
-			Ship.tribbles += 1 + mGameState.GetRandom(Math.max(1,
-			                                                   (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
+			Ship.tribbles += 1 + mGameState.GetRandom(Math.max(1, (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
 			)
 			);
 
@@ -5684,11 +5295,10 @@ FrmGotoForm( CurForm );
 				buf = "a dangerous number of";
 			else
 				buf = String.format("%d", Ship.tribbles);
-			popup = new Popup(this,
-			                  "Space Port Inspector",
-			                  "Excuse me, but do you realize you have "+buf+" tribbles on board your ship?",
-			                  "You might want to do something about those Tribbles...",
-			                  "OK", cbShowNextPopup
+			popup = new Popup(this, "Space Port Inspector",
+			                  "Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
+			                  "You might want to do something about those Tribbles...", "OK",
+			                  cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -5705,16 +5315,15 @@ FrmGotoForm( CurForm );
 			btnShipyardBuyFuel(9999);
 			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
 				if (mGameState.AutoRepair && Ship.hull < mGameState.GetHullStrength()) {
-					popup = new Popup(this,
-					                  "Not Enough Money",
+					popup = new Popup(this, "Not Enough Money",
 					                  "You don't have enough money to get a full tank or full hull repairs.",
 					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
 					                  "OK", cbShowNextPopup
 					);
 					TryAutoRepair = false;
 				} else {
-					popup = new Popup(this,
-					                  "No Full Tanks", "You do not have enough money to buy full tanks.",
+					popup = new Popup(this, "No Full Tanks",
+					                  "You do not have enough money to buy full tanks.",
 					                  "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
 					                  "OK", cbShowNextPopup
 					);
@@ -5726,9 +5335,8 @@ FrmGotoForm( CurForm );
 
 		if (mGameState.AutoRepair && TryAutoRepair) {
 			btnShipyardBuyRepairs(99999);
-			if (Ship.hull < mGameState.GetHullStrength()){
-				popup = new Popup(this,
-				                  "No Full Repairs",
+			if (Ship.hull < mGameState.GetHullStrength()) {
+				popup = new Popup(this, "No Full Repairs",
 				                  "You don't have enough money to get your hull fully repaired.",
 				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
 				                  "OK", cbShowNextPopup
@@ -5748,25 +5356,28 @@ FrmGotoForm( CurForm );
 				++i;
 			}
 			if (i >= GameState.MAXTRADEITEM)
-				FirstEmptySlot = mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[Ship.type].shieldSlots, Ship.shield);
+				FirstEmptySlot =
+					mGameState.GetFirstEmptySlot(mGameState.ShipTypes.ShipTypes[Ship.type].shieldSlots,
+					                             Ship.shield
+					);
 			else
 				FirstEmptySlot = -1;
 
 			if (FirstEmptySlot >= 0) {
-				popup = new Popup(this,
-				                  "Easter",
+				popup = new Popup(this, "Easter",
 				                  "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
 				                  "Look up your ship's equipment.", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
-				Ship.shieldStrength[FirstEmptySlot] = mGameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+				Ship.shieldStrength[FirstEmptySlot] =
+					mGameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
 				EasterEgg = true;
 			}
 
 			if (EasterEgg) {
-				for (i=0; i<GameState.MAXTRADEITEM; ++i) {
+				for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
 					Ship.cargo[i] = 0;
 					mGameState.BuyingPrice[i] = 0;
 				}
@@ -5774,12 +5385,13 @@ FrmGotoForm( CurForm );
 		}
 
 		// It seems a glitch may cause cargo bays to become negative - no idea how...
-		for (i=0; i<GameState.MAXTRADEITEM; ++i)
+		for (i = 0; i < GameState.MAXTRADEITEM; ++i)
 			if (Ship.cargo[i] < 0)
 				Ship.cargo[i] = 0;
 
-		btnSystemInformation(null);
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
+
 	public static void EncounterDisplayShips() {
 		// *************************************************************************
 		// Display on the encounter screen the ships (and also wipe it)
@@ -5794,63 +5406,54 @@ FrmGotoForm( CurForm );
 			playerShipNeedsUpdate = false;
 		}
 	}
+
 	static void EncounterDisplayNextAction(Boolean FirstDisplay) {
 		// *************************************************************************
 		// Display on the encounter screen what the next action will be
 		// *************************************************************************
-			if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
+		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
 			EncounterText.setText("The police summon you to submit to an inspection.");
-		}
-		else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER)
-		{
-			EncounterText.setText("\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\"");
-		}
-		else if (FirstDisplay && mGameState.EncounterType == GameState.POLICEATTACK && mGameState.PoliceRecordScore > GameState.CRIMINALSCORE)
-		{
+		} else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+			EncounterText
+				.setText("\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\"");
+		} else if (FirstDisplay && mGameState.EncounterType == GameState.POLICEATTACK && mGameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
 			EncounterText.setText("The police hail they want you to surrender.");
-		}
-		else if (mGameState.EncounterType == GameState.POLICEFLEE ||
-			         mGameState.EncounterType == GameState.TRADERFLEE ||
-			         mGameState.EncounterType == GameState.PIRATEFLEE){
+		} else if (mGameState.EncounterType == GameState.POLICEFLEE ||
+			           mGameState.EncounterType == GameState.TRADERFLEE ||
+			           mGameState.EncounterType == GameState.PIRATEFLEE) {
 			EncounterText.setText("Your opponent is fleeing.");
-		}
-		else if (mGameState.EncounterType == GameState.PIRATEATTACK ||
-			         mGameState.EncounterType == GameState.POLICEATTACK ||
-			         mGameState.EncounterType == GameState.TRADERATTACK ||
-			         mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
-			         mGameState.EncounterType == GameState.DRAGONFLYATTACK ||
-			         mGameState.EncounterType == GameState.SCARABATTACK ||
-			         mGameState.EncounterType == GameState.FAMOUSCAPATTACK){
+		} else if (mGameState.EncounterType == GameState.PIRATEATTACK ||
+			           mGameState.EncounterType == GameState.POLICEATTACK ||
+			           mGameState.EncounterType == GameState.TRADERATTACK ||
+			           mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
+			           mGameState.EncounterType == GameState.DRAGONFLYATTACK ||
+			           mGameState.EncounterType == GameState.SCARABATTACK ||
+			           mGameState.EncounterType == GameState.FAMOUSCAPATTACK) {
 			EncounterText.setText("Your opponent attacks.");
-		}
-		else if (mGameState.EncounterType == GameState.TRADERIGNORE ||
-			         mGameState.EncounterType == GameState.POLICEIGNORE ||
-			         mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||
-			         mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||
-			         mGameState.EncounterType == GameState.PIRATEIGNORE ||
-			         mGameState.EncounterType == GameState.SCARABIGNORE) {
+		} else if (mGameState.EncounterType == GameState.TRADERIGNORE ||
+			           mGameState.EncounterType == GameState.POLICEIGNORE ||
+			           mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||
+			           mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||
+			           mGameState.EncounterType == GameState.PIRATEIGNORE ||
+			           mGameState.EncounterType == GameState.SCARABIGNORE) {
 			if (mGameState.Cloaked(mGameState.Ship, mGameState.Opponent))
 				EncounterText.setText("It doesn't notice you.");
 			else
-			EncounterText.setText("it ignores you.");
-		}
-		else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
+				EncounterText.setText("it ignores you.");
+		} else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
 			EncounterText.setText("You are hailed with an offer to trade goods.");
-		}
-		else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER){
+		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER) {
 			EncounterText.setText("Your opponent hails that he surrenders to you.");
-		}
-		else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
+		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 			EncounterText.setText("The Marie Celeste appears to be completely abandoned.");
-		}
-		else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType) && mGameState.EncounterType != GameState.FAMOUSCAPATTACK) {
+		} else if (mGameState
+			           .ENCOUNTERFAMOUS(mGameState.EncounterType) && mGameState.EncounterType != GameState.FAMOUSCAPATTACK) {
 			EncounterText.setText("The Captain requests a brief meeting with you.");
-		}
-		else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER ||
-			         mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER){
+		} else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
 			EncounterText.setText("It appears to be a rare bottle of Captain Marmoset's Skill Tonic!");
 		}
 	}
+
 	public static void EncounterButtons() {
 		btnInt.setVisibility(View.INVISIBLE);
 		btnAttack.setVisibility(View.INVISIBLE);
@@ -5867,7 +5470,7 @@ FrmGotoForm( CurForm );
 		btnTrade.setVisibility(View.INVISIBLE);
 		pBarEncounter.setVisibility(View.INVISIBLE);
 
-		if (mGameState.AutoAttack || mGameState.AutoFlee){
+		if (mGameState.AutoAttack || mGameState.AutoFlee) {
 			btnInt.setVisibility(View.VISIBLE);
 			pBarEncounter.setVisibility(View.VISIBLE);
 		}
@@ -5881,26 +5484,26 @@ FrmGotoForm( CurForm );
 			btnFlee.setVisibility(View.VISIBLE);
 			btnYield.setVisibility(View.VISIBLE);
 			btnBribe.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.POLICEFLEE ||mGameState.EncounterType == GameState.TRADERFLEE ||mGameState.EncounterType == GameState.PIRATEFLEE) {
+		} else if (mGameState.EncounterType == GameState.POLICEFLEE || mGameState.EncounterType == GameState.TRADERFLEE || mGameState.EncounterType == GameState.PIRATEFLEE) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.PIRATEATTACK ||mGameState.EncounterType == GameState.POLICEATTACK || mGameState.EncounterType == GameState.SCARABATTACK) {
+		} else if (mGameState.EncounterType == GameState.PIRATEATTACK || mGameState.EncounterType == GameState.POLICEATTACK || mGameState.EncounterType == GameState.SCARABATTACK) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnFlee.setVisibility(View.VISIBLE);
 			btnSurrender.setVisibility(View.VISIBLE);
 		} else if (mGameState.EncounterType == GameState.FAMOUSCAPATTACK) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnFlee.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERATTACK ||mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||mGameState.EncounterType == GameState.DRAGONFLYATTACK) {
+		} else if (mGameState.EncounterType == GameState.TRADERATTACK || mGameState.EncounterType == GameState.SPACEMONSTERATTACK || mGameState.EncounterType == GameState.DRAGONFLYATTACK) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnFlee.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERIGNORE ||mGameState.EncounterType == GameState.POLICEIGNORE ||mGameState.EncounterType == GameState.PIRATEIGNORE ||mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||mGameState.EncounterType == GameState.SCARABIGNORE) {
+		} else if (mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.POLICEIGNORE || mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.SPACEMONSTERIGNORE || mGameState.EncounterType == GameState.DRAGONFLYIGNORE || mGameState.EncounterType == GameState.SCARABIGNORE) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER ||mGameState.EncounterType == GameState.PIRATESURRENDER) {
+		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER) {
 			btnAttack.setVisibility(View.VISIBLE);
 			btnPlunder.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER){
+		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 			btnBoard.setVisibility(View.VISIBLE);
 			btnIgnore.setVisibility(View.VISIBLE);
 		} else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType)) {
@@ -5926,6 +5529,7 @@ FrmGotoForm( CurForm );
 		}
 		*/
 	}
+
 	public void Arrested() {
 		// *************************************************************************
 		// You get arrested
@@ -5933,25 +5537,31 @@ FrmGotoForm( CurForm );
 		int Fine, Imprisonment;
 		int i;
 
-		Fine = ((1 + (((mGameState.CurrentWorth() * Math.min(80, -mGameState.PoliceRecordScore)) / 100) / 500)) * 500);
+		Fine = ((1 + (((mGameState.CurrentWorth() * Math.min(80, -mGameState.PoliceRecordScore
+		)) / 100) / 500)) * 500);
 		if (mGameState.WildStatus == 1) {
 			Fine *= 1.05;
 		}
 		Imprisonment = Math.max(30, -mGameState.PoliceRecordScore);
 
 		String buf;
-		buf = "Arrested\n\nYou are arrested and taken to the space station, where you are brought before a court of law.\n\n";
+		buf =
+			"Arrested\n\nYou are arrested and taken to the space station, where you are brought before a court of law.\n\n";
 		buf += "Verdict\n\n";
-		buf += String.format("You are convicted to %d days in prison and a fine of %d credits.", Imprisonment, Fine);
+		buf += String.format("You are convicted to %d days in prison and a fine of %d credits.",
+		                     Imprisonment, Fine
+		);
 
 		if (mGameState.Ship.cargo[GameState.NARCOTICS] > 0 || mGameState.Ship.cargo[GameState.FIREARMS] > 0) {
-			buf += "\n\nIllegal Goods Impounded\n\nThe police also impound all of the illegal goods you have on board.";
+			buf +=
+				"\n\nIllegal Goods Impounded\n\nThe police also impound all of the illegal goods you have on board.";
 			mGameState.Ship.cargo[GameState.NARCOTICS] = 0;
 			mGameState.Ship.cargo[GameState.FIREARMS] = 0;
 		}
 
 		if (mGameState.Insurance) {
-			buf += "\n\nInsurance Lost\n\nSince you cannot pay your insurance while you're in prison, it is retracted.";
+			buf +=
+				"\n\nInsurance Lost\n\nSince you cannot pay your insurance while you're in prison, it is retracted.";
 			mGameState.Insurance = false;
 			mGameState.NoClaim = 0;
 		}
@@ -5959,17 +5569,19 @@ FrmGotoForm( CurForm );
 		if (mGameState.Ship.crew[1] >= 0) {
 			buf += "\n\nMercenaries Leave\n\nAny mercenaries who were traveling with you have left.";
 			// "You can't pay your mercenaries while you are imprisoned, and so they have sought new employment."
-			for (i=1; i<GameState.MAXCREW; ++i)
+			for (i = 1; i < GameState.MAXCREW; ++i)
 				mGameState.Ship.crew[i] = -1;
 		}
 
 		if (mGameState.JaporiDiseaseStatus == 1) {
-			buf += "\n\nAntidote Taken\n\nThe Space Corps removed the antidote for Japori from your ship and delivered it, fulfilling your assignment.";
+			buf +=
+				"\n\nAntidote Taken\n\nThe Space Corps removed the antidote for Japori from your ship and delivered it, fulfilling your assignment.";
 			mGameState.JaporiDiseaseStatus = 2;
 		}
 
 		if (mGameState.JarekStatus == 1) {
-			buf += "\n\nJarek Taken Home\n\nThe Space Corps decides to give ambassador Jarek a lift home to Devidia.";
+			buf +=
+				"\n\nJarek Taken Home\n\nThe Space Corps decides to give ambassador Jarek a lift home to Devidia.";
 			mGameState.JarekStatus = 0;
 		}
 
@@ -5980,7 +5592,8 @@ FrmGotoForm( CurForm );
 		}
 
 		if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
-			buf += "\n\nPolice Confiscate Reator\n\nThe Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.";
+			buf +=
+				"\n\nPolice Confiscate Reator\n\nThe Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.";
 			// "The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store."
 			mGameState.ReactorStatus = 0;
 		}
@@ -5998,14 +5611,16 @@ FrmGotoForm( CurForm );
 			else
 				mGameState.Credits = 0;
 
-			buf += "\n\nShip Sold\n\nBecause you don't have the credits to pay your fine, your ship is sold.";
+			buf +=
+				"\n\nShip Sold\n\nBecause you don't have the credits to pay your fine, your ship is sold.";
 
 			if (mGameState.Ship.tribbles > 0) {
 				buf += "\n\nTribbles sold\n\nThe tribbles were sold with your ship.";
 				mGameState.Ship.tribbles = 0;
 			}
 
-			buf += "\n\nFlea Received\n\nWhen you leave prison, the police have left a second-hand Flea for you so you can continue your travels.";
+			buf +=
+				"\n\nFlea Received\n\nWhen you leave prison, the police have left a second-hand Flea for you so you can continue your travels.";
 
 			mGameState.CreateFlea();
 		}
@@ -6022,15 +5637,16 @@ FrmGotoForm( CurForm );
 			}
 		}
 
-		for (i=0; i<Imprisonment; ++i)
+		for (i = 0; i < Imprisonment; ++i)
 			mGameState.PayInterest();
-		
+
 		Popup popup;
 		popup = new Popup(this, "Arrested", buf, "", "OK", cbShowNextPopup);
-		btnSystemInformation(null);
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	public void EncounterButtonTradeCallback(View view) {
 		final int i;
 
@@ -6057,64 +5673,68 @@ FrmGotoForm( CurForm );
 			if (mGameState.SellPrice[i] > GameState.Tradeitems.mTradeitems[i].maxTradePrice)
 				mGameState.SellPrice[i] = GameState.Tradeitems.mTradeitems[i].maxTradePrice;
 
-			String buf = String.format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.SellPrice[i], mGameState.Ship.cargo[i], mGameState.BuyingPrice[i] / mGameState.Ship.cargo[i]);
+			String buf = String
+				             .format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?",
+				                     mGameState.Tradeitems.mTradeitems[i].name, mGameState.SellPrice[i],
+				                     mGameState.Ship.cargo[i],
+				                     mGameState.BuyingPrice[i] / mGameState.Ship.cargo[i]
+				             );
 
 			Popup popup;
-			popup = new Popup(this,
-			                  "Trade offer", buf, "Amount", "", mGameState.Ship.cargo[i],
-			                  "Trade", "Don't trade",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-														int Amount;
-					                  SeekBar seekBar = (SeekBar) view;
-														Amount = seekBar.getProgress();
-														Amount = Math.max(0, Math.min(mGameState.Ship.cargo[i], Amount));
-														Amount = Math.min(Amount, mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays);
-														if (Amount > 0) {
-															mGameState.BuyingPrice[i] = mGameState.BuyingPrice[i]*(mGameState.Ship.cargo[i]-Amount)/mGameState.Ship.cargo[i];
-															mGameState.Ship.cargo[i] -= Amount;
-															mGameState.Opponent.cargo[i] = Amount;
-															mGameState.Credits += Amount * mGameState.SellPrice[i];
-															Popup popup1;
-															popup1 = new Popup(popup.context,
-															                   "Trade Completed",
-															                   String.format("%s %s. It's been a pleasure doing business with you.",
-															                                 "Thanks for selling us the",
-															                                 GameState.Tradeitems.mTradeitems[i].name
-															                   ), "", "OK", cbShowNextPopup
-															);
-															popupQueue.push(popup1);
-															showNextPopup();
-														}
-														Travel();
-													}
-												}, cbShowNextPopup,
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  int Amount = popup.max;
-					                  mGameState.BuyingPrice[i] = mGameState.BuyingPrice[i]*(mGameState.Ship.cargo[i]-Amount)/mGameState.Ship.cargo[i];
-					                  mGameState.Ship.cargo[i] -= Amount;
-					                  mGameState.Opponent.cargo[i] = Amount;
-					                  mGameState.Credits += Amount * mGameState.SellPrice[i];
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Trade Completed",
-					                                     String.format("%s %s. It's been a pleasure doing business with you.",
-					                                                   "Thanks for selling us the",
-					                                                   GameState.Tradeitems.mTradeitems[i].name
-					                                     ), "", "OK", cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-				                  }
-			                  }
+			popup = new Popup(this, "Trade offer", buf, "Amount", "", mGameState.Ship.cargo[i], "Trade",
+			                  "Don't trade", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					int Amount;
+					SeekBar seekBar = (SeekBar) view;
+					Amount = seekBar.getProgress();
+					Amount = Math.max(0, Math.min(mGameState.Ship.cargo[i], Amount));
+					Amount = Math.min(Amount,
+					                  mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays
+					);
+					if (Amount > 0) {
+						mGameState.BuyingPrice[i] =
+							mGameState.BuyingPrice[i] * (mGameState.Ship.cargo[i] - Amount) / mGameState.Ship.cargo[i];
+						mGameState.Ship.cargo[i] -= Amount;
+						mGameState.Opponent.cargo[i] = Amount;
+						mGameState.Credits += Amount * mGameState.SellPrice[i];
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Trade Completed",
+						                   String.format("%s %s. It's been a pleasure doing business with you.",
+						                                 "Thanks for selling us the",
+						                                 GameState.Tradeitems.mTradeitems[i].name
+						                   ), "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					}
+					Travel();
+				}
+			}, cbShowNextPopup, new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					int Amount = popup.max;
+					mGameState.BuyingPrice[i] =
+						mGameState.BuyingPrice[i] * (mGameState.Ship.cargo[i] - Amount) / mGameState.Ship.cargo[i];
+					mGameState.Ship.cargo[i] -= Amount;
+					mGameState.Opponent.cargo[i] = Amount;
+					mGameState.Credits += Amount * mGameState.SellPrice[i];
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Trade Completed",
+					                   String.format("%s %s. It's been a pleasure doing business with you.",
+					                                 "Thanks for selling us the",
+					                                 GameState.Tradeitems.mTradeitems[i].name
+					                   ), "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+				}
+			}
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (mGameState.EncounterType == GameState.TRADERSELL) {
-			i = mGameState.GetRandomTradeableItem (mGameState.Opponent, GameState.TRADERSELL);
+			i = mGameState.GetRandomTradeableItem(mGameState.Opponent, GameState.TRADERSELL);
 			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
 				if (mGameState.GetRandom(100) <= 45)
 					mGameState.BuyPrice[i] *= 1.1;
@@ -6134,91 +5754,94 @@ FrmGotoForm( CurForm );
 			if (mGameState.BuyPrice[i] > GameState.Tradeitems.mTradeitems[i].maxTradePrice)
 				mGameState.BuyPrice[i] = GameState.Tradeitems.mTradeitems[i].maxTradePrice;
 
-			String buf = String.format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?", mGameState.Tradeitems.mTradeitems[i].name, mGameState.BuyPrice[i], mGameState.Opponent.cargo[i], mGameState.Credits / mGameState.BuyPrice[i]);
+			String buf = String
+				             .format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?",
+				                     mGameState.Tradeitems.mTradeitems[i].name, mGameState.BuyPrice[i],
+				                     mGameState.Opponent.cargo[i],
+				                     mGameState.Credits / mGameState.BuyPrice[i]
+				             );
 
 			Popup popup;
-			popup = new Popup(this,
-			                  "Trade Offer", buf, "Amount", "", mGameState.Opponent.cargo[i],
-			                  "Trade", "Don't trade",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  SeekBar seekBar = (SeekBar) view;
-														int Amount;
-														Amount = seekBar.getProgress();
-														Amount = Math.max(0, Math.min(mGameState.Opponent.cargo[i], Amount));
-														Amount = Math.min( Amount, (mGameState.Credits / mGameState.BuyPrice[i]));
-														if (Amount > 0) {
-															mGameState.Ship.cargo[i] += Amount;
-															mGameState.Opponent.cargo[i] -= Amount;
-															mGameState.BuyingPrice[i] += (Amount * mGameState.BuyPrice[i]);
-															mGameState.Credits -= (Amount * mGameState.BuyPrice[i]);
+			popup = new Popup(this, "Trade Offer", buf, "Amount", "", mGameState.Opponent.cargo[i],
+			                  "Trade", "Don't trade", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					SeekBar seekBar = (SeekBar) view;
+					int Amount;
+					Amount = seekBar.getProgress();
+					Amount = Math.max(0, Math.min(mGameState.Opponent.cargo[i], Amount));
+					Amount = Math.min(Amount, (mGameState.Credits / mGameState.BuyPrice[i]));
+					if (Amount > 0) {
+						mGameState.Ship.cargo[i] += Amount;
+						mGameState.Opponent.cargo[i] -= Amount;
+						mGameState.BuyingPrice[i] += (Amount * mGameState.BuyPrice[i]);
+						mGameState.Credits -= (Amount * mGameState.BuyPrice[i]);
 
-															Popup popup1;
-															popup1 = new Popup(popup.context,
-															                   "Trade Completed",
-															                   String.format("%s %s. It's been a pleasure doing business with you.",
-															                                 "Thanks for buying the",
-															                                 GameState.Tradeitems.mTradeitems[i].name
-															                   ), "", "OK", cbShowNextPopup
-															);
-															popupQueue.push(popup1);
-															showNextPopup();
-														}
-														Travel();
-													}
-												}, cbShowNextPopup,
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  int Amount = popup.max;
-					                  if (Amount > 0) {
-						                  mGameState.Ship.cargo[i] += Amount;
-						                  mGameState.Opponent.cargo[i] -= Amount;
-						                  mGameState.BuyingPrice[i] += (Amount * mGameState.BuyPrice[i]);
-						                  mGameState.Credits -= (Amount * mGameState.BuyPrice[i]);
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Trade Completed",
+						                   String.format("%s %s. It's been a pleasure doing business with you.",
+						                                 "Thanks for buying the",
+						                                 GameState.Tradeitems.mTradeitems[i].name
+						                   ), "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					}
+					Travel();
+				}
+			}, cbShowNextPopup, new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					int Amount = popup.max;
+					if (Amount > 0) {
+						mGameState.Ship.cargo[i] += Amount;
+						mGameState.Opponent.cargo[i] -= Amount;
+						mGameState.BuyingPrice[i] += (Amount * mGameState.BuyPrice[i]);
+						mGameState.Credits -= (Amount * mGameState.BuyPrice[i]);
 
-						                  Popup popup1;
-						                  popup1 = new Popup(popup.context,
-						                                     "Trade Completed",
-						                                     String.format("%s %s. It's been a pleasure doing business with you.",
-						                                                   "Thanks for buying the",
-						                                                   GameState.Tradeitems.mTradeitems[i].name
-						                                     ), "", "OK", cbShowNextPopup
-						                  );
-						                  popupQueue.push(popup1);
-						                  showNextPopup();
-					                  }
-					                  Travel();
-				                  }
-			                  }
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Trade Completed",
+						                   String.format("%s %s. It's been a pleasure doing business with you.",
+						                                 "Thanks for buying the",
+						                                 GameState.Tradeitems.mTradeitems[i].name
+						                   ), "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					}
+					Travel();
+				}
+			}
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 	}
+
 	public void EncounterButtonYieldCallback(View view) {
 		String buf = "";
 		Popup popup;
 
 		if (mGameState.WildStatus == 1) {
-			buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
-			                    "You have Jonathan Wild on board!\n", "Wild will be arrested, too.\n");
+			buf = String
+				      .format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
+				              "You have Jonathan Wild on board!\n", "Wild will be arrested, too.\n"
+				      );
 		} else if (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21) {
-			buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
-			                    "You have an illegal Reactor on board!\n ", "They will destroy the reactor.\n");
+			buf = String
+				      .format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
+				              "You have an illegal Reactor on board!\n ", "They will destroy the reactor.\n"
+				      );
 		}
 
 		if (mGameState.WildStatus == 1 || (mGameState.ReactorStatus > 0 && mGameState.ReactorStatus < 21)) {
-			popup = new Popup(this,
-			                  "Surrender", buf, "", "Yes", "No",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-							              Arrested();
-							              Travel();
-						              }
-					              }, cbShowNextPopup
+			popup = new Popup(this, "Surrender", buf, "", "Yes", "No", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					Arrested();
+					Travel();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -6226,11 +5849,10 @@ FrmGotoForm( CurForm );
 			// Police Record becomes dubious, if it wasn't already.
 			if (mGameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
 				mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-			mGameState.Ship.cargo[GameState.NARCOTICS]=0;
-			mGameState.Ship.cargo[GameState.FIREARMS]=0;
+			mGameState.Ship.cargo[GameState.NARCOTICS] = 0;
+			mGameState.Ship.cargo[GameState.FIREARMS] = 0;
 
-			popup = new Popup(this,
-			                  "Contraband Removed",
+			popup = new Popup(this, "Contraband Removed",
 			                  "The Customs Police confiscated all of your illegal cargo, but since you were cooperative, you avoided stronger fines or penalties.",
 			                  "The Customs Police took all the illegal goods from your ship, and sent you on your way.",
 			                  "OK", cbShowNextPopup
@@ -6240,27 +5862,27 @@ FrmGotoForm( CurForm );
 			Travel();
 		}
 	}
+
 	public void EncounterButtonBoardCallback(View view) {
 		if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 			// take the cargo of the Marie Celeste?
 			Popup popup;
-			popup = new Popup(this,
-			                  "Board Marie Celeste",
+			popup = new Popup(this, "Board Marie Celeste",
 			                  "The ship is empty: there is nothing in the ship's log, but the crew has vanished, leaving food on the tables and cargo in the holds. Do you wish to offload the cargo to your own holds?",
 			                  "The Marie Celeste is completely abandoned, and drifting through space. The ship's log is unremarkable except for a Tribble infestation a few months ago, and the note that the last system visited was Lowry.\nThe crew's quarters are in good shape, with no signs of struggle. There is still food sitting on the table and beer in the mugs in the mess hall. Except for the fact that it's abandoned, the ship is normal in every way.\nBy Intergalactic Salvage Law, you have the right to claim the cargo as your own if you decide to.",
-			                  "Yes", "No",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-														btnPlunderForm(null);
-													}
-												}, cbShowNextPopup
+			                  "Yes", "No", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					btnPlunderForm(null);
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 		// Travel(); // is called from Done button in PlunderForm
 	}
+
 	public void EncounterButtonPlunderCallback(View view) {
 		mGameState.AutoAttack = false;
 		mGameState.AutoFlee = false;
@@ -6272,28 +5894,27 @@ FrmGotoForm( CurForm );
 		btnPlunderForm(null);
 		// Travel(); // is called from Done button in PlunderForm
 	}
+
 	public void EncounterButtonMeetCallback(View view) {
 		Popup popup;
 		if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER) {
 			// Trade a reflective shield for skill points in piloting?
-			popup = new Popup(this,
-			                  "Meet Captain Ahab",
-					              "Captain Ahab is in need of a spare shield for an upcoming mission. He offers to trade you some piloting lessons for your reflective shield. Do you wish to trade?",
-					              "Captain Ahab is in need of a spare shield for an upcoming mission. Since he's in a rush, he'd rather not stop to get one on-planet.\nThe deal he's offering is a trade, rather than cash, for the shield. He'll trade you some piloting lessons in exchange for your reflective shield (he only needs one, so if you have more than one, you'll keep the others.\nCaptain Ahab is one of the greatest pilots of all time, and still holds the speed record for cross-galaxy transport.",
-					              "Trade", "Keep",
-					              new Popup.buttonCallback() {
-						              @Override
-						              public void execute(Popup popup, View view) {
-														// remove the last reflective shield
-														int i=GameState.MAXSHIELD - 1;
-														while (i >= 0) {
-															if (mGameState.Ship.shield[i] == GameState.REFLECTIVESHIELD) {
-																for (int m=i+1; m<GameState.MAXSHIELD; ++m) {
-																	mGameState.Ship.shield[m-1] = mGameState.Ship.shield[m];
-																	mGameState.Ship.shieldStrength[m-1] = mGameState.Ship.shieldStrength[m];
-																}
-																mGameState.Ship.shield[GameState.MAXSHIELD-1] = -1;
-																mGameState.Ship.shieldStrength[GameState.MAXSHIELD-1] = 0;
+			popup = new Popup(this, "Meet Captain Ahab",
+			                  "Captain Ahab is in need of a spare shield for an upcoming mission. He offers to trade you some piloting lessons for your reflective shield. Do you wish to trade?",
+			                  "Captain Ahab is in need of a spare shield for an upcoming mission. Since he's in a rush, he'd rather not stop to get one on-planet.\nThe deal he's offering is a trade, rather than cash, for the shield. He'll trade you some piloting lessons in exchange for your reflective shield (he only needs one, so if you have more than one, you'll keep the others.\nCaptain Ahab is one of the greatest pilots of all time, and still holds the speed record for cross-galaxy transport.",
+			                  "Trade", "Keep", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					// remove the last reflective shield
+					int i = GameState.MAXSHIELD - 1;
+					while (i >= 0) {
+						if (mGameState.Ship.shield[i] == GameState.REFLECTIVESHIELD) {
+							for (int m = i + 1; m < GameState.MAXSHIELD; ++m) {
+								mGameState.Ship.shield[m - 1] = mGameState.Ship.shield[m];
+								mGameState.Ship.shieldStrength[m - 1] = mGameState.Ship.shieldStrength[m];
+							}
+							mGameState.Ship.shield[GameState.MAXSHIELD - 1] = -1;
+							mGameState.Ship.shieldStrength[GameState.MAXSHIELD-1] = 0;
 																i = -1;
 															}
 															i--;
@@ -7699,7 +7320,7 @@ FrmGotoForm( CurForm );
 		mGameState.CreateFlea();
 
 		mGameState.AutoAttack = mGameState.AutoFlee = false;
-		btnSystemInformation(null);
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	// *************************************************************************
 	// You can pick up cannisters left by a destroyed ship
@@ -7852,7 +7473,7 @@ FrmGotoForm( CurForm );
 			case GameState.REACTORDELIVERED:
 				CURSYSTEM.special = GameState.GETSPECIALLASER;
 				mGameState.ReactorStatus = 21;
-				btnSystemInformation(null);
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				return;
 			case GameState.MONSTERKILLED:
 				break;
@@ -7862,7 +7483,7 @@ FrmGotoForm( CurForm );
 			case GameState.SCARABDESTROYED:
 				mGameState.ScarabStatus = 2;
 				CURSYSTEM.special = GameState.GETHULLUPGRADED;
-				btnSystemInformation(null);
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				return;
 			case GameState.GETHULLUPGRADED:
 				popup = new Popup(this, "Hull Upgraded",
@@ -7904,13 +7525,13 @@ FrmGotoForm( CurForm );
 
 			case GameState.DRAGONFLYDESTROYED:
 				CURSYSTEM.special = GameState.INSTALLLIGHTNINGSHIELD;
-				btnSystemInformation(null);
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				return;
 
 			case GameState.GEMULONRESCUED:
 				CURSYSTEM.special = GameState.GETFUELCOMPACTOR;
 				mGameState.InvasionStatus = 0;
-				btnSystemInformation(null);
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION;
 				return;
 
 			case GameState.MEDICINEDELIVERY:
@@ -8189,7 +7810,7 @@ FrmGotoForm( CurForm );
 		}
 		mGameState.Credits -= Event.price;
 		CURSYSTEM.special = -1;
-		btnSystemInformation(null);
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION;
 	}
 	int GetScore(int EndStatus, int Days, int Worth, int Level) {
 		int d;
@@ -8275,11 +7896,7 @@ FrmGotoForm( CurForm );
 		if (Scored && !mGameState.GameLoaded)
 			ViewHighScores();
 
-		WelcomeScreen.mContext.deleteFile("savegame.txt");
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new StartNewGameFragment()).commit();
-		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
-		mCurrentState = "StartNewGame";
+		changeFragment(FRAGMENTS.NEW_GAME);
 	}
 	void ViewHighScores() {
 		int i;

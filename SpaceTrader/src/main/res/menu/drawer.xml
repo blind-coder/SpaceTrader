@@ -10,7 +10,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-			android:id="@+id/menuGameOptions"
+			android:id="@+id/submenuGame"
 			android:title="Game"
 			android:showAsAction="ifRoom|withText">
 		<menu>

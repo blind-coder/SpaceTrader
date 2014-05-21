@@ -22,7 +22,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 16
@@ -30,17 +30,20 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-        }
-    }
-    productFlavors {
-        defaultFlavor {
             proguardFile 'proguard-rules.txt'
-        }
+            jniDebugBuild false
+runProguard true
+debuggable false
+}
+}
+    productFlavors {
+defaultFlavor {
+proguardFile 'proguard-rules.txt'
+}
     }
 }
 
 dependencies {
     compile 'com.android.support:support-v4:+'
+    compile 'com.google.android.gms:play-services:4.0.30'
 }
