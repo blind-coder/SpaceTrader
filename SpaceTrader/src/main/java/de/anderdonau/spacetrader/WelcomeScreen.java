@@ -2653,81 +2653,106 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                if (buf.length() < 2){
 						                return;
 					                }
-
-					                if (buf.equals("Moolah")) {
-						                mGameState.Credits += 100000;
-					                } else
-					                if (buf.startsWith("Go ") && buf.length() > 3) {
-						                int i = 0;
-						                while (i < GameState.MAXSOLARSYSTEM) {
-							                if (mGameState.SolarSystemName[i].equals(buf.substring(3)))
-								                break;
-							                ++i;
+					                if (buf.equals("Cheetah")) {
+						                if (++mGameState.CheatCounter < 3){
+							                Popup popup1 = new Popup(popup.context,
+							                                         "Cheetah!",
+							                                         String.format("Strike %d!", mGameState.CheatCounter),
+							                                         "", "OK", cbShowNextPopup
+							                );
+							                popupQueue.push(popup1);
+							                showNextPopup();
 						                }
-						                if (i < GameState.MAXSOLARSYSTEM) {
-							                mGameState.Mercenary[0].curSystem = i;
-							                mGameState.RecalculateBuyPrices(i);
-							                btnGalacticChart(null);
-						                }
-					                } else
-				                  if (buf.equals("Quests")) {
-						                String questbuf = "";
 
-						                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
-							                SolarSystem s = mGameState.SolarSystem[i];
-							                switch (s.special){
-								                case GameState.DRAGONFLY:
-								                  questbuf += String.format("Dragonfly: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+						                if (mGameState.CheatCounter == 3){
+							                Popup popup1 = new Popup(popup.context,
+							                                         "Cheat mode enabled",
+							                                         "Cheat mode has been enabled. You will NOT be added to the highscore list!",
+							                                         "Winners never cheat. Cheaters never win.", "OK",
+							                                         cbShowNextPopup
+							                );
+							                popupQueue.push(popup1);
+							                showNextPopup();
+						                }
+						                if (mGameState.CheatCounter > 3)
+							                mGameState.CheatCounter = 3;
+
+					                }
+													if (mGameState.CheatCounter >= 3){
+						                if (buf.equals("Moolah")) {
+							                mGameState.Credits += 100000;
+						                } else
+						                if (buf.startsWith("Go ") && buf.length() > 3) {
+							                int i = 0;
+							                while (i < GameState.MAXSOLARSYSTEM) {
+								                if (mGameState.SolarSystemName[i].equals(buf.substring(3)))
 									                break;
-								                case GameState.SPACEMONSTER:
-									                questbuf += String.format("Spacemonster: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.JAPORIDISEASE:
-								                  questbuf += String.format("Disease: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.ALIENARTIFACT:
-								                  questbuf += String.format("Artifact: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-							                  case GameState.ARTIFACTDELIVERY:
-								                  if (mGameState.ArtifactOnBoard)
-								                    questbuf += String.format("Berger: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.TRIBBLE:
-									                questbuf += String.format("Tribbles: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.GETREACTOR:
-									                questbuf += String.format("Get reactor: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.AMBASSADORJAREK:
-									                questbuf += String.format("Jarek: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.ALIENINVASION:
-									                questbuf += String.format("Invasion: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.EXPERIMENT:
-									                questbuf += String.format("Experiment: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-								                case GameState.TRANSPORTWILD:
-									                questbuf += String.format("Wild: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-								                  break;
-							                  case GameState.SCARAB:
-									                questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-									                break;
-								                case GameState.SCARABDESTROYED:
-									                if (mGameState.ScarabStatus > 0 && mGameState.ScarabStatus < 2)
-									                  questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
-									                break;
+								                ++i;
 							                }
-						                }
-						                Popup popup1 = new Popup(popup.context,
-						                                         "Quests", questbuf, "", "OK", cbShowNextPopup
-						                );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-			                    } else if (buf.equals("Very rare")) {
-					                  btnVeryRareForm(null);
-				                  }
-				                  else {
+							                if (i < GameState.MAXSOLARSYSTEM) {
+								                mGameState.Mercenary[0].curSystem = i;
+								                mGameState.RecalculateBuyPrices(i);
+								                btnGalacticChart(null);
+							                }
+						                } else
+					                  if (buf.equals("Quests")) {
+							                String questbuf = "";
+
+							                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
+								                SolarSystem s = mGameState.SolarSystem[i];
+								                switch (s.special){
+									                case GameState.DRAGONFLY:
+									                  questbuf += String.format("Dragonfly: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+										                break;
+									                case GameState.SPACEMONSTER:
+										                questbuf += String.format("Spacemonster: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.JAPORIDISEASE:
+									                  questbuf += String.format("Disease: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.ALIENARTIFACT:
+									                  questbuf += String.format("Artifact: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+								                  case GameState.ARTIFACTDELIVERY:
+									                  if (mGameState.ArtifactOnBoard)
+									                    questbuf += String.format("Berger: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.TRIBBLE:
+										                questbuf += String.format("Tribbles: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.GETREACTOR:
+										                questbuf += String.format("Get reactor: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.AMBASSADORJAREK:
+										                questbuf += String.format("Jarek: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.ALIENINVASION:
+										                questbuf += String.format("Invasion: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.EXPERIMENT:
+										                questbuf += String.format("Experiment: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+									                case GameState.TRANSPORTWILD:
+										                questbuf += String.format("Wild: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+									                  break;
+								                  case GameState.SCARAB:
+										                questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+										                break;
+									                case GameState.SCARABDESTROYED:
+										                if (mGameState.ScarabStatus > 0 && mGameState.ScarabStatus < 2)
+										                  questbuf += String.format("Scarab: %s\n", mGameState.SolarSystemName[s.nameIndex]);
+										                break;
+								                }
+							                }
+							                Popup popup1 = new Popup(popup.context,
+							                                         "Quests", questbuf, "", "OK", cbShowNextPopup
+							                );
+						                  popupQueue.push(popup1);
+						                  showNextPopup();
+				                    } else if (buf.equals("Very rare")) {
+						                  btnVeryRareForm(null);
+					                  }
+													} else {
 							                int i = 0;
 							                while (i < GameState.MAXSOLARSYSTEM) {
 								                if (buf.equalsIgnoreCase(mGameState.SolarSystemName[i]))
@@ -2748,10 +2773,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
      /* Cheats come later
-          else if (StrCompare( FindSystem, "Cheetah" ) == 0)
-          {
-          CheatCounter = 3;
-          }
 #ifdef BETATEST
 else if (StrCompare( FindSystem, "Load" ) == 0)
 #else
@@ -8210,7 +8231,7 @@ FrmGotoForm( CurForm );
 				){
 				Scored = true;
 
-				if (!mGameState.GameLoaded){
+				if (!(mGameState.GameLoaded) && mGameState.CheatCounter < 3){
 					for (j=GameState.MAXHIGHSCORE-1; j>i; --j) {
 						Hscores[j].setName(Hscores[j-1].getName());
 						Hscores[j].setStatus(Hscores[j-1].getStatus());
@@ -8233,6 +8254,9 @@ FrmGotoForm( CurForm );
 		if (Scored && mGameState.GameLoaded) {
 			buf = "Without loading a savegame, you";
 			buf2 = "would have made the high-score list.";
+		} else if (Scored && mGameState.CheatCounter >= 3){
+			buf = "Cheat mode was active.";
+			buf2 = "You are not added to the high-score list.";
 		} else if (Scored) {
 			buf = "Congratulations!";
 			buf2 = "You have made the high-score list!";
