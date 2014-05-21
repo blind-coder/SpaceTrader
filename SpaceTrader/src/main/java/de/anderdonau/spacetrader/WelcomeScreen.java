@@ -16,14 +16,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,7 +58,6 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
 	static GameState mGameState;
 	private static String mCurrentState = "startup";
 	private static Context mContext;
@@ -79,6 +76,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		@Override
 		public void execute(Popup popup, View view) {
 			WelcomeScreen.this.showNextPopup();
+		}
+	};
+
+	Handler delayHandler = new Handler();
+	Runnable delayRunnable = new Runnable() {
+		@Override
+		public void run() {
+			if (mGameState.AutoAttack || mGameState.AutoFlee){ // Need to check again, might have pressed Int. button
+				if (!ExecuteAction(mGameState.CommanderFlees)){
+					if (mGameState.Ship.hull > 0){
+						Travel();
+					}
+				}
+			}
 		}
 	};
 
@@ -1575,6 +1586,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 			}
 		}
+		btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], false, hasCompactor, hasMorganLaser);
 	}
 	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final boolean addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
 		final int[] extra = new int[1];
@@ -1619,6 +1631,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 			}
 		}
+		btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 	}
 	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final boolean addLightning, final boolean addCompactor, boolean hasMorganLaser){
 		final int[] extra = new int[1];
@@ -1658,6 +1671,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 			}
 		}
+		btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 	}
 	public void btnBuyNewShipStep2(final int Index, final int extra, final boolean addLightning, final boolean addCompactor, final boolean addMorganLaser){
 		Popup popup = new Popup(this,
@@ -7391,20 +7405,11 @@ FrmGotoForm( CurForm );
 		EncounterText.setText(buf);
 
 		if (mGameState.Continuous && (mGameState.AutoAttack || mGameState.AutoFlee)){
-			Handler delayHandler = new Handler();
-			Runnable r = new Runnable() {
-				@Override
-				public void run() {
-					if (mGameState.AutoAttack || mGameState.AutoFlee){ // Need to check again, might have pressed Int. button
-						if (!ExecuteAction(CommanderFlees)){
-							if (mGameState.Ship.hull > 0){
-								Travel();
-							}
-						}
-					}
-				}
-			};
-			delayHandler.postDelayed(r, 1500);
+			// Make sure there's always just one delayRunnable queued.
+			// Otherwise several are queued if player keeps tapping Attack/Flee buttons.
+			delayHandler.removeCallbacksAndMessages(null);
+			mGameState.CommanderFlees = CommanderFlees;
+			delayHandler.postDelayed(delayRunnable, 1000);
 		}
 		return true;
 	}

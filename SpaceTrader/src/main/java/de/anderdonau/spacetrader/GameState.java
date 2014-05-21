@@ -614,6 +614,7 @@ public class GameState implements Serializable {
 	// Automatically get a full hull repair when arriving in a new system
 	public        boolean       CanSuperWarp              = false;
 	// Do you have the Portable Singularity on board?
+	public        boolean       CommanderFlees            = false;
 	public        boolean       Continuous                = false;      // Continuous attack/flee mode
 	public        boolean       EscapePod                 = false;           // Escape Pod in ship
 	public        boolean       GameLoaded                = false;
