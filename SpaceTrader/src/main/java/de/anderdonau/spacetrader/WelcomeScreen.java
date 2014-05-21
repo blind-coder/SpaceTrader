@@ -220,6 +220,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// update the main content by replacing fragments
 		//FragmentManager fragmentManager = getFragmentManager();
 		//fragmentManager.beginTransaction().replace(R.id.container, WelcomeScreenFragment.newInstance(position + 1)).commit();
+		if (mCurrentState.equals("Encounter")){
+			return;
+		}
 		if (mGameState == null) // game not loaded yet
 			return;
 		switch (position) {
@@ -299,6 +302,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		if (mCurrentState.equals("Encounter")){
+			return true;
+		}
 		int id = item.getItemId();
 		String call = "";
 		Popup popup;
@@ -7820,6 +7826,7 @@ FrmGotoForm( CurForm );
 					showNextPopup();
 					return;
 				}
+				mGameState.ReactorStatus = 1;
 				break;
 			case GameState.REACTORDELIVERED:
 				CURSYSTEM.special = GameState.GETSPECIALLASER;
