@@ -223,6 +223,6 @@
 			android:layout_below="@+id/numSkillEngineer"
 			android:layout_centerHorizontal="true"
 			android:enabled="false"
-			android:onClick="btnStartNewGame"/>
+			android:onClick="StartNewGameStartGameCallback"/>
 
 </RelativeLayout>

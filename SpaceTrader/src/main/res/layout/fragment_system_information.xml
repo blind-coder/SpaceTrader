@@ -122,7 +122,7 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:onClick="btnSystemInformationNewspaper"/>
+			android:onClick="SystemInformationNewspaperCallback"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -131,8 +131,8 @@
 			android:id="@+id/btnSpecialEvent"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:onClick="btnSpecialCallback"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentEnd="true"
+			android:onClick="SystemInformationSpecialCallback"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
 			android:layout_toRightOf="@+id/btnNewspaper"
 			android:layout_alignParentBottom="true"
 			android:layout_toLeftOf="@+id/btnSpecialEvent"
-			android:onClick="btnPersonnelRoster"/>
+			android:onClick="SystemInformationPersonnelRosterCallback"/>
 
 	<TextView
 			android:layout_width="wrap_content"

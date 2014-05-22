@@ -293,30 +293,30 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Quests"
-			android:id="@+id/btnCommanderStatusQuests"
+			android:id="@+id/CommanderStatusQuestsCallback"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:onClick="btnCommanderStatusQuests"/>
+			android:onClick="CommanderStatusQuestsCallback"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Special Cargo"
-			android:id="@+id/btnCommanderStatusSpecialCargo"
+			android:id="@+id/CommanderStatusSpecialCargoCallback"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"
-			android:onClick="btnCommanderStatusSpecialCargo"/>
+			android:onClick="CommanderStatusSpecialCargoCallback"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Ship"
-			android:id="@+id/btnCommanderStatusShip"
+			android:id="@+id/CommanderStatusShipCallback"
 			android:layout_alignParentBottom="true"
-			android:layout_toRightOf="@+id/btnCommanderStatusQuests"
-			android:layout_toLeftOf="@+id/btnCommanderStatusSpecialCargo"
-			android:onClick="btnCommanderStatusShip"/>
+			android:layout_toRightOf="@+id/CommanderStatusQuestsCallback"
+			android:layout_toLeftOf="@+id/CommanderStatusSpecialCargoCallback"
+			android:onClick="CommanderStatusShipCallback"/>
 
 </RelativeLayout>

@@ -387,44 +387,6 @@ public class GameState implements Serializable {
 		// Countdown for reset of tradeitems.
 	// Distance from target system,= 0;= arrived
 	static              int           Difficulty                  = NORMAL;     // Difficulty level
-	static              String[][]    CannedNews                  =
-		{{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.",
-		  "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"},
-		 {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!",
-		  "Restrictions on Corporate Freedom Abolished by Courts!"},
-		 {"Party Reports Productivity Increase.",
-		  "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!",
-		  "Politburo Approves New 5-Year Plan!"},
-		 {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!",
-		  "Southern States Resist Federal Taxation for Capital Projects!",
-		  "States Request Federal Intervention in Citrus Conflict!"},
-		 {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.",
-		  "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."},
-		 {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.",
-		  "Storage Banks to be Upgraded!", "System Backup Rescheduled."},
-		 {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!",
-		  "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."},
-		 {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!",
-		  "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"},
-		 {"Drug Smugglers Sentenced to Death!",
-		  "Aliens Required to Carry Visible Identification at All Times!",
-		  "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."},
-		 {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!",
-		  "Baron Ignores Ultimatum!", "War of Succession Threatens!"},
-		 {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?",
-		  "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"},
-		 {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!",
-		  "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"},
-		 {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?",
-		  "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "},
-		 {"Government Promises Increased Welfare Benefits!",
-		  "State Denies Food Rationing Required to Prevent Famine.",
-		  "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"},
-		 {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."},
-		 {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.",
-		  "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."},
-		 {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.",
-		  "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
 	public final        String[]      levelDesc                   =
 		new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
 	final               PoliceRecord  PoliceRecord                = new PoliceRecord();
@@ -676,23 +638,6 @@ public class GameState implements Serializable {
 	Ship         SpaceMonster;
 	Ship         Scarab;
 	Ship         Dragonfly;
-	String[][] NewsPaperNames = {{"* Arsenal", "The Grassroot", "Kick It!"},       /* Anarchy */
-	                             {"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
-	                             {"Planet News", "* Times", "Interstate Update"},      /* Communist */
-	                             {"The Objectivist", "* Market", "The Invisible Hand"},      /* Confederacy */
-	                             {"+ Memo", "News From The Board", "Status Report"},     /* Corporate */
-	                             {"Pulses", "Binary Stream", "The System Clock"},      /* Cybernetic */
-	                             {"The Daily Planet", "* Majority", "Unanimity"},      /* Democracy */
-	                             {"The Command", "Leader's Voice", "* Mandate"},       /* Dictatorship */
-	                             {"State Tribune", "Motherland News", "Homeland Report"},    /* Fascist */
-	                             {"News from the Keep", "The Town Crier", "* Herald"},     /* Feudal */
-	                             {"General Report", "+ Dispatch", "* Sentry"},       /* Military */
-	                             {"Royal Times", "The Loyal Subject", "The Fanfare"},      /* Monarchy */
-	                             {"Pax Humani", "Principle", "* Chorus"},        /* Pacifist */
-	                             {"All for One", "Brotherhood", "The People's Syndicate"},   /* Socialist */
-	                             {"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
-	                             {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
-	                             {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
 
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
