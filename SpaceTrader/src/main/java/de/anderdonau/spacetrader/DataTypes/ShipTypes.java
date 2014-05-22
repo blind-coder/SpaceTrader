@@ -34,7 +34,7 @@ public class ShipTypes {
 
 	public ShipTypes() {
 		this.ShipTypes = new ShipType[GameState.MAXSHIPTYPE + GameState.EXTRASHIPS];
-		this.ShipTypes[0] = new ShipType("Flea", 10, 0, 0, 0, 1, GameState.MAXRANGE, 4, 1, 2000, 5, 2, 25, -1, -1, 0, 1, 0, R.drawable.flea, R.drawable.flea_damaged, R.drawable.flea_shield);
+		this.ShipTypes[0] = new ShipType("Flea", 10, 0, 0, 0, 1, GameState.MAXRANGE, 4, 1, 2000, 5, 2, 25, -1, -1, 0, 1, 0, R.drawable.flea_ssck, R.drawable.flea_ssck_damaged, R.drawable.flea_ssck_shield);
 		this.ShipTypes[1] = new ShipType("Gnat", 15, 1, 0, 1, 1, 14, 5, 2, 10000, 50, 28, 100, 0, 0, 0, 1, 1, R.drawable.gnat, R.drawable.gnat_damaged, R.drawable.gnat_shield);
 		this.ShipTypes[2] = new ShipType("Firefly", 20, 1, 1, 1, 1, 17, 5, 3, 25000, 75, 20, 100, 0, 0, 0, 1, 1, R.drawable.firefly, R.drawable.firefly_damaged, R.drawable.firefly_shield);
 		this.ShipTypes[3] = new ShipType("Mosquito", 15, 2, 1, 1, 1, 13, 5, 5, 30000, 100, 20, 100, 0, 1, 0, 1, 1, R.drawable.mosquito, R.drawable.mosquito_damaged, R.drawable.mosquito_shield);

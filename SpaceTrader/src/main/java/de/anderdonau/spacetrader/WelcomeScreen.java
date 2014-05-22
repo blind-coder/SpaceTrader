@@ -40,7 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.HighScore;
@@ -49,7 +48,6 @@ import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
-import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
 import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
@@ -71,6 +69,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		SELL_CARGO,
 		SELL_EQUIPMENT,
 		SHIPYARD,
+		SHIP_INFO,
 		SHORTCUTS,
 		SHORT_RANGE_CHART,
 		SYSTEM_INFORMATION,
@@ -520,7 +519,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	/*
 	 * Popup functions must be here to be in the right context.
 	 */
-	void showNextPopup(){
+	public void showNextPopup(){
 		if (popupQueue.isEmpty())
 			return;
 
@@ -600,6 +599,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 			case SHIPYARD:
 				currentFragment = new FragmentShipyard(gameState);
+				break;
+			case SHIP_INFO:
+				currentFragment = new FragmentShipInfo(gameState);
 				break;
 			case SHORTCUTS:
 				currentFragment = new FragmentShortcuts(gameState);
@@ -1086,28 +1088,28 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnBuyNewShipInfo(View view){
 		gameState.ShipInfoId = -1;
 		switch (view.getId()){
-			case R.id.btnInfoFlea:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoGnat:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoFirefly:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoMosquito:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoBumblebee:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoBeetle:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoHornet:
-				gameState.ShipInfoId++;
-			case R.id.btnInfoGrasshopper:
+			case R.id.btnInfoWasp:
 				gameState.ShipInfoId++;
 			case R.id.btnInfoTermite:
 				gameState.ShipInfoId++;
-			case R.id.btnInfoWasp:
+			case R.id.btnInfoGrasshopper:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoHornet:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoBeetle:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoBumblebee:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoMosquito:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoFirefly:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoGnat:
+				gameState.ShipInfoId++;
+			case R.id.btnInfoFlea:
 				gameState.ShipInfoId++;
 		}
-		changeFragment(FRAGMENTS.BUY_NEW_SHIP);
+		changeFragment(FRAGMENTS.SHIP_INFO);
 	}
 	public void btnBuyNewShipStep1(View view){
 		int Index;
