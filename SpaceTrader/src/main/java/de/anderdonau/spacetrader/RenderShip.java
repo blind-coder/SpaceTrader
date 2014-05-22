@@ -16,7 +16,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.util.Random;
@@ -26,6 +25,7 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class RenderShip extends View {
 	protected final Paint paint = new Paint();
+	private GameState gameState = null;
 	private Ship mShip;
 
 	private boolean rotate = false;
@@ -47,6 +47,10 @@ public class RenderShip extends View {
 		super(context, attrs, defStyle);
 	}
 
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
 	private Bitmap rotateBitmap(Bitmap src){
 		Matrix m = new Matrix();
 		m.preScale(-1, 1);
@@ -64,19 +68,19 @@ public class RenderShip extends View {
 	public void setShip(Ship ship) {
 		this.mShip = ship;
 		this.rotate = false;
-		if (WelcomeScreen.mGameState == null) {
+		if (gameState == null) {
 			bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beetle);
 			bitmap_shield = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_shield);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_damaged);
 		} else {
 			bitmap = BitmapFactory.decodeResource(getResources(),
-			                                      WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable
+			                                      gameState.ShipTypes.ShipTypes[mShip.type].drawable
 			);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(),
-			                                              WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable_damaged
+			                                              gameState.ShipTypes.ShipTypes[mShip.type].drawable_damaged
 			);
 			bitmap_shield = BitmapFactory.decodeResource(getResources(),
-			                                              WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].drawable_shield
+			                                             gameState.ShipTypes.ShipTypes[mShip.type].drawable_shield
 			);
 		}
 	}
@@ -101,20 +105,20 @@ public class RenderShip extends View {
 			this.setRotate(true);
 		}
 
-		if (WelcomeScreen.mGameState == null){
+		if (gameState == null){
 			dmgPercent = (mShip.hull * 100) / 200;
 			shieldPercent = (mShip.shieldStrength[0] * 100 / GameState.ESHIELDPOWER);
 		} else {
-			if (WelcomeScreen.mGameState.TotalShields(mShip) > 0){
-				shieldPercent = (WelcomeScreen.mGameState.TotalShieldStrength(mShip)*100)/WelcomeScreen.mGameState.TotalShields(mShip);
+			if (gameState.TotalShields(mShip) > 0){
+				shieldPercent = (gameState.TotalShieldStrength(mShip)*100)/gameState.TotalShields(mShip);
 			} else {
 				shieldPercent = -1;
 			}
 			// TODO: correctly move GetHullStrength to Ship class
-			if (mShip == WelcomeScreen.mGameState.Ship){
-				dmgPercent = (mShip.hull * 100) / WelcomeScreen.mGameState.GetHullStrength();
+			if (mShip == gameState.Ship){
+				dmgPercent = (mShip.hull * 100) / gameState.GetHullStrength();
 			} else {
-				dmgPercent = (mShip.hull * 100) / WelcomeScreen.mGameState.ShipTypes.ShipTypes[mShip.type].hullStrength;
+				dmgPercent = (mShip.hull * 100) / gameState.ShipTypes.ShipTypes[mShip.type].hullStrength;
 			}
 		}
 
@@ -158,7 +162,7 @@ public class RenderShip extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-		int size = 0;
+		int size;
 		int width = getMeasuredWidth();
 		int height = getMeasuredHeight();
 		int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();

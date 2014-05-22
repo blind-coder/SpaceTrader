@@ -63,23 +63,36 @@ import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
 public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-	private enum FRAGMENTS {
-		NEW_GAME, SYSTEM_INFORMATION, ENCOUNTER, 		BUY_CARGO, SELL_CARGO, SHIPYARD, BUY_EQUIPMENT,
-		SELL_EQUIPMENT, PERSONNEL_ROSTER, BANK, COMMANDER_STATUS, GALACTIC_CHART, SHORT_RANGE_CHART,
-		BUY_NEW_SHIP
+	public enum FRAGMENTS {
+		AVERAGE_PRICES,
+		BANK,
+		BUY_CARGO,
+		BUY_EQUIPMENT,
+		BUY_NEW_SHIP,
+		COMMANDER_STATUS,
+		DUMP,
+		ENCOUNTER,
+		GALACTIC_CHART,
+		NEW_GAME,
+		OPTIONS,
+		PERSONNEL_ROSTER,
+		PLUNDER,
+		SELL_CARGO,
+		SELL_EQUIPMENT,
+		SHIPYARD,
+		SHORTCUTS,
+		SHORT_RANGE_CHART,
+		SYSTEM_INFORMATION,
+		VERY_RARE_CHEAT,
+		WARP_SYSTEM_INFORMATION
 	}
 	private AdView adView = null;
 	private Fragment currentFragment = null;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private static Context mContext;
-	private static FRAGMENTS currentState = FRAGMENTS.NEW_GAME;
-	public static Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder, btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
-	public static ProgressBar pBarEncounter;
-	public static RenderShip EncounterPlayerShip, EncounterOpponentShip;
-	public static SolarSystem WarpSystem;
-	public static TextView EncounterText;
-	public static boolean playerShipNeedsUpdate, opponentShipNeedsUpdate;
-	static GameState mGameState;
+	private Context mContext;
+	public SolarSystem WarpSystem;
+	private FRAGMENTS currentState = FRAGMENTS.NEW_GAME;
+	GameState mGameState;
 
 
 	public       PopupQueue           popupQueue      = new PopupQueue();
@@ -112,7 +125,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		WelcomeScreen.mContext = getApplicationContext();
+		mContext = getApplicationContext();
 
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
@@ -298,7 +311,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				call = mGameState.Shortcuts[mGameState.Shortcut4][0];
 				break;
 			case R.id.menuOptions:
-				btnGameOptions(null);
+				changeFragment(FRAGMENTS.OPTIONS);
 				return true;
 			case R.id.menuNewGame:
 				popup = new Popup(this,
@@ -308,7 +321,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				                  new Popup.buttonCallback() {
 					                  @Override
 					                  public void execute(Popup popup, View view) {
-						                  WelcomeScreen.mContext.deleteFile("savegame.txt");
+						                  mContext.deleteFile("savegame.txt");
 						                  changeFragment(FRAGMENTS.NEW_GAME);
 						                  popupQueue.clear();
 					                  }
@@ -331,7 +344,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				return true;
 			case R.id.menuShortcuts:
-				btnShortcutOptions(null);
+				changeFragment(FRAGMENTS.SHORTCUTS);
 				return true;
 			case R.id.menuHighscores:
 				ViewHighScores();
@@ -541,19 +554,74 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
 		if (fragment == FRAGMENTS.NEW_GAME){
-			transaction.show(mNavigationDrawerFragment).commit();
+			transaction.show(mNavigationDrawerFragment);
 		} else {
-			transaction.hide(mNavigationDrawerFragment).commit();
+			transaction.hide(mNavigationDrawerFragment);
 		}
 		switch (fragment){
+			case AVERAGE_PRICES:
+				currentFragment = new FragmentAveragePrices(this, mGameState);
+				break;
+			case BANK:
+				currentFragment = new FragmentBank(mGameState);
+				break;
+			case BUY_CARGO:
+				currentFragment = new FragmentBuyCargo(mGameState);
+				break;
+			case BUY_EQUIPMENT:
+				currentFragment = new FragmentBuyEquipment(mGameState);
+				break;
+			case BUY_NEW_SHIP:
+				currentFragment = new FragmentBuyNewShip(this, mGameState);
+				break;
+			case COMMANDER_STATUS:
+				currentFragment = new FragmentCommanderStatus(mGameState);
+				break;
+			case DUMP:
+				currentFragment = new FragmentDumpCargo(mGameState);
+				break;
+			case ENCOUNTER:
+				currentFragment = new FragmentEncounter(this, mGameState);
+				break;
+			case GALACTIC_CHART:
+				currentFragment = new FragmentGalacticChart(this, mGameState);
+				break;
 			case NEW_GAME:
 				currentFragment = new FragmentStartNewGame();
+				break;
+			case OPTIONS:
+				currentFragment = new FragmentOptions(mGameState);
+				break;
+			case PERSONNEL_ROSTER:
+				currentFragment = new FragmentPersonnelRoster(mGameState);
+				break;
+			case PLUNDER:
+				currentFragment = new FragmentPlunderCargo(mGameState);
+				break;
+			case SELL_CARGO:
+				currentFragment = new FragmentSellCargo(mGameState);
+				break;
+			case SELL_EQUIPMENT:
+				currentFragment = new FragmentSellEquipment(mGameState);
+				break;
+			case SHIPYARD:
+				currentFragment = new FragmentShipyard(mGameState);
+				break;
+			case SHORTCUTS:
+				currentFragment = new FragmentShortcuts(mGameState);
+				break;
+			case SHORT_RANGE_CHART:
+				currentFragment = new FragmentShortRangeChart(this, mGameState);
 				break;
 			case SYSTEM_INFORMATION:
 				currentFragment = new FragmentSystemInformation(mGameState);
 				break;
-			case PERSONNEL_ROSTER:
-				currentFragment = new FragmentPersonnelRoster(mGameState);
+			case VERY_RARE_CHEAT:
+				currentFragment = new FragmentVeryRare(mGameState);
+				break;
+			case WARP_SYSTEM_INFORMATION:
+				currentFragment = new FragmentWarpSystemInformation(this, mGameState);
+				break;
 			default:
 				return;
 		}
@@ -1449,7 +1517,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				numLightning = i;
 				extra += i*30000;
 			}
 		}
@@ -1556,16 +1623,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                  @Override
 					                  public void execute(Popup popup, View view) {
 						                  extra[0] += 20000;
-						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, true,
-						                                                      hasMorganLaser
+						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning,
+						                                                      true, hasMorganLaser
 						                  );
 					                  }
 				                  },
 				                  new Popup.buttonCallback() {
 					                  @Override
 					                  public void execute(Popup popup, View view) {
-						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false,
-						                                                      hasMorganLaser
+						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning,
+						                                                      false, hasMorganLaser
 						                  );
 					                  }
 				                  }
@@ -1655,11 +1722,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
-	public void btnBuyEquipment(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new BuyEquipmentFragment()).commit();
-		mCurrentState = "BuyEquipment";
-	}
 	public void BuyEquipmentButtonCallback(View view){
 		int Index;
 
@@ -1705,7 +1767,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			BuyItem(mGameState.ShipTypes.ShipTypes[mGameState.Ship.type].gadgetSlots, mGameState.Ship.gadget, mGameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)), mGameState.Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)].name, Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE));
 		}
-		btnBuyEquipment(null);
+		changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 	}
 	void BuyItem(int Slots, final int[] Item, final int Price, String Name, final int ItemIndex){
 		// *************************************************************************
@@ -1762,18 +1824,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				                  public void execute(Popup popup, View view) {
 														Item[FirstEmptySlot] = ItemIndex;
 														mGameState.Credits -= Price;
-														btnBuyEquipment(null);
+					                  changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 													}
 												}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
-	}
-	public void btnSellEquipment(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new SellEquipmentFragment()).commit();
-		mCurrentState = "SellEquipment";
 	}
 	public void btnSellEquipmentOnClick(View view){
 		int idx = -1;
@@ -1840,17 +1897,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 													mGameState.Ship.gadget[i-1] = mGameState.Ship.gadget[i];
 												mGameState.Ship.gadget[GameState.MAXGADGET-1] = -1;
 											}
-											btnSellEquipment(null);
+				              changeFragment(FRAGMENTS.SELL_EQUIPMENT);
 			              }
 									}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
-	}
-	public void btnBuyCargo(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new BuyCargoFragment()).commit();
-		mCurrentState = "BuyCargo";
 	}
 	public void btnBuyCargoCallback(View view){
 		int idx;
@@ -1959,10 +2011,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							            Amount = seekBar.getProgress();
 							            if (Amount > 0) {
 								            BuyCargo(Index, Amount);
-								            if (mCurrentState.equals("AveragePrices")){
-									            btnAveragePricesForm(null);
+								            if (currentState == FRAGMENTS.AVERAGE_PRICES){
+									            changeFragment(FRAGMENTS.AVERAGE_PRICES);
 								            } else {
-								              btnBuyCargo(null);
+									            changeFragment(FRAGMENTS.BUY_CARGO);
 								            }
 							            }
 						            }
@@ -1971,10 +2023,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                  @Override
 			                  public void execute(Popup popup, View view) {
 				                  BuyCargo(Index, popup.max);
-				                  if (mCurrentState.equals("AveragePrices")){
-					                  btnAveragePricesForm(null);
+				                  if (currentState == FRAGMENTS.AVERAGE_PRICES){
+					                  changeFragment(FRAGMENTS.AVERAGE_PRICES);
 				                  } else {
-					                  btnBuyCargo(null);
+					                  changeFragment(FRAGMENTS.BUY_CARGO);
 				                  }
 			                  }
 		                  }
@@ -2063,12 +2115,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		BuyCargo(Index, 999);
-    btnBuyCargo(null);
-	}
-	public void btnSellCargo(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new SellCargoFragment()).commit();
-		mCurrentState = "SellCargo";
+		changeFragment(FRAGMENTS.BUY_CARGO);
 	}
 	public void btnSellCargoCallback(View view){
 		int Index;
@@ -2150,7 +2197,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							            Amount = seekBar.getProgress();
 							            if (Amount > 0){
 								            SellCargo(idx, Amount, GameState.SELLCARGO);
-								            btnSellCargo(null);
+								            changeFragment(FRAGMENTS.SELL_CARGO);
 							            }
 						            }
 											}, cbShowNextPopup,
@@ -2158,7 +2205,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                  @Override
 			                  public void execute(Popup popup, View view) {
 				                  SellCargo(idx, 999, GameState.SELLCARGO);
-				                  btnSellCargo(null);
+				                  changeFragment(FRAGMENTS.SELL_CARGO);
 			                  }
 		                  }
 		);
@@ -2221,57 +2268,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		SellCargo(Index, 999, GameState.SELLCARGO);
-		btnSellCargo(null);
-	}
-	public void btnGalacticChart(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new GalacticChartFragment()).commit();
-		mCurrentState = "GalacticChart";
-	}
-	public void btnShortRangeChart(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new ShortRangeChartFragment()).commit();
-		mCurrentState = "ShortRangeChart";
+		changeFragment(FRAGMENTS.SELL_CARGO);
 	}
 	public void btnAveragePricesForm(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new AveragePricesFragment()).commit();
-		mCurrentState = "AveragePrices";
+		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 	public void btnToggleAverageDiffPrices(View view){
 		mGameState.PriceDifferences = !mGameState.PriceDifferences;
-		btnAveragePricesForm(null);
+		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 	public void btnNextSystem(View view){
-		WarpSystem = mGameState.SolarSystem[NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev)];
-		btnAveragePricesForm(null);
+		mGameState.WarpSystem = NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev);
+		WarpSystem = mGameState.SolarSystem[mGameState.WarpSystem];
+		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 	public void btnWarpSystemInformation(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new WarpSystemInformationFragment()).commit();
-		mCurrentState = "WarpSystemInformation";
+		changeFragment(FRAGMENTS.WARP_SYSTEM_INFORMATION);
 	}
 	public void btnDoWarp(View view){
 		DoWarp(false);
 	}
-	public void btnEncounter(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new EncounterFragment()).commit();
-		mCurrentState = "Encounter";
-	}
 	public void btnDestroyed(){
 		mContext.deleteFile("savegame.txt");
 		EndOfGame(GameState.KILLED);
-	}
-	public void btnGameOptions(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new OptionsFragment()).commit();
-		mCurrentState = "Options";
-	}
-	public void btnShortcutOptions(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new ShortcutsFragment()).commit();
-		mCurrentState = "Shortcuts";
 	}
 	public void btnSetOption(View view){
 		CheckBox checkBox = (CheckBox) view;
@@ -2318,11 +2337,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
-	public void btnPlunderForm(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new PlunderCargoFragment()).commit();
-		mCurrentState = "PlunderCargo";
-	}
 	public void PlunderCargo(int Index, int Amount) {
 		// *************************************************************************
 		// Plunder amount of cargo
@@ -2360,7 +2374,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER && Index == GameState.NARCOTICS && Amount > 0)
 			mGameState.JustLootedMarie = true;
-		btnPlunderForm(null);
+		changeFragment(FRAGMENTS.PLUNDER);
 	}
 	public void btnPlunderAllCargoQty(View view){
 		int Index = -1;
@@ -2468,9 +2482,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 	public void btnDumpForm(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new DumpCargoFragment()).commit();
-		mCurrentState = "DumpCargo";
+		changeFragment(FRAGMENTS.DUMP);
 	}
 	public void btnDumpAllCargoQty(View view){
 		int Index = -1;
@@ -2581,7 +2593,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Travel();
 	}
 	public void btnDumpDone(View view){
-		btnPlunderForm(null);
+		changeFragment(FRAGMENTS.PLUNDER);
 	}
 	public void btnGalacticChartFind(View view){
 		Popup popup;
@@ -2636,7 +2648,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							                if (i < GameState.MAXSOLARSYSTEM) {
 								                mGameState.Mercenary[0].curSystem = i;
 								                mGameState.RecalculateBuyPrices(i);
-								                btnGalacticChart(null);
+								                changeFragment(FRAGMENTS.GALACTIC_CHART);
 							                }
 						                } else
 					                  if (buf.equals("Quests")) {
@@ -2694,7 +2706,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						                  popupQueue.push(popup1);
 						                  showNextPopup();
 				                    } else if (buf.equals("Very rare")) {
-						                  btnVeryRareForm(null);
+						                  changeFragment(FRAGMENTS.VERY_RARE_CHEAT);
 					                  }
 													} else {
 							                int i = 0;
@@ -2708,7 +2720,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							                }
 							                mGameState.WarpSystem = i;
 							                WarpSystem = mGameState.SolarSystem[i];
-							                btnGalacticChart(null);
+														changeFragment(FRAGMENTS.GALACTIC_CHART);
 						                }
 					                }
 			                  },
@@ -2716,31 +2728,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		);
 		popupQueue.push(popup);
 		showNextPopup();
-     /* Cheats come later
-#ifdef BETATEST
-else if (StrCompare( FindSystem, "Load" ) == 0)
-#else
-else if (StrCompare( FindSystem, "Timewarp" ) == 0)
-#endif
-{
-DontLoad = false;
-if (!GameLoaded)
-{
-if (FrmAlert( DisableScoringAlert ) != DisableScoringYes)
-DontLoad = true;
-}
-else if (FrmAlert( ReallyLoadAlert ) != ReallyLoadYes)
-DontLoad = true;
-if (!DontLoad)
-{
-if (LoadGame( 1 ))
-{
-GameLoaded = true;
-FrmGotoForm( CurForm );
-}
-}
-}
-*/
 	}
 	public void SuperWarpButtonCallback(View view){
 		Popup popup;
@@ -2873,11 +2860,6 @@ FrmGotoForm( CurForm );
 		}
 		invalidateOptionsMenu();
 	}
-	public void btnVeryRareForm(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, new VeryRareFragment()).commit();
-		mCurrentState = "VeryRare";
-	}
 	public void btnVeryRareCheckboxCallback(View view){
 		CheckBox checkBox = (CheckBox) view;
 		switch (checkBox.getId()){
@@ -2922,23 +2904,6 @@ FrmGotoForm( CurForm );
 				} else {
 					mGameState.VeryRareEncounter ^= GameState.ALREADYMARIE;
 				}
-				break;
-		}
-	}
-	public void numVeryRareChanceCallback(View view){
-		EditText editText = (EditText) view;
-		int amount;
-		try {
-			amount = Integer.parseInt(editText.getText().toString());
-		} catch (Exception e){
-			return;
-		}
-		switch (editText.getId()){
-			case R.id.numCheatRareEncounter:
-				mGameState.ChanceOfVeryRareEncounter = amount;
-				break;
-			case R.id.numCheatOrbitTrade:
-				mGameState.ChanceOfTradeInOrbit = amount;
 				break;
 		}
 	}
@@ -3015,7 +2980,7 @@ FrmGotoForm( CurForm );
 																	mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
 																else
 																	--mGameState.PoliceRecordScore;
-																addNewsEvent(GameState.CAUGHTLITTERING);
+																mGameState.addNewsEvent(GameState.CAUGHTLITTERING);
 															}
 														}
 													}, cbShowNextPopup
@@ -3030,7 +2995,7 @@ FrmGotoForm( CurForm );
 					mGameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
 				else
 					--mGameState.PoliceRecordScore;
-				addNewsEvent(GameState.CAUGHTLITTERING);
+				mGameState.addNewsEvent(GameState.CAUGHTLITTERING);
 			}
 		}
 
@@ -3067,1372 +3032,6 @@ FrmGotoForm( CurForm );
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-	// Fragments -
-	////////////////////////////////////////////////////////////////////////////
-	public class CommanderStatusFragment extends Fragment {
-		public CommanderStatusFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_commander_status, container, false);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			Ship Ship = mGameState.Ship;
-			TextView tv;
-			int i;
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusNameCommander);
-			tv.setText(mGameState.NameCommander);
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPilot);
-			tv.setText(String.format("%d [%d]", COMMANDER.pilot, mGameState.PilotSkill(Ship)));
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusFighter);
-			tv.setText(String.format("%d [%d]", COMMANDER.fighter, mGameState.FighterSkill(Ship)));
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusTrader);
-			tv.setText(String.format("%d [%d]", COMMANDER.trader, mGameState.TraderSkill(Ship)));
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusEngineer);
-			tv.setText(String.format("%d [%d]", COMMANDER.engineer, mGameState.EngineerSkill(Ship)));
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusKills);
-			tv.setText(String.format("%d",
-			                         mGameState.PirateKills + mGameState.PoliceKills + mGameState.TraderKills
-			)
-			);
-
-			i = 0;
-			while (i < GameState.MAXPOLICERECORD && mGameState.PoliceRecordScore >= mGameState.PoliceRecord.minScore[i])
-				++i;
-			--i;
-			if (i < 0)
-				++i;
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPoliceRecord);
-			tv.setText(mGameState.PoliceRecord.name[i]);
-
-			i = 0;
-			while (i < GameState.MAXREPUTATION && mGameState.ReputationScore >= mGameState.Reputation.minScore[i])
-				++i;
-			--i;
-			if (i < 0)
-				i = 0;
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusReputation);
-			tv.setText(mGameState.Reputation.name[i]);
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
-			tv.setText(mGameState.levelDesc[GameState.getDifficulty()]);
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDays);
-			tv.setText(String.format("%d", mGameState.Days));
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusCash);
-			tv.setText(String.format("%d cr.", mGameState.Credits));
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDebt);
-			tv.setText(String.format("%d cr.", mGameState.Debt));
-
-			tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusWorth);
-			tv.setText(String.format("%d cr.", mGameState.CurrentWorth()));
-
-			return rootView;
-		}
-	}
-
-	public class BankFragment extends Fragment {
-		public BankFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_bank, container, false);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			Ship Ship = mGameState.Ship;
-			TextView tv;
-			Button btn;
-
-			btn = (Button) rootView.findViewById(R.id.btnBankGetLoan);
-			if (mGameState.Debt <= 0) {
-				btn.setText("Get Loan");
-			} else {
-				btn.setText("Payback Loan");
-			}
-
-			btn = (Button) rootView.findViewById(R.id.btnBankBuyInsurance);
-			if (mGameState.Insurance) {
-				btn.setText("Stop insurance");
-			} else {
-				btn.setText("Buy insurance");
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankDebt);
-			tv.setText(String.format("%d cr.", mGameState.Debt));
-			btn = (Button) rootView.findViewById(R.id.btnBankPaybackLoan);
-			if (mGameState.Debt <= 0) {
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankMaxDebt);
-			tv.setText(String.format("%d cr.", mGameState.MaxLoan()));
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankShipValue);
-			tv.setText(String.format("%d cr.", mGameState.CurrentShipPriceWithoutCargo(true)));
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankNoClaim);
-			tv.setText(String.format("%d%%%s", Math.min(mGameState.NoClaim, 90),
-			                         mGameState.NoClaim == 90 ? " (maximum)" : ""
-			)
-			);
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankCost);
-			tv.setText(String.format("%d cr. daily", mGameState.InsuranceMoney()));
-
-			tv = (TextView) rootView.findViewById(R.id.txtBankCash);
-			tv.setText(String.format("%d cr.", mGameState.Credits));
-
-			return rootView;
-		}
-	}
-
-	public class ShipyardFragment extends Fragment {
-		public ShipyardFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_shipyard, container, false);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
-			Ship Ship = mGameState.Ship;
-			TextView tv;
-			Button btn;
-
-			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFuel);
-				btn.setVisibility(View.VISIBLE);
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyMaxFuel);
-				btn.setVisibility(View.VISIBLE);
-			} else {
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFuel);
-				btn.setVisibility(View.INVISIBLE);
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyMaxFuel);
-				btn.setVisibility(View.INVISIBLE);
-			}
-
-			if (Ship.hull < mGameState.GetHullStrength()) {
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyRepairs);
-				btn.setVisibility(View.VISIBLE);
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFullRepairs);
-				btn.setVisibility(View.VISIBLE);
-			} else {
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyRepairs);
-				btn.setVisibility(View.INVISIBLE);
-				btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFullRepairs);
-				btn.setVisibility(View.INVISIBLE);
-			}
-
-			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyNewShip);
-			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
-				btn.setText("Buy New Ship");
-			} else {
-				btn.setText("Ship Information");
-			}
-
-			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyEscapePod);
-			if (mGameState.EscapePod || mGameState
-				                            .ToSpend() < 2000 || CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
-				btn.setVisibility(View.INVISIBLE);
-			} else {
-				btn.setVisibility(View.VISIBLE);
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelReserve);
-			tv.setText(String.format("You have fuel to fly %d parsec%s.", mGameState.GetFuel(),
-			                         mGameState.GetFuel() == 1 ? "" : "s"
-			)
-			);
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelCost);
-			if (mGameState.GetFuel() < mGameState.GetFuelTanks()) {
-				tv.setText(String.format("A full tank costs %d cr.", (mGameState.GetFuelTanks() - mGameState
-					                                                                                  .GetFuel()) * mGameState.ShipTypes.ShipTypes[Ship.type].costOfFuel
-				)
-				);
-			} else {
-				tv.setText("Your tank cannot hold more fuel.");
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardHullStrength);
-			tv.setText(String.format("Your hull strength is at %d%%.",
-			                         (Ship.hull * 100) / mGameState.GetHullStrength()
-			)
-			);
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardRepairsNeeded);
-			if (Ship.hull < mGameState.GetHullStrength()) {
-				tv.setText(String.format("Full repair will cost %d cr.", (mGameState
-					                                                          .GetHullStrength() - Ship.hull) * mGameState.ShipTypes.ShipTypes[Ship.type].repairCosts
-				)
-				);
-			} else {
-				tv.setText("No repairs are needed.");
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardNewShipsForSale);
-			if (CURSYSTEM.techLevel >= mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
-				tv.setText("There are new ships for sale.");
-			} else {
-				tv.setText("No new ships are for sale.");
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			tv = (TextView) rootView.findViewById(R.id.txtShipyardBuyEscapePod);
-			if (mGameState.EscapePod) {
-				tv.setText("You have an escape pod installed.");
-			} else if (CURSYSTEM.techLevel < mGameState.ShipTypes.ShipTypes[0].minTechLevel) {
-				tv.setText("No escape pods are for sale.");
-			} else if (mGameState.ToSpend() < 2000) {
-				tv.setText("You need 2000 cr. for an escape pod.");
-			} else {
-				tv.setText("You can buy an escape pod for 2000 cr.");
-			}
-
-			return rootView;
-		}
-	}
-
-	public class BuyEquipmentFragment extends Fragment {
-		public BuyEquipmentFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_buy_equipment, container, false);
-			TextView tv;
-			Button btn;
-			int i;
-
-			tv = (TextView) rootView.findViewById(R.id.txtBuyEquipmentCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			i = -1;
-			btn = (Button) rootView.findViewById(R.id.btnBuyPulseLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyBeamLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyMilitaryLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-
-			i = -1;
-			btn = (Button) rootView.findViewById(R.id.btnBuyEnergyShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyReflectiveShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-
-			i = -1;
-			btn = (Button) rootView.findViewById(R.id.btnBuy5CargoBays);
-			if (mGameState.BASEGADGETPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyAutoRepairSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyNavigationSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyTargetingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-			btn = (Button) rootView.findViewById(R.id.btnBuyCloakingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0)
-				btn.setVisibility(View.VISIBLE);
-			else
-				btn.setVisibility(View.INVISIBLE);
-
-			i = -1;
-			tv = (TextView) rootView.findViewById(R.id.txtBuyPulseLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyBeamLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyMilitaryLaser);
-			if (mGameState.BASEWEAPONPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEWEAPONPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-
-			i = -1;
-			tv = (TextView) rootView.findViewById(R.id.txtBuyEnergyShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyReflectiveShield);
-			if (mGameState.BASESHIELDPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASESHIELDPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-
-			i = -1;
-			tv = (TextView) rootView.findViewById(R.id.txtBuy5CargoBays);
-			if (mGameState.BASEGADGETPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyAutoRepairSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyNavigationSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyTargetingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyCloakingSystem);
-			if (mGameState.BASEGADGETPRICE(++i) > 0) {
-				tv.setText(String.format("%d cr.", mGameState.BASEGADGETPRICE(i)));
-			} else {
-				tv.setText("not sold");
-			}
-
-			return rootView;
-		}
-	}
-
-	public class SellEquipmentFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_sell_equipment, container, false);
-			TextView tv;
-			Button btn;
-			Ship Ship = mGameState.Ship;
-			int i;
-
-			tv = (TextView) rootView.findViewById(R.id.txtSellEquipmentCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			for (i = 0; i < GameState.MAXWEAPON; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentWeapon1 :
-				                                     i == 1 ? R.id.btnSellEquipmentWeapon2 :
-				                                     R.id.btnSellEquipmentWeapon3
-				);
-				if (Ship.weapon[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 :
-					                                      i == 1 ? R.id.txtSellEquipmentWeapon2 :
-					                                      R.id.txtSellEquipmentWeapon3
-					);
-					tv.setText(mGameState.Weapons.mWeapons[Ship.weapon[i]].name);
-					tv.setVisibility(View.VISIBLE);
-
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceWeapon2 :
-					                                      R.id.txtSellEquipmentPriceWeapon3
-					);
-					tv.setText(String.format("%d cr.", mGameState.WEAPONSELLPRICE(i)));
-					tv.setVisibility(View.VISIBLE);
-
-					btn.setVisibility(View.VISIBLE);
-				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceWeapon2 :
-					                                      R.id.txtSellEquipmentPriceWeapon3
-					);
-					tv.setVisibility(View.INVISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentWeapon1 :
-					                                      i == 1 ? R.id.txtSellEquipmentWeapon2 :
-					                                      R.id.txtSellEquipmentWeapon3
-					);
-					tv.setVisibility(View.INVISIBLE);
-					tv.setText("");
-				}
-			}
-
-			for (i = 0; i < GameState.MAXSHIELD; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentShield1 :
-				                                     i == 1 ? R.id.btnSellEquipmentShield2 :
-				                                     R.id.btnSellEquipmentShield3
-				);
-				if (Ship.shield[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 :
-					                                      i == 1 ? R.id.txtSellEquipmentShield2 :
-					                                      R.id.txtSellEquipmentShield3
-					);
-					tv.setText(mGameState.Shields.mShields[Ship.shield[i]].name);
-					tv.setVisibility(View.VISIBLE);
-
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceShield2 :
-					                                      R.id.txtSellEquipmentPriceShield3
-					);
-					tv.setText(String.format("%d cr.", mGameState.SHIELDSELLPRICE(i)));
-					tv.setVisibility(View.VISIBLE);
-
-					btn.setVisibility(View.VISIBLE);
-				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceShield2 :
-					                                      R.id.txtSellEquipmentPriceShield3
-					);
-					tv.setVisibility(View.INVISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentShield1 :
-					                                      i == 1 ? R.id.txtSellEquipmentShield2 :
-					                                      R.id.txtSellEquipmentShield3
-					);
-					tv.setVisibility(View.INVISIBLE);
-					tv.setText("");
-				}
-			}
-
-			for (i = 0; i < GameState.MAXGADGET; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellEquipmentGadget1 :
-				                                     i == 1 ? R.id.btnSellEquipmentGadget2 :
-				                                     R.id.btnSellEquipmentGadget3
-				);
-				if (Ship.gadget[i] >= 0) {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 :
-					                                      i == 1 ? R.id.txtSellEquipmentGadget2 :
-					                                      R.id.txtSellEquipmentGadget3
-					);
-					tv.setText(mGameState.Gadgets.mGadgets[Ship.gadget[i]].name);
-					tv.setVisibility(View.VISIBLE);
-
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceGadget2 :
-					                                      R.id.txtSellEquipmentPriceGadget3
-					);
-					tv.setText(String.format("%d cr.", mGameState.GADGETSELLPRICE(i)));
-					tv.setVisibility(View.VISIBLE);
-
-					btn.setVisibility(View.VISIBLE);
-				} else {
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 :
-					                                      i == 1 ? R.id.txtSellEquipmentPriceGadget2 :
-					                                      R.id.txtSellEquipmentPriceGadget3
-					);
-					tv.setVisibility(View.INVISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentGadget1 :
-					                                      i == 1 ? R.id.txtSellEquipmentGadget2 :
-					                                      R.id.txtSellEquipmentGadget3
-					);
-					tv.setText("");
-					tv.setVisibility(View.INVISIBLE);
-				}
-			}
-
-			return rootView;
-		}
-	}
-
-	public class BuyCargoFragment extends Fragment {
-		public BuyCargoFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_buy_cargo, container, false);
-			CrewMember COMMANDER;
-			SolarSystem CURSYSTEM;
-			COMMANDER = mGameState.Mercenary[0];
-			CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
-			TextView tv;
-			Button btn;
-			Button btnAll;
-			int i;
-
-			for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnBuyCargo1 :
-				                                     i == 1 ? R.id.btnBuyCargo2 :
-				                                     i == 2 ? R.id.btnBuyCargo3 :
-				                                     i == 3 ? R.id.btnBuyCargo4 :
-				                                     i == 4 ? R.id.btnBuyCargo5 :
-				                                     i == 5 ? R.id.btnBuyCargo6 :
-				                                     i == 6 ? R.id.btnBuyCargo7 :
-				                                     i == 7 ? R.id.btnBuyCargo8 :
-				                                     i == 8 ? R.id.btnBuyCargo9 :
-					                                    /*i == 9 ? */R.id.btnBuyCargo10
-				);
-				btnAll = (Button) rootView.findViewById(i == 0 ? R.id.btnBuyCargoAll1 :
-				                                        i == 1 ? R.id.btnBuyCargoAll2 :
-				                                        i == 2 ? R.id.btnBuyCargoAll3 :
-				                                        i == 3 ? R.id.btnBuyCargoAll4 :
-				                                        i == 4 ? R.id.btnBuyCargoAll5 :
-				                                        i == 5 ? R.id.btnBuyCargoAll6 :
-				                                        i == 6 ? R.id.btnBuyCargoAll7 :
-				                                        i == 7 ? R.id.btnBuyCargoAll8 :
-				                                        i == 8 ? R.id.btnBuyCargoAll9 :
-					                                    /*i == 9 ? */R.id.btnBuyCargoAll10
-				);
-				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtBuyCargoPrice1 :
-				                                      i == 1 ? R.id.txtBuyCargoPrice2 :
-				                                      i == 2 ? R.id.txtBuyCargoPrice3 :
-				                                      i == 3 ? R.id.txtBuyCargoPrice4 :
-				                                      i == 4 ? R.id.txtBuyCargoPrice5 :
-				                                      i == 5 ? R.id.txtBuyCargoPrice6 :
-				                                      i == 6 ? R.id.txtBuyCargoPrice7 :
-				                                      i == 7 ? R.id.txtBuyCargoPrice8 :
-				                                      i == 8 ? R.id.txtBuyCargoPrice9 :
-					                                     /*i == 9 ? */R.id.txtBuyCargoPrice10
-				);
-				if (mGameState.BuyPrice[i] > 0) {
-					btn.setText(String.format("%d", CURSYSTEM.qty[i]));
-					tv.setText(String.format("%d cr.", mGameState.BuyPrice[i]));
-					tv.setVisibility(View.VISIBLE);
-					btn.setVisibility(View.VISIBLE);
-					btnAll.setVisibility(View.VISIBLE);
-				} else {
-					tv.setText("not sold");
-					tv.setVisibility(View.VISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					btnAll.setVisibility(View.INVISIBLE);
-				}
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
-			                         mGameState.TotalCargoBays()
-			)
-			);
-			tv = (TextView) rootView.findViewById(R.id.txtBuyCargoCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			return rootView;
-		}
-	}
-
-	public class SellCargoFragment extends Fragment {
-		public SellCargoFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_sell_cargo, container, false);
-			CrewMember COMMANDER;
-			SolarSystem CURSYSTEM;
-			COMMANDER = mGameState.Mercenary[0];
-			CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
-			TextView tv;
-			TextView name;
-			Button btn;
-			Button btnAll;
-			int i;
-
-			for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnSellCargo1 :
-				                                     i == 1 ? R.id.btnSellCargo2 :
-				                                     i == 2 ? R.id.btnSellCargo3 :
-				                                     i == 3 ? R.id.btnSellCargo4 :
-				                                     i == 4 ? R.id.btnSellCargo5 :
-				                                     i == 5 ? R.id.btnSellCargo6 :
-				                                     i == 6 ? R.id.btnSellCargo7 :
-				                                     i == 7 ? R.id.btnSellCargo8 :
-				                                     i == 8 ? R.id.btnSellCargo9 :
-					                                    /*i == 9 ? */R.id.btnSellCargo10
-				);
-				btnAll = (Button) rootView.findViewById(i == 0 ? R.id.btnSellCargoAll1 :
-				                                        i == 1 ? R.id.btnSellCargoAll2 :
-				                                        i == 2 ? R.id.btnSellCargoAll3 :
-				                                        i == 3 ? R.id.btnSellCargoAll4 :
-				                                        i == 4 ? R.id.btnSellCargoAll5 :
-				                                        i == 5 ? R.id.btnSellCargoAll6 :
-				                                        i == 6 ? R.id.btnSellCargoAll7 :
-				                                        i == 7 ? R.id.btnSellCargoAll8 :
-				                                        i == 8 ? R.id.btnSellCargoAll9 :
-					                                    /*i == 9 ? */R.id.btnSellCargoAll10
-				);
-				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellCargoPrice1 :
-				                                      i == 1 ? R.id.txtSellCargoPrice2 :
-				                                      i == 2 ? R.id.txtSellCargoPrice3 :
-				                                      i == 3 ? R.id.txtSellCargoPrice4 :
-				                                      i == 4 ? R.id.txtSellCargoPrice5 :
-				                                      i == 5 ? R.id.txtSellCargoPrice6 :
-				                                      i == 6 ? R.id.txtSellCargoPrice7 :
-				                                      i == 7 ? R.id.txtSellCargoPrice8 :
-				                                      i == 8 ? R.id.txtSellCargoPrice9 :
-					                                     /*i == 9 ? */R.id.txtSellCargoPrice10
-				);
-				name = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellName1 :
-				                                        i == 1 ? R.id.txtSellName2 :
-				                                        i == 2 ? R.id.txtSellName3 :
-				                                        i == 3 ? R.id.txtSellName4 :
-				                                        i == 4 ? R.id.txtSellName5 :
-				                                        i == 5 ? R.id.txtSellName6 :
-				                                        i == 6 ? R.id.txtSellName7 :
-				                                        i == 7 ? R.id.txtSellName8 :
-				                                        i == 8 ? R.id.txtSellName9 :
-	                                             /*i == 9 ? */R.id.txtSellName10
-				);
-				if (mGameState.BuyingPrice[i] < mGameState.SellPrice[i] * mGameState.Ship.cargo[i]) {
-					name.setTypeface(null, Typeface.BOLD);
-				} else {
-					name.setTypeface(null, Typeface.NORMAL);
-				}
-				if (mGameState.SellPrice[i] > 0) {
-					btn.setText(String.format("%d", mGameState.Ship.cargo[i]));
-					tv.setText(String.format("%d cr.", mGameState.SellPrice[i]));
-					tv.setVisibility(View.VISIBLE);
-					btn.setVisibility(View.VISIBLE);
-					btnAll.setVisibility(View.VISIBLE);
-				} else {
-					tv.setText("not trade");
-					tv.setVisibility(View.VISIBLE);
-					btn.setVisibility(View.INVISIBLE);
-					btnAll.setVisibility(View.INVISIBLE);
-				}
-			}
-			tv = (TextView) rootView.findViewById(R.id.txtSellCargoBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
-			                         mGameState.TotalCargoBays()
-			)
-			);
-			tv = (TextView) rootView.findViewById(R.id.txtSellCargoCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			return rootView;
-		}
-	}
-
-	public class PlunderCargoFragment extends Fragment {
-		public PlunderCargoFragment() {}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_plunder_cargo, container, false);
-			TextView tv;
-			Button btn;
-			int i;
-
-			for (i = 0; i < GameState.MAXTRADEITEM; i++) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPlunderCargo1 :
-				                                     i == 1 ? R.id.btnPlunderCargo2 :
-				                                     i == 2 ? R.id.btnPlunderCargo3 :
-				                                     i == 3 ? R.id.btnPlunderCargo4 :
-				                                     i == 4 ? R.id.btnPlunderCargo5 :
-				                                     i == 5 ? R.id.btnPlunderCargo6 :
-				                                     i == 6 ? R.id.btnPlunderCargo7 :
-				                                     i == 7 ? R.id.btnPlunderCargo8 :
-				                                     i == 8 ? R.id.btnPlunderCargo9 :
-					                           /*i == 9 ?*/ R.id.btnPlunderCargo10
-				);
-				btn.setText(String.format("%2d", mGameState.Opponent.cargo[i]));
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtPlunderCargoBays);
-			tv.setText(String.format("%d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
-
-			return rootView;
-		}
-	}
-
-	public class DumpCargoFragment extends Fragment {
-		public DumpCargoFragment() {}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_dump_cargo, container, false);
-			TextView tv;
-			Button btn;
-			int i;
-
-			for (i = 0; i < GameState.MAXTRADEITEM; i++) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnDumpCargo1 :
-				                                     i == 1 ? R.id.btnDumpCargo2 :
-				                                     i == 2 ? R.id.btnDumpCargo3 :
-				                                     i == 3 ? R.id.btnDumpCargo4 :
-				                                     i == 4 ? R.id.btnDumpCargo5 :
-				                                     i == 5 ? R.id.btnDumpCargo6 :
-				                                     i == 6 ? R.id.btnDumpCargo7 :
-				                                     i == 7 ? R.id.btnDumpCargo8 :
-				                                     i == 8 ? R.id.btnDumpCargo9 :
-					                           /*i == 9 ?*/ R.id.btnDumpCargo10
-				);
-				btn.setText(String.format("%2d", mGameState.Ship.cargo[i]));
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtDumpCargoBays);
-			tv.setText(String.format("%d/%d", mGameState.FilledCargoBays(), mGameState.TotalCargoBays()));
-
-			return rootView;
-		}
-	}
-
-	public class ShortRangeChartFragment extends Fragment {
-		public ShortRangeChartFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
-			final NavigationChart navigationChart =
-				(NavigationChart) rootView.findViewById(R.id.ShortRangeChart);
-			navigationChart.setGameState(mGameState);
-			navigationChart.setShortRange(true);
-
-			navigationChart.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					navigationChart.mDrawWormhole = -1;
-					navigationChart.invalidate();
-					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-						int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
-						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-						if (wormhole >= 0) {
-							system = mGameState.Wormhole[wormhole];
-							mGameState.WarpSystem = system;
-							WarpSystem = mGameState.SolarSystem[system];
-							if (!mGameState.AlwaysInfo &&
-								    (mGameState
-									     .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-									                   mGameState.SolarSystem[system]
-									     ) <= mGameState.GetFuel() || mGameState
-										                                  .WormholeExists(mGameState.Mercenary[0].curSystem,
-										                                                  system
-										                                  )) &&
-								    mGameState
-									    .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-									                  mGameState.SolarSystem[system]
-									    ) > 0) {
-								btnAveragePricesForm(null);
-							} else {
-								btnWarpSystemInformation(null);
-							}
-						} else if (system >= 0) {
-							mGameState.WarpSystem = system;
-							WarpSystem = mGameState.SolarSystem[system];
-							if (!mGameState.AlwaysInfo &&
-								    (mGameState
-									     .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-									                   mGameState.SolarSystem[system]
-									     ) <= mGameState.GetFuel() || mGameState
-										                                  .WormholeExists(mGameState.Mercenary[0].curSystem,
-										                                                  system
-										                                  )) &&
-								    mGameState
-									    .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-									                  mGameState.SolarSystem[system]
-									    ) > 0) {
-								btnAveragePricesForm(null);
-							} else {
-								btnWarpSystemInformation(null);
-							}
-						} else {
-							navigationChart.onTouchEvent(motionEvent);
-						}
-					}
-					return false;
-				}
-			}
-			);
-			TextView tv = (TextView) rootView.findViewById(R.id.txtShortRangeChartDistToTarget);
-			if (mGameState.TrackedSystem < 0) {
-				tv.setVisibility(View.INVISIBLE);
-			} else {
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("Distance to %s: %d parsec",
-				                         mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.TrackedSystem].nameIndex],
-				                         mGameState
-					                         .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-					                                       mGameState.SolarSystem[mGameState.TrackedSystem]
-					                         )
-				)
-				);
-			}
-			return rootView;
-		}
-	}
-
-	public class GalacticChartFragment extends Fragment {
-		public GalacticChartFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
-			final NavigationChart navigationChart =
-				(NavigationChart) rootView.findViewById(R.id.GalacticChart);
-			Button button = (Button) rootView.findViewById(R.id.btnJump);
-			button.setVisibility(mGameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
-			navigationChart.setGameState(mGameState);
-			navigationChart.setShortRange(false);
-
-			TextView tv;
-			if (mGameState.WarpSystem <= 0) {
-				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
-				tv.setVisibility(View.INVISIBLE);
-				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
-				tv.setVisibility(View.INVISIBLE);
-				tv = (TextView) rootView.findViewById(R.id.galChartName);
-				tv.setVisibility(View.INVISIBLE);
-			} else {
-				SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
-				tv = (TextView) rootView.findViewById(R.id.galChartDetails);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size],
-				                         mGameState.techLevel[s.techLevel],
-				                         mGameState.Politics.mPolitics[s.politics].name
-				)
-				);
-				tv = (TextView) rootView.findViewById(R.id.galChartDistance);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(String.format("%d parsecs", mGameState
-					                                       .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-					                                                     s
-					                                       )
-				)
-				);
-				tv = (TextView) rootView.findViewById(R.id.galChartName);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(mGameState.SolarSystemName[s.nameIndex]);
-				navigationChart.mSelectedSystem = mGameState.WarpSystem;
-			}
-			navigationChart.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-						final int system = navigationChart.getSystemAt(motionEvent.getX(), motionEvent.getY());
-						int wormhole = navigationChart.getWormholeAt(motionEvent.getX(), motionEvent.getY());
-						if (wormhole >= 0) {
-							navigationChart.mDrawWormhole = wormhole;
-							navigationChart.invalidate();
-							TextView tv;
-							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
-							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("Wormhole to %s",
-							                         mGameState.SolarSystemName[mGameState.SolarSystem[mGameState.Wormhole[wormhole]].nameIndex]
-							)
-							);
-							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
-							tv.setVisibility(View.INVISIBLE);
-							tv = (TextView) rootView.findViewById(R.id.galChartName);
-							tv.setVisibility(View.INVISIBLE);
-						} else if (system >= 0) {
-							TextView tv;
-							mGameState.WarpSystem = system;
-							WarpSystem = mGameState.SolarSystem[system];
-							SolarSystem s = mGameState.SolarSystem[mGameState.WarpSystem];
-							tv = (TextView) rootView.findViewById(R.id.galChartDetails);
-							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("%s %s %s", mGameState.SystemSize[s.size],
-							                         mGameState.techLevel[s.techLevel],
-							                         mGameState.Politics.mPolitics[s.politics].name
-							)
-							);
-							tv = (TextView) rootView.findViewById(R.id.galChartDistance);
-							tv.setVisibility(View.VISIBLE);
-							tv.setText(String.format("%d parsecs", mGameState
-								                                       .RealDistance(mGameState.SolarSystem[mGameState.Mercenary[0].curSystem],
-								                                                     s
-								                                       )
-							)
-							);
-
-							tv = (TextView) rootView.findViewById(R.id.galChartName);
-							tv.setVisibility(View.VISIBLE);
-							tv.setText(mGameState.SolarSystemName[s.nameIndex]);
-							if (system == navigationChart.mSelectedSystem) {
-								Popup popup;
-								popup = new Popup(WelcomeScreen.this, "Track system",
-								                  "Do you want to track the distance to " + mGameState.SolarSystemName[mGameState.SolarSystem[system].nameIndex] + "?",
-								                  "", "Yes", "No", new Popup.buttonCallback() {
-									@Override
-									public void execute(Popup popup, View view) {
-										mGameState.TrackedSystem = system;
-										navigationChart.invalidate();
-									}
-								}, cbShowNextPopup
-								);
-								popupQueue.push(popup);
-								showNextPopup();
-							} else {
-								navigationChart.mSelectedSystem = system;
-								navigationChart.invalidate();
-							}
-						} else {
-							navigationChart.onTouchEvent(motionEvent);
-						}
-					}
-					return false;
-				}
-			}
-			);
-			return rootView;
-		}
-	}
-
-	public class AveragePricesFragment extends Fragment {
-		public AveragePricesFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_average_prices, container, false);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
-			TextView tv, tvprice;
-			Button btn;
-
-			if (WarpSystem == null) {
-				WarpSystem = CURSYSTEM;
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtPriceListSystemName);
-			tv.setText(mGameState.SolarSystemName[WarpSystem.nameIndex]);
-
-			tv = (TextView) rootView.findViewById(R.id.txtPriceListSpecialResources);
-			if (WarpSystem.visited)
-				tv.setText(mGameState.SpecialResources[WarpSystem.specialResources]);
-			else
-				tv.setText("Special resources unknown");
-
-			tv = (TextView) rootView.findViewById(R.id.txtPriceListTitle);
-			btn = (Button) rootView.findViewById(R.id.btnPriceListDiffAvg);
-			if (mGameState.PriceDifferences) {
-				tv.setText("Price Differences");
-				btn.setText("Absolute Prices");
-			} else {
-				tv.setText("Absolute Prices");
-				btn.setText("Price Differences");
-			}
-
-			tv = (TextView) rootView.findViewById(R.id.txtPriceListBays);
-			tv.setText(String.format("Bays: %d/%d", mGameState.FilledCargoBays(),
-			                         mGameState.TotalCargoBays()
-			)
-			);
-
-			tv = (TextView) rootView.findViewById(R.id.txtPriceListCash);
-			tv.setText(String.format("Cash: %d cr.", mGameState.Credits));
-
-			for (int i = 0; i < GameState.MAXTRADEITEM; ++i) {
-				btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPriceListBuy1 :
-				                                     i == 1 ? R.id.btnPriceListBuy2 :
-				                                     i == 2 ? R.id.btnPriceListBuy3 :
-				                                     i == 3 ? R.id.btnPriceListBuy4 :
-				                                     i == 4 ? R.id.btnPriceListBuy5 :
-				                                     i == 5 ? R.id.btnPriceListBuy6 :
-				                                     i == 6 ? R.id.btnPriceListBuy7 :
-				                                     i == 7 ? R.id.btnPriceListBuy8 :
-				                                     i == 8 ? R.id.btnPriceListBuy9 :
-					                                    /*i == 9 ?*/ R.id.btnPriceListBuy10
-				);
-				btn.setVisibility(mGameState.BuyPrice[i] <= 0 ? View.INVISIBLE : View.VISIBLE);
-				btn.setText(String.format("%d", CURSYSTEM.qty[i]));
-				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListName1 :
-				                                      i == 1 ? R.id.txtPriceListName2 :
-				                                      i == 2 ? R.id.txtPriceListName3 :
-				                                      i == 3 ? R.id.txtPriceListName4 :
-				                                      i == 4 ? R.id.txtPriceListName5 :
-				                                      i == 5 ? R.id.txtPriceListName6 :
-				                                      i == 6 ? R.id.txtPriceListName7 :
-				                                      i == 7 ? R.id.txtPriceListName8 :
-				                                      i == 8 ? R.id.txtPriceListName9 :
-					                                     /*i == 9 ?*/ R.id.txtPriceListName10
-				);
-				tvprice = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListPrice1 :
-				                                           i == 1 ? R.id.txtPriceListPrice2 :
-				                                           i == 2 ? R.id.txtPriceListPrice3 :
-				                                           i == 3 ? R.id.txtPriceListPrice4 :
-				                                           i == 4 ? R.id.txtPriceListPrice5 :
-				                                           i == 5 ? R.id.txtPriceListPrice6 :
-				                                           i == 6 ? R.id.txtPriceListPrice7 :
-				                                           i == 7 ? R.id.txtPriceListPrice8 :
-				                                           i == 8 ? R.id.txtPriceListPrice9 :
-					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10
-				);
-
-				int Price = mGameState.StandardPrice(i, WarpSystem.size, WarpSystem.techLevel,
-				                                     WarpSystem.politics,
-				                                     (WarpSystem.visited ? WarpSystem.specialResources : -1)
-				);
-
-				if (Price > mGameState.BuyPrice[i] && mGameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0) {
-					tv.setTypeface(null, Typeface.BOLD);
-					tvprice.setTypeface(null, Typeface.BOLD);
-				} else {
-					tv.setTypeface(null, Typeface.NORMAL);
-					tvprice.setTypeface(null, Typeface.NORMAL);
-				}
-
-				if (Price <= 0 || (mGameState.PriceDifferences && mGameState.BuyPrice[i] <= 0)) {
-					tvprice.setText("---");
-				} else {
-					if (mGameState.PriceDifferences)
-						tvprice.setText(String.format("%+d cr.", Price - mGameState.BuyPrice[i]));
-					else
-						tvprice.setText(String.format("%d cr.", Price));
-				}
-			}
-			return rootView;
-		}
-	}
-
-	public class WarpSystemInformationFragment extends Fragment {
-		public WarpSystemInformationFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container,
-			                                       false
-			);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			SolarSystem CURSYSTEM = mGameState.SolarSystem[COMMANDER.curSystem];
-			TextView tv;
-
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
-			tv.setText(mGameState.SolarSystemName[WarpSystem.nameIndex]);
-
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoTechLevel);
-			tv.setText(mGameState.techLevel[WarpSystem.techLevel]);
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoGovernment);
-			tv.setText(Politics.mPolitics[WarpSystem.politics].name);
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
-			tv.setText(mGameState.SystemSize[WarpSystem.size]);
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
-			tv.setText(mGameState.Activity[mGameState.Politics.mPolitics[WarpSystem.politics].strengthPolice]);
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
-			tv.setText(mGameState.Activity[mGameState.Politics.mPolitics[WarpSystem.politics].strengthPirates]);
-
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
-			int Distance = mGameState.RealDistance(CURSYSTEM, WarpSystem);
-			if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem))
-				tv.setText("Wormhole");
-			else
-				tv.setText(String.format("%d parsecs", Distance));
-
-			tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
-			tv.setText(String.format("%d cr.", mGameState.InsuranceMoney() + mGameState
-				                                                                 .MercenaryMoney() + (mGameState.Debt > 0 ?
-			                                                                                        Math
-				                                                                                        .max(mGameState.Debt / 10,
-				                                                                                             1
-				                                                                                        ) :
-			                                                                                        0) + mGameState
-				                                                                                             .WormholeTax(COMMANDER.curSystem,
-				                                                                                                          WarpSystem
-				                                                                                             )
-			)
-			);
-
-			if (Distance > 0) {
-				if (mGameState.WormholeExists(COMMANDER.curSystem, WarpSystem
-				) || Distance <= mGameState.GetFuel()) {
-					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
-					btn.setVisibility(View.VISIBLE);
-					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
-					btn.setVisibility(View.VISIBLE);
-					tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
-					tv.setVisibility(View.INVISIBLE);
-				} else if (Distance > mGameState.GetFuel()) {
-					Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
-					btn.setVisibility(View.INVISIBLE);
-					btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
-					btn.setVisibility(View.INVISIBLE);
-					tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
-					tv.setVisibility(View.VISIBLE);
-				}
-			}
-
-			/* TODO: Specific Costs Button
-			if (mGameState.WormholeExists(mGameState.Mercenary[0].curSystem, WarpSystem ) ||
-				    mGameState.Insurance || mGameState.Debt > 0 || mGameState.Ship.crew[1] >= 0)
-				WarpSystemButtonSpecific.setVisibility(View.VISIBLE);
-			*/
-			return rootView;
-		}
-	}
-
-	public class EncounterFragment extends Fragment {
-		public EncounterFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_encounter, container, false);
-			CrewMember COMMANDER = mGameState.Mercenary[0];
-			Ship Ship = mGameState.Ship;
-			Ship Opponent = mGameState.Opponent;
-			int d, i;
-
-			EncounterPlayerShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerShip);
-			EncounterPlayerShip.setShip(Ship);
-			EncounterPlayerShip.setRotate(false);
-			EncounterOpponentShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerOpponent);
-			EncounterOpponentShip.setShip(Opponent);
-			EncounterOpponentShip.setRotate(true);
-
-			btnAttack = (Button) rootView.findViewById(R.id.btnAttack);
-			btnFlee = (Button) rootView.findViewById(R.id.btnFlee);
-			btnSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
-			btnBribe = (Button) rootView.findViewById(R.id.btnBribe);
-			btnIgnore = (Button) rootView.findViewById(R.id.btnIgnore);
-			btnYield = (Button) rootView.findViewById(R.id.btnYield);
-			btnBoard = (Button) rootView.findViewById(R.id.btnBoard);
-			btnPlunder = (Button) rootView.findViewById(R.id.btnPlunder);
-			btnSurrender = (Button) rootView.findViewById(R.id.btnSurrender);
-			btnDrink = (Button) rootView.findViewById(R.id.btnDrink);
-			btnMeet = (Button) rootView.findViewById(R.id.btnMeet);
-			btnTrade = (Button) rootView.findViewById(R.id.btnTrade);
-			btnInt = (Button) rootView.findViewById(R.id.btnInt);
-			pBarEncounter = (ProgressBar) rootView.findViewById(R.id.pBarEncounter);
-			EncounterText = (TextView) rootView.findViewById(R.id.txtEncounterText);
-
-			EncounterButtons();
-
-			playerShipNeedsUpdate = false;
-			opponentShipNeedsUpdate = false;
-
-			//EncounterDisplayShips();
-			EncounterDisplayNextAction(true);
-
-			if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-				EncounterText.setText("You encounter the Customs Police.");
-			} else {
-				String buf;
-				buf = String.format("At %d click%s from %s you encounter ", mGameState.Clicks,
-				                    mGameState.Clicks == 1 ? "" : "s",
-				                    mGameState.SolarSystemName[WarpSystem.nameIndex]
-				);
-				if (mGameState.ENCOUNTERPOLICE(mGameState.EncounterType))
-					buf += "a police ";
-				else if (mGameState.ENCOUNTERPIRATE(mGameState.EncounterType)) {
-					if (Opponent.type == GameState.MANTISTYPE)
-						buf += "an alien ";
-					else
-						buf += "a pirate ";
-				} else if (mGameState.ENCOUNTERTRADER(mGameState.EncounterType))
-					buf += "a trader ";
-				else if (mGameState.ENCOUNTERMONSTER(mGameState.EncounterType))
-					buf += "";
-				else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER)
-					buf += "a drifting ship ";
-				else if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
-					buf += "the famous Captain Ahab ";
-				else if (mGameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
-					buf += "Captain Conrad ";
-				else if (mGameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
-					buf += "Captain Huie ";
-				else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER)
-					buf += "a floating bottle. ";
-				else
-					buf += "a stolen ";
-				if (mGameState.EncounterType != GameState.MARIECELESTEENCOUNTER && mGameState.EncounterType != GameState.CAPTAINAHABENCOUNTER &&
-					    mGameState.EncounterType != GameState.CAPTAINCONRADENCOUNTER && mGameState.EncounterType != GameState.CAPTAINHUIEENCOUNTER &&
-					    mGameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && mGameState.EncounterType != GameState.BOTTLEGOODENCOUNTER) {
-					buf += mGameState.ShipTypes.ShipTypes[Opponent.type].name;
-				}
-				buf += ".\n";
-
-				EncounterText.setText(buf += EncounterText.getText().toString());
-			}
-
-			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
-			d = (int) Math.ceil(Math.sqrt(Ship.tribbles / 250));
-			d = Math.min(d, GameState.TRIBBLESONSCREEN);
-			for (i = 0; i <= d; ++i) {
-				int resID = mContext.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
-				                                                  mContext.getPackageName()
-				);
-				ImageView imageView = (ImageView) rootView.findViewById(resID);
-				if (imageView == null) {
-					continue;
-				}
-				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView
-					                                                                             .getLayoutParams()
-				);
-				marginParams.setMargins(mGameState.GetRandom(container.getWidth() - tribble.getWidth()),
-				                        mGameState.GetRandom(container.getHeight() - tribble.getHeight()),
-				                        0, 0
-				);
-				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
-				imageView.setLayoutParams(layoutParams);
-
-				imageView.setVisibility(View.VISIBLE);
-			}
-			for (; i <= GameState.TRIBBLESONSCREEN; ++i) {
-				int resID = mContext.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
-				                                                  mContext.getPackageName()
-				);
-				ImageView imageView = (ImageView) rootView.findViewById(resID);
-				if (imageView == null) {
-					continue;
-				}
-				imageView.setVisibility(View.GONE);
-			}
-			return rootView;
-		}
-	}
-
-	public class OptionsFragment extends Fragment {
-		public OptionsFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_game_options, container, false);
-			CheckBox checkBox;
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnorePolice);
-			checkBox.setChecked(mGameState.AlwaysIgnorePolice);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnorePiraces);
-			checkBox.setChecked(mGameState.AlwaysIgnorePirates);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnoreTraders);
-			checkBox.setChecked(mGameState.AlwaysIgnoreTraders);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxIgnoreTradeOffers);
-			checkBox.setChecked(mGameState.AlwaysIgnoreTradeInOrbit);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoFuel);
-			checkBox.setChecked(mGameState.AutoFuel);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoRepair);
-			checkBox.setChecked(mGameState.AutoRepair);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAlwaysInfo);
-			checkBox.setChecked(mGameState.AlwaysInfo);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxReserveMoney);
-			checkBox.setChecked(mGameState.ReserveMoney);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxContinuous);
-			checkBox.setChecked(mGameState.Continuous);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAttackFleeing);
-			checkBox.setChecked(mGameState.AttackFleeing);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxAutoPayNewspaper);
-			checkBox.setChecked(mGameState.NewsAutoPay);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxDebtReminder);
-			checkBox.setChecked(mGameState.RemindLoans);
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxSaveOnArrival);
-			checkBox.setChecked(mGameState.SaveOnArrival);
-
-			return rootView;
-		}
-	}
-
-	public class ShortcutsFragment extends Fragment {
-		public ShortcutsFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_shortcuts, container, false);
-
-			return rootView;
-		}
-	}
-
-	public class VeryRareFragment extends Fragment {
-		public VeryRareFragment() { }
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_rare_encounter_cheats, container,
-			                                       false
-			);
-			CheckBox checkBox;
-
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatAhab);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYAHAB) == GameState.ALREADYAHAB);
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatHuie);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYHUIE) == GameState.ALREADYHUIE);
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatConrad);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYCONRAD) == GameState.ALREADYCONRAD);
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatMarieCeleste);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYMARIE) == GameState.ALREADYMARIE);
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatGoodTonic);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEGOOD) == GameState.ALREADYBOTTLEGOOD);
-			checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxCheatBadTonic);
-			checkBox
-				.setChecked((mGameState.VeryRareEncounter & GameState.ALREADYBOTTLEOLD) == GameState.ALREADYBOTTLEOLD);
-
-			final EditText editText;
-			editText = (EditText) rootView.findViewById(R.id.numCheatRareEncounter);
-			editText.setText(String.valueOf(mGameState.ChanceOfVeryRareEncounter));
-			editText.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-				}
-
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-				}
-
-				@Override
-				public void afterTextChanged(Editable editable) {
-					numVeryRareChanceCallback(editText);
-				}
-			}
-			);
-
-			final EditText editText1 = (EditText) rootView.findViewById(R.id.numCheatOrbitTrade);
-			editText1.setText(String.valueOf(mGameState.ChanceOfTradeInOrbit));
-			editText1.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-				}
-
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-				}
-
-				@Override
-				public void afterTextChanged(Editable editable) {
-					numVeryRareChanceCallback(editText1);
-				}
-			}
-			);
-
-			return rootView;
 		}
 	}
 
@@ -4649,7 +3248,7 @@ FrmGotoForm( CurForm );
 			mGameState.ArrivedViaWormhole = false;
 		}
 
-		resetNewsEvents();
+		mGameState.resetNewsEvents();
 		if (!viaSingularity) {
 			// normal warp.
 			mGameState.PayInterest();
@@ -4658,7 +3257,7 @@ FrmGotoForm( CurForm );
 				++mGameState.NoClaim;
 		} else {
 			// add the singularity news story
-			addNewsEvent(GameState.ARRIVALVIASINGULARITY);
+			mGameState.addNewsEvent(GameState.ARRIVALVIASINGULARITY);
 		}
 		mGameState.Clicks = 21;
 		mGameState.Raided = false;
@@ -4715,7 +3314,7 @@ FrmGotoForm( CurForm );
 				);
 				popupQueue.push(popup);
 				showNextPopup();
-				addNewsEvent(GameState.EXPERIMENTPERFORMED);
+				mGameState.addNewsEvent(GameState.EXPERIMENTPERFORMED);
 			}
 		} else if (mGameState.ExperimentStatus == 12 && mGameState.FabricRipProbability > 0) {
 			mGameState.FabricRipProbability -= Amount;
@@ -4791,7 +3390,7 @@ FrmGotoForm( CurForm );
 					mGameState.EncounterType = GameState.SPACEMONSTERIGNORE;
 				else
 					mGameState.EncounterType = GameState.SPACEMONSTERATTACK;
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 
@@ -4807,7 +3406,7 @@ FrmGotoForm( CurForm );
 					mGameState.EncounterType = GameState.SCARABIGNORE;
 				else
 					mGameState.EncounterType = GameState.SCARABATTACK;
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 			// Encounter with stolen Dragonfly
@@ -4821,7 +3420,7 @@ FrmGotoForm( CurForm );
 					mGameState.EncounterType = GameState.DRAGONFLYIGNORE;
 				else
 					mGameState.EncounterType = GameState.DRAGONFLYATTACK;
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 
@@ -4932,7 +3531,7 @@ FrmGotoForm( CurForm );
 					--mGameState.Clicks;
 					continue;
 				}
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 			// Encounter with pirate
@@ -4974,7 +3573,7 @@ FrmGotoForm( CurForm );
 					--mGameState.Clicks;
 					continue;
 				}
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 			// Encounter with trader
@@ -5030,7 +3629,7 @@ FrmGotoForm( CurForm );
 					--mGameState.Clicks;
 					continue;
 				}
-				btnEncounter(null);
+				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 			// Very Rare Random Events:
@@ -5057,7 +3656,7 @@ FrmGotoForm( CurForm );
 							}
 							mGameState.Opponent.cargo[GameState.NARCOTICS] =
 								Math.min(mGameState.ShipTypes.ShipTypes[mGameState.Opponent.type].cargoBays, 5);
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5069,7 +3668,7 @@ FrmGotoForm( CurForm );
 							mGameState.VeryRareEncounter |= GameState.ALREADYAHAB;
 							mGameState.EncounterType = GameState.CAPTAINAHABENCOUNTER;
 							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5081,7 +3680,7 @@ FrmGotoForm( CurForm );
 							mGameState.VeryRareEncounter &= GameState.ALREADYCONRAD;
 							mGameState.EncounterType = GameState.CAPTAINCONRADENCOUNTER;
 							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5093,7 +3692,7 @@ FrmGotoForm( CurForm );
 							mGameState.VeryRareEncounter |= GameState.ALREADYHUIE;
 							mGameState.EncounterType = GameState.CAPTAINHUIEENCOUNTER;
 							mGameState.GenerateOpponent(GameState.FAMOUSCAPTAIN);
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5104,7 +3703,7 @@ FrmGotoForm( CurForm );
 							mGameState.GenerateOpponent(GameState.TRADER);
 							mGameState.Opponent.type = GameState.BOTTLETYPE;
 							mGameState.Opponent.hull = 10;
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5115,7 +3714,7 @@ FrmGotoForm( CurForm );
 							mGameState.GenerateOpponent(GameState.TRADER);
 							mGameState.Opponent.type = GameState.BOTTLETYPE;
 							mGameState.Opponent.hull = 10;
-							btnEncounter(null);
+							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
 						break;
@@ -5130,7 +3729,7 @@ FrmGotoForm( CurForm );
 			mGameState.EncounterType = GameState.POSTMARIEPOLICEENCOUNTER;
 			mGameState.JustLootedMarie = false;
 			mGameState.Clicks++;
-			btnEncounter(null);
+			changeFragment(FRAGMENTS.ENCOUNTER);
 			return;
 		}
 
@@ -5392,144 +3991,6 @@ FrmGotoForm( CurForm );
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 
-	public static void EncounterDisplayShips() {
-		// *************************************************************************
-		// Display on the encounter screen the ships (and also wipe it)
-		// *************************************************************************
-		RenderShip r;
-		if (opponentShipNeedsUpdate) {
-			EncounterOpponentShip.invalidate();
-			opponentShipNeedsUpdate = false;
-		}
-		if (playerShipNeedsUpdate) {
-			EncounterPlayerShip.invalidate();
-			playerShipNeedsUpdate = false;
-		}
-	}
-
-	static void EncounterDisplayNextAction(Boolean FirstDisplay) {
-		// *************************************************************************
-		// Display on the encounter screen what the next action will be
-		// *************************************************************************
-		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
-			EncounterText.setText("The police summon you to submit to an inspection.");
-		} else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			EncounterText
-				.setText("\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\"");
-		} else if (FirstDisplay && mGameState.EncounterType == GameState.POLICEATTACK && mGameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
-			EncounterText.setText("The police hail they want you to surrender.");
-		} else if (mGameState.EncounterType == GameState.POLICEFLEE ||
-			           mGameState.EncounterType == GameState.TRADERFLEE ||
-			           mGameState.EncounterType == GameState.PIRATEFLEE) {
-			EncounterText.setText("Your opponent is fleeing.");
-		} else if (mGameState.EncounterType == GameState.PIRATEATTACK ||
-			           mGameState.EncounterType == GameState.POLICEATTACK ||
-			           mGameState.EncounterType == GameState.TRADERATTACK ||
-			           mGameState.EncounterType == GameState.SPACEMONSTERATTACK ||
-			           mGameState.EncounterType == GameState.DRAGONFLYATTACK ||
-			           mGameState.EncounterType == GameState.SCARABATTACK ||
-			           mGameState.EncounterType == GameState.FAMOUSCAPATTACK) {
-			EncounterText.setText("Your opponent attacks.");
-		} else if (mGameState.EncounterType == GameState.TRADERIGNORE ||
-			           mGameState.EncounterType == GameState.POLICEIGNORE ||
-			           mGameState.EncounterType == GameState.SPACEMONSTERIGNORE ||
-			           mGameState.EncounterType == GameState.DRAGONFLYIGNORE ||
-			           mGameState.EncounterType == GameState.PIRATEIGNORE ||
-			           mGameState.EncounterType == GameState.SCARABIGNORE) {
-			if (mGameState.Cloaked(mGameState.Ship, mGameState.Opponent))
-				EncounterText.setText("It doesn't notice you.");
-			else
-				EncounterText.setText("it ignores you.");
-		} else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
-			EncounterText.setText("You are hailed with an offer to trade goods.");
-		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER) {
-			EncounterText.setText("Your opponent hails that he surrenders to you.");
-		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
-			EncounterText.setText("The Marie Celeste appears to be completely abandoned.");
-		} else if (mGameState
-			           .ENCOUNTERFAMOUS(mGameState.EncounterType) && mGameState.EncounterType != GameState.FAMOUSCAPATTACK) {
-			EncounterText.setText("The Captain requests a brief meeting with you.");
-		} else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
-			EncounterText.setText("It appears to be a rare bottle of Captain Marmoset's Skill Tonic!");
-		}
-	}
-
-	public static void EncounterButtons() {
-		btnInt.setVisibility(View.INVISIBLE);
-		btnAttack.setVisibility(View.INVISIBLE);
-		btnFlee.setVisibility(View.INVISIBLE);
-		btnSubmit.setVisibility(View.INVISIBLE);
-		btnBribe.setVisibility(View.INVISIBLE);
-		btnYield.setVisibility(View.INVISIBLE);
-		btnIgnore.setVisibility(View.INVISIBLE);
-		btnSurrender.setVisibility(View.INVISIBLE);
-		btnPlunder.setVisibility(View.INVISIBLE);
-		btnBoard.setVisibility(View.INVISIBLE);
-		btnMeet.setVisibility(View.INVISIBLE);
-		btnDrink.setVisibility(View.INVISIBLE);
-		btnTrade.setVisibility(View.INVISIBLE);
-		pBarEncounter.setVisibility(View.INVISIBLE);
-
-		if (mGameState.AutoAttack || mGameState.AutoFlee) {
-			btnInt.setVisibility(View.VISIBLE);
-			pBarEncounter.setVisibility(View.VISIBLE);
-		}
-		if (mGameState.EncounterType == GameState.POLICEINSPECTION) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnFlee.setVisibility(View.VISIBLE);
-			btnSubmit.setVisibility(View.VISIBLE);
-			btnBribe.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnFlee.setVisibility(View.VISIBLE);
-			btnYield.setVisibility(View.VISIBLE);
-			btnBribe.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.POLICEFLEE || mGameState.EncounterType == GameState.TRADERFLEE || mGameState.EncounterType == GameState.PIRATEFLEE) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.PIRATEATTACK || mGameState.EncounterType == GameState.POLICEATTACK || mGameState.EncounterType == GameState.SCARABATTACK) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnFlee.setVisibility(View.VISIBLE);
-			btnSurrender.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.FAMOUSCAPATTACK) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnFlee.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERATTACK || mGameState.EncounterType == GameState.SPACEMONSTERATTACK || mGameState.EncounterType == GameState.DRAGONFLYATTACK) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnFlee.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERIGNORE || mGameState.EncounterType == GameState.POLICEIGNORE || mGameState.EncounterType == GameState.PIRATEIGNORE || mGameState.EncounterType == GameState.SPACEMONSTERIGNORE || mGameState.EncounterType == GameState.DRAGONFLYIGNORE || mGameState.EncounterType == GameState.SCARABIGNORE) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERSURRENDER || mGameState.EncounterType == GameState.PIRATESURRENDER) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnPlunder.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
-			btnBoard.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.ENCOUNTERFAMOUS(mGameState.EncounterType)) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-			btnMeet.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || mGameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
-			btnDrink.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-		} else if (mGameState.EncounterType == GameState.TRADERSELL || mGameState.EncounterType == GameState.TRADERBUY) {
-			btnAttack.setVisibility(View.VISIBLE);
-			btnIgnore.setVisibility(View.VISIBLE);
-			btnTrade.setVisibility(View.VISIBLE);
-		}
-
-		/* TODO
-		if (!TextualEncounters){
-			btnYou.setVisibility(View.INVISIBLE);
-			btnOpponent.setVisibility(View.INVISIBLE);
-		} else {
-			btnYou.setVisibility(View.VISIBLE);
-			btnOpponent.setVisibility(View.VISIBLE);
-		}
-		*/
-	}
-
 	public void Arrested() {
 		// *************************************************************************
 		// You get arrested
@@ -5587,7 +4048,7 @@ FrmGotoForm( CurForm );
 
 		if (mGameState.WildStatus == 1) {
 			buf += "\n\nWild Arrested\n\nJonathan Wild is arrested, and taken away to stand trial.";
-			addNewsEvent(GameState.WILDARRESTED);
+			mGameState.addNewsEvent(GameState.WILDARRESTED);
 			mGameState.WildStatus = 0;
 		}
 
@@ -5873,7 +4334,7 @@ FrmGotoForm( CurForm );
 			                  "Yes", "No", new Popup.buttonCallback() {
 				@Override
 				public void execute(Popup popup, View view) {
-					btnPlunderForm(null);
+					changeFragment(FRAGMENTS.PLUNDER);
 				}
 			}, cbShowNextPopup
 			);
@@ -5891,7 +4352,7 @@ FrmGotoForm( CurForm );
 			mGameState.PoliceRecordScore += GameState.PLUNDERTRADERSCORE;
 		else
 			mGameState.PoliceRecordScore += GameState.PLUNDERPIRATESCORE;
-		btnPlunderForm(null);
+		changeFragment(FRAGMENTS.PLUNDER);
 		// Travel(); // is called from Done button in PlunderForm
 	}
 
@@ -6473,11 +4934,11 @@ FrmGotoForm( CurForm );
 																mGameState.PoliceRecordScore = GameState.VILLAINSCORE;
 															mGameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
 															if (mGameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
-																addNewsEvent(GameState.CAPTAINHUIEATTACKED);
+																mGameState.addNewsEvent(GameState.CAPTAINHUIEATTACKED);
 															else if (mGameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
-																addNewsEvent(GameState.CAPTAINAHABATTACKED);
+																mGameState.addNewsEvent(GameState.CAPTAINAHABATTACKED);
 															else if (mGameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
-																addNewsEvent(GameState.CAPTAINCONRADATTACKED);
+																mGameState.addNewsEvent(GameState.CAPTAINCONRADATTACKED);
 
 															mGameState.EncounterType = GameState.FAMOUSCAPATTACK;
 															EncounterButtonAttackCallbackStartAttack();
@@ -6682,8 +5143,8 @@ FrmGotoForm( CurForm );
 	}
 	public void EncounterButtonIntCallback(View view){
 		mGameState.AutoFlee = mGameState.AutoAttack = false;
-		btnInt.setVisibility(View.INVISIBLE);
-		pBarEncounter.setVisibility(View.INVISIBLE);
+		((FragmentEncounter)currentFragment).btnInt.setVisibility(View.INVISIBLE);
+		((FragmentEncounter)currentFragment).pBarEncounter.setVisibility(View.INVISIBLE);
 	}
 	public void EncounterButtonTribbleCallback(View view){
 		Popup popup;
@@ -6772,7 +5233,7 @@ FrmGotoForm( CurForm );
 		}
 
 		if (CommanderGotHit) {
-			playerShipNeedsUpdate = true;
+			((FragmentEncounter)currentFragment).playerShipNeedsUpdate = true;
 			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
 			ViewGroup container = (ViewGroup) findViewById(R.id.container);
 			for (i=0; i<=GameState.TRIBBLESONSCREEN; ++i) {
@@ -6790,7 +5251,7 @@ FrmGotoForm( CurForm );
 			}
 		}
 		if (OpponentGotHit) {
-			opponentShipNeedsUpdate = true;
+			((FragmentEncounter)currentFragment).opponentShipNeedsUpdate = true;
 		}
 
 		// Determine whether someone gets destroyed
@@ -6839,7 +5300,7 @@ FrmGotoForm( CurForm );
 					mGameState.ReputationScore += 100;
 				}
 				// bump news flag from attacked to ship destroyed
-				replaceNewsEvent(latestNewsEvent(), latestNewsEvent() + 10);
+				mGameState.replaceNewsEvent(mGameState.latestNewsEvent(), mGameState.latestNewsEvent() + 10);
 			} else if (mGameState.ENCOUNTERPIRATE(mGameState.EncounterType)) {
 				if (Opponent.type != GameState.MANTISTYPE) {
 					mGameState.Credits += GetBounty(Opponent);
@@ -6999,11 +5460,11 @@ FrmGotoForm( CurForm );
 			mGameState.AutoFlee = false;
 		}
 
-		playerShipNeedsUpdate=true;
-		opponentShipNeedsUpdate=true;
+		((FragmentEncounter)currentFragment).playerShipNeedsUpdate=true;
+		((FragmentEncounter)currentFragment).opponentShipNeedsUpdate=true;
 
-		EncounterDisplayShips();
-		EncounterButtons();
+		((FragmentEncounter)currentFragment).EncounterDisplayShips();
+		((FragmentEncounter)currentFragment).EncounterButtons();
 
 		String buf = "The ";
 		String buf2 = "";
@@ -7051,10 +5512,10 @@ FrmGotoForm( CurForm );
 			buf += "\nThe "+buf2+" is still following you.";
 		}
 
-		EncounterDisplayNextAction(false);
+		((FragmentEncounter)currentFragment).EncounterDisplayNextAction(false);
 
-		buf = EncounterText.getText().toString() + "\n" + buf;
-		EncounterText.setText(buf);
+		buf = ((FragmentEncounter)currentFragment).EncounterText.getText().toString() + "\n" + buf;
+		((FragmentEncounter)currentFragment).EncounterText.setText(buf);
 
 		if (mGameState.Continuous && (mGameState.AutoAttack || mGameState.AutoFlee)){
 			// Make sure there's always just one delayRunnable queued.
@@ -7159,11 +5620,11 @@ FrmGotoForm( CurForm );
 		{
 			if (CommanderUnderAttack)
 			{
-				playerShipNeedsUpdate = true;
+				((FragmentEncounter)currentFragment).playerShipNeedsUpdate = true;
 			}
 			else
 			{
-				opponentShipNeedsUpdate = true;
+				((FragmentEncounter)currentFragment).opponentShipNeedsUpdate = true;
 			}
 		}
 
@@ -7273,7 +5734,7 @@ FrmGotoForm( CurForm );
 			popupQueue.push(popup);
 			showNextPopup();
 			mGameState.PoliceRecordScore += GameState.CAUGHTWITHWILDSCORE;
-			addNewsEvent(GameState.WILDARRESTED);
+			mGameState.addNewsEvent(GameState.WILDARRESTED);
 			mGameState.WildStatus = 0;
 		}
 
@@ -7360,7 +5821,7 @@ FrmGotoForm( CurForm );
 																									 for (int i=0; i<GameState.MAXTRADEITEM; i++)
 																										 mGameState.Opponent.cargo[i] = 0;
 																									 mGameState.Opponent.cargo[item] = 1;
-																									 btnPlunderForm(null);// Travel() is called from PlunderDoneButton
+																                   changeFragment(FRAGMENTS.PLUNDER); // Travel() is called from PlunderDoneButton
 																								}
 																							}, cbShowNextPopup
 														);
@@ -7531,7 +5992,7 @@ FrmGotoForm( CurForm );
 			case GameState.GEMULONRESCUED:
 				CURSYSTEM.special = GameState.GETFUELCOMPACTOR;
 				mGameState.InvasionStatus = 0;
-				changeFragment(FRAGMENTS.SYSTEM_INFORMATION;
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				return;
 
 			case GameState.MEDICINEDELIVERY:
@@ -7810,7 +6271,7 @@ FrmGotoForm( CurForm );
 		}
 		mGameState.Credits -= Event.price;
 		CURSYSTEM.special = -1;
-		changeFragment(FRAGMENTS.SYSTEM_INFORMATION;
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	int GetScore(int EndStatus, int Days, int Worth, int Level) {
 		int d;

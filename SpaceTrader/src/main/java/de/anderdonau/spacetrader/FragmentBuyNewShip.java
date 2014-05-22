@@ -156,7 +156,7 @@ public class FragmentBuyNewShip extends Fragment {
 			popup = new Popup(welcomeScreen, "You've Got Tribbles",
 			                  "Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.",
 			                  "Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.",
-			                  "OK", WelcomeScreen.cbShowNextPopup
+			                  "OK", welcomeScreen.cbShowNextPopup
 			);
 			welcomeScreen.addPopup(popup);
 			gameState.TribbleMessage = true;
