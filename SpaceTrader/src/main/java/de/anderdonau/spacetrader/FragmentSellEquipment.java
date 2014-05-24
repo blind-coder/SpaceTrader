@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.Gadgets;
+import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
+import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 public class FragmentSellEquipment extends Fragment {
 	GameState gameState;
@@ -47,7 +50,7 @@ public class FragmentSellEquipment extends Fragment {
 				                                      i == 1 ? R.id.txtSellEquipmentWeapon2 :
 				                                      R.id.txtSellEquipmentWeapon3
 				);
-				tv.setText(gameState.Weapons.mWeapons[Ship.weapon[i]].name);
+				tv.setText(Weapons.mWeapons[Ship.weapon[i]].name);
 				tv.setVisibility(View.VISIBLE);
 
 				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceWeapon1 :
@@ -84,7 +87,7 @@ public class FragmentSellEquipment extends Fragment {
 				                                      i == 1 ? R.id.txtSellEquipmentShield2 :
 				                                      R.id.txtSellEquipmentShield3
 				);
-				tv.setText(gameState.Shields.mShields[Ship.shield[i]].name);
+				tv.setText(Shields.mShields[Ship.shield[i]].name);
 				tv.setVisibility(View.VISIBLE);
 
 				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceShield1 :
@@ -121,7 +124,7 @@ public class FragmentSellEquipment extends Fragment {
 				                                      i == 1 ? R.id.txtSellEquipmentGadget2 :
 				                                      R.id.txtSellEquipmentGadget3
 				);
-				tv.setText(gameState.Gadgets.mGadgets[Ship.gadget[i]].name);
+				tv.setText(Gadgets.mGadgets[Ship.gadget[i]].name);
 				tv.setVisibility(View.VISIBLE);
 
 				tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellEquipmentPriceGadget1 :

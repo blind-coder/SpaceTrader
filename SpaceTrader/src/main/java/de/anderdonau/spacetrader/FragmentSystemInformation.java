@@ -21,6 +21,7 @@ import java.util.Random;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
+import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
@@ -822,7 +823,7 @@ public class FragmentSystemInformation extends Fragment {
 					);
 					welcomeScreen.addPopup(popup);
 					gameState.Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
-					gameState.Ship.shieldStrength[FirstEmptySlot] = gameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+					gameState.Ship.shieldStrength[FirstEmptySlot] = Shields.mShields[GameState.LIGHTNINGSHIELD].power;
 				}
 				break;
 

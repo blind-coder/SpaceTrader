@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
@@ -53,7 +54,7 @@ public class FragmentGalacticChart extends Fragment {
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(String.format("%s %s %s", gameState.SystemSize[s.size],
 			                         gameState.techLevel[s.techLevel],
-			                         gameState.Politics.mPolitics[s.politics].name
+			                         Politics.mPolitics[s.politics].name
 			)
 			);
 			tv = (TextView) rootView.findViewById(R.id.galChartDistance);
@@ -98,7 +99,7 @@ public class FragmentGalacticChart extends Fragment {
 						tv.setVisibility(View.VISIBLE);
 						tv.setText(String.format("%s %s %s", gameState.SystemSize[s.size],
 						                         gameState.techLevel[s.techLevel],
-						                         gameState.Politics.mPolitics[s.politics].name
+						                         Politics.mPolitics[s.politics].name
 						)
 						);
 						tv = (TextView) rootView.findViewById(R.id.galChartDistance);

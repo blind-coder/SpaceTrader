@@ -42,12 +42,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.Gadgets;
 import de.anderdonau.spacetrader.DataTypes.HighScore;
+import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
+import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
+import de.anderdonau.spacetrader.DataTypes.Tradeitems;
+import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
@@ -791,7 +796,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					++j;
 			}
 			if (j > 0) {
-				buf += String.format("%d %s%s\n", j, gameState.Weapons.mWeapons[i].name, j > 1 ? "s" : "");
+				buf += String.format("%d %s%s\n", j, Weapons.mWeapons[i].name, j > 1 ? "s" : "");
 			}
 		}
 
@@ -802,7 +807,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					++j;
 			}
 			if (j > 0) {
-				buf += String.format("%d %s%s\n", j, gameState.Shields.mShields[i].name, j > 1 ? "s" : "");
+				buf += String.format("%d %s%s\n", j, Shields.mShields[i].name, j > 1 ? "s" : "");
 			}
 		}
 		for (i=0; i<GameState.MAXGADGETTYPE+GameState.EXTRAGADGETS; ++i) {
@@ -815,7 +820,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (i == GameState.EXTRABAYS) {
 					buf += String.format("%d extra cargo bays\n", j*5);;
 				} else {
-					buf += String.format("%s\n", gameState.Gadgets.mGadgets[i].name);
+					buf += String.format("%s\n", Gadgets.mGadgets[i].name);
 				}
 			}
 		}
@@ -1484,9 +1489,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			default: return;
 		}
 		if (Index < GameState.MAXWEAPONTYPE){
-			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon, gameState.BASEWEAPONPRICE(Index), gameState.Weapons.mWeapons[Index].name, Index);
+			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon, gameState.BASEWEAPONPRICE(Index), Weapons.mWeapons[Index].name, Index);
 		} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
-			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield, gameState.BASESHIELDPRICE(Index-GameState.MAXWEAPONTYPE), gameState.Shields.mShields[Index-GameState.MAXWEAPONTYPE].name, Index-GameState.MAXWEAPONTYPE);
+			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield, gameState.BASESHIELDPRICE(Index-GameState.MAXWEAPONTYPE), Shields.mShields[Index-GameState.MAXWEAPONTYPE].name, Index-GameState.MAXWEAPONTYPE);
 		} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
 			if (gameState.HasGadget(gameState.Ship, Index-(GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE))){
 				Popup popup;
@@ -1498,7 +1503,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				return;
 			}
-			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget, gameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)), gameState.Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)].name, Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE));
+			BuyItem(gameState.ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget, gameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)), Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)].name, Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE));
 		}
 		changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 	}
@@ -2227,7 +2232,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this,
 			                  "Plunder",
 			                  String.format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
-			                                GameState.Tradeitems.mTradeitems[idx].name,
+			                                Tradeitems.mTradeitems[idx].name,
 				                              gameState.Opponent.cargo[idx]
 			                  ), "Amount", "",
 			                  gameState.Opponent.cargo[idx],
@@ -2338,7 +2343,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this,
 			                  "Discard Cargo",
 			                  String.format("Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
-			                                GameState.Tradeitems.mTradeitems[idx].name, gameState.Ship.cargo[idx],
+			                                Tradeitems.mTradeitems[idx].name, gameState.Ship.cargo[idx],
 			                                gameState.BuyingPrice[idx] / gameState.Ship.cargo[idx]
 			                  ),
 			                  "Amount", "",
@@ -2843,7 +2848,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (gameState.Ship.shield[i] < 0)
 				break;
 			gameState.Ship.shieldStrength[i] =
-				gameState.Shields.mShields[gameState.Ship.shield[i]].power;
+				Shields.mShields[gameState.Ship.shield[i]].power;
 		}
 
 		CURSYSTEM.countDown = GameState.CountDown;
@@ -2909,17 +2914,17 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.SellPrice[i] *= 1.1;
 			}
 
-			gameState.SellPrice[i] /= GameState.Tradeitems.mTradeitems[i].roundOff;
+			gameState.SellPrice[i] /= Tradeitems.mTradeitems[i].roundOff;
 			++gameState.SellPrice[i];
-			gameState.SellPrice[i] *= GameState.Tradeitems.mTradeitems[i].roundOff;
-			if (gameState.SellPrice[i] < GameState.Tradeitems.mTradeitems[i].minTradePrice)
-				gameState.SellPrice[i] = GameState.Tradeitems.mTradeitems[i].minTradePrice;
-			if (gameState.SellPrice[i] > GameState.Tradeitems.mTradeitems[i].maxTradePrice)
-				gameState.SellPrice[i] = GameState.Tradeitems.mTradeitems[i].maxTradePrice;
+			gameState.SellPrice[i] *= Tradeitems.mTradeitems[i].roundOff;
+			if (gameState.SellPrice[i] < Tradeitems.mTradeitems[i].minTradePrice)
+				gameState.SellPrice[i] = Tradeitems.mTradeitems[i].minTradePrice;
+			if (gameState.SellPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice)
+				gameState.SellPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
 
 			String buf = String
 				.format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?",
-				        gameState.Tradeitems.mTradeitems[i].name, gameState.SellPrice[i],
+				        Tradeitems.mTradeitems[i].name, gameState.SellPrice[i],
 				        gameState.Ship.cargo[i],
 				        gameState.BuyingPrice[i] / gameState.Ship.cargo[i]
 				);
@@ -2946,7 +2951,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						popup1 = new Popup(popup.context, "Trade Completed",
 						                   String.format("%s %s. It's been a pleasure doing business with you.",
 						                                 "Thanks for selling us the",
-						                                 GameState.Tradeitems.mTradeitems[i].name
+						                                 Tradeitems.mTradeitems[i].name
 						                   ), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
@@ -2967,7 +2972,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Trade Completed",
 					                   String.format("%s %s. It's been a pleasure doing business with you.",
 					                                 "Thanks for selling us the",
-					                                 GameState.Tradeitems.mTradeitems[i].name
+					                                 Tradeitems.mTradeitems[i].name
 					                   ), "", "OK", cbShowNextPopup
 					);
 					popupQueue.push(popup1);
@@ -2991,16 +2996,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.BuyPrice[i] *= 0.9;
 			}
 
-			gameState.BuyPrice[i] /= GameState.Tradeitems.mTradeitems[i].roundOff;
-			gameState.BuyPrice[i] *= GameState.Tradeitems.mTradeitems[i].roundOff;
-			if (gameState.BuyPrice[i] < GameState.Tradeitems.mTradeitems[i].minTradePrice)
-				gameState.BuyPrice[i] = GameState.Tradeitems.mTradeitems[i].minTradePrice;
-			if (gameState.BuyPrice[i] > GameState.Tradeitems.mTradeitems[i].maxTradePrice)
-				gameState.BuyPrice[i] = GameState.Tradeitems.mTradeitems[i].maxTradePrice;
+			gameState.BuyPrice[i] /= Tradeitems.mTradeitems[i].roundOff;
+			gameState.BuyPrice[i] *= Tradeitems.mTradeitems[i].roundOff;
+			if (gameState.BuyPrice[i] < Tradeitems.mTradeitems[i].minTradePrice)
+				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].minTradePrice;
+			if (gameState.BuyPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice)
+				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
 
 			String buf = String
 				.format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?",
-				        gameState.Tradeitems.mTradeitems[i].name, gameState.BuyPrice[i],
+				        Tradeitems.mTradeitems[i].name, gameState.BuyPrice[i],
 				        gameState.Opponent.cargo[i],
 				        gameState.Credits / gameState.BuyPrice[i]
 				);
@@ -3025,7 +3030,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						popup1 = new Popup(popup.context, "Trade Completed",
 						                   String.format("%s %s. It's been a pleasure doing business with you.",
 						                                 "Thanks for buying the",
-						                                 GameState.Tradeitems.mTradeitems[i].name
+						                                 Tradeitems.mTradeitems[i].name
 						                   ), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
@@ -3047,7 +3052,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						popup1 = new Popup(popup.context, "Trade Completed",
 						                   String.format("%s %s. It's been a pleasure doing business with you.",
 						                                 "Thanks for buying the",
-						                                 GameState.Tradeitems.mTradeitems[i].name
+						                                 Tradeitems.mTradeitems[i].name
 						                   ), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
@@ -3328,7 +3333,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.AutoFlee = false;
 		String text = "", hint = "", title = "";
 		Popup popup;
-		if (gameState.Politics.mPolitics[WarpSystem.politics].bribeLevel <= 0) {
+		if (Politics.mPolitics[WarpSystem.politics].bribeLevel <= 0) {
 			title = "No bribe";
 			text = "These police officers can't be bribed.";
 			hint = "Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
@@ -3369,7 +3374,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int Bribe;
 		// Bribe depends on how easy it is to bribe the police and commander's current worth
 		Bribe = gameState.CurrentWorth() /
-			((10 + 5 * (GameState.IMPOSSIBLE - GameState.getDifficulty())) * gameState.Politics.mPolitics[WarpSystem.politics].bribeLevel);
+			((10 + 5 * (GameState.IMPOSSIBLE - GameState.getDifficulty())) * Politics.mPolitics[WarpSystem.politics].bribeLevel);
 		if (Bribe % 100 != 0)
 			Bribe += (100 - (Bribe % 100));
 		if (gameState.WildStatus == 1 || (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21)) {
@@ -4017,9 +4022,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (Ship.shield[i] < 0)
 					break;
 				Ship.shieldStrength[i] += Repairs;
-				if (Ship.shieldStrength[i] > gameState.Shields.mShields[Ship.shield[i]].power) {
-					Repairs = Ship.shieldStrength[i] - gameState.Shields.mShields[Ship.shield[i]].power;
-					Ship.shieldStrength[i] = gameState.Shields.mShields[Ship.shield[i]].power;
+				if (Ship.shieldStrength[i] > Shields.mShields[Ship.shield[i]].power) {
+					Repairs = Ship.shieldStrength[i] - Shields.mShields[Ship.shield[i]].power;
+					Ship.shieldStrength[i] = Shields.mShields[Ship.shield[i]].power;
 				} else
 					Repairs = 0;
 			}
@@ -4081,16 +4086,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (Ship.type == 0)
 					EncounterTest *= 2;
 
-				if (EncounterTest < gameState.Politics.mPolitics[WarpSystem.politics].strengthPirates && !gameState.Raided) // When you are already raided, other pirates have little to gain
+				if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates && !gameState.Raided) // When you are already raided, other pirates have little to gain
 					Pirate = true;
-				else if (EncounterTest < gameState.Politics.mPolitics[WarpSystem.politics].strengthPirates + gameState
+				else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates + gameState
 					.STRENGTHPOLICE(WarpSystem))
 					// StrengthPolice adapts itself to your criminal record: you'll
 					// encounter more police if you are a hardened criminal.
 					Police = true;
-				else if (EncounterTest < gameState.Politics.mPolitics[WarpSystem.politics].strengthPirates +
+				else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates +
 					gameState.STRENGTHPOLICE(WarpSystem) +
-					gameState.Politics.mPolitics[WarpSystem.politics].strengthTraders)
+					Politics.mPolitics[WarpSystem.politics].strengthTraders)
 					Trader = true;
 				else if (gameState.WildStatus == 1 && WarpSystem == gameState.SolarSystem[GameState.KRAVATSYSTEM]) {
 					// if you're coming in to Kravat & you have Wild onboard, there'll be swarms o' cops.
@@ -4617,7 +4622,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
 				Ship.shieldStrength[FirstEmptySlot] =
-					gameState.Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+					Shields.mShields[GameState.LIGHTNINGSHIELD].power;
 				EasterEgg = true;
 			}
 
@@ -4781,9 +4786,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.SolarSystem[i].initializeTradeitems();
 				else {
 					for (j=0; j<GameState.MAXTRADEITEM; ++j) {
-						if (((j == GameState.NARCOTICS) && (!gameState.Politics.mPolitics[gameState.SolarSystem[i].politics].drugsOK)) ||
-							((j == GameState.FIREARMS) && (!gameState.Politics.mPolitics[gameState.SolarSystem[i].politics].firearmsOK)) ||
-							(gameState.SolarSystem[i].techLevel < gameState.Tradeitems.mTradeitems[j].techProduction)) {
+						if (((j == GameState.NARCOTICS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].drugsOK)) ||
+							((j == GameState.FIREARMS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].firearmsOK)) ||
+							(gameState.SolarSystem[i].techLevel < Tradeitems.mTradeitems[j].techProduction)) {
 							gameState.SolarSystem[i].qty[j] = 0;
 							continue;
 						} else {
@@ -5254,10 +5259,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		CurPrice = gameState.ShipTypes.ShipTypes[Sh.type].price;
 		for (i=0; i<GameState.MAXWEAPON; ++i)
 			if (Sh.weapon[i] >= 0)
-				CurPrice += gameState.Weapons.mWeapons[Sh.weapon[i]].price;
+				CurPrice += Weapons.mWeapons[Sh.weapon[i]].price;
 		for (i=0; i<GameState.MAXSHIELD; ++i)
 			if (Sh.shield[i] >= 0)
-				CurPrice += gameState.Shields.mShields[Sh.shield[i]].price;
+				CurPrice += Shields.mShields[Sh.shield[i]].price;
 		// Gadgets aren't counted in the price, because they are already taken into account in
 		// the skill adjustment of the price.
 
@@ -5405,7 +5410,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		final int item = d;
 		popup = new Popup(this,
 		                  "Scoop Canister",
-		                  String.format("A canister from the destroyed ship, labeled %s, drifts within range of your scoops.", GameState.Tradeitems.mTradeitems[d].name),
+		                  String.format("A canister from the destroyed ship, labeled %s, drifts within range of your scoops.", Tradeitems.mTradeitems[d].name),
 		                  "", "Pick up", "Let go",
 		                  new Popup.buttonCallback() {
 			                  @Override

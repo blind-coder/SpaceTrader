@@ -381,7 +381,6 @@ public class GameState implements Serializable {
 	public static final int           KILLED                      = 0;
 	public static final int           RETIRED                     = 1;
 	public static final int           MOON                        = 2;
-	public static final Tradeitems    Tradeitems                  = new Tradeitems();
 	// Array of news events.
 	public static       int           CountDown                   = 3;
 		// Countdown for reset of tradeitems.
@@ -479,7 +478,6 @@ public class GameState implements Serializable {
 		 "Yojimbo", // A film by Akira Kurosawa
 		 "Zalkon", "Zuul" // From the first Ghostbusters movie
 		};
-	public              Politics      Politics                    = new Politics();
 	public              SolarSystem[] SolarSystem                 = new SolarSystem[MAXSOLARSYSTEM];
 	public              int           Credits                     = 1000;// Current credits owned
 	public              int           Debt                        = 0;               // Current Debt
@@ -632,8 +630,6 @@ public class GameState implements Serializable {
 	public Random rand = new Random();
 	ShipTypes ShipTypes = new ShipTypes();
 	Weapons   Weapons   = new Weapons();
-	Shields   Shields   = new Shields();
-	Gadgets   Gadgets   = new Gadgets();
 	CrewMember[] CrewMember;
 	Ship         SpaceMonster;
 	Ship         Scarab;
@@ -2179,7 +2175,7 @@ public class GameState implements Serializable {
 		j = 0;
 		for (i = 0; i < MAXSHIELD; ++i) {
 			if (Sh.shield[i] < 0) { break; }
-			j += this.Shields.mShields[Sh.shield[i]].power;
+			j += Shields.mShields[Sh.shield[i]].power;
 		}
 
 		return j;

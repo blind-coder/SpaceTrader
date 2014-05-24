@@ -11,19 +11,17 @@ package de.anderdonau.spacetrader.DataTypes;
 import de.anderdonau.spacetrader.GameState;
 
 public class Weapons {
-	public Weapon[] mWeapons;
-
-	public Weapons() {
-		mWeapons = new Weapon[GameState.MAXWEAPONTYPE + GameState.EXTRAWEAPONS];
-		mWeapons[0] = new Weapon("Pulse laser", GameState.PULSELASERPOWER, 2000, 5, 50);
-		mWeapons[1] = new Weapon("Beam laser", GameState.BEAMLASERPOWER, 12500, 6, 35);
-		mWeapons[2] = new Weapon("Military laser", GameState.MILITARYLASERPOWER, 35000, 7, 15);
+	public static Weapon[] mWeapons = {
+		new Weapon("Pulse laser", GameState.PULSELASERPOWER, 2000, 5, 50),
+		new Weapon("Beam laser", GameState.BEAMLASERPOWER, 12500, 6, 35),
+		new Weapon("Military laser", GameState.MILITARYLASERPOWER, 35000, 7, 15),
 		// The weapons below cannot be bought
-		mWeapons[3] = new Weapon("Morgan's laser", GameState.MORGANLASERPOWER, 50000, 8, 0);
+		new Weapon("Morgan's laser", GameState.MORGANLASERPOWER, 50000, 8, 0)
+	};
 
-	}
+	public Weapons() { }
 
-	public class Weapon {
+	public static class Weapon {
 		public String name;
 		public int    power;
 		public int    price;

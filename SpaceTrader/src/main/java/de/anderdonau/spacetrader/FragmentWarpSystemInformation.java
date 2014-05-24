@@ -49,9 +49,9 @@ public class FragmentWarpSystemInformation extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
 		tv.setText(gameState.SystemSize[welcomeScreen.WarpSystem.size]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
-		tv.setText(gameState.Activity[gameState.Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]);
+		tv.setText(gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
-		tv.setText(gameState.Activity[gameState.Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]);
+		tv.setText(gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
 		int Distance = gameState.RealDistance(CURSYSTEM, welcomeScreen.WarpSystem);

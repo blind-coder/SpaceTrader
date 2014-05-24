@@ -37,27 +37,27 @@ public class SolarSystem implements Serializable {
 		for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
 			if (((i == GameState.NARCOTICS) && (!Politics.mPolitics[this.politics].drugsOK)) ||
 							    ((i == GameState.FIREARMS) && (!Politics.mPolitics[this.politics].firearmsOK)) ||
-							    (this.techLevel < GameState.Tradeitems.mTradeitems[i].techProduction)) {
+							    (this.techLevel < Tradeitems.mTradeitems[i].techProduction)) {
 				this.qty[i] = 0;
 				continue;
 			}
 
-			this.qty[i] = ((9 + rand.nextInt(5)) - Math.abs(GameState.Tradeitems.mTradeitems[i].techTopProduction - this.techLevel)) * (1 + this.size);
+			this.qty[i] = ((9 + rand.nextInt(5)) - Math.abs(Tradeitems.mTradeitems[i].techTopProduction - this.techLevel)) * (1 + this.size);
 
 			// Because of the enormous profits possible, there shouldn't be too many robots or narcotics available
 			if (i == GameState.ROBOTS || i == GameState.NARCOTICS)
 				this.qty[i] = ((this.qty[i] * (5 - GameState.getDifficulty())) / (6 - GameState.getDifficulty())) + 1;
 
-			if (GameState.Tradeitems.mTradeitems[i].cheapResource >= 0)
-				if (this.specialResources == GameState.Tradeitems.mTradeitems[i].cheapResource)
+			if (Tradeitems.mTradeitems[i].cheapResource >= 0)
+				if (this.specialResources == Tradeitems.mTradeitems[i].cheapResource)
 					this.qty[i] = (this.qty[i] * 4) / 3;
 
-			if (GameState.Tradeitems.mTradeitems[i].expensiveResource >= 0)
-				if (this.specialResources == GameState.Tradeitems.mTradeitems[i].expensiveResource)
+			if (Tradeitems.mTradeitems[i].expensiveResource >= 0)
+				if (this.specialResources == Tradeitems.mTradeitems[i].expensiveResource)
 					this.qty[i] = (this.qty[i] * 3) >> 2;
 
-			if (GameState.Tradeitems.mTradeitems[i].doublePriceStatus >= 0)
-				if (this.status == GameState.Tradeitems.mTradeitems[i].doublePriceStatus)
+			if (Tradeitems.mTradeitems[i].doublePriceStatus >= 0)
+				if (this.status == Tradeitems.mTradeitems[i].doublePriceStatus)
 					this.qty[i] = this.qty[i] / 5;
 
 			this.qty[i] = this.qty[i] - rand.nextInt(10) + rand.nextInt(10);
