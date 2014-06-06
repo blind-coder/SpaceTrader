@@ -205,7 +205,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		if (currentState == FRAGMENTS.ENCOUNTER || gameState == null) {
+		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME || gameState == null) {
 			return;
 		}
 		switch (position) {
@@ -283,7 +283,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		if (currentState == FRAGMENTS.ENCOUNTER){
+		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME) {
 			return true;
 		}
 		int id = item.getItemId();
@@ -467,9 +467,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
-			case R.id.menuHelpAbout:
-				popup = new Popup(this, "About",
-				                  "Android port Copyright 2014 by Benjamin Schieder\n"+
+			case R.id.menuHelpCredits:
+				popup = new Popup(this, "Credits", "Android port Copyright 2014 by Benjamin Schieder\n"+
 					                  "Linux port Copyright 2010 by Benjamin Schieder\n"+
 					                  "Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
 					                  "New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
@@ -556,11 +555,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-		if (fragment == FRAGMENTS.NEW_GAME){
-			transaction.show(mNavigationDrawerFragment);
-		} else {
+		if (fragment == FRAGMENTS.NEW_GAME || fragment == FRAGMENTS.ENCOUNTER) {
 			transaction.hide(mNavigationDrawerFragment);
+		} else {
+			transaction.show(mNavigationDrawerFragment);
 		}
+
 		switch (fragment){
 			case AVERAGE_PRICES:
 				currentFragment = new FragmentAveragePrices(this, gameState);
@@ -4052,8 +4052,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 	public void Travel() {
-		int EncounterTest, StartClicks, i, Repairs, rareEncounter;
-		boolean Pirate, Trader, Police, Mantis;
+		int EncounterTest, StartClicks, i, j, Repairs, rareEncounter, previousTribbles, FirstEmptySlot;
+		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard;
 		boolean HaveMilitaryLaser, HaveReflectiveShield;
 		Ship Ship = gameState.Ship;
 		CrewMember COMMANDER = gameState.Mercenary[0];
@@ -4500,6 +4500,218 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		Arrival();
+		// Reactor warnings:
+		// now they know the quest has a time constraint!
+		if (gameState.ReactorStatus == 2) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		// better deliver it soon!
+		else if (gameState.ReactorStatus == 16) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		// last warning!
+		else if (gameState.ReactorStatus == 18) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		if (gameState.ReactorStatus == 20) {
+			popup = new Popup(this, "Reactor Meltdown!",
+			                  "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			gameState.ReactorStatus = 0;
+			if (gameState.EscapePod) {
+				EscapeWithPod();
+				return;
+			} else {
+				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				btnDestroyed();
+				return;
+			}
+		}
+
+		if (gameState.TrackAutoOff && gameState.TrackedSystem == COMMANDER.curSystem) {
+			gameState.TrackedSystem = -1;
+		}
+
+		FoodOnBoard = false;
+		previousTribbles = Ship.tribbles;
+
+		if (Ship.tribbles > 0 && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
+			Ship.tribbles /= 2;
+			if (Ship.tribbles < 10) {
+				Ship.tribbles = 0;
+				popup = new Popup(this, "All the Tribbles Died",
+				                  "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			} else {
+				popup = new Popup(this, "Half the Tribbles Died",
+				                  "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
+				                  "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.NARCOTICS] > 0) {
+			Ship.tribbles = 1 + gameState.GetRandom(3);
+			j = 1 + gameState.GetRandom(3);
+			i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
+			gameState.BuyingPrice[GameState.NARCOTICS] =
+				(gameState.BuyingPrice[GameState.NARCOTICS] * (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
+			Ship.cargo[GameState.NARCOTICS] -= i;
+			Ship.cargo[GameState.FURS] += i;
+			popup = new Popup(this, "Tribbles ate Narcotics",
+			                  "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
+			Ship.tribbles += 100 + gameState.GetRandom(Ship.cargo[GameState.FOOD] * 100);
+			i = gameState.GetRandom(Ship.cargo[GameState.FOOD]);
+			gameState.BuyingPrice[GameState.FOOD] =
+				(gameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[GameState.FOOD];
+			Ship.cargo[GameState.FOOD] = i;
+			popup = new Popup(this, "Tribbles Ate Food",
+			                  "You find that, instead of food, some of your cargo bays contain only tribbles!",
+			                  "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			FoodOnBoard = true;
+		}
+
+		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES) {
+			Ship.tribbles += 1 + gameState.GetRandom(Math.max(1, (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
+			)
+			);
+		}
+
+		if (Ship.tribbles > GameState.MAXTRIBBLES) { Ship.tribbles = GameState.MAXTRIBBLES; }
+
+		String buf;
+		if ((previousTribbles < 100 && Ship.tribbles >= 100) ||
+			(previousTribbles < 1000 && Ship.tribbles >= 1000) ||
+			(previousTribbles < 10000 && Ship.tribbles >= 10000) ||
+			(previousTribbles < 50000 && Ship.tribbles >= 50000)) {
+			if (Ship.tribbles >= GameState.MAXTRIBBLES) { buf = "a dangerous number of"; } else {
+				buf = String.format("%d", Ship.tribbles);
+			}
+			popup = new Popup(this, "Space Port Inspector",
+			                  "Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
+			                  "You might want to do something about those Tribbles...", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+
+		gameState.TribbleMessage = false;
+
+		Ship.hull += gameState.GetRandom(gameState.EngineerSkill(Ship));
+		if (Ship.hull > gameState.GetHullStrength()) { Ship.hull = gameState.GetHullStrength(); }
+
+		TryAutoRepair = true;
+		if (gameState.AutoFuel) {
+			btnShipyardBuyFuel(9999);
+			if (gameState.GetFuel() < gameState.GetFuelTanks()) {
+				if (gameState.AutoRepair && Ship.hull < gameState.GetHullStrength()) {
+					popup = new Popup(this, "Not Enough Money",
+					                  "You don't have enough money to get a full tank or full hull repairs.",
+					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
+					                  "OK", cbShowNextPopup
+					);
+					TryAutoRepair = false;
+				} else {
+					popup = new Popup(this, "No Full Tanks",
+					                  "You do not have enough money to buy full tanks.",
+					                  "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
+					                  "OK", cbShowNextPopup
+					);
+				}
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		}
+
+		if (gameState.AutoRepair && TryAutoRepair) {
+			btnShipyardBuyRepairs(99999);
+			if (Ship.hull < gameState.GetHullStrength()) {
+				popup = new Popup(this, "No Full Repairs",
+				                  "You don't have enough money to get your hull fully repaired.",
+				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		}
+
+  /* This Easter Egg gives the commander a Lighting Shield */
+		if (COMMANDER.curSystem == GameState.OGSYSTEM) {
+			i = 0;
+			boolean EasterEgg = false;
+			while (i < GameState.MAXTRADEITEM) {
+				if (Ship.cargo[i] != 1) { break; }
+				++i;
+			}
+			if (i >= GameState.MAXTRADEITEM) {
+				FirstEmptySlot = gameState.GetFirstEmptySlot(
+					gameState.ShipTypes.ShipTypes[Ship.type].shieldSlots, Ship.shield
+				);
+			} else { FirstEmptySlot = -1; }
+
+			if (FirstEmptySlot >= 0) {
+				popup = new Popup(this, "Easter",
+				                  "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
+				                  "Look up your ship's equipment.", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
+				Ship.shieldStrength[FirstEmptySlot] = Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+				EasterEgg = true;
+			}
+
+			if (EasterEgg) {
+				for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+					Ship.cargo[i] = 0;
+					gameState.BuyingPrice[i] = 0;
+				}
+			}
+		}
+
+		// It seems a glitch may cause cargo bays to become negative - no idea how...
+		for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+			if (Ship.cargo[i] < 0) { Ship.cargo[i] = 0; }
+		}
+
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	public void Arrested() {
 		// *************************************************************************
@@ -5312,220 +5524,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		gameState.DeterminePrices(gameState.WarpSystem);
 		gameState.AlreadyPaidForNewspaper = false;
-
-		// Reactor warnings:
-		// now they know the quest has a time constraint!
-		if (gameState.ReactorStatus == 2) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		// better deliver it soon!
-		else if (gameState.ReactorStatus == 16) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		// last warning!
-		else if (gameState.ReactorStatus == 18) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		if (gameState.ReactorStatus == 20) {
-			popup = new Popup(this, "Reactor Meltdown!",
-			                  "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			gameState.ReactorStatus = 0;
-			if (gameState.EscapePod) {
-				EscapeWithPod();
-				return;
-			} else {
-				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
-				                  cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				btnDestroyed();
-				return;
-			}
-		}
-
-		if (gameState.TrackAutoOff && gameState.TrackedSystem == COMMANDER.curSystem) {
-			gameState.TrackedSystem = -1;
-		}
-
-		boolean FoodOnBoard = false;
-		int previousTribbles = Ship.tribbles;
-
-		if (Ship.tribbles > 0 && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-			Ship.tribbles /= 2;
-			if (Ship.tribbles < 10) {
-				Ship.tribbles = 0;
-				popup = new Popup(this, "All the Tribbles Died",
-				                  "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
-				                  "", "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			} else {
-				popup = new Popup(this, "Half the Tribbles Died",
-				                  "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
-				                  "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
-				                  "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.NARCOTICS] > 0) {
-			Ship.tribbles = 1 + gameState.GetRandom(3);
-			int j = 1 + gameState.GetRandom(3);
-			int i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
-			gameState.BuyingPrice[GameState.NARCOTICS] =
-				(gameState.BuyingPrice[GameState.NARCOTICS] * (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
-			Ship.cargo[GameState.NARCOTICS] -= i;
-			Ship.cargo[GameState.FURS] += i;
-			popup = new Popup(this, "Tribbles ate Narcotics",
-			                  "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
-			Ship.tribbles += 100 + gameState.GetRandom(Ship.cargo[GameState.FOOD] * 100);
-			int i = gameState.GetRandom(Ship.cargo[GameState.FOOD]);
-			gameState.BuyingPrice[GameState.FOOD] =
-				(gameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[GameState.FOOD];
-			Ship.cargo[GameState.FOOD] = i;
-			popup = new Popup(this, "Tribbles Ate Food",
-			                  "You find that, instead of food, some of your cargo bays contain only tribbles!",
-			                  "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
-			                  "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			FoodOnBoard = true;
-		}
-
-		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES) {
-			Ship.tribbles += 1 + gameState.GetRandom(Math.max(1, (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
-			)
-			);
-		}
-
-		if (Ship.tribbles > GameState.MAXTRIBBLES) { Ship.tribbles = GameState.MAXTRIBBLES; }
-
-		String buf;
-		if ((previousTribbles < 100 && Ship.tribbles >= 100) ||
-			(previousTribbles < 1000 && Ship.tribbles >= 1000) ||
-			(previousTribbles < 10000 && Ship.tribbles >= 10000) ||
-			(previousTribbles < 50000 && Ship.tribbles >= 50000)) {
-			if (Ship.tribbles >= GameState.MAXTRIBBLES) { buf = "a dangerous number of"; } else {
-				buf = String.format("%d", Ship.tribbles);
-			}
-			popup = new Popup(this, "Space Port Inspector",
-			                  "Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
-			                  "You might want to do something about those Tribbles...", "OK",
-			                  cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-
-		gameState.TribbleMessage = false;
-
-		Ship.hull += gameState.GetRandom(gameState.EngineerSkill(Ship));
-		if (Ship.hull > gameState.GetHullStrength()) { Ship.hull = gameState.GetHullStrength(); }
-
-		boolean TryAutoRepair = true;
-		if (gameState.AutoFuel) {
-			btnShipyardBuyFuel(9999);
-			if (gameState.GetFuel() < gameState.GetFuelTanks()) {
-				if (gameState.AutoRepair && Ship.hull < gameState.GetHullStrength()) {
-					popup = new Popup(this, "Not Enough Money",
-					                  "You don't have enough money to get a full tank or full hull repairs.",
-					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
-					                  "OK", cbShowNextPopup
-					);
-					TryAutoRepair = false;
-				} else {
-					popup = new Popup(this, "No Full Tanks",
-					                  "You do not have enough money to buy full tanks.",
-					                  "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
-					                  "OK", cbShowNextPopup
-					);
-				}
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		}
-
-		if (gameState.AutoRepair && TryAutoRepair) {
-			btnShipyardBuyRepairs(99999);
-			if (Ship.hull < gameState.GetHullStrength()) {
-				popup = new Popup(this, "No Full Repairs",
-				                  "You don't have enough money to get your hull fully repaired.",
-				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
-				                  "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		}
-
-  /* This Easter Egg gives the commander a Lighting Shield */
-		if (COMMANDER.curSystem == GameState.OGSYSTEM) {
-			int i = 0;
-			int FirstEmptySlot;
-			boolean EasterEgg = false;
-			while (i < GameState.MAXTRADEITEM) {
-				if (Ship.cargo[i] != 1) { break; }
-				++i;
-			}
-			if (i >= GameState.MAXTRADEITEM) {
-				FirstEmptySlot = gameState.GetFirstEmptySlot(
-					gameState.ShipTypes.ShipTypes[Ship.type].shieldSlots, Ship.shield
-				);
-			} else { FirstEmptySlot = -1; }
-
-			if (FirstEmptySlot >= 0) {
-				popup = new Popup(this, "Easter",
-				                  "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
-				                  "Look up your ship's equipment.", "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
-				Ship.shieldStrength[FirstEmptySlot] = Shields.mShields[GameState.LIGHTNINGSHIELD].power;
-				EasterEgg = true;
-			}
-
-			if (EasterEgg) {
-				for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
-					Ship.cargo[i] = 0;
-					gameState.BuyingPrice[i] = 0;
-				}
-			}
-		}
-
-		// It seems a glitch may cause cargo bays to become negative - no idea how...
-		for (int i = 0; i < GameState.MAXTRADEITEM; ++i) {
-			if (Ship.cargo[i] < 0) { Ship.cargo[i] = 0; }
-		}
-
-		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 
 		if (gameState.SaveOnArrival){
 			saveGame();

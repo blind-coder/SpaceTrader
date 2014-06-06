@@ -73,8 +73,8 @@
 					android:id="@+id/menuHelpAcknowledgements"
 					android:title="Acknowledgements"/>
 			<item
-					android:id="@+id/menuHelpAbout"
-					android:title="About"/>
+					android:id="@+id/menuHelpCredits"
+					android:title="Credits"/>
 			<item
 					android:id="@+id/menuHelpLicense"
 					android:title="License"/>

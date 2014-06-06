@@ -10,6 +10,7 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -99,6 +100,7 @@ public class Popup {
 		AlertDialog.Builder confirm = new AlertDialog.Builder(context);
 		confirm.setTitle(title);
 		confirm.setMessage(content);
+		confirm.setCancelable(false);
 		confirm.setPositiveButton(positive, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -135,7 +137,11 @@ public class Popup {
 	public void showMessage() {
 		AlertDialog.Builder confirm = new AlertDialog.Builder(context);
 		confirm.setTitle(title);
-		confirm.setMessage(content);
+		TextView textView = new TextView(context);
+		textView.setAutoLinkMask(Linkify.ALL);
+		textView.setText(content);
+		confirm.setView(textView);
+		confirm.setCancelable(false);
 		confirm.setPositiveButton(positive, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -169,27 +175,28 @@ public class Popup {
 		input = (EditText) view.findViewById(R.id.view_input_dialog_text);
 		input.setHint(hint);
 
-		AlertDialog.Builder confirm =
-			new AlertDialog.Builder(context).setTitle(title).setMessage(content).setView(view)
-				.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-						if (cbPositive != null) {
-							cbPositive.execute(Popup.this, input);
-						}
-						context.showNextPopup();
-					}
+		AlertDialog.Builder confirm = new AlertDialog.Builder(context).setTitle(title).setMessage(
+			content
+		).setView(view).setPositiveButton(positive, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+				if (cbPositive != null) {
+					cbPositive.execute(Popup.this, input);
 				}
-				).setNegativeButton(negative, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					dialog.dismiss();
-					if (cbNegative != null) {
-						cbNegative.execute(Popup.this, input);
-					}
-					context.showNextPopup();
-				}
+				context.showNextPopup();
 			}
-			);
+		}
+		).setNegativeButton(negative, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+				if (cbNegative != null) {
+					cbNegative.execute(Popup.this, input);
+				}
+				context.showNextPopup();
+			}
+		}
+		);
+		confirm.setCancelable(false);
 		if (help.length() > 0) {
 			confirm.setNeutralButton("Help", doNothing);
 		}
@@ -221,7 +228,8 @@ public class Popup {
 				}
 				context.showNextPopup();
 			}
-		});
+		}
+		);
 
 		seekBar = (SeekBar) view.findViewById(R.id.view_input_dialog_seekbar);
 		seekBar.setMax(max);
@@ -247,27 +255,28 @@ public class Popup {
 		}
 		);
 
-		AlertDialog.Builder confirm =
-			new AlertDialog.Builder(context).setTitle(title).setMessage(content).setView(view)
-				.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-						if (cbPositive != null) {
-							cbPositive.execute(Popup.this, seekBar);
-						}
-						context.showNextPopup();
-					}
+		AlertDialog.Builder confirm = new AlertDialog.Builder(context).setTitle(title).setMessage(
+			content
+		).setView(view).setPositiveButton(positive, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+				if (cbPositive != null) {
+					cbPositive.execute(Popup.this, seekBar);
 				}
-				).setNegativeButton(negative, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					dialog.dismiss();
-					if (cbNegative != null) {
-						cbNegative.execute(Popup.this, seekBar);
-					}
-					context.showNextPopup();
-				}
+				context.showNextPopup();
 			}
-			);
+		}
+		).setNegativeButton(negative, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+				if (cbNegative != null) {
+					cbNegative.execute(Popup.this, seekBar);
+				}
+				context.showNextPopup();
+			}
+		}
+		);
+		confirm.setCancelable(false);
 		if (help.length() > 0) {
 			confirm.setNeutralButton("Help", doNothing);
 		}
@@ -285,7 +294,8 @@ public class Popup {
 		this.wasShown = true;
 		if (this.cbNegative == null && this.max == -1) {
 			this.showMessage();
-		} else if (this.cbNegative != null && this.cbPositive != null && this.max == -1 && this.hint.equals("")) {
+		} else if (this.cbNegative != null && this.cbPositive != null && this.max == -1 && this.hint
+			.equals("")) {
 			this.showConfirm();
 		} else if (this.max == -1) {
 			this.showTextInput();
