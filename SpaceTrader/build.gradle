@@ -32,14 +32,14 @@ android {
         release {
             proguardFile 'proguard-rules.txt'
             jniDebugBuild false
-runProguard true
-debuggable false
-}
-}
+            runProguard true
+            debuggable false
+        }
+    }
     productFlavors {
-defaultFlavor {
-proguardFile 'proguard-rules.txt'
-}
+        defaultFlavor {
+            proguardFile 'proguard-rules.txt'
+        }
     }
 }
 

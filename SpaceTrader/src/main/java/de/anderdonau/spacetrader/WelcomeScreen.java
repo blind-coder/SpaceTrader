@@ -10,6 +10,7 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -33,6 +34,7 @@ import android.widget.SeekBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.FileInputStream;
@@ -89,6 +91,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	public  SolarSystem              WarpSystem;
 	private GameState                gameState;
+	InterstitialAd interstitial;
 
 	private PopupQueue           popupQueue      = new PopupQueue();
 	final  Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
@@ -635,22 +638,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	 * Button Callbacks
 	 */
 	// FragmentStartNewGame
+	@SuppressWarnings("UnusedParameters")
 	public void StartNewGameStartGameCallback(View view) {
 		gameState = ((FragmentStartNewGame)currentFragment).getGameState();
 		this.saveGame();
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	// FragmentSystemInformation
+	@SuppressWarnings("UnusedParameters")
 	public void SystemInformationNewspaperCallback(View view){
 		((FragmentSystemInformation)currentFragment).showNewspaper();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void SystemInformationPersonnelRosterCallback(View view) {
 		changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void SystemInformationSpecialCallback(View view) {
 		((FragmentSystemInformation)currentFragment).special();
 	}
 	// FragmentCommanderStatus
+	@SuppressWarnings("UnusedParameters")
 	public void CommanderStatusQuestsCallback(View view){
 		String quests = "";
 		if (gameState.MonsterStatus == 1) {
@@ -745,6 +755,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void CommanderStatusSpecialCargoCallback(View view) {
 		String buf = "";
 		if (gameState.Ship.tribbles > 0) {
@@ -781,6 +793,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void CommanderStatusShipCallback(View view){
 		int i, j, k, FirstEmptySlot;
 		String buf;
@@ -818,7 +832,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			if (j > 0) {
 				if (i == GameState.EXTRABAYS) {
-					buf += String.format("%d extra cargo bays\n", j*5);;
+					buf += String.format("%d extra cargo bays\n", j * 5);
 				} else {
 					buf += String.format("%s\n", Gadgets.mGadgets[i].name);
 				}
@@ -852,6 +866,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		showNextPopup();
 	}
 	// FragmentBank
+	@SuppressWarnings("UnusedParameters")
 	public void btnBankGetLoan(View view){
 		Popup popup;
 		if (gameState.Debt >= gameState.MaxLoan()){
@@ -894,6 +909,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnBankPaybackLoan(View view){
 		Popup popup;
 		if (gameState.Debt <= 0){
@@ -941,7 +958,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			                  }
 		                  }
 		);
+		popupQueue.push(popup);
+		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnBankBuyInsurance(View view){
 		Popup popup;
 		if (gameState.Insurance){
@@ -989,6 +1010,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.Credits -= Parsecs * gameState.ShipTypes.ShipTypes[gameState.Ship.type].costOfFuel;
 		changeFragment(FRAGMENTS.SHIPYARD);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnShipyardBuyFuel(View view){
 		Popup popup;
 		popup = new Popup(this,
@@ -1020,6 +1043,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnShipyardBuyMaxFuel(View view){
 		btnShipyardBuyFuel(gameState.Credits);
 	}
@@ -1037,6 +1062,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.Credits -= Percentage * gameState.ShipTypes.ShipTypes[gameState.Ship.type].repairCosts;
 		changeFragment(FRAGMENTS.SHIPYARD);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnShipyardBuyRepairs(View view){
 		Popup popup;
 		popup = new Popup(this,
@@ -1064,9 +1091,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnShipyardBuyFullRepairs(View view){
 		btnShipyardBuyRepairs(gameState.Credits);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnShipyardBuyEscapePod(View view){
 		Popup popup;
 		popup = new Popup(this,
@@ -1087,6 +1118,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		showNextPopup();
 	}
 	// FragmentBuyNewShip
+	@SuppressWarnings("UnusedParameters")
 	public void btnBuyNewShip(View view){
 		changeFragment(FRAGMENTS.BUY_NEW_SHIP);
 	}
@@ -1628,6 +1660,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 														                   "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.",
 														                   "OK", cbShowNextPopup
 														);
+														popupQueue.push(popup1);
+														showNextPopup();
 														return;
 													}
 												}
@@ -1918,9 +1952,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		final int idx = Index;
 		popup = new Popup(this,
-		                  "Sell Cargo",
-		                  String.format("How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.",
-		                                gameState.Ship.cargo[Index], gameState.SellPrice[Index],
+		                  "Sell Cargo", String.format(
+			"How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.\nYou paid about %d cr. each.",
+			gameState.Ship.cargo[Index], gameState.SellPrice[Index],
 		                                gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ? "loss" : "profit",
 		                                Math.abs(gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index]),
 		                                gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ? (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]) - gameState.SellPrice[Index] :
@@ -2012,10 +2046,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		changeFragment(FRAGMENTS.SELL_CARGO);
 	}
 	// FragmentWarpSystemInformation
+	@SuppressWarnings("UnusedParameters")
 	public void btnAveragePricesForm(View view){
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 	// FragmentAveragePrices
+	@SuppressWarnings("UnusedParameters")
 	public void btnToggleAverageDiffPrices(View view){
 		gameState.PriceDifferences = !gameState.PriceDifferences;
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
@@ -2025,16 +2061,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnWarpSystemInformation(View view){
 		changeFragment(FRAGMENTS.WARP_SYSTEM_INFORMATION);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnDoWarp(View view){
 		DoWarp(false);
 	}
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
 		int i;
-		for (i = 0; gameState.SolarSystem[i] != Current; i++)
-			;
+		for (i = 0; gameState.SolarSystem[i] != Current; i++) { ; }
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 
@@ -2257,9 +2296,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnDumpForm(View view){
 		changeFragment(FRAGMENTS.DUMP);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnPlunderDone(View view){
 		Travel();
 	}
@@ -2369,10 +2412,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void btnDumpDone(View view){
 		changeFragment(FRAGMENTS.PLUNDER);
 	}
 	// FragmentGalacticChart
+	@SuppressWarnings("UnusedParameters")
 	public void btnGalacticChartFind(View view){
 		Popup popup;
 		popup = new Popup(this,
@@ -2507,6 +2553,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void SuperWarpButtonCallback(View view){
 		Popup popup;
 		if (gameState.TrackedSystem < 0) {
@@ -2688,6 +2736,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 	// FragmentPersonnelRoster
+	@SuppressWarnings("UnusedParameters")
 	public void btnPersonnelRosterHireCallback(View view) {
 		int ForHire = gameState.GetForHire();
 		int FirstFree = -1;
@@ -2896,6 +2945,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.DeterminePrices(gameState.WarpSystem);
 		Travel();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonTradeCallback(View view) {
 		final int i;
 
@@ -3066,6 +3117,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonYieldCallback(View view) {
 		String buf = "";
 		Popup popup;
@@ -3110,6 +3163,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Travel();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonBoardCallback(View view) {
 		if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 			// take the cargo of the Marie Celeste?
@@ -3129,6 +3184,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		// Travel(); // is called from Done button in PlunderForm
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonPlunderCallback(View view) {
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
@@ -3140,6 +3197,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		changeFragment(FRAGMENTS.PLUNDER);
 		// Travel(); // is called from Done button in PlunderForm
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonMeetCallback(View view) {
 		Popup popup;
 		if (gameState.EncounterType == GameState.CAPTAINAHABENCOUNTER) {
@@ -3284,6 +3343,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonDrinkCallback(View view) {
 		Popup popup;
 		popup = new Popup(this,
@@ -3328,6 +3389,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonBribeCallback(View view) {
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
@@ -3413,6 +3476,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonSurrenderCallback(View view) {
 		Popup popup;
 		gameState.AutoAttack = false;
@@ -3460,7 +3525,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				return;
 			} else {
-				String buf = "";
+				String buf;
 				if (gameState.WildStatus == 1) {
 					buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?", "You have Jonathan Wild on board! ", "Wild will be arrested, too. ");
 				} else if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
@@ -3576,6 +3641,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		Travel();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonAttackCallback(View view) {
 		Popup popup;
 		gameState.AutoAttack = false;
@@ -3745,12 +3812,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		Travel();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonIgnoreCallback(View view) {
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
 
 		Travel();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonFleeCallback(View view) {
 		Popup popup;
 		gameState.AutoAttack = false;
@@ -3815,12 +3886,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		Travel();
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonSubmitCallback(View view){
 		Popup popup;
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
 
-		String buf = "", buf2 = "";
+		String buf, buf2;
 
 		if (gameState.EncounterType == GameState.POLICEINSPECTION &&
 			(gameState.Ship.cargo[GameState.FIREARMS] > 0 ||
@@ -3925,11 +3998,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Travel();
 		}
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonIntCallback(View view){
 		gameState.AutoFlee = gameState.AutoAttack = false;
 		((FragmentEncounter)currentFragment).btnInt.setVisibility(View.INVISIBLE);
 		((FragmentEncounter)currentFragment).pBarEncounter.setVisibility(View.INVISIBLE);
 	}
+
+	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonTribbleCallback(View view){
 		Popup popup;
 		popup = new Popup(this, "Squeek!", "Squeek!", "Squeek! Squeek!", "Squeek!", cbShowNextPopup);
@@ -3973,10 +4050,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 	public void Travel() {
-		int EncounterTest, StartClicks, i, j, Repairs, FirstEmptySlot, rareEncounter;
-		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard, EasterEgg;
+		int EncounterTest, StartClicks, i, Repairs, rareEncounter;
+		boolean Pirate, Trader, Police, Mantis;
 		boolean HaveMilitaryLaser, HaveReflectiveShield;
-		long previousTribbles;
 		Ship Ship = gameState.Ship;
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		Popup popup;
@@ -3998,7 +4074,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			);
 			popupQueue.push(popup);
 			showNextPopup();
-			WarpSystem = gameState.SolarSystem[gameState.GetRandom(GameState.MAXSOLARSYSTEM)];
+			gameState.WarpSystem = gameState.GetRandom(GameState.MAXSOLARSYSTEM);
+			WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
 		}
 
 		gameState.PossibleToGoThroughRip = false;
@@ -4421,225 +4498,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		Arrival();
-
-		// Reactor warnings:
-		// now they know the quest has a time constraint!
-		if (gameState.ReactorStatus == 2) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		// better deliver it soon!
-		else if (gameState.ReactorStatus == 16) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		// last warning!
-		else if (gameState.ReactorStatus == 18) {
-			popup = new Popup(this, "Reactor Warning",
-			                  "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-		if (gameState.ReactorStatus == 20) {
-			popup = new Popup(this, "Reactor Meltdown!",
-			                  "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			gameState.ReactorStatus = 0;
-			if (gameState.EscapePod) {
-				EscapeWithPod();
-				return;
-			} else {
-				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
-				                  cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				btnDestroyed();
-				return;
-			}
-		}
-
-		if (gameState.TrackAutoOff && gameState.TrackedSystem == COMMANDER.curSystem) {
-			gameState.TrackedSystem = -1;
-		}
-
-		FoodOnBoard = false;
-		previousTribbles = Ship.tribbles;
-
-		if (Ship.tribbles > 0 && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-			Ship.tribbles /= 2;
-			if (Ship.tribbles < 10) {
-				Ship.tribbles = 0;
-				popup = new Popup(this, "All the Tribbles Died",
-				                  "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
-				                  "", "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			} else {
-				popup = new Popup(this, "Half the Tribbles Died",
-				                  "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
-				                  "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
-				                  "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.NARCOTICS] > 0) {
-			Ship.tribbles = 1 + gameState.GetRandom(3);
-			j = 1 + gameState.GetRandom(3);
-			i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
-			gameState.BuyingPrice[GameState.NARCOTICS] =
-				(gameState.BuyingPrice[GameState.NARCOTICS] * (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
-			Ship.cargo[GameState.NARCOTICS] -= i;
-			Ship.cargo[GameState.FURS] += i;
-			popup = new Popup(this, "Tribbles ate Narcotics",
-			                  "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
-			                  "", "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
-			Ship.tribbles += 100 + gameState.GetRandom(Ship.cargo[GameState.FOOD] * 100);
-			i = gameState.GetRandom(Ship.cargo[GameState.FOOD]);
-			gameState.BuyingPrice[GameState.FOOD] =
-				(gameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[gameState.FOOD];
-			Ship.cargo[GameState.FOOD] = i;
-			popup = new Popup(this, "Tribbles Ate Food",
-			                  "You find that, instead of food, some of your cargo bays contain only tribbles!",
-			                  "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
-			                  "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			FoodOnBoard = true;
-		}
-
-		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES)
-			Ship.tribbles += 1 + gameState.GetRandom(Math.max(1, (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
-			)
-			);
-
-		if (Ship.tribbles > GameState.MAXTRIBBLES)
-			Ship.tribbles = GameState.MAXTRIBBLES;
-
-		String buf;
-		if ((previousTribbles < 100 && Ship.tribbles >= 100) ||
-			(previousTribbles < 1000 && Ship.tribbles >= 1000) ||
-			(previousTribbles < 10000 && Ship.tribbles >= 10000) ||
-			(previousTribbles < 50000 && Ship.tribbles >= 50000)) {
-			if (Ship.tribbles >= GameState.MAXTRIBBLES)
-				buf = "a dangerous number of";
-			else
-				buf = String.format("%d", Ship.tribbles);
-			popup = new Popup(this, "Space Port Inspector",
-			                  "Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
-			                  "You might want to do something about those Tribbles...", "OK",
-			                  cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-		}
-
-		gameState.TribbleMessage = false;
-
-		Ship.hull += gameState.GetRandom(gameState.EngineerSkill(Ship));
-		if (Ship.hull > gameState.GetHullStrength())
-			Ship.hull = gameState.GetHullStrength();
-
-		TryAutoRepair = true;
-		if (gameState.AutoFuel) {
-			btnShipyardBuyFuel(9999);
-			if (gameState.GetFuel() < gameState.GetFuelTanks()) {
-				if (gameState.AutoRepair && Ship.hull < gameState.GetHullStrength()) {
-					popup = new Popup(this, "Not Enough Money",
-					                  "You don't have enough money to get a full tank or full hull repairs.",
-					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
-					                  "OK", cbShowNextPopup
-					);
-					TryAutoRepair = false;
-				} else {
-					popup = new Popup(this, "No Full Tanks",
-					                  "You do not have enough money to buy full tanks.",
-					                  "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
-					                  "OK", cbShowNextPopup
-					);
-				}
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		}
-
-		if (gameState.AutoRepair && TryAutoRepair) {
-			btnShipyardBuyRepairs(99999);
-			if (Ship.hull < gameState.GetHullStrength()) {
-				popup = new Popup(this, "No Full Repairs",
-				                  "You don't have enough money to get your hull fully repaired.",
-				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
-				                  "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-			}
-		}
-
-  /* This Easter Egg gives the commander a Lighting Shield */
-		if (COMMANDER.curSystem == GameState.OGSYSTEM) {
-			i = 0;
-			EasterEgg = false;
-			while (i < GameState.MAXTRADEITEM) {
-				if (Ship.cargo[i] != 1)
-					break;
-				++i;
-			}
-			if (i >= GameState.MAXTRADEITEM)
-				FirstEmptySlot =
-					gameState.GetFirstEmptySlot(gameState.ShipTypes.ShipTypes[Ship.type].shieldSlots,
-					                            Ship.shield
-					);
-			else
-				FirstEmptySlot = -1;
-
-			if (FirstEmptySlot >= 0) {
-				popup = new Popup(this, "Easter",
-				                  "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
-				                  "Look up your ship's equipment.", "OK", cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
-				Ship.shieldStrength[FirstEmptySlot] =
-					Shields.mShields[GameState.LIGHTNINGSHIELD].power;
-				EasterEgg = true;
-			}
-
-			if (EasterEgg) {
-				for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
-					Ship.cargo[i] = 0;
-					gameState.BuyingPrice[i] = 0;
-				}
-			}
-		}
-
-		// It seems a glitch may cause cargo bays to become negative - no idea how...
-		for (i = 0; i < GameState.MAXTRADEITEM; ++i)
-			if (Ship.cargo[i] < 0)
-				Ship.cargo[i] = 0;
-
-		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
 	public void Arrested() {
 		// *************************************************************************
@@ -4780,20 +4638,18 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (gameState.SolarSystem[i].countDown > 0)
 			{
 				--gameState.SolarSystem[i].countDown;
-				if (gameState.SolarSystem[i].countDown > gameState.CountDown)
-					gameState.SolarSystem[i].countDown = gameState.CountDown;
-				else if (gameState.SolarSystem[i].countDown <= 0)
+				if (gameState.SolarSystem[i].countDown > GameState.CountDown) {
+					gameState.SolarSystem[i].countDown = GameState.CountDown;
+				} else if (gameState.SolarSystem[i].countDown <= 0)
 					gameState.SolarSystem[i].initializeTradeitems();
 				else {
-					for (j=0; j<GameState.MAXTRADEITEM; ++j) {
+					for (j = 0; j < GameState.MAXTRADEITEM; ++j) {
 						if (((j == GameState.NARCOTICS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].drugsOK)) ||
 							((j == GameState.FIREARMS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].firearmsOK)) ||
 							(gameState.SolarSystem[i].techLevel < Tradeitems.mTradeitems[j].techProduction)) {
 							gameState.SolarSystem[i].qty[j] = 0;
-							continue;
 						} else {
-							gameState.SolarSystem[i].qty[j] = gameState.SolarSystem[i].qty[j] +
-								gameState.GetRandom( 5 ) - gameState.GetRandom( 5 );
+							gameState.SolarSystem[i].qty[j] = gameState.SolarSystem[i].qty[j] + gameState.GetRandom(5) - gameState.GetRandom(5);
 							if (gameState.SolarSystem[i].qty[j] < 0)
 								gameState.SolarSystem[i].qty[j] = 0;
 						}
@@ -4813,7 +4669,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int PrevEncounterType;
 		Ship Ship = gameState.Ship;
 		Ship Opponent = gameState.Opponent;
-		CrewMember COMMANDER = gameState.Mercenary[0];
 		Popup popup;
 
 		CommanderGotHit = false;
@@ -5445,14 +5300,263 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		showNextPopup();
 	}
 	public void Arrival() {
+		Popup popup;
+		CrewMember COMMANDER = gameState.Mercenary[0];
+		Ship Ship = gameState.Ship;
 		gameState.Clicks = 0;
 		gameState.Mercenary[0].curSystem = gameState.WarpSystem;
 		ShuffleStatus();
 		ChangeQuantities();
+
 		gameState.DeterminePrices(gameState.WarpSystem);
 		gameState.AlreadyPaidForNewspaper = false;
+
+		// Reactor warnings:
+		// now they know the quest has a time constraint!
+		if (gameState.ReactorStatus == 2) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		// better deliver it soon!
+		else if (gameState.ReactorStatus == 16) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		// last warning!
+		else if (gameState.ReactorStatus == 18) {
+			popup = new Popup(this, "Reactor Warning",
+			                  "The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+		if (gameState.ReactorStatus == 20) {
+			popup = new Popup(this, "Reactor Meltdown!",
+			                  "Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			gameState.ReactorStatus = 0;
+			if (gameState.EscapePod) {
+				EscapeWithPod();
+				return;
+			} else {
+				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
+				                  cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				btnDestroyed();
+				return;
+			}
+		}
+
+		if (gameState.TrackAutoOff && gameState.TrackedSystem == COMMANDER.curSystem) {
+			gameState.TrackedSystem = -1;
+		}
+
+		boolean FoodOnBoard = false;
+		int previousTribbles = Ship.tribbles;
+
+		if (Ship.tribbles > 0 && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
+			Ship.tribbles /= 2;
+			if (Ship.tribbles < 10) {
+				Ship.tribbles = 0;
+				popup = new Popup(this, "All the Tribbles Died",
+				                  "The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
+				                  "", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			} else {
+				popup = new Popup(this, "Half the Tribbles Died",
+				                  "The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
+				                  "Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.NARCOTICS] > 0) {
+			Ship.tribbles = 1 + gameState.GetRandom(3);
+			int j = 1 + gameState.GetRandom(3);
+			int i = Math.min(j, Ship.cargo[GameState.NARCOTICS]);
+			gameState.BuyingPrice[GameState.NARCOTICS] =
+				(gameState.BuyingPrice[GameState.NARCOTICS] * (Ship.cargo[GameState.NARCOTICS] - i)) / Ship.cargo[GameState.NARCOTICS];
+			Ship.cargo[GameState.NARCOTICS] -= i;
+			Ship.cargo[GameState.FURS] += i;
+			popup = new Popup(this, "Tribbles ate Narcotics",
+			                  "Tribbles ate your narcotics, and it killed most of them. At least the furs remained.",
+			                  "", "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
+			Ship.tribbles += 100 + gameState.GetRandom(Ship.cargo[GameState.FOOD] * 100);
+			int i = gameState.GetRandom(Ship.cargo[GameState.FOOD]);
+			gameState.BuyingPrice[GameState.FOOD] =
+				(gameState.BuyingPrice[GameState.FOOD] * i) / Ship.cargo[GameState.FOOD];
+			Ship.cargo[GameState.FOOD] = i;
+			popup = new Popup(this, "Tribbles Ate Food",
+			                  "You find that, instead of food, some of your cargo bays contain only tribbles!",
+			                  "Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
+			                  "OK", cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			FoodOnBoard = true;
+		}
+
+		if (Ship.tribbles > 0 && Ship.tribbles < GameState.MAXTRIBBLES) {
+			Ship.tribbles += 1 + gameState.GetRandom(Math.max(1, (Ship.tribbles >> (FoodOnBoard ? 0 : 1))
+			)
+			);
+		}
+
+		if (Ship.tribbles > GameState.MAXTRIBBLES) { Ship.tribbles = GameState.MAXTRIBBLES; }
+
+		String buf;
+		if ((previousTribbles < 100 && Ship.tribbles >= 100) ||
+			(previousTribbles < 1000 && Ship.tribbles >= 1000) ||
+			(previousTribbles < 10000 && Ship.tribbles >= 10000) ||
+			(previousTribbles < 50000 && Ship.tribbles >= 50000)) {
+			if (Ship.tribbles >= GameState.MAXTRIBBLES) { buf = "a dangerous number of"; } else {
+				buf = String.format("%d", Ship.tribbles);
+			}
+			popup = new Popup(this, "Space Port Inspector",
+			                  "Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
+			                  "You might want to do something about those Tribbles...", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+		}
+
+		gameState.TribbleMessage = false;
+
+		Ship.hull += gameState.GetRandom(gameState.EngineerSkill(Ship));
+		if (Ship.hull > gameState.GetHullStrength()) { Ship.hull = gameState.GetHullStrength(); }
+
+		boolean TryAutoRepair = true;
+		if (gameState.AutoFuel) {
+			btnShipyardBuyFuel(9999);
+			if (gameState.GetFuel() < gameState.GetFuelTanks()) {
+				if (gameState.AutoRepair && Ship.hull < gameState.GetHullStrength()) {
+					popup = new Popup(this, "Not Enough Money",
+					                  "You don't have enough money to get a full tank or full hull repairs.",
+					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
+					                  "OK", cbShowNextPopup
+					);
+					TryAutoRepair = false;
+				} else {
+					popup = new Popup(this, "No Full Tanks",
+					                  "You do not have enough money to buy full tanks.",
+					                  "You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
+					                  "OK", cbShowNextPopup
+					);
+				}
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		}
+
+		if (gameState.AutoRepair && TryAutoRepair) {
+			btnShipyardBuyRepairs(99999);
+			if (Ship.hull < gameState.GetHullStrength()) {
+				popup = new Popup(this, "No Full Repairs",
+				                  "You don't have enough money to get your hull fully repaired.",
+				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
+				                  "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+			}
+		}
+
+  /* This Easter Egg gives the commander a Lighting Shield */
+		if (COMMANDER.curSystem == GameState.OGSYSTEM) {
+			int i = 0;
+			int FirstEmptySlot;
+			boolean EasterEgg = false;
+			while (i < GameState.MAXTRADEITEM) {
+				if (Ship.cargo[i] != 1) { break; }
+				++i;
+			}
+			if (i >= GameState.MAXTRADEITEM) {
+				FirstEmptySlot = gameState.GetFirstEmptySlot(
+					gameState.ShipTypes.ShipTypes[Ship.type].shieldSlots, Ship.shield
+				);
+			} else { FirstEmptySlot = -1; }
+
+			if (FirstEmptySlot >= 0) {
+				popup = new Popup(this, "Easter",
+				                  "Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
+				                  "Look up your ship's equipment.", "OK", cbShowNextPopup
+				);
+				popupQueue.push(popup);
+				showNextPopup();
+				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
+				Ship.shieldStrength[FirstEmptySlot] = Shields.mShields[GameState.LIGHTNINGSHIELD].power;
+				EasterEgg = true;
+			}
+
+			if (EasterEgg) {
+				for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+					Ship.cargo[i] = 0;
+					gameState.BuyingPrice[i] = 0;
+				}
+			}
+		}
+
+		// It seems a glitch may cause cargo bays to become negative - no idea how...
+		for (int i = 0; i < GameState.MAXTRADEITEM; ++i) {
+			if (Ship.cargo[i] < 0) { Ship.cargo[i] = 0; }
+		}
+
+		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+
 		if (gameState.SaveOnArrival){
 			saveGame();
+		}
+
+		if (gameState.Days % 3 == 0) { // Show an ad every 3 days
+			// Create the interstitial.
+			interstitial = new InterstitialAd(this);
+			interstitial.setAdUnitId("ca-app-pub-2751649723763471/1614767347");
+
+			// Create ad request.
+			AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+				.build();
+
+			// Begin loading your interstitial.
+			interstitial.loadAd(adRequest);
+
+			final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Please wait")
+				.setCancelable(false).create();
+			alertDialog.show();
+			final Handler waiter = new Handler();
+			final Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					if (interstitial.isLoaded()) {
+						alertDialog.dismiss();
+						interstitial.show();
+					} else {
+						waiter.postDelayed(this, 100);
+					}
+				}
+			};
+			waiter.postDelayed(runnable, 100);
 		}
 	}
 
@@ -5478,7 +5582,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Operation is SELLCARGO, DUMPCARGO, or JETTISONCARGO
 		// *************************************************************************
 		int ToSell;
-		CrewMember COMMANDER = gameState.Mercenary[0];
 		Ship Ship = gameState.Ship;
 		Popup popup;
 
@@ -5557,8 +5660,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.Credits += ToSell * gameState.SellPrice[Index];
 		if (Operation == GameState.DUMPCARGO)
 			gameState.Credits -= ToSell * 5 * (GameState.getDifficulty() + 1);
-		if (Operation == GameState.JETTISONCARGO) {
-		}
+		//if (Operation == GameState.JETTISONCARGO) {
+		//}
 	}
 
 	public void saveGame() {
@@ -5571,7 +5674,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			e.printStackTrace();
 		}
 		if (fos != null) {
-			ObjectOutputStream oos = null;
+			ObjectOutputStream oos;
 			try {
 				oos = new ObjectOutputStream(fos);
 				oos.writeObject(s);
@@ -5646,7 +5749,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 
-		String buf = "", buf2 = "";
+		String buf, buf2;
 		if (Scored && gameState.GameLoaded) {
 			buf = "Without loading a savegame, you";
 			buf2 = "would have made the high-score list.";
