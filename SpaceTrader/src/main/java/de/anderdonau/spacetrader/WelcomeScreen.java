@@ -2953,7 +2953,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		final int i;
 
 		if (gameState.EncounterType == GameState.TRADERBUY) {
-			i = gameState.GetRandomTradeableItem(gameState.Ship, GameState.TRADERBUY);
+			i = gameState.Ship.getRandomTradeableItem(GameState.TRADERBUY);
 
 			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
 				if (gameState.GetRandom(100) <= 45)
@@ -3036,7 +3036,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.EncounterType == GameState.TRADERSELL) {
-			i = gameState.GetRandomTradeableItem(gameState.Opponent, GameState.TRADERSELL);
+			i = gameState.Opponent.getRandomTradeableItem(GameState.TRADERSELL);
 			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
 				if (gameState.GetRandom(100) <= 45)
 					gameState.BuyPrice[i] *= 1.1;

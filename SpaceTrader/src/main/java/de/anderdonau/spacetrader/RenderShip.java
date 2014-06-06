@@ -100,7 +100,9 @@ public class RenderShip extends View {
 			int fuel = 10;
 			int hull = rand.nextInt(200);
 			int tribbles = 0;
-			Ship s = new Ship(ShipTypes.BEETLE, cargo, weapon, shield, shieldStrength, gadget, crew, fuel, hull, tribbles);
+			Ship s = new Ship(ShipTypes.BEETLE, cargo, weapon, shield, shieldStrength, gadget, crew, fuel,
+			                  hull, tribbles, gameState
+			);
 			this.setShip(s);
 			this.setRotate(true);
 		}

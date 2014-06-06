@@ -1130,7 +1130,7 @@ public class GameState implements Serializable {
 		                crew, // Commander on board
 		                14, // Full tank
 		                100, // Full hull strength
-		                0
+		                0, this
 		); // No tribbles on board
 		crew[0] = 1;
 		Opponent = new Ship(1, // Gnat
@@ -1141,7 +1141,7 @@ public class GameState implements Serializable {
 		                    crew, // Alyssa on board
 		                    14, // Full tank
 		                    100, // Full hull strength
-		                    0
+		                    0, this
 		); // No tribbles on board
 		armament[0] = armament[1] = armament[2] = 2;
 		crew[0] = MAXCREWMEMBER;
@@ -1153,7 +1153,7 @@ public class GameState implements Serializable {
 		                        crew, // super stats
 		                        1, // Full tank
 		                        500, // Full hull strength
-		                        0
+		                        0, this
 		); // No tribbles on board
 		armament[0] = armament[1] = 2;
 		armament[2] = -1;
@@ -1165,7 +1165,7 @@ public class GameState implements Serializable {
 		                  crew, // super stats
 		                  1, // Full tank
 		                  400, // Full hull strength
-		                  0
+		                  0, this
 		); // No tribbles on board
 		armament[0] = 2;
 		armament[1] = 0;
@@ -1183,7 +1183,7 @@ public class GameState implements Serializable {
 		                     crew, // super stats
 		                     1, // Full tank
 		                     10, // Full hull strength (though this isn't much)
-		                     0
+		                     0, this
 		); // No tribbles on board
 	}
 
@@ -2223,54 +2223,6 @@ public class GameState implements Serializable {
 
 	public boolean ENCOUNTERSCARAB(int a) {
 		return ((a) >= SCARABATTACK && (a) <= MAXSCARAB);
-	}
-
-	public int GetRandomTradeableItem(Ship sh, int Operation) {
-		// *************************************************************************
-		// Returns the index of a trade good that is on a given ship that can be
-		// sold in a given system.
-		// *************************************************************************
-		boolean looping = true;
-		int i = 0, j = -1;
-
-		while (looping && i < 10) {
-			j = GetRandom(MAXTRADEITEM);
-			// It's not as ugly as it may look! If the ship has a particular item, the following
-			// conditions must be met for it to be tradeable:
-			// if the trader is buying, there must be a valid sale price for that good on the local system
-			// if the trader is selling, there must be a valid buy price for that good on the local system
-			// if the player is criminal, the good must be illegal
-			// if the player is not criminal, the good must be legal
-			if ((sh.cargo[j] > 0 && Operation == TRADERSELL && BuyPrice[j] > 0) && ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) || (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS))) {
-				looping = false;
-			} else if ((sh.cargo[j] > 0 && Operation == TRADERBUY && SellPrice[j] > 0) && ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) || (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS))) {
-				looping = false;
-			}
-			// alles klar?
-			else {
-				j = -1;
-				i++;
-			}
-		}
-		// if we didn't succeed in picking randomly, we'll pick sequentially. We can do this, because
-		// this routine is only called if there are tradeable goods.
-		if (j == -1) {
-			j = 0;
-			looping = true;
-			while (looping) {
-				// see lengthy comment above.
-				if ((((sh.cargo[j] > 0) && (Operation == TRADERSELL) && (BuyPrice[j] > 0)) || ((sh.cargo[j] > 0) && (Operation == TRADERBUY) && (SellPrice[j] > 0))) && ((PoliceRecordScore < DUBIOUSSCORE && (j == FIREARMS || j == NARCOTICS)) || (PoliceRecordScore >= DUBIOUSSCORE && j != FIREARMS && j != NARCOTICS))) {
-					looping = false;
-				} else {
-					j++;
-					if (j == MAXTRADEITEM) {
-						// this should never happen!
-						looping = false;
-					}
-				}
-			}
-		}
-		return j;
 	}
 
 	void IncreaseRandomSkill() {
