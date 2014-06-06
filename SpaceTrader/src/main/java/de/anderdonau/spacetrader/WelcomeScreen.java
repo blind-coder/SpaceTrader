@@ -471,6 +471,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "About",
 				                  "Android port Copyright 2014 by Benjamin Schieder\n"+
 					                  "Linux port Copyright 2010 by Benjamin Schieder\n"+
+					                  "Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
+					                  "New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
 					                  "Original Copyright 2000-2002 by Pieter Spronck\n"+
 					                  "Design and programming: Pieter Spronck\"\n"+
 					                  "Additional design and programming: Samuel Goldstein, Sam Anderson\n"+
