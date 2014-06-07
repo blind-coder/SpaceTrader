@@ -10,9 +10,6 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import de.anderdonau.spacetrader.GameState;
 
-/**
- * Created by blindcoder on 4/24/14.
- */
 public class PoliceRecord {
 	public static int[] minScore =
 		{-100, GameState.PSYCHOPATHSCORE, GameState.VILLAINSCORE, GameState.CRIMINALSCORE,

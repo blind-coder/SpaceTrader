@@ -23,9 +23,10 @@ import java.util.Random;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
+@SuppressWarnings("UnusedDeclaration")
 public class RenderShip extends View {
-	protected final Paint paint = new Paint();
-	private GameState gameState = null;
+	protected final Paint     paint     = new Paint();
+	private         GameState gameState = null;
 	private Ship mShip;
 
 	private boolean rotate = false;
@@ -51,13 +52,14 @@ public class RenderShip extends View {
 		this.gameState = gameState;
 	}
 
-	private Bitmap rotateBitmap(Bitmap src){
+	private Bitmap rotateBitmap(Bitmap src) {
 		Matrix m = new Matrix();
 		m.preScale(-1, 1);
 		return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
 	}
+
 	public void setRotate(boolean rotate) {
-		if (rotate != this.rotate){
+		if (rotate != this.rotate) {
 			bitmap = rotateBitmap(bitmap);
 			bitmap_shield = rotateBitmap(bitmap_shield);
 			bitmap_damaged = rotateBitmap(bitmap_damaged);
@@ -106,7 +108,7 @@ public class RenderShip extends View {
 			this.setRotate(true);
 		}
 
-		if (gameState == null){
+		if (gameState == null) {
 			dmgPercent = (mShip.hull * 100) / 200;
 			shieldPercent = (mShip.shieldStrength[0] * 100 / GameState.ESHIELDPOWER);
 		} else {
@@ -118,15 +120,15 @@ public class RenderShip extends View {
 			dmgPercent = (mShip.hull * 100) / mShip.GetHullStrength();
 		}
 
-		if (shieldPercent > 0){
+		if (shieldPercent > 0) {
 			src.top = 0;
 			src.bottom = bitmap_shield.getHeight();
 			src.left = 0;
-			src.right = bitmap_shield.getWidth()*shieldPercent/100;
+			src.right = bitmap_shield.getWidth() * shieldPercent / 100;
 
-			dst.top = getHeight()/2 - bitmap_shield.getHeight()/2;
+			dst.top = getHeight() / 2 - bitmap_shield.getHeight() / 2;
 			dst.bottom = dst.top + (src.bottom - src.top);
-			dst.left = getWidth()/2 - bitmap_shield.getWidth()/2;
+			dst.left = getWidth() / 2 - bitmap_shield.getWidth() / 2;
 			dst.right = dst.left + (src.right - src.left);
 			canvas.drawBitmap(bitmap_shield, src, dst, paint);
 		}
@@ -136,20 +138,20 @@ public class RenderShip extends View {
 		src.left = 0;
 		src.right = bitmap_damaged.getWidth();
 
-		dst.top = getHeight()/2 - bitmap.getHeight()/2;
+		dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
 		dst.bottom = dst.top + (src.bottom - src.top);
-		dst.left = getWidth()/2 - bitmap.getWidth()/2;
+		dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
 		dst.right = dst.left + (src.right - src.left);
 		canvas.drawBitmap(bitmap_damaged, src, dst, paint);
 
 		src.top = 0;
 		src.bottom = bitmap.getHeight();
 		src.left = 0;
-		src.right = bitmap.getWidth()*dmgPercent/100;
+		src.right = bitmap.getWidth() * dmgPercent / 100;
 
-		dst.top = getHeight()/2 - bitmap.getHeight()/2;
+		dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
 		dst.bottom = dst.top + (src.bottom - src.top);
-		dst.left = getWidth()/2 - bitmap.getWidth()/2;
+		dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
 		dst.right = dst.left + (src.right - src.left);
 		canvas.drawBitmap(bitmap, src, dst, paint);
 	}
@@ -171,6 +173,8 @@ public class RenderShip extends View {
 			size = widthWithoutPadding;
 		}
 
-		setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(), size + getPaddingTop() + getPaddingBottom());
+		setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(),
+		                     size + getPaddingTop() + getPaddingBottom()
+		);
 	}
 }

@@ -13,18 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.GameState;
 import de.anderdonau.spacetrader.R;
 
-/**
- * Created by blindcoder on 5/21/14.
- */
 public class ShortcutArrayAdapter extends ArrayAdapter<String> {
-	private final Context  context;
-	private final String[] values;
+	private final Context   context;
+	private final String[]  values;
 	private final GameState gameState;
 
 	public ShortcutArrayAdapter(Context context, String[] values, GameState gameState) {
@@ -36,17 +32,19 @@ public class ShortcutArrayAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater =
-			(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+			Context.LAYOUT_INFLATER_SERVICE
+		);
 
 		View rowView = inflater.inflate(R.layout.listview_shortcut_entry, parent, false);
+		//noinspection ConstantConditions
 		TextView textView = (TextView) rowView.findViewById(R.id.txtShortcut);
 		TextView textView1 = (TextView) rowView.findViewById(R.id.txtTarget);
 		textView.setText(values[position]);
 
-		int i = position == 0 ? gameState.Shortcut1 :
-		        position == 1 ? gameState.Shortcut2 :
-		        position == 2 ? gameState.Shortcut3 : gameState.Shortcut4;
+		int i = position == 0 ? gameState.Shortcut1 : position == 1 ? gameState.Shortcut2 :
+		                                              position == 2 ? gameState.Shortcut3 :
+		                                              gameState.Shortcut4;
 		String s = gameState.Shortcuts[i][1];
 		textView1.setText(s);
 

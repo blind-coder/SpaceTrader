@@ -13,29 +13,26 @@ import android.content.SharedPreferences;
 
 import de.anderdonau.spacetrader.GameState;
 
-/**
- * Created by blindcoder on 5/18/14.
- */
 public class HighScore {
-	String Name;
-	int Status; // 0 = killed, 1 = Retired, 2 = Bought moon
-	int Days;
-	int Worth;
-	int Difficulty;
-	int pos;
-	Context mContext;
-	SharedPreferences sp;
+	String                   Name;
+	int                      Status; // 0 = killed, 1 = Retired, 2 = Bought moon
+	int                      Days;
+	int                      Worth;
+	int                      Difficulty;
+	int                      pos;
+	Context                  mContext;
+	SharedPreferences        sp;
 	SharedPreferences.Editor e;
 
-	public HighScore(Context mContext, int i){
+	public HighScore(Context mContext, int i) {
 		this.mContext = mContext;
 		this.sp = mContext.getSharedPreferences("HighScore", Context.MODE_PRIVATE);
 		this.e = sp.edit();
-		this.Status = sp.getInt("Status"+String.valueOf(i), GameState.KILLED);
-		this.Days = sp.getInt("Days"+String.valueOf(i), i*10);
-		this.Worth = sp.getInt("Worth"+String.valueOf(i), i*500);
-		this.Difficulty = sp.getInt("Difficulty"+String.valueOf(i), i);
-		this.Name = sp.getString("Name"+String.valueOf(i), "");
+		this.Status = sp.getInt("Status" + String.valueOf(i), GameState.KILLED);
+		this.Days = sp.getInt("Days" + String.valueOf(i), i * 10);
+		this.Worth = sp.getInt("Worth" + String.valueOf(i), i * 500);
+		this.Difficulty = sp.getInt("Difficulty" + String.valueOf(i), i);
+		this.Name = sp.getString("Name" + String.valueOf(i), "");
 		this.pos = i;
 	}
 
@@ -44,7 +41,7 @@ public class HighScore {
 	}
 
 	public void setName(String name) {
-		this.e.putString("Name"+String.valueOf(this.pos), name);
+		this.e.putString("Name" + String.valueOf(this.pos), name);
 		e.commit();
 		Name = name;
 	}
@@ -54,7 +51,7 @@ public class HighScore {
 	}
 
 	public void setStatus(int status) {
-		this.e.putInt("Status"+String.valueOf(this.pos), status);
+		this.e.putInt("Status" + String.valueOf(this.pos), status);
 		e.commit();
 		Status = status;
 	}
@@ -64,7 +61,7 @@ public class HighScore {
 	}
 
 	public void setDays(int days) {
-		this.e.putInt("Days"+String.valueOf(this.pos), days);
+		this.e.putInt("Days" + String.valueOf(this.pos), days);
 		e.commit();
 		Days = days;
 	}
@@ -74,7 +71,7 @@ public class HighScore {
 	}
 
 	public void setWorth(int worth) {
-		this.e.putInt("Worth"+String.valueOf(this.pos), worth);
+		this.e.putInt("Worth" + String.valueOf(this.pos), worth);
 		e.commit();
 		Worth = worth;
 	}
@@ -84,7 +81,7 @@ public class HighScore {
 	}
 
 	public void setDifficulty(int difficulty) {
-		this.e.putInt("Difficulty"+String.valueOf(this.pos), difficulty);
+		this.e.putInt("Difficulty" + String.valueOf(this.pos), difficulty);
 		e.commit();
 		Difficulty = difficulty;
 	}

@@ -10,10 +10,6 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import de.anderdonau.spacetrader.GameState;
 
-/**
- * Created by blindcoder on 4/24/14.
- */
-
 public class Tradeitems {
 	public static Tradeitem[] mTradeitems = {new Tradeitem("Water", 0, 0, 2, 30, +3, 4,
 	                                                       GameState.DROUGHT, GameState.LOTSOFWATER,

@@ -10,9 +10,6 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import java.util.LinkedList;
 
-/**
- * Created by blindcoder on 5/19/14.
- */
 public class PopupQueue {
 	private LinkedList<Popup> list = new LinkedList<Popup>();
 

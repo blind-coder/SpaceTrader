@@ -18,6 +18,7 @@ import android.view.View;
 
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
+@SuppressWarnings("UnusedDeclaration")
 public class NavigationChart extends View {
 	protected final Paint     paint           = new Paint();
 	public          int       Multiplicator   = 20;
@@ -111,6 +112,7 @@ public class NavigationChart extends View {
 		mOffsetY = Math.min(mOffsetY, 0);
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {

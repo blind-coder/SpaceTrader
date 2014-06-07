@@ -8,9 +8,6 @@
 
 package de.anderdonau.spacetrader.DataTypes;
 
-/**
- * Created by blindcoder on 4/24/14.
- */
 public class Gadgets {
 	public static Gadget[] mGadgets = {new Gadget("5 extra cargo bays", 2500, 4, 35), // 5 extra holds
 	                                   new Gadget("Auto-repair system", 7500, 5, 20),

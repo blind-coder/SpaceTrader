@@ -10,9 +10,6 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import de.anderdonau.spacetrader.GameState;
 
-/**
- * Created by blindcoder on 4/24/14.
- */
 public class Politics {
 	final static boolean drugsOK       = true;
 	final static boolean drugsNotOK    = false;
@@ -50,19 +47,19 @@ public class Politics {
 	public static class Politic {
 		public String  name;
 		public int     reactionIllegal;
-			// Reaction level of illegal goods 0 = total acceptance (determines how police reacts if they find you carry them)
+		// Reaction level of illegal goods 0 = total acceptance (determines how police reacts if they find you carry them)
 		public int     strengthPolice;
-			// Strength level of police force 0 = no police (determines occurrence rate)
+		// Strength level of police force 0 = no police (determines occurrence rate)
 		public int     strengthPirates; // Strength level of pirates 0 = no pirates
 		public int     strengthTraders; // Strength levcel of traders 0 = no traders
 		public int     minTechLevel;    // Mininum tech level needed
 		public int     maxTechLevel;    // Maximum tech level where this is found
 		public int     bribeLevel;
-			// Indicates how easily someone can be bribed 0 = unbribeable/high bribe costs
+		// Indicates how easily someone can be bribed 0 = unbribeable/high bribe costs
 		public boolean drugsOK;
-			// Drugs can be traded (if not, people aren't interested or the governemnt is too strict)
+		// Drugs can be traded (if not, people aren't interested or the governemnt is too strict)
 		public boolean firearmsOK;
-			// Firearms can be traded (if not, people aren't interested or the governemnt is too strict)
+		// Firearms can be traded (if not, people aren't interested or the governemnt is too strict)
 		public int     wanted;          // Tradeitem requested in particular in this type of government
 
 		public Politic(String name, int reactionIllegal, int strengthPolice, int strengthPirates, int strengthTraders, int minTechLevel, int maxTechLevel, int bribeLevel, boolean drugsOK, boolean girearmsOK, int wanted) {
