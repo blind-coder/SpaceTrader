@@ -9,6 +9,8 @@
 package de.anderdonau.spacetrader;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +22,28 @@ import android.widget.TextView;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentStartNewGame extends Fragment {
+	private Context context;
 	private GameState gameState;
 	private View rootView = null;
 
-	public FragmentStartNewGame() {
-		gameState = new GameState("Jameson");
+	public FragmentStartNewGame(Context context) {
+		this.context = context;
+		gameState = new GameState(context, "Jameson");
 	}
 
 	public GameState getGameState() {
+		SharedPreferences sp = context.getSharedPreferences("options", Context.MODE_PRIVATE);
+		SharedPreferences.Editor ed = sp.edit();
+
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
-		gameState = new GameState(t.getText().toString());
+		gameState = new GameState(context, t.getText().toString());
 		gameState.DeterminePrices(gameState.Mercenary[0].curSystem);
 
+		ed.putString("Name", t.getText().toString());
+
 		GameState.setDifficulty(s.getProgress());
+		ed.putInt("Difficulty", s.getProgress());
 
 		if (s.getProgress() < GameState.NORMAL) {
 			if (gameState.SolarSystem[gameState.Mercenary[0].curSystem].special < 0) {
@@ -43,12 +53,17 @@ public class FragmentStartNewGame extends Fragment {
 
 		s = (SeekBar) findViewById(R.id.skillPilot);
 		gameState.Mercenary[0].pilot = s.getProgress() + 1;
+		ed.putInt("Pilot", s.getProgress());
 		s = (SeekBar) findViewById(R.id.skillFighter);
 		gameState.Mercenary[0].fighter = s.getProgress() + 1;
+		ed.putInt("Fighter", s.getProgress());
 		s = (SeekBar) findViewById(R.id.skillTrader);
 		gameState.Mercenary[0].trader = s.getProgress() + 1;
+		ed.putInt("Trader", s.getProgress());
 		s = (SeekBar) findViewById(R.id.skillEngineer);
 		gameState.Mercenary[0].engineer = s.getProgress() + 1;
+		ed.putInt("Engineer", s.getProgress());
+		ed.commit();
 		return gameState;
 	}
 
@@ -58,9 +73,14 @@ public class FragmentStartNewGame extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		SharedPreferences sp = context.getSharedPreferences("options", Context.MODE_PRIVATE);
+
 		rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);
 		TextView textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
 		textView.setText(String.format("%d", gameState.SkillPointsLeft));
+		textView = (TextView) rootView.findViewById(R.id.strNameCommander);
+		textView.setText(sp.getString("Name", "Jameson"));
+		SeekBar seekBar;
 
 		SeekBar.OnSeekBarChangeListener skillChangeListener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -123,20 +143,32 @@ public class FragmentStartNewGame extends Fragment {
 
 			}
 		};
-		((SeekBar) rootView.findViewById(R.id.skillEngineer)).setOnSeekBarChangeListener(
-			skillChangeListener
+
+		seekBar = (SeekBar) rootView.findViewById(R.id.skillEngineer);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener
 		);
-		((SeekBar) rootView.findViewById(R.id.skillPilot)).setOnSeekBarChangeListener(
-			skillChangeListener
+		seekBar.setProgress(sp.getInt("Engineer", 0));
+
+		seekBar = (SeekBar) rootView.findViewById(R.id.skillPilot);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener
 		);
-		((SeekBar) rootView.findViewById(R.id.skillFighter)).setOnSeekBarChangeListener(
-			skillChangeListener
+		seekBar.setProgress(sp.getInt("Pilot", 0));
+
+		seekBar = (SeekBar) rootView.findViewById(R.id.skillFighter);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener
 		);
-		((SeekBar) rootView.findViewById(R.id.skillTrader)).setOnSeekBarChangeListener(
-			skillChangeListener
+		seekBar.setProgress(sp.getInt("Fighter", 0));
+
+		seekBar = (SeekBar) rootView.findViewById(R.id.skillTrader);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener
 		);
-		((SeekBar) rootView.findViewById(R.id.levelBar)).setOnSeekBarChangeListener(levelChangeListener
-		);
+		seekBar.setProgress(sp.getInt("Trader", 0));
+
+		skillChangeListener.onStopTrackingTouch(seekBar);
+
+		seekBar = (SeekBar) rootView.findViewById(R.id.levelBar);
+		seekBar.setOnSeekBarChangeListener(levelChangeListener);
+		seekBar.setProgress(sp.getInt("Difficulty", 2));
 
 		return rootView;
 	}

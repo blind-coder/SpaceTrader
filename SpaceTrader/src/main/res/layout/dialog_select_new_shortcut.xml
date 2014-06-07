@@ -105,5 +105,14 @@
 				android:layout_below="@+id/dialogSelectNewShortcut8"
 				android:layout_alignParentStart="true"
 				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut10"
+				android:id="@+id/dialogSelectNewShortcut10"
+				android:layout_below="@+id/dialogSelectNewShortcut9"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
 	</RelativeLayout>
 </ScrollView>

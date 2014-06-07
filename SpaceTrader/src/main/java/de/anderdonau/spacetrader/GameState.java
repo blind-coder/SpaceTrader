@@ -8,6 +8,9 @@
 
 package de.anderdonau.spacetrader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -629,9 +632,10 @@ public class GameState implements Serializable {
 		}
 	}
 
-	public GameState(String NameCommander) {
+	public GameState(Context context, String NameCommander) {
 		int i, j, k, d, x, y;
 		Boolean Redo, CloseFound, FreeWormhole;
+		SharedPreferences sp = context.getSharedPreferences("options", Context.MODE_PRIVATE);
 
 		initializeBasic();
 
@@ -640,6 +644,25 @@ public class GameState implements Serializable {
 		} else {
 			this.NameCommander = NameCommander;
 		}
+
+		Shortcut1 = sp.getInt("Shortcut1", Shortcut1);
+		Shortcut2 = sp.getInt("Shortcut2", Shortcut2);
+		Shortcut3 = sp.getInt("Shortcut3", Shortcut3);
+		Shortcut4 = sp.getInt("Shortcut4", Shortcut4);
+
+		AlwaysIgnorePolice = sp.getBoolean("AlwaysIgnorePolice", AlwaysIgnorePolice);
+		AlwaysIgnorePirates = sp.getBoolean("AlwaysIgnorePirates", AlwaysIgnorePirates);
+		AlwaysIgnoreTraders = sp.getBoolean("AlwaysIgnoreTraders", AlwaysIgnoreTraders);
+		AlwaysIgnoreTradeInOrbit = sp.getBoolean("AlwaysIgnoreTradeInOrbit", AlwaysIgnoreTradeInOrbit);
+		AutoFuel = sp.getBoolean("AutoFuel", AutoFuel);
+		AutoRepair = sp.getBoolean("AutoRepair", AutoRepair);
+		AlwaysInfo = sp.getBoolean("AlwaysInfo", AlwaysInfo);
+		ReserveMoney = sp.getBoolean("ReserveMoney", ReserveMoney);
+		Continuous = sp.getBoolean("Continuous", Continuous);
+		AttackFleeing = sp.getBoolean("AttackFleeing", AttackFleeing);
+		NewsAutoPay = sp.getBoolean("AutoPayNewspaper", NewsAutoPay);
+		RemindLoans = sp.getBoolean("RemindLoans", RemindLoans);
+		SaveOnArrival = sp.getBoolean("SaveOnArrival", SaveOnArrival);
 
 		// Initialize Galaxy
 		i = 0;
@@ -734,10 +757,10 @@ public class GameState implements Serializable {
 
 		// Initialize mercenary list
 		Mercenary[0].nameIndex = 0;
-		Mercenary[0].pilot = 1;
-		Mercenary[0].fighter = 1;
-		Mercenary[0].trader = 1;
-		Mercenary[0].engineer = 1;
+		Mercenary[0].pilot = sp.getInt("Pilot", 1);
+		Mercenary[0].fighter = sp.getInt("Fighter", 1);
+		Mercenary[0].trader = sp.getInt("Trader", 1);
+		Mercenary[0].engineer = sp.getInt("Engineer", 1);
 
 		i = 1;
 		while (i <= GameState.MAXCREWMEMBER) {

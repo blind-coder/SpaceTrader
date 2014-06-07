@@ -175,7 +175,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			fis.close();
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		} catch (Exception e) {
-			gameState = new GameState("Jameson");
+			gameState = new GameState(this, "Jameson");
 			changeFragment(FRAGMENTS.NEW_GAME);
 		}
 	}
@@ -200,9 +200,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 				break;
-			default:
+			case SYSTEM_INFORMATION:
 				saveGame();
 				finish();
+				break;
+			default:
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				break;
 		}
 	}
@@ -591,7 +594,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				currentFragment = new FragmentGalacticChart(this, gameState);
 				break;
 			case NEW_GAME:
-				currentFragment = new FragmentStartNewGame();
+				currentFragment = new FragmentStartNewGame(this);
 				break;
 			case OPTIONS:
 				currentFragment = new FragmentOptions(gameState);
@@ -5320,45 +5323,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			saveGame();
 		}
 
-		boolean isOnline = false;
+		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		final boolean hideAds = settings.getBoolean("hideAds", false);
 
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnected()) {
-			isOnline = true;
-		}
-		if (isOnline && (gameState.Days % 3 == 0)) { // Show an ad every 3 days
-			interstitial = new InterstitialAd(this);
-			interstitial.setAdUnitId("ca-app-pub-2751649723763471/1614767347");
+		if (!hideAds) {
+			boolean isOnline = false;
+			ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo netInfo = cm.getActiveNetworkInfo();
+			if (netInfo != null && netInfo.isConnected()) {
+				isOnline = true;
+			}
+			if (isOnline && (gameState.Days % 10 == 0)) { // Show an ad every 10 days
+				interstitial = new InterstitialAd(this);
+				interstitial.setAdUnitId("ca-app-pub-2751649723763471/1614767347");
 
-			AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-				.build();
+				AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+					.build();
 
-			interstitial.loadAd(adRequest);
+				interstitial.loadAd(adRequest);
 
-			final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Please wait")
-				.setCancelable(false).create();
-			alertDialog.show();
-			final Handler waiter = new Handler();
-			final Runnable runnable = new Runnable() {
-				int count = 0;
+				final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Please wait")
+					.setCancelable(false).create();
+				alertDialog.show();
+				final Handler waiter = new Handler();
+				final Runnable runnable = new Runnable() {
+					int count = 0;
 
-				@Override
-				public void run() {
-					if (interstitial.isLoaded()) {
-						alertDialog.dismiss();
-						interstitial.show();
-					} else {
-						this.count++;
-						if (this.count < 500) {
-							waiter.postDelayed(this, 100);
-						} else {
+					@Override
+					public void run() {
+						if (interstitial.isLoaded()) {
 							alertDialog.dismiss();
+							interstitial.show();
+						} else {
+							this.count++;
+							if (this.count < 500) {
+								waiter.postDelayed(this, 100);
+							} else {
+								alertDialog.dismiss();
+							}
 						}
 					}
-				}
-			};
-			waiter.postDelayed(runnable, 100);
+				};
+				waiter.postDelayed(runnable, 100);
+			}
 		}
 	}
 
@@ -5487,6 +5494,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				e.printStackTrace();
 			}
 		}
+
+		SharedPreferences sp = getSharedPreferences("options", MODE_PRIVATE);
+		SharedPreferences.Editor ed = sp.edit();
+
+		ed.putInt("Shortcut1", gameState.Shortcut1);
+		ed.putInt("Shortcut2", gameState.Shortcut2);
+		ed.putInt("Shortcut3", gameState.Shortcut3);
+		ed.putInt("Shortcut4", gameState.Shortcut4);
+
+		ed.putBoolean("AlwaysIgnorePolice", gameState.AlwaysIgnorePolice);
+		ed.putBoolean("AlwaysIgnorePirates", gameState.AlwaysIgnorePirates);
+		ed.putBoolean("AlwaysIgnoreTraders", gameState.AlwaysIgnoreTraders);
+		ed.putBoolean("AlwaysIgnoreTradeInOrbit", gameState.AlwaysIgnoreTradeInOrbit);
+		ed.putBoolean("AutoFuel", gameState.AutoFuel);
+		ed.putBoolean("AutoRepair", gameState.AutoRepair);
+		ed.putBoolean("AlwaysInfo", gameState.AlwaysInfo);
+		ed.putBoolean("ReserveMoney", gameState.ReserveMoney);
+		ed.putBoolean("Continuous", gameState.Continuous);
+		ed.putBoolean("AttackFleeing", gameState.AttackFleeing);
+		ed.putBoolean("AutoPayNewspaper", gameState.NewsAutoPay);
+		ed.putBoolean("RemindLoans", gameState.RemindLoans);
+		ed.putBoolean("SaveOnArrival", gameState.SaveOnArrival);
+
+		ed.commit();
 	}
 
 	public void btnDestroyed() {

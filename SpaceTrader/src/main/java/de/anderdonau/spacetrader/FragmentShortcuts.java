@@ -58,6 +58,8 @@ public class FragmentShortcuts extends Fragment {
 					public void onClick(View view) {
 						int i = -1;
 						switch (view.getId()) {
+							case R.id.dialogSelectNewShortcut10:
+								i++;
 							case R.id.dialogSelectNewShortcut9:
 								i++;
 							case R.id.dialogSelectNewShortcut8:
@@ -98,9 +100,9 @@ public class FragmentShortcuts extends Fragment {
 						welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.SHORTCUTS);
 					}
 				};
-				i = 9;
-				for (int j : new int[]{R.id.dialogSelectNewShortcut9, R.id.dialogSelectNewShortcut8,
-				                       R.id.dialogSelectNewShortcut7, R.id.dialogSelectNewShortcut6,
+				i = gameState.Shortcuts.length;
+				for (int j : new int[]{R.id.dialogSelectNewShortcut10, R.id.dialogSelectNewShortcut9,
+				                       R.id.dialogSelectNewShortcut8, R.id.dialogSelectNewShortcut7, R.id.dialogSelectNewShortcut6,
 				                       R.id.dialogSelectNewShortcut5, R.id.dialogSelectNewShortcut4,
 				                       R.id.dialogSelectNewShortcut3, R.id.dialogSelectNewShortcut2,
 				                       R.id.dialogSelectNewShortcut1, R.id.dialogSelectNewShortcut0
@@ -108,7 +110,7 @@ public class FragmentShortcuts extends Fragment {
 				}) {
 					Button button = (Button) linearLayout.findViewById(j);
 					button.setOnClickListener(listener);
-					button.setText(gameState.Shortcuts[i--][1]);
+					button.setText(gameState.Shortcuts[--i][1]);
 				}
 				alertDialog.show();
 			}
