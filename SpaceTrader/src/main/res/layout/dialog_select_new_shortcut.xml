@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+	<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut0"
+				android:id="@+id/dialogSelectNewShortcut0"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut1"
+				android:id="@+id/dialogSelectNewShortcut1"
+				android:layout_below="@+id/dialogSelectNewShortcut0"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut2"
+				android:id="@+id/dialogSelectNewShortcut2"
+				android:layout_below="@+id/dialogSelectNewShortcut1"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut3"
+				android:id="@+id/dialogSelectNewShortcut3"
+				android:layout_below="@+id/dialogSelectNewShortcut2"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut4"
+				android:id="@+id/dialogSelectNewShortcut4"
+				android:layout_below="@+id/dialogSelectNewShortcut3"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut5"
+				android:id="@+id/dialogSelectNewShortcut5"
+				android:layout_below="@+id/dialogSelectNewShortcut4"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut6"
+				android:id="@+id/dialogSelectNewShortcut6"
+				android:layout_below="@+id/dialogSelectNewShortcut5"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut7"
+				android:id="@+id/dialogSelectNewShortcut7"
+				android:layout_below="@+id/dialogSelectNewShortcut6"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut8"
+				android:id="@+id/dialogSelectNewShortcut8"
+				android:layout_below="@+id/dialogSelectNewShortcut7"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+
+		<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Shortcut9"
+				android:id="@+id/dialogSelectNewShortcut9"
+				android:layout_below="@+id/dialogSelectNewShortcut8"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"/>
+	</RelativeLayout>
+</ScrollView>
