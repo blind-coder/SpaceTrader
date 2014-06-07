@@ -411,7 +411,6 @@ public class GameState implements Serializable {
 		 "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
 		 "Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley",
 		 "Wonton", "Yorvick", "Zeethibal"};
-	final               SpecialEvents SpecialEvents               = new SpecialEvents();
 	final               String[]      SystemSize                  =
 		{"Tiny", "Small", "Medium", "Large", "Huge"};
 	final               String[]      techLevel                   =
@@ -625,7 +624,6 @@ public class GameState implements Serializable {
 	public Ship         Opponent;
 	public String       NameCommander;
 	public Random rand = new Random();
-	Weapons Weapons = new Weapons();
 	CrewMember[] CrewMember;
 	Ship         SpaceMonster;
 	Ship         Scarab;

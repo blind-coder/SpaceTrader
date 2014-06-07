@@ -545,7 +545,7 @@ public class FragmentSystemInformation extends Fragment {
 	public void special() {
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
-		SpecialEvents.SpecialEvent Event = gameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+		SpecialEvents.SpecialEvent Event = SpecialEvents.mSpecialEvent[CURSYSTEM.special];
 		Popup popup;
 
 		if (Event.justAMessage) {
@@ -571,7 +571,7 @@ public class FragmentSystemInformation extends Fragment {
 		int i, FirstEmptySlot;
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
-		SpecialEvents.SpecialEvent Event = gameState.SpecialEvents.mSpecialEvent[CURSYSTEM.special];
+		SpecialEvents.SpecialEvent Event = SpecialEvents.mSpecialEvent[CURSYSTEM.special];
 		Popup popup;
 
 		if (gameState.ToSpend() < Event.price) {

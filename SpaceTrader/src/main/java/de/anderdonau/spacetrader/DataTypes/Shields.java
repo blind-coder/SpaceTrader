@@ -11,14 +11,13 @@ package de.anderdonau.spacetrader.DataTypes;
 import de.anderdonau.spacetrader.GameState;
 
 public class Shields {
-	public static Shield[] mShields = {
-		new Shield("Energy shield", GameState.ESHIELDPOWER, 5000, 5, 70),
-		new Shield("Reflective shield", GameState.RSHIELDPOWER, 20000, 6, 30),
-		// The shields below can't be bought
-		new Shield("Lightning shield", GameState.LSHIELDPOWER, 45000, 8, 0)
-	};
-	
-	public Shields() { }
+	public static Shield[] mShields = {new Shield("Energy shield", GameState.ESHIELDPOWER, 5000, 5,
+	                                              70
+	), new Shield("Reflective shield", GameState.RSHIELDPOWER, 20000, 6, 30),
+	                                   // The shields below can't be bought
+	                                   new Shield("Lightning shield", GameState.LSHIELDPOWER, 45000,
+	                                              8, 0
+	                                   )};
 
 	public static class Shield {
 		public String name;
