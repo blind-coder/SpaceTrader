@@ -2113,31 +2113,6 @@ public class GameState implements Serializable {
 		for (i = d; i < MAXCREW; ++i) { Opponent.crew[i] = -1; }
 	}
 
-	int TotalWeapons(Ship Sh, int minWeapon, int maxWeapon) {
-		// *************************************************************************
-		// Calculate total possible weapon strength
-		// Modified to allow an upper and lower limit on which weapons work.
-		// Weapons equal to or between minWeapon and maxWeapon (e.g., PULSELASERWEAPON)
-		// will do damage. Use -1 to allow damage from any weapon, which is almost
-		// always what you want. SjG
-		// *************************************************************************
-		int i;
-		int j;
-
-		j = 0;
-		for (i = 0; i < MAXWEAPON; ++i) {
-			if (Sh.weapon[i] < 0) { break; }
-
-			if ((minWeapon != -1 && Sh.weapon[i] < minWeapon) || (maxWeapon != -1 && Sh.weapon[i] > maxWeapon)) {
-				continue;
-			}
-
-			j += Weapons.mWeapons[Sh.weapon[i]].power;
-		}
-
-		return j;
-	}
-
 	public boolean ENCOUNTERFAMOUS(int a) {
 		return ((a) >= FAMOUSCAPTAIN && (a) <= MAXFAMOUSCAPTAIN);
 	}

@@ -3650,7 +3650,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
 
-		if (gameState.TotalWeapons(gameState.Ship, -1, -1 ) <= 0) {
+		if (gameState.Ship.TotalWeapons(-1, -1) <= 0) {
 			popup = new Popup(this,
 			                  "No Weapons", "You can't attack without weapons!",
 			                  "You either are flying a ship without any weapon slots, so your only option is to flee from fights, or you haven't bought any weapons yet. Sorry, no weapons, no attacking.",
@@ -3737,7 +3737,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						                  public void execute(Popup popup, View view) {
 							                  gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
 							                  if (gameState.EncounterType != GameState.TRADERFLEE) {
-								                  if (gameState.TotalWeapons(gameState.Opponent, -1, -1) <= 0)
+								                  if (gameState.Opponent.TotalWeapons(-1, -1) <= 0)
 									                  gameState.EncounterType = GameState.TRADERFLEE;
 								                  else if (gameState.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type))
 									                  gameState.EncounterType = GameState.TRADERFLEE;
@@ -3757,7 +3757,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			/* Duplicated from Yes callback */
 			if (gameState.EncounterType != GameState.TRADERFLEE) {
-				if (gameState.TotalWeapons(gameState.Opponent, -1, -1) <= 0)
+				if (gameState.Opponent.TotalWeapons(-1, -1) <= 0)
 					gameState.EncounterType = GameState.TRADERFLEE;
 				else if (gameState.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type))
 					gameState.EncounterType = GameState.TRADERFLEE;
@@ -4201,7 +4201,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.EncounterType = GameState.POLICEIGNORE;
 				else if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
 					// If you're a criminal, the police will tend to attack
-					if (gameState.TotalWeapons(gameState.Opponent, -1, -1) <= 0) {
+					if (gameState.Opponent.TotalWeapons(-1, -1) <= 0) {
 						if (gameState.Cloaked(gameState.Opponent, Ship))
 							gameState.EncounterType = GameState.POLICEIGNORE;
 						else
@@ -4328,12 +4328,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (gameState.EncounterType == GameState.TRADERIGNORE && (gameState
 					.GetRandom(1000) < gameState.ChanceOfTradeInOrbit)) {
 					if (gameState.FilledCargoBays() < gameState.TotalCargoBays() && gameState.Opponent
-						.HasTradeableItems(WarpSystem, GameState.TRADERSELL
+						.HasTradeableItems(gameState.WarpSystem, GameState.TRADERSELL
 						))
 						gameState.EncounterType = GameState.TRADERSELL;
 
 					// we fudge on whether the trader has capacity to carry the stuff he's buying.
-					if (Ship.HasTradeableItems(WarpSystem, GameState.TRADERBUY
+					if (Ship.HasTradeableItems(gameState.WarpSystem, GameState.TRADERBUY
 					) && gameState.EncounterType != GameState.TRADERSELL)
 						gameState.EncounterType = GameState.TRADERBUY;
 				}
@@ -5217,23 +5217,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			// Misses
 			return false;
 
-		if (gameState.TotalWeapons(Attacker, -1, -1) <= 0)
+		if (Attacker.TotalWeapons(-1, -1) <= 0)
 			Damage = 0;
 		else if (Defender.type == GameState.SCARABTYPE) {
-			if (gameState.TotalWeapons(Attacker, GameState.PULSELASERWEAPON, GameState.PULSELASERWEAPON) <= 0 &&
-				gameState.TotalWeapons(Attacker, GameState.MORGANLASERWEAPON,
-				                       GameState.MORGANLASERWEAPON
-				) <= 0)
+			if (Attacker.TotalWeapons(GameState.PULSELASERWEAPON, GameState.PULSELASERWEAPON
+			) <= 0 && Attacker.TotalWeapons(GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON
+			) <= 0)
 				Damage = 0;
 			else
-				Damage = gameState.GetRandom(((gameState.TotalWeapons(Attacker, GameState.PULSELASERWEAPON, GameState.PULSELASERWEAPON ) +
-					gameState.TotalWeapons(Attacker, GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON )) *
-					(100 + 2*gameState.EngineerSkill(Attacker)) / 100));
-		}
-		else
-			Damage = gameState.GetRandom((gameState.TotalWeapons(Attacker, -1, -1
-			) * (100 + 2 * gameState.EngineerSkill(Attacker)) / 100)
+				Damage = gameState.GetRandom(((Attacker.TotalWeapons(GameState.PULSELASERWEAPON,
+				                                                     GameState.PULSELASERWEAPON
+				) + Attacker.TotalWeapons(GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON
+				)) * (100 + 2 * gameState.EngineerSkill(Attacker)) / 100)
+				);
+		} else {
+			Damage = gameState.GetRandom((Attacker.TotalWeapons(-1, -1) * (100 + 2 * gameState
+				.EngineerSkill(Attacker)) / 100)
 			);
+		}
 
 		if (Damage <= 0L)
 			return false;

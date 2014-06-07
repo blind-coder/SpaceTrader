@@ -87,7 +87,7 @@ public class Ship implements Serializable {
 		return j;
 	}
 
-	public boolean HasTradeableItems(SolarSystem warpSystem, int Operation) {
+	public boolean HasTradeableItems(int warpSystem, int Operation) {
 		int i;
 		Boolean ret = false, thisRet;
 		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
@@ -95,6 +95,7 @@ public class Ship implements Serializable {
 			// local system, or trader is buying, and there is a sell price on the
 			// local system.
 			thisRet = false;
+			gameState.RecalculateBuyPrices(warpSystem);
 			if (cargo[i] > 0 && Operation == GameState.TRADERSELL && gameState.BuyPrice[i] > 0) {
 				thisRet = true;
 			} else if (cargo[i] > 0 && Operation == GameState.TRADERBUY && gameState.SellPrice[i] > 0) {
@@ -147,5 +148,29 @@ public class Ship implements Serializable {
 		return k;
 	}
 
+	public int TotalWeapons(int minWeapon, int maxWeapon) {
+		// *************************************************************************
+		// Calculate total possible weapon strength
+		// Modified to allow an upper and lower limit on which weapons work.
+		// Weapons equal to or between minWeapon and maxWeapon (e.g., PULSELASERWEAPON)
+		// will do damage. Use -1 to allow damage from any weapon, which is almost
+		// always what you want. SjG
+		// *************************************************************************
+		int i;
+		int j;
+
+		j = 0;
+		for (i = 0; i < GameState.MAXWEAPON; ++i) {
+			if (weapon[i] < 0) { break; }
+
+			if ((minWeapon != -1 && weapon[i] < minWeapon) || (maxWeapon != -1 && weapon[i] > maxWeapon)) {
+				continue;
+			}
+
+			j += Weapons.mWeapons[weapon[i]].power;
+		}
+
+		return j;
+	}
 
 }
