@@ -2138,32 +2138,6 @@ public class GameState implements Serializable {
 		return j;
 	}
 
-	public boolean HasTradeableItems(Ship sh, SolarSystem warpSystem, int Operation) {
-		int i;
-		Boolean ret = false, thisRet;
-		for (i = 0; i < MAXTRADEITEM; i++) {
-			// trade only if trader is selling and the item has a buy price on the
-			// local system, or trader is buying, and there is a sell price on the
-			// local system.
-			thisRet = false;
-			if (sh.cargo[i] > 0 && Operation == TRADERSELL && BuyPrice[i] > 0) {
-				thisRet = true;
-			} else if (sh.cargo[i] > 0 && Operation == TRADERBUY && SellPrice[i] > 0) { thisRet = true; }
-
-			// Criminals can only buy or sell illegal goods, Noncriminals cannot buy
-			// or sell such items.
-			if (PoliceRecordScore < DUBIOUSSCORE && i != FIREARMS && i != NARCOTICS) {
-				thisRet = false;
-			} else if (PoliceRecordScore >= DUBIOUSSCORE && (i == FIREARMS || i == NARCOTICS)) {
-				thisRet = false;
-			}
-
-			if (thisRet) { ret = true; }
-		}
-
-		return ret;
-	}
-
 	public boolean ENCOUNTERFAMOUS(int a) {
 		return ((a) >= FAMOUSCAPTAIN && (a) <= MAXFAMOUSCAPTAIN);
 	}

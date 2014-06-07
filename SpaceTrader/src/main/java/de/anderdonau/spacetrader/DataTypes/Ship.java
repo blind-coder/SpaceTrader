@@ -87,6 +87,34 @@ public class Ship implements Serializable {
 		return j;
 	}
 
+	public boolean HasTradeableItems(SolarSystem warpSystem, int Operation) {
+		int i;
+		Boolean ret = false, thisRet;
+		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
+			// trade only if trader is selling and the item has a buy price on the
+			// local system, or trader is buying, and there is a sell price on the
+			// local system.
+			thisRet = false;
+			if (cargo[i] > 0 && Operation == GameState.TRADERSELL && gameState.BuyPrice[i] > 0) {
+				thisRet = true;
+			} else if (cargo[i] > 0 && Operation == GameState.TRADERBUY && gameState.SellPrice[i] > 0) {
+				thisRet = true;
+			}
+
+			// Criminals can only buy or sell illegal goods, Noncriminals cannot buy
+			// or sell such items.
+			if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE && i != GameState.FIREARMS && i != GameState.NARCOTICS) {
+				thisRet = false;
+			} else if (gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE && (i == GameState.FIREARMS || i == GameState.NARCOTICS)) {
+				thisRet = false;
+			}
+
+			if (thisRet) { ret = true; }
+		}
+
+		return ret;
+	}
+
 	public int TotalShields() {
 		// *************************************************************************
 		// Calculate total possible shield strength

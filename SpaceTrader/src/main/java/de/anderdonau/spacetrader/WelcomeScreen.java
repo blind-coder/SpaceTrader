@@ -4327,15 +4327,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				// Will there be trade in orbit?
 				if (gameState.EncounterType == GameState.TRADERIGNORE && (gameState
 					.GetRandom(1000) < gameState.ChanceOfTradeInOrbit)) {
-					if (gameState.FilledCargoBays() < gameState.TotalCargoBays() && gameState
-						.HasTradeableItems(gameState.Opponent,
-						                   WarpSystem,
-						                   GameState.TRADERSELL
+					if (gameState.FilledCargoBays() < gameState.TotalCargoBays() && gameState.Opponent
+						.HasTradeableItems(WarpSystem, GameState.TRADERSELL
 						))
 						gameState.EncounterType = GameState.TRADERSELL;
 
 					// we fudge on whether the trader has capacity to carry the stuff he's buying.
-					if (gameState.HasTradeableItems(Ship, WarpSystem, GameState.TRADERBUY
+					if (Ship.HasTradeableItems(WarpSystem, GameState.TRADERBUY
 					) && gameState.EncounterType != GameState.TRADERSELL)
 						gameState.EncounterType = GameState.TRADERBUY;
 				}
