@@ -383,7 +383,7 @@ public class GameState implements Serializable {
 	public static final int           MOON                        = 2;
 	// Array of news events.
 	public static       int           CountDown                   = 3;
-		// Countdown for reset of tradeitems.
+	// Countdown for reset of tradeitems.
 	// Distance from target system,= 0;= arrived
 	static              int           Difficulty                  = NORMAL;     // Difficulty level
 	public final        String[]      levelDesc                   =
@@ -419,15 +419,13 @@ public class GameState implements Serializable {
 		 "Industrial", "Post-industrial", "Hi-tech"};
 	final               String[]      SolarSystemName             =
 		{"Acamar", "Adahn", // The alternate personality for The Nameless One in "Planescape: Torment"
-		 "Aldea", "Andevian", "Antedi",
-		 "Balosnee", "Baratas", "Brax", // One of the heroes in Master of Magic
+		 "Aldea", "Andevian", "Antedi", "Balosnee", "Baratas", "Brax",
+		 // One of the heroes in Master of Magic
 		 "Bretel", // This is a Dutch device for keeping your pants up.
 		 "Calondia", "Campor", "Capelle", // The city I lived in while programming this game
 		 "Carzon", "Castor", // A Greek demi-god
 		 "Cestus", "Cheron", "Courteney", // After Courteney Cox...
-		 "Daled", "Damast", "Davlos",
-		 "Deneb", "Deneva", "Devidia",
-		 "Draylon", "Drema", "Endor",
+		 "Daled", "Damast", "Davlos", "Deneb", "Deneva", "Devidia", "Draylon", "Drema", "Endor",
 		 "Esmee", // One of the witches in Pratchett's Discworld
 		 "Exo", "Ferris",   // Iron
 		 "Festen", // A great Scandinavian movie
@@ -462,16 +460,15 @@ public class GameState implements Serializable {
 		 "Penthara", "Picard", // The enigmatic captain from ST:TNG
 		 "Pollux", // Brother of Castor
 		 "Quator", "Rakhar", "Ran", // A film by Akira Kurosawa
-		 "Regulas", "Relva", "Rhymus",
-		 "Rochani", "Rubicum", // The river Ceasar crossed to get into Rome
-		 "Rutia", "Sarpeidon", "Sefalla",
-		 "Seltrice", "Sigma", "Sol", // That's our own solar system
-		 "Somari", "Stakoron", "Styris",
-		 "Talani", "Tamus", "Tantalos", // A king from a Greek tragedy
+		 "Regulas", "Relva", "Rhymus", "Rochani", "Rubicum",
+		 // The river Ceasar crossed to get into Rome
+		 "Rutia", "Sarpeidon", "Sefalla", "Seltrice", "Sigma", "Sol", // That's our own solar system
+		 "Somari", "Stakoron", "Styris", "Talani", "Tamus", "Tantalos", // A king from a Greek tragedy
 		 "Tanuga", "Tarchannen", "Terosa", "Thera", // A seldom encountered Dutch girl's name
 		 "Titan", // The largest moon of Jupiter
 		 "Torin", // A hero from Master of Magic
-		 "Triacus", "Turkana", "Tyrus", "Umberlee", // A god from AD&D, which has a prominent role in Baldur's Gate
+		 "Triacus", "Turkana", "Tyrus", "Umberlee",
+		 // A god from AD&D, which has a prominent role in Baldur's Gate
 		 "Utopia", // The ultimate goal
 		 "Vadera", "Vagra", "Vandor", "Ventax", "Xenon", "Xerxes", // A Greek hero
 		 "Yew", // A city which is in almost all of the Ultima games
@@ -502,7 +499,7 @@ public class GameState implements Serializable {
 	public              int           Days                        = 0;// Number of days playing
 	public              int           EncounterType               = 0;// Type of current encounter
 	public              int           GalacticChartSystem         = 0;
-		// Current system on Galactic chart
+	// Current system on Galactic chart
 	public              int           LeaveEmpty                  = 0;
 	// Number of cargo bays to leave empty when buying goods
 	public              int           NewsSpecialEventCount       = 0;
@@ -514,9 +511,9 @@ public class GameState implements Serializable {
 	// The short-range chart will display an arrow towards this system if the value is not -1
 	public              int           WarpSystem                  = 0;// Target system for warp
 	public              int           Shortcut1                   = 0;
-		// default shortcut= 1;= Buy Cargo
+	// default shortcut= 1;= Buy Cargo
 	public              int           Shortcut2                   = 1;
-		// default shortcut= 2;= Sell Cargo
+	// default shortcut= 2;= Sell Cargo
 	public              int           Shortcut3                   = 2;
 	// default shortcut= 3;= Shipyard
 	public              int           Shortcut4                   = 10;
@@ -581,7 +578,7 @@ public class GameState implements Serializable {
 	// Do you have the Portable Singularity on board?
 	public              boolean       CommanderFlees              = false;
 	public              boolean       Continuous                  = false;
-		// Continuous attack/flee mode
+	// Continuous attack/flee mode
 	public              boolean       EscapePod                   = false;// Escape Pod in ship
 	public              boolean       GameLoaded                  = false;
 	// Indicates whether a game is loaded
@@ -639,27 +636,30 @@ public class GameState implements Serializable {
 	// Helper functions for Newspaper
 	////////////////////////////////////////////////////
 	public void addNewsEvent(int eventFlag) {
-		if (NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1)
+		if (NewsSpecialEventCount < GameState.MAXSPECIALNEWSEVENTS - 1) {
 			NewsEvents[NewsSpecialEventCount++] = eventFlag;
+		}
 	}
+
 	public boolean isNewsEvent(int eventFlag) {
 		int i;
 
 		for (i = 0; i < NewsSpecialEventCount; i++) {
-			if (NewsEvents[i] == eventFlag)
-				return true;
+			if (NewsEvents[i] == eventFlag) { return true; }
 		}
 		return false;
 	}
+
 	public int latestNewsEvent() {
-		if (NewsSpecialEventCount == 0)
-			return -1;
-		else
+		if (NewsSpecialEventCount == 0) { return -1; } else {
 			return NewsEvents[NewsSpecialEventCount - 1];
+		}
 	}
+
 	public void resetNewsEvents() {
 		NewsSpecialEventCount = 0;
 	}
+
 	public void replaceNewsEvent(int originalEventFlag, int replacementEventFlag) {
 		int i;
 
@@ -667,8 +667,7 @@ public class GameState implements Serializable {
 			addNewsEvent(replacementEventFlag);
 		} else {
 			for (i = 0; i < NewsSpecialEventCount; i++) {
-				if (NewsEvents[i] == originalEventFlag)
-					NewsEvents[i] = replacementEventFlag;
+				if (NewsEvents[i] == originalEventFlag) { NewsEvents[i] = replacementEventFlag; }
 			}
 		}
 	}
@@ -2163,38 +2162,6 @@ public class GameState implements Serializable {
 		}
 
 		return ret;
-	}
-
-	int TotalShields(Ship Sh) {
-		// *************************************************************************
-		// Calculate total possible shield strength
-		// *************************************************************************
-		int i;
-		int j;
-
-		j = 0;
-		for (i = 0; i < MAXSHIELD; ++i) {
-			if (Sh.shield[i] < 0) { break; }
-			j += Shields.mShields[Sh.shield[i]].power;
-		}
-
-		return j;
-	}
-
-	int TotalShieldStrength(Ship Sh) {
-		// *************************************************************************
-		// Calculate total shield strength
-		// *************************************************************************
-		int i;
-		int k;
-
-		k = 0;
-		for (i = 0; i < MAXSHIELD; ++i) {
-			if (Sh.shield[i] < 0) { break; }
-			k += Sh.shieldStrength[i];
-		}
-
-		return k;
 	}
 
 	public boolean ENCOUNTERFAMOUS(int a) {

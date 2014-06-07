@@ -86,4 +86,38 @@ public class Ship implements Serializable {
 		}
 		return j;
 	}
+
+	public int TotalShields() {
+		// *************************************************************************
+		// Calculate total possible shield strength
+		// *************************************************************************
+		int i;
+		int j;
+
+		j = 0;
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
+			if (shield[i] < 0) { break; }
+			j += Shields.mShields[shield[i]].power;
+		}
+
+		return j;
+	}
+
+	public int TotalShieldStrength() {
+		// *************************************************************************
+		// Calculate total shield strength
+		// *************************************************************************
+		int i;
+		int k;
+
+		k = 0;
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
+			if (shield[i] < 0) { break; }
+			k += shieldStrength[i];
+		}
+
+		return k;
+	}
+
+
 }

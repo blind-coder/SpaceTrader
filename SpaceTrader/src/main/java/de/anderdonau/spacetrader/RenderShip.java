@@ -111,8 +111,8 @@ public class RenderShip extends View {
 			dmgPercent = (mShip.hull * 100) / 200;
 			shieldPercent = (mShip.shieldStrength[0] * 100 / GameState.ESHIELDPOWER);
 		} else {
-			if (gameState.TotalShields(mShip) > 0){
-				shieldPercent = (gameState.TotalShieldStrength(mShip)*100)/gameState.TotalShields(mShip);
+			if (mShip.TotalShields() > 0) {
+				shieldPercent = (mShip.TotalShieldStrength() * 100) / mShip.TotalShields();
 			} else {
 				shieldPercent = -1;
 			}
