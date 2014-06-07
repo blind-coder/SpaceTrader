@@ -158,7 +158,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				} else {
 					// Initiate a generic request.
 					AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-						.build();
+						.addTestDevice("FE95DA7F3FE40606FA7F49DCE9E93A84").build();
 
 					// Load the adView with the ad request.
 					adView.loadAd(adRequest);
