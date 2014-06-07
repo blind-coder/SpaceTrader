@@ -173,4 +173,8 @@ public class Ship implements Serializable {
 		return j;
 	}
 
+	public boolean isCloakedTo(Ship Opp) {
+		return (gameState.HasGadget(this, GameState.CLOAKINGDEVICE) && (gameState.EngineerSkill(this
+		) > gameState.EngineerSkill(Opp)));
+	}
 }

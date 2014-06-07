@@ -273,7 +273,7 @@ public class FragmentEncounter extends Fragment {
 			gameState.EncounterType == GameState.DRAGONFLYIGNORE ||
 			gameState.EncounterType == GameState.PIRATEIGNORE ||
 			gameState.EncounterType == GameState.SCARABIGNORE) {
-			if (gameState.Cloaked(gameState.Ship, gameState.Opponent))
+			if (gameState.Ship.isCloakedTo(gameState.Opponent))
 				EncounterText.setText("It doesn't notice you.");
 			else
 				EncounterText.setText("it ignores you.");

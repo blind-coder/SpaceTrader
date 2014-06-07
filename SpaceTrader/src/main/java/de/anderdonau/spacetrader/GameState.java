@@ -1250,7 +1250,7 @@ public class GameState implements Serializable {
 		return (HasGadget(this.Ship, FUELCOMPACTOR) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
 	}
 
-	boolean HasGadget(Ship sh, int Gg) {
+	public boolean HasGadget(Ship sh, int Gg) {
 		int i;
 
 		for (i = 0; i < MAXGADGET; ++i) {
@@ -1496,7 +1496,7 @@ public class GameState implements Serializable {
 		return AdaptDifficulty(MaxSkill);
 	}
 
-	int EngineerSkill(Ship Sh) {
+	public int EngineerSkill(Ship Sh) {
 		// *************************************************************************
 		// Engineer skill
 		// *************************************************************************
@@ -1833,10 +1833,6 @@ public class GameState implements Serializable {
 				Credits = 0;
 			}
 		}
-	}
-
-	public boolean Cloaked(Ship Sh, Ship Opp) {
-		return (HasGadget(Sh, CLOAKINGDEVICE) && (EngineerSkill(Sh) > EngineerSkill(Opp)));
 	}
 
 	public int STRENGTHPOLICE(SolarSystem a) {

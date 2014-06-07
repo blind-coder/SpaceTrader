@@ -4116,7 +4116,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 8 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 1 + GameState.getDifficulty();
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.SPACEMONSTERIGNORE;
 				else
 					gameState.EncounterType = GameState.SPACEMONSTERATTACK;
@@ -4132,7 +4132,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.SCARABIGNORE;
 				else
 					gameState.EncounterType = GameState.SCARABATTACK;
@@ -4146,7 +4146,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.DRAGONFLYIGNORE;
 				else
 					gameState.EncounterType = GameState.DRAGONFLYATTACK;
@@ -4197,12 +4197,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.GenerateOpponent(GameState.POLICE);
 				gameState.EncounterType = GameState.POLICEIGNORE;
 				// If you are cloaked, they don't see you
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.POLICEIGNORE;
 				else if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
 					// If you're a criminal, the police will tend to attack
 					if (gameState.Opponent.TotalWeapons(-1, -1) <= 0) {
-						if (gameState.Cloaked(gameState.Opponent, Ship))
+						if (gameState.Opponent.isCloakedTo(Ship))
 							gameState.EncounterType = GameState.POLICEIGNORE;
 						else
 							gameState.EncounterType = GameState.POLICEFLEE;
@@ -4212,7 +4212,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					else if (gameState
 						.GetRandom(GameState.ELITESCORE) > (gameState.ReputationScore / (1 + gameState.Opponent.type)))
 						gameState.EncounterType = GameState.POLICEATTACK;
-					else if (gameState.Cloaked(gameState.Opponent, Ship))
+					else if (gameState.Opponent.isCloakedTo(Ship))
 						gameState.EncounterType = GameState.POLICEIGNORE;
 					else
 						gameState.EncounterType = GameState.POLICEFLEE;
@@ -4246,10 +4246,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				}
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
-				if (gameState.EncounterType == GameState.POLICEIGNORE && gameState
-					.Cloaked(gameState.Opponent,
-					         Ship
-					)) {
+				if (gameState.EncounterType == GameState.POLICEIGNORE && gameState.Opponent.isCloakedTo(
+					Ship
+				)) {
 					--gameState.Clicks;
 					continue;
 				}
@@ -4272,7 +4271,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.GenerateOpponent(GameState.PIRATE);
 
 				// If you have a cloak, they don't see you
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.PIRATEIGNORE;
 
 					// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
@@ -4293,9 +4292,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 				// If they ignore you or flee and you can't see them, the encounter doesn't take place
 				if ((gameState.EncounterType == GameState.PIRATEIGNORE || gameState.EncounterType == GameState.PIRATEFLEE) && gameState
-					.Cloaked(gameState.Opponent,
-					         Ship
-					)) {
+					.Opponent.isCloakedTo(Ship)) {
 					--gameState.Clicks;
 					continue;
 				}
@@ -4311,13 +4308,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.GenerateOpponent(GameState.TRADER);
 				gameState.EncounterType = GameState.TRADERIGNORE;
 				// If you are cloaked, they don't see you
-				if (gameState.Cloaked(Ship, gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent))
 					gameState.EncounterType = GameState.TRADERIGNORE;
 					// If you're a criminal, traders tend to flee if you've got at least some reputation
 				else if (gameState.PoliceRecordScore <= GameState.CRIMINALSCORE) {
 					if (gameState
 						.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type)) {
-						if (gameState.Cloaked(gameState.Opponent, Ship))
+						if (gameState.Opponent.isCloakedTo(Ship))
 							gameState.EncounterType = GameState.TRADERIGNORE;
 						else
 							gameState.EncounterType = GameState.TRADERFLEE;
@@ -4341,9 +4338,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				// If they ignore you and you can't see them, the encounter doesn't take place
 				if ((gameState.EncounterType == GameState.TRADERIGNORE || gameState.EncounterType == GameState.TRADERFLEE ||
 					gameState.EncounterType == GameState.TRADERSELL || gameState.EncounterType == GameState.TRADERBUY) && gameState
-					.Cloaked(gameState.Opponent,
-					         Ship
-					)) {
+					.Opponent.isCloakedTo(Ship)) {
 					--gameState.Clicks;
 					continue;
 				}
