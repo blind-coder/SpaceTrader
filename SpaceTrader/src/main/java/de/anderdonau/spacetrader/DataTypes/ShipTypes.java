@@ -8,51 +8,71 @@
 
 package de.anderdonau.spacetrader.DataTypes;
 
-import android.graphics.drawable.GradientDrawable;
-
 import de.anderdonau.spacetrader.GameState;
 import de.anderdonau.spacetrader.R;
 
 public class ShipTypes {
-	public static final int          FLEA                        = 0;
-	public static final int          GNAT                        = 1;
-	public static final int          FIREFLY                     = 2;
-	public static final int          MOSQUITO                    = 3;
-	public static final int          BUMBLEBEE                   = 4;
-	public static final int          BEETLE                      = 5;
-	public static final int          HORNET                      = 6;
-	public static final int          GRASSHOPPER                 = 7;
-	public static final int          TERMITE                     = 8;
-	public static final int          WASP                        = 9;
-	public static final int          SPACEMONSTER                = 10;
-	public static final int          DRAGONFLY                   = 11;
-	public static final int          MANTIS                      = 12;
-	public static final int          SCARAB                      = 13;
-	public static final int          BOTTLE                      = 14;
+	public static final int FLEA         = 0;
+	public static final int GNAT         = 1;
+	public static final int FIREFLY      = 2;
+	public static final int MOSQUITO     = 3;
+	public static final int BUMBLEBEE    = 4;
+	public static final int BEETLE       = 5;
+	public static final int HORNET       = 6;
+	public static final int GRASSHOPPER  = 7;
+	public static final int TERMITE      = 8;
+	public static final int WASP         = 9;
+	public static final int SPACEMONSTER = 10;
+	public static final int DRAGONFLY    = 11;
+	public static final int MANTIS       = 12;
+	public static final int SCARAB       = 13;
+	public static final int BOTTLE       = 14;
 
-	public ShipType[] ShipTypes;
+	public static ShipType[] ShipTypes = {new ShipType("Flea", 10, 0, 0, 0, 1, GameState.MAXRANGE, 4,
+	                                                   1, 2000, 5, 2, 25, -1, -1, 0, 1, 0,
+	                                                   R.drawable.flea_ssck,
+	                                                   R.drawable.flea_ssck_damaged,
+	                                                   R.drawable.flea_ssck_shield
+	), new ShipType("Gnat", 15, 1, 0, 1, 1, 14, 5, 2, 10000, 50, 28, 100, 0, 0, 0, 1, 1,
+	                R.drawable.gnat, R.drawable.gnat_damaged, R.drawable.gnat_shield
+	), new ShipType("Firefly", 20, 1, 1, 1, 1, 17, 5, 3, 25000, 75, 20, 100, 0, 0, 0, 1, 1,
+	                R.drawable.firefly, R.drawable.firefly_damaged, R.drawable.firefly_shield
+	), new ShipType("Mosquito", 15, 2, 1, 1, 1, 13, 5, 5, 30000, 100, 20, 100, 0, 1, 0, 1, 1,
+	                R.drawable.mosquito, R.drawable.mosquito_damaged, R.drawable.mosquito_shield
+	), new ShipType("Bumblebee", 25, 1, 2, 2, 2, 15, 5, 7, 60000, 125, 15, 100, 1, 1, 0, 1, 2,
+	                R.drawable.bumblebee, R.drawable.bumblebee_damaged, R.drawable.bumblebee_shield
+	), new ShipType("Beetle", 50, 0, 1, 1, 3, 14, 5, 10, 80000, 50, 3, 50, -1, -1, 0, 1, 2,
+	                R.drawable.beetle, R.drawable.beetle_damaged, R.drawable.beetle_shield
+	), new ShipType("Hornet", 20, 3, 2, 1, 2, 16, 6, 15, 100000, 200, 6, 150, 2, 3, 1, 2, 3,
+	                R.drawable.hornet, R.drawable.hornet_damaged, R.drawable.hornet_shield
+	), new ShipType("Grasshopper", 30, 2, 2, 3, 3, 15, 6, 15, 150000, 300, 2, 150, 3, 4, 2, 3, 3,
+	                R.drawable.grasshopper, R.drawable.grasshopper_damaged,
+	                R.drawable.grasshopper_shield
+	), new ShipType("Termite", 60, 1, 3, 2, 3, 13, 7, 20, 225000, 300, 2, 200, 4, 5, 3, 4, 4,
+	                R.drawable.termite, R.drawable.termite_damaged, R.drawable.termite_shield
+	), new ShipType("Wasp", 35, 3, 2, 2, 3, 14, 7, 20, 300000, 500, 2, 200, 5, 6, 4, 5, 4,
+	                R.drawable.wasp, R.drawable.wasp_damaged, R.drawable.wasp_shield
+	),
+	                                      // The ships below can't be bought
+	                                      new ShipType("Spacemonster", 0, 3, 0, 0, 1, 1, 8, 1, 500000,
+	                                                   0, 0, 500, 8, 8, 8, 1, 4,
+	                                                   R.drawable.spacemonster,
+	                                                   R.drawable.spacemonster_damaged,
+	                                                   R.drawable.spacemonster_shield
+	                                      ), new ShipType("Dragonfly", 0, 2, 3, 2, 1, 1, 8, 1, 500000,
+	                                                      0, 0, 10, 8, 8, 8, 1, 1,
+	                                                      R.drawable.dragonfly,
+	                                                      R.drawable.dragonfly_damaged,
+	                                                      R.drawable.dragonfly_shield
+	), new ShipType("Mantis", 0, 3, 1, 3, 3, 1, 8, 1, 500000, 0, 0, 300, 8, 8, 8, 1, 2,
+	                R.drawable.mantis, R.drawable.mantis_damaged, R.drawable.mantis_shield
+	), new ShipType("Scarab", 20, 2, 0, 0, 2, 1, 8, 1, 500000, 0, 0, 400, 8, 8, 8, 1, 3,
+	                R.drawable.scarab, R.drawable.scarab_damaged, R.drawable.scarab_shield
+	), new ShipType("Bottle", 0, 0, 0, 0, 0, 1, 8, 1, 100, 0, 0, 10, 8, 8, 8, 1, 1, R.drawable.bottle,
+	                R.drawable.bottle_damaged, R.drawable.bottle_shield
+	)};
 
-	public ShipTypes() {
-		this.ShipTypes = new ShipType[GameState.MAXSHIPTYPE + GameState.EXTRASHIPS];
-		this.ShipTypes[0] = new ShipType("Flea", 10, 0, 0, 0, 1, GameState.MAXRANGE, 4, 1, 2000, 5, 2, 25, -1, -1, 0, 1, 0, R.drawable.flea_ssck, R.drawable.flea_ssck_damaged, R.drawable.flea_ssck_shield);
-		this.ShipTypes[1] = new ShipType("Gnat", 15, 1, 0, 1, 1, 14, 5, 2, 10000, 50, 28, 100, 0, 0, 0, 1, 1, R.drawable.gnat, R.drawable.gnat_damaged, R.drawable.gnat_shield);
-		this.ShipTypes[2] = new ShipType("Firefly", 20, 1, 1, 1, 1, 17, 5, 3, 25000, 75, 20, 100, 0, 0, 0, 1, 1, R.drawable.firefly, R.drawable.firefly_damaged, R.drawable.firefly_shield);
-		this.ShipTypes[3] = new ShipType("Mosquito", 15, 2, 1, 1, 1, 13, 5, 5, 30000, 100, 20, 100, 0, 1, 0, 1, 1, R.drawable.mosquito, R.drawable.mosquito_damaged, R.drawable.mosquito_shield);
-		this.ShipTypes[4] = new ShipType("Bumblebee", 25, 1, 2, 2, 2, 15, 5, 7, 60000, 125, 15, 100, 1, 1, 0, 1, 2, R.drawable.bumblebee, R.drawable.bumblebee_damaged, R.drawable.bumblebee_shield);
-		this.ShipTypes[5] = new ShipType("Beetle", 50, 0, 1, 1, 3, 14, 5, 10, 80000, 50, 3, 50, -1, -1, 0, 1, 2, R.drawable.beetle, R.drawable.beetle_damaged, R.drawable.beetle_shield);
-		this.ShipTypes[6] = new ShipType("Hornet", 20, 3, 2, 1, 2, 16, 6, 15, 100000, 200, 6, 150, 2, 3, 1, 2, 3, R.drawable.hornet, R.drawable.hornet_damaged, R.drawable.hornet_shield);
-		this.ShipTypes[7] = new ShipType("Grasshopper", 30, 2, 2, 3, 3, 15, 6, 15, 150000, 300, 2, 150, 3, 4, 2, 3, 3, R.drawable.grasshopper, R.drawable.grasshopper_damaged, R.drawable.grasshopper_shield);
-		this.ShipTypes[8] = new ShipType("Termite", 60, 1, 3, 2, 3, 13, 7, 20, 225000, 300, 2, 200, 4, 5, 3, 4, 4, R.drawable.termite, R.drawable.termite_damaged, R.drawable.termite_shield);
-		this.ShipTypes[9] = new ShipType("Wasp", 35, 3, 2, 2, 3, 14, 7, 20, 300000, 500, 2, 200, 5, 6, 4, 5, 4, R.drawable.wasp, R.drawable.wasp_damaged, R.drawable.wasp_shield);
-		// The ships below can't be bought
-		this.ShipTypes[10] = new ShipType("Spacemonster", 0, 3, 0, 0, 1, 1, 8, 1, 500000, 0, 0, 500, 8, 8, 8, 1, 4, R.drawable.spacemonster, R.drawable.spacemonster_damaged, R.drawable.spacemonster_shield);
-		this.ShipTypes[11] = new ShipType("Dragonfly", 0, 2, 3, 2, 1, 1, 8, 1, 500000, 0, 0, 10, 8, 8, 8, 1, 1, R.drawable.dragonfly, R.drawable.dragonfly_damaged, R.drawable.dragonfly_shield);
-		this.ShipTypes[12] = new ShipType("Mantis", 0, 3, 1, 3, 3, 1, 8, 1, 500000, 0, 0, 300, 8, 8, 8, 1, 2, R.drawable.mantis, R.drawable.mantis_damaged, R.drawable.mantis_shield);
-		this.ShipTypes[13] = new ShipType("Scarab", 20, 2, 0, 0, 2, 1, 8, 1, 500000, 0, 0, 400, 8, 8, 8, 1, 3, R.drawable.scarab, R.drawable.scarab_damaged, R.drawable.scarab_shield);
-		this.ShipTypes[14] = new ShipType("Bottle", 0, 0, 0, 0, 0, 1, 8, 1, 100, 0, 0, 10, 8, 8, 8, 1, 1, R.drawable.bottle, R.drawable.bottle_damaged, R.drawable.bottle_shield);
-	}
-
-	public class ShipType {
+	public static class ShipType {
 		public String name;
 		public int    cargoBays;   // Number of cargo bays
 		public int    weaponSlots; // Number of lasers possible

@@ -20,11 +20,11 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentShipInfo extends Fragment {
 	private ShipTypes.ShipType mType;
-	private GameState gameState;
+	private GameState          gameState;
 
 	public FragmentShipInfo(GameState gameState) {
 		this.gameState = gameState;
-		mType = gameState.ShipTypes.ShipTypes[gameState.ShipInfoId];
+		mType = ShipTypes.ShipTypes[gameState.ShipInfoId];
 	}
 
 	@SuppressWarnings("ConstantConditions")

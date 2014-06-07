@@ -177,4 +177,25 @@ public class Ship implements Serializable {
 		return (gameState.HasGadget(this, GameState.CLOAKINGDEVICE) && (gameState.EngineerSkill(this
 		) > gameState.EngineerSkill(Opp)));
 	}
+
+	public boolean AnyEmptySlots() {
+		int j;
+
+		for (j = 0; j < ShipTypes.ShipTypes[type].weaponSlots; ++j) {
+			if (weapon[j] < 0) {
+				return true;
+			}
+		}
+		for (j = 0; j < ShipTypes.ShipTypes[type].shieldSlots; ++j) {
+			if (shield[j] < 0) {
+				return true;
+			}
+		}
+		for (j = 0; j < ShipTypes.ShipTypes[type].gadgetSlots; ++j) {
+			if (gadget[j] < 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

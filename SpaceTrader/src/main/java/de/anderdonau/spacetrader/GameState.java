@@ -625,8 +625,7 @@ public class GameState implements Serializable {
 	public Ship         Opponent;
 	public String       NameCommander;
 	public Random rand = new Random();
-	ShipTypes ShipTypes = new ShipTypes();
-	Weapons   Weapons   = new Weapons();
+	Weapons Weapons = new Weapons();
 	CrewMember[] CrewMember;
 	Ship         SpaceMonster;
 	Ship         Scarab;
@@ -1580,27 +1579,6 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		if (!ReserveMoney) { return Credits; }
 		return Math.max(0, Credits - MercenaryMoney() - InsuranceMoney());
-	}
-
-	public boolean AnyEmptySlots(Ship ship) {
-		int j;
-
-		for (j = 0; j < ShipTypes.ShipTypes[ship.type].weaponSlots; ++j) {
-			if (ship.weapon[j] < 0) {
-				return true;
-			}
-		}
-		for (j = 0; j < ShipTypes.ShipTypes[ship.type].shieldSlots; ++j) {
-			if (ship.shield[j] < 0) {
-				return true;
-			}
-		}
-		for (j = 0; j < ShipTypes.ShipTypes[ship.type].gadgetSlots; ++j) {
-			if (ship.gadget[j] < 0) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public int GetFirstEmptySlot(int Slots, int[] Item) {

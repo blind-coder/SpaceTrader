@@ -22,16 +22,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.Ship;
+import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentEncounter extends Fragment {
 	WelcomeScreen welcomeScreen;
-	GameState gameState;
+	GameState     gameState;
 	public Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder,
 		btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
 	public ProgressBar pBarEncounter;
-	public RenderShip EncounterPlayerShip, EncounterOpponentShip;
-	public TextView    EncounterText;
-	public boolean     playerShipNeedsUpdate, opponentShipNeedsUpdate;
+	public RenderShip  EncounterPlayerShip, EncounterOpponentShip;
+	public TextView EncounterText;
+	public boolean  playerShipNeedsUpdate, opponentShipNeedsUpdate;
 
 	public FragmentEncounter(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -87,33 +88,31 @@ public class FragmentEncounter extends Fragment {
 			                    gameState.Clicks == 1 ? "" : "s",
 			                    gameState.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]
 			);
-			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType))
+			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
 				buf += "a police ";
-			else if (gameState.ENCOUNTERPIRATE(gameState.EncounterType)) {
-				if (Opponent.type == GameState.MANTISTYPE)
-					buf += "an alien ";
-				else
+			} else if (gameState.ENCOUNTERPIRATE(gameState.EncounterType)) {
+				if (Opponent.type == GameState.MANTISTYPE) { buf += "an alien "; } else {
 					buf += "a pirate ";
-			} else if (gameState.ENCOUNTERTRADER(gameState.EncounterType))
+				}
+			} else if (gameState.ENCOUNTERTRADER(gameState.EncounterType)) {
 				buf += "a trader ";
-			else if (gameState.ENCOUNTERMONSTER(gameState.EncounterType))
+			} else if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
 				buf += "";
-			else if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER)
+			} else if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 				buf += "a drifting ship ";
-			else if (gameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
+			} else if (gameState.EncounterType == GameState.CAPTAINAHABENCOUNTER) {
 				buf += "the famous Captain Ahab ";
-			else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
+			} else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER) {
 				buf += "Captain Conrad ";
-			else if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
+			} else if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER) {
 				buf += "Captain Huie ";
-			else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || gameState.EncounterType == GameState.BOTTLEGOODENCOUNTER)
+			} else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || gameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
 				buf += "a floating bottle. ";
-			else
-				buf += "a stolen ";
+			} else { buf += "a stolen "; }
 			if (gameState.EncounterType != GameState.MARIECELESTEENCOUNTER && gameState.EncounterType != GameState.CAPTAINAHABENCOUNTER &&
 				gameState.EncounterType != GameState.CAPTAINCONRADENCOUNTER && gameState.EncounterType != GameState.CAPTAINHUIEENCOUNTER &&
 				gameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && gameState.EncounterType != GameState.BOTTLEGOODENCOUNTER) {
-				buf += gameState.ShipTypes.ShipTypes[Opponent.type].name;
+				buf += ShipTypes.ShipTypes[Opponent.type].name;
 			}
 			buf += ".\n";
 			buf += EncounterText.getText().toString();
@@ -125,19 +124,18 @@ public class FragmentEncounter extends Fragment {
 		d = (int) Math.ceil(Math.sqrt(Ship.tribbles / 250));
 		d = Math.min(d, GameState.TRIBBLESONSCREEN);
 		for (i = 0; i <= d; ++i) {
-			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
-			                                                  welcomeScreen.getPackageName()
+			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i),
+			                                                       "id", welcomeScreen.getPackageName()
 			);
 			ImageView imageView = (ImageView) rootView.findViewById(resID);
 			if (imageView == null) {
 				continue;
 			}
-			ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView
-				                                                                             .getLayoutParams()
+			ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(
+				imageView.getLayoutParams()
 			);
 			marginParams.setMargins(gameState.GetRandom(container.getWidth() - tribble.getWidth()),
-			                        gameState.GetRandom(container.getHeight() - tribble.getHeight()),
-			                        0, 0
+			                        gameState.GetRandom(container.getHeight() - tribble.getHeight()), 0, 0
 			);
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
 			imageView.setLayoutParams(layoutParams);
@@ -145,8 +143,8 @@ public class FragmentEncounter extends Fragment {
 			imageView.setVisibility(View.VISIBLE);
 		}
 		for (; i <= GameState.TRIBBLESONSCREEN; ++i) {
-			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
-			                                                  welcomeScreen.getPackageName()
+			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i),
+			                                                       "id", welcomeScreen.getPackageName()
 			);
 			ImageView imageView = (ImageView) rootView.findViewById(resID);
 			if (imageView == null) {
@@ -156,6 +154,7 @@ public class FragmentEncounter extends Fragment {
 		}
 		return rootView;
 	}
+
 	public void EncounterButtons() {
 		btnInt.setVisibility(View.INVISIBLE);
 		btnAttack.setVisibility(View.INVISIBLE);
@@ -231,6 +230,7 @@ public class FragmentEncounter extends Fragment {
 		}
 		*/
 	}
+
 	public void EncounterDisplayShips() {
 		// *************************************************************************
 		// Display on the encounter screen the ships (and also wipe it)
@@ -244,6 +244,7 @@ public class FragmentEncounter extends Fragment {
 			playerShipNeedsUpdate = false;
 		}
 	}
+
 	void EncounterDisplayNextAction(Boolean FirstDisplay) {
 		// *************************************************************************
 		// Display on the encounter screen what the next action will be
@@ -251,8 +252,9 @@ public class FragmentEncounter extends Fragment {
 		if (gameState.EncounterType == GameState.POLICEINSPECTION) {
 			EncounterText.setText("The police summon you to submit to an inspection.");
 		} else if (gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			EncounterText
-				.setText("\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\"");
+			EncounterText.setText(
+				"\"We know you removed illegal goods from the Marie Celeste!\nYou must give them up at once!\""
+			);
 		} else if (FirstDisplay && gameState.EncounterType == GameState.POLICEATTACK && gameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
 			EncounterText.setText("The police hail they want you to surrender.");
 		} else if (gameState.EncounterType == GameState.POLICEFLEE ||
@@ -273,18 +275,17 @@ public class FragmentEncounter extends Fragment {
 			gameState.EncounterType == GameState.DRAGONFLYIGNORE ||
 			gameState.EncounterType == GameState.PIRATEIGNORE ||
 			gameState.EncounterType == GameState.SCARABIGNORE) {
-			if (gameState.Ship.isCloakedTo(gameState.Opponent))
+			if (gameState.Ship.isCloakedTo(gameState.Opponent)) {
 				EncounterText.setText("It doesn't notice you.");
-			else
-				EncounterText.setText("it ignores you.");
+			} else { EncounterText.setText("it ignores you."); }
 		} else if (gameState.EncounterType == GameState.TRADERSELL || gameState.EncounterType == GameState.TRADERBUY) {
 			EncounterText.setText("You are hailed with an offer to trade goods.");
 		} else if (gameState.EncounterType == GameState.TRADERSURRENDER || gameState.EncounterType == GameState.PIRATESURRENDER) {
 			EncounterText.setText("Your opponent hails that he surrenders to you.");
 		} else if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER) {
 			EncounterText.setText("The Marie Celeste appears to be completely abandoned.");
-		} else if (gameState
-			.ENCOUNTERFAMOUS(gameState.EncounterType) && gameState.EncounterType != GameState.FAMOUSCAPATTACK) {
+		} else if (gameState.ENCOUNTERFAMOUS(gameState.EncounterType
+		) && gameState.EncounterType != GameState.FAMOUSCAPATTACK) {
 			EncounterText.setText("The Captain requests a brief meeting with you.");
 		} else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER || gameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
 			EncounterText.setText("It appears to be a rare bottle of Captain Marmoset's Skill Tonic!");

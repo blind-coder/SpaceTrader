@@ -23,7 +23,7 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentPersonnelRoster extends Fragment {
-	View rootView;
+	View      rootView;
 	GameState gameState;
 
 	public FragmentPersonnelRoster(GameState gameState) {
@@ -81,7 +81,7 @@ public class FragmentPersonnelRoster extends Fragment {
 				tv = (TextView) rootView.findViewById(R.id.txtNameCrew2);
 				btn = (Button) rootView.findViewById(R.id.btnFireCrew2);
 			}
-			ShipTypes.ShipType Ship = gameState.ShipTypes.ShipTypes[gameState.Ship.type];
+			ShipTypes.ShipType Ship = ShipTypes.ShipTypes[gameState.Ship.type];
 			if (Ship.crewQuarters <= i + 1) {
 				tl.setVisibility(View.INVISIBLE);
 				btn.setVisibility(View.INVISIBLE);

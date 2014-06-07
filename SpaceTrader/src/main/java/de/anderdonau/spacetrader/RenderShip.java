@@ -73,14 +73,13 @@ public class RenderShip extends View {
 			bitmap_shield = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_shield);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_damaged);
 		} else {
-			bitmap = BitmapFactory.decodeResource(getResources(),
-			                                      gameState.ShipTypes.ShipTypes[mShip.type].drawable
+			bitmap = BitmapFactory.decodeResource(getResources(), ShipTypes.ShipTypes[mShip.type].drawable
 			);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(),
-			                                              gameState.ShipTypes.ShipTypes[mShip.type].drawable_damaged
+			                                              ShipTypes.ShipTypes[mShip.type].drawable_damaged
 			);
 			bitmap_shield = BitmapFactory.decodeResource(getResources(),
-			                                             gameState.ShipTypes.ShipTypes[mShip.type].drawable_shield
+			                                             ShipTypes.ShipTypes[mShip.type].drawable_shield
 			);
 		}
 	}
@@ -120,7 +119,7 @@ public class RenderShip extends View {
 			if (mShip == gameState.Ship){
 				dmgPercent = (mShip.hull * 100) / gameState.GetHullStrength();
 			} else {
-				dmgPercent = (mShip.hull * 100) / gameState.ShipTypes.ShipTypes[mShip.type].hullStrength;
+				dmgPercent = (mShip.hull * 100) / ShipTypes.ShipTypes[mShip.type].hullStrength;
 			}
 		}
 

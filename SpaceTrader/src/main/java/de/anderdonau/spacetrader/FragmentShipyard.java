@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Ship;
+import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentShipyard extends Fragment {
@@ -62,7 +63,7 @@ public class FragmentShipyard extends Fragment {
 		}
 
 		btn = (Button) rootView.findViewById(R.id.btnShipyardBuyNewShip);
-		if (CURSYSTEM.techLevel >= gameState.ShipTypes.ShipTypes[0].minTechLevel) {
+		if (CURSYSTEM.techLevel >= ShipTypes.ShipTypes[0].minTechLevel) {
 			btn.setText("Buy New Ship");
 		} else {
 			btn.setText("Ship Information");
@@ -70,7 +71,7 @@ public class FragmentShipyard extends Fragment {
 
 		btn = (Button) rootView.findViewById(R.id.btnShipyardBuyEscapePod);
 		if (gameState.EscapePod || gameState
-			.ToSpend() < 2000 || CURSYSTEM.techLevel < gameState.ShipTypes.ShipTypes[0].minTechLevel) {
+			.ToSpend() < 2000 || CURSYSTEM.techLevel < ShipTypes.ShipTypes[0].minTechLevel) {
 			btn.setVisibility(View.INVISIBLE);
 		} else {
 			btn.setVisibility(View.VISIBLE);
@@ -85,7 +86,7 @@ public class FragmentShipyard extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelCost);
 		if (gameState.GetFuel() < gameState.GetFuelTanks()) {
 			tv.setText(String.format("A full tank costs %d cr.", (gameState.GetFuelTanks() - gameState
-				.GetFuel()) * gameState.ShipTypes.ShipTypes[Ship.type].costOfFuel
+				.GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel
 			)
 			);
 		} else {
@@ -101,7 +102,7 @@ public class FragmentShipyard extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardRepairsNeeded);
 		if (Ship.hull < gameState.GetHullStrength()) {
 			tv.setText(String.format("Full repair will cost %d cr.", (gameState
-				.GetHullStrength() - Ship.hull) * gameState.ShipTypes.ShipTypes[Ship.type].repairCosts
+				.GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
 			)
 			);
 		} else {
@@ -109,7 +110,7 @@ public class FragmentShipyard extends Fragment {
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardNewShipsForSale);
-		if (CURSYSTEM.techLevel >= gameState.ShipTypes.ShipTypes[0].minTechLevel) {
+		if (CURSYSTEM.techLevel >= ShipTypes.ShipTypes[0].minTechLevel) {
 			tv.setText("There are new ships for sale.");
 		} else {
 			tv.setText("No new ships are for sale.");
@@ -121,7 +122,7 @@ public class FragmentShipyard extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardBuyEscapePod);
 		if (gameState.EscapePod) {
 			tv.setText("You have an escape pod installed.");
-		} else if (CURSYSTEM.techLevel < gameState.ShipTypes.ShipTypes[0].minTechLevel) {
+		} else if (CURSYSTEM.techLevel < ShipTypes.ShipTypes[0].minTechLevel) {
 			tv.setText("No escape pods are for sale.");
 		} else if (gameState.ToSpend() < 2000) {
 			tv.setText("You need 2000 cr. for an escape pod.");
