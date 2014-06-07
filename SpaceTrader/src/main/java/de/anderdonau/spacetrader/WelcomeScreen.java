@@ -1013,7 +1013,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int MaxFuel;
 		int Parsecs;
 
-		MaxFuel = (gameState.GetFuelTanks() - gameState
+		MaxFuel = (gameState.Ship.GetFuelTanks() - gameState.Ship
 			.GetFuel()) * ShipTypes.ShipTypes[gameState.Ship.type].costOfFuel;
 		amount = Math.min(amount, MaxFuel);
 		amount = Math.min(amount, gameState.Credits);
@@ -1065,7 +1065,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int MaxRepairs;
 		int Percentage;
 
-		MaxRepairs = (gameState
+		MaxRepairs = (gameState.Ship
 			.GetHullStrength() - gameState.Ship.hull) * ShipTypes.ShipTypes[gameState.Ship.type].repairCosts;
 		amount = Math.min(amount, MaxRepairs);
 		amount = Math.min(amount, gameState.Credits);
@@ -2087,7 +2087,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 			if (gameState.WormholeExists(COMMANDER.curSystem, i)) { return i; } else if (gameState
 				.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
-				) <= gameState.GetFuel() && gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
+				) <= gameState.Ship.GetFuel() && gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
 			) > 0) { return i; }
 
 			if (Back) { --i; } else { ++i; }
@@ -2929,7 +2929,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.ArrivedViaWormhole = true;
 		} else {
 			Distance = gameState.RealDistance(CURSYSTEM, WarpSystem);
-			gameState.Ship.fuel -= Math.min(Distance, gameState.GetFuel());
+			gameState.Ship.fuel -= Math.min(Distance, gameState.Ship.GetFuel());
 			gameState.ArrivedViaWormhole = false;
 		}
 
@@ -4061,9 +4061,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			// Engineer may do some repairs
 			Repairs = gameState.GetRandom(Ship.EngineerSkill()) >> 1;
 			Ship.hull += Repairs;
-			if (Ship.hull > gameState.GetHullStrength()) {
-				Repairs = Ship.hull - gameState.GetHullStrength();
-				Ship.hull = gameState.GetHullStrength();
+			if (Ship.hull > gameState.Ship.GetHullStrength()) {
+				Repairs = Ship.hull - gameState.Ship.GetHullStrength();
+				Ship.hull = gameState.Ship.GetHullStrength();
 			} else { Repairs = 0; }
 
 			// Shields are easier to repair
@@ -4589,13 +4589,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.TribbleMessage = false;
 
 		Ship.hull += gameState.GetRandom(Ship.EngineerSkill());
-		if (Ship.hull > gameState.GetHullStrength()) { Ship.hull = gameState.GetHullStrength(); }
+		if (Ship.hull > Ship.GetHullStrength()) { Ship.hull = Ship.GetHullStrength(); }
 
 		TryAutoRepair = true;
 		if (gameState.AutoFuel) {
 			btnShipyardBuyFuel(9999);
-			if (gameState.GetFuel() < gameState.GetFuelTanks()) {
-				if (gameState.AutoRepair && Ship.hull < gameState.GetHullStrength()) {
+			if (Ship.GetFuel() < Ship.GetFuelTanks()) {
+				if (gameState.AutoRepair && Ship.hull < Ship.GetHullStrength()) {
 					popup = new Popup(this, "Not Enough Money",
 					                  "You don't have enough money to get a full tank or full hull repairs.",
 					                  "In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
@@ -4616,7 +4616,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.AutoRepair && TryAutoRepair) {
 			btnShipyardBuyRepairs(99999);
-			if (Ship.hull < gameState.GetHullStrength()) {
+			if (Ship.hull < Ship.GetHullStrength()) {
 				popup = new Popup(this, "No Full Repairs",
 				                  "You don't have enough money to get your hull fully repaired.",
 				                  "You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
@@ -5207,8 +5207,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			// (3 on Easy, 4 on Beginner, 1 on Hard or Impossible). For opponents,
 			// it is always 2.
 			if (CommanderUnderAttack && gameState.ScarabStatus == 3) {
-				Damage = Math.min(Damage, (gameState.GetHullStrength() / (CommanderUnderAttack ? Math.max(1,
-				                                                                                          (GameState.IMPOSSIBLE - GameState
+				Damage = Math.min(Damage,
+				                  (gameState.Ship.GetHullStrength() / (CommanderUnderAttack ? Math.max(1, (GameState.IMPOSSIBLE - GameState
 					                                                                                          .getDifficulty())
 				) : 2))
 				);

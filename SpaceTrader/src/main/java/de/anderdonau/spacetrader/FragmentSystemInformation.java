@@ -920,7 +920,7 @@ public class FragmentSystemInformation extends Fragment {
 					);
 					welcomeScreen.addPopup(popup);
 					gameState.Ship.gadget[FirstEmptySlot] = GameState.FUELCOMPACTOR;
-					gameState.Ship.fuel = gameState.GetFuelTanks();
+					gameState.Ship.fuel = gameState.Ship.GetFuelTanks();
 				}
 				break;
 

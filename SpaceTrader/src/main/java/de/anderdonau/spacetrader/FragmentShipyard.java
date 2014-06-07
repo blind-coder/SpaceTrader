@@ -38,7 +38,7 @@ public class FragmentShipyard extends Fragment {
 		TextView tv;
 		Button btn;
 
-		if (gameState.GetFuel() < gameState.GetFuelTanks()) {
+		if (Ship.GetFuel() < Ship.GetFuelTanks()) {
 			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFuel);
 			btn.setVisibility(View.VISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyMaxFuel);
@@ -50,7 +50,7 @@ public class FragmentShipyard extends Fragment {
 			btn.setVisibility(View.INVISIBLE);
 		}
 
-		if (Ship.hull < gameState.GetHullStrength()) {
+		if (Ship.hull < Ship.GetHullStrength()) {
 			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyRepairs);
 			btn.setVisibility(View.VISIBLE);
 			btn = (Button) rootView.findViewById(R.id.btnShipyardBuyFullRepairs);
@@ -78,14 +78,14 @@ public class FragmentShipyard extends Fragment {
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelReserve);
-		tv.setText(String.format("You have fuel to fly %d parsec%s.", gameState.GetFuel(),
-		                         gameState.GetFuel() == 1 ? "" : "s"
+		tv.setText(String.format("You have fuel to fly %d parsec%s.", Ship.GetFuel(),
+		                         Ship.GetFuel() == 1 ? "" : "s"
 		)
 		);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardFuelCost);
-		if (gameState.GetFuel() < gameState.GetFuelTanks()) {
-			tv.setText(String.format("A full tank costs %d cr.", (gameState.GetFuelTanks() - gameState
+		if (Ship.GetFuel() < Ship.GetFuelTanks()) {
+			tv.setText(String.format("A full tank costs %d cr.", (Ship.GetFuelTanks() - Ship
 				.GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel
 			)
 			);
@@ -95,13 +95,13 @@ public class FragmentShipyard extends Fragment {
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardHullStrength);
 		tv.setText(String.format("Your hull strength is at %d%%.",
-		                         (Ship.hull * 100) / gameState.GetHullStrength()
+		                         (Ship.hull * 100) / Ship.GetHullStrength()
 		)
 		);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipyardRepairsNeeded);
-		if (Ship.hull < gameState.GetHullStrength()) {
-			tv.setText(String.format("Full repair will cost %d cr.", (gameState
+		if (Ship.hull < Ship.GetHullStrength()) {
+			tv.setText(String.format("Full repair will cost %d cr.", (Ship
 				.GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
 			)
 			);

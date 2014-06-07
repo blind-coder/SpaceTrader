@@ -323,4 +323,25 @@ public class Ship implements Serializable {
 
 		return gameState.AdaptDifficulty(MaxSkill);
 	}
+
+	public int GetHullStrength() {
+		if (this == gameState.Ship && gameState.ScarabStatus == 3) {
+			return ShipTypes.ShipTypes[type].hullStrength + GameState.UPGRADEDHULL;
+		} else {
+			return ShipTypes.ShipTypes[type].hullStrength;
+		}
+	}
+
+	public int GetFuelTanks() {
+		// *************************************************************************
+		// Determine size of fueltanks
+		// *************************************************************************
+		return (gameState.HasGadget(this, GameState.FUELCOMPACTOR) ? 18 :
+		        ShipTypes.ShipTypes[type].fuelTanks);
+	}
+
+	public int GetFuel() {
+		return Math.min(fuel, GetFuelTanks());
+	}
+
 }

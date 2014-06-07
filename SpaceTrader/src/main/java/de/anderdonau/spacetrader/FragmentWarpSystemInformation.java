@@ -22,7 +22,7 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentWarpSystemInformation extends Fragment {
 	WelcomeScreen welcomeScreen;
-	GameState gameState;
+	GameState     gameState;
 
 	public FragmentWarpSystemInformation(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -49,34 +49,38 @@ public class FragmentWarpSystemInformation extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
 		tv.setText(gameState.SystemSize[welcomeScreen.WarpSystem.size]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
-		tv.setText(gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]);
+		tv.setText(
+			gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]
+		);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
-		tv.setText(gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]);
+		tv.setText(
+			gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]
+		);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
 		int Distance = gameState.RealDistance(CURSYSTEM, welcomeScreen.WarpSystem);
-		if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem))
+		if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem)) {
 			tv.setText("Wormhole");
-		else
-			tv.setText(String.format("%d parsecs", Distance));
+		} else { tv.setText(String.format("%d parsecs", Distance)); }
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
-		tv.setText(String.format("%d cr.", gameState.InsuranceMoney() + gameState
-			.MercenaryMoney() + (gameState.Debt > 0 ? Math.max(gameState.Debt / 10, 1) :
-		                       0) + gameState.WormholeTax(COMMANDER.curSystem,welcomeScreen.WarpSystem)
+		tv.setText(String.format("%d cr.", gameState.InsuranceMoney() + gameState.MercenaryMoney() + (
+			gameState.Debt > 0 ? Math.max(gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(
+			COMMANDER.curSystem, welcomeScreen.WarpSystem
+		)
 		)
 		);
 
 		if (Distance > 0) {
 			if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem
-			) || Distance <= gameState.GetFuel()) {
+			) || Distance <= gameState.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 				btn.setVisibility(View.VISIBLE);
 				btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
 				btn.setVisibility(View.VISIBLE);
 				tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
 				tv.setVisibility(View.INVISIBLE);
-			} else if (Distance > gameState.GetFuel()) {
+			} else if (Distance > gameState.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 				btn.setVisibility(View.INVISIBLE);
 				btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);

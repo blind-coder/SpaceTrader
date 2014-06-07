@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 public class FragmentShortRangeChart extends Fragment {
 	WelcomeScreen welcomeScreen;
-	GameState gameState;
+	GameState     gameState;
 
 	public FragmentShortRangeChart(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -29,8 +29,9 @@ public class FragmentShortRangeChart extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
-		final NavigationChart navigationChart =
-			(NavigationChart) rootView.findViewById(R.id.ShortRangeChart);
+		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(
+			R.id.ShortRangeChart
+		);
 		navigationChart.setGameState(gameState);
 		navigationChart.setShortRange(true);
 
@@ -47,17 +48,14 @@ public class FragmentShortRangeChart extends Fragment {
 						gameState.WarpSystem = system;
 						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
-							(gameState
-								.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-								              gameState.SolarSystem[system]
-								) <= gameState.GetFuel() || gameState
-								.WormholeExists(gameState.Mercenary[0].curSystem,
-								                system
-								)) &&
-							gameState
-								.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-								              gameState.SolarSystem[system]
-								) > 0) {
+							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+							                        gameState.SolarSystem[system]
+							) <= gameState.Ship.GetFuel() || gameState.WormholeExists(
+								gameState.Mercenary[0].curSystem, system
+							)) &&
+							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+							                       gameState.SolarSystem[system]
+							) > 0) {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
 						} else {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.WARP_SYSTEM_INFORMATION);
@@ -66,17 +64,14 @@ public class FragmentShortRangeChart extends Fragment {
 						gameState.WarpSystem = system;
 						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
-							(gameState
-								.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-								              gameState.SolarSystem[system]
-								) <= gameState.GetFuel() || gameState
-								.WormholeExists(gameState.Mercenary[0].curSystem,
-								                system
-								)) &&
-							gameState
-								.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-								              gameState.SolarSystem[system]
-								) > 0) {
+							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+							                        gameState.SolarSystem[system]
+							) <= gameState.Ship.GetFuel() || gameState.WormholeExists(
+								gameState.Mercenary[0].curSystem, system
+							)) &&
+							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+							                       gameState.SolarSystem[system]
+							) > 0) {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
 
 						} else {
@@ -97,10 +92,10 @@ public class FragmentShortRangeChart extends Fragment {
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(String.format("Distance to %s: %d parsec",
 			                         gameState.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
-			                         gameState
-				                         .RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-				                                       gameState.SolarSystem[gameState.TrackedSystem]
-				                         )
+			                         gameState.RealDistance(
+				                         gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+				                         gameState.SolarSystem[gameState.TrackedSystem]
+			                         )
 			)
 			);
 		}

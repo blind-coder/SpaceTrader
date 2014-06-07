@@ -65,8 +65,7 @@ public class NavigationChart extends View {
 				}
 			}
 		}
-		if (isShortRange)
-			return -1;
+		if (isShortRange) { return -1; }
 		return getSystemCloseTo(posX, posY);
 	}
 
@@ -78,10 +77,9 @@ public class NavigationChart extends View {
 		posY -= mOffsetY; // to get the actual touch position relative to 0,0
 		for (int i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			s = mGameState.SolarSystem[i];
-			int nDist = (int) (Math.pow(posX - s.x * Multiplicator, 2) + Math
-				                                                             .pow(posY - s.y * Multiplicator,
-				                                                                  2
-				                                                             ));
+			int nDist = (int) (Math.pow(posX - s.x * Multiplicator, 2) + Math.pow(
+				posY - s.y * Multiplicator, 2
+			));
 			if (dist > nDist) {
 				dist = nDist;
 				retVal = i;
@@ -145,7 +143,7 @@ public class NavigationChart extends View {
 		SolarSystem s;
 		int x, y;
 
-		if (isShortRange){
+		if (isShortRange) {
 			radius = Math.min(getWidth(), getHeight()) / 20;
 			Multiplicator = 20;
 		} else {
@@ -166,7 +164,7 @@ public class NavigationChart extends View {
 			/* Short range chart always focuses on CURSYSTEM.
 			 * Long range chart may focus on mSelectedSystem by using "Find" button.
 			 */
-			if (!isShortRange){
+			if (!isShortRange) {
 				mOffsetX = -s.x * Multiplicator + getWidth() / 2;
 				mOffsetY = -s.y * Multiplicator + getHeight() / 2;
 			} else {
@@ -184,7 +182,7 @@ public class NavigationChart extends View {
 		paint.setColor(Color.BLACK);
 		paint.setStrokeWidth(3);
 
-		if (isShortRange){
+		if (isShortRange) {
 			canvas.drawLine(x - (radius * 1.25f), y, x + (radius * 1.25f), y, paint);
 			canvas.drawLine(x, y - (radius * 1.25f), x, y + (radius * 1.25f), paint);
 		} else {
@@ -198,7 +196,7 @@ public class NavigationChart extends View {
 			s = mGameState.SolarSystem[i];
 			x = s.x * Multiplicator;
 			y = s.y * Multiplicator;
-			if (i == mSelectedSystem){
+			if (i == mSelectedSystem) {
 				paint.setColor(Color.RED);
 			} else if (s.visited) {
 				paint.setColor(Color.BLUE);
@@ -224,13 +222,13 @@ public class NavigationChart extends View {
 			}
 		}
 
-		if (mGameState.GetFuel() > 0) {
+		if (mGameState.Ship.GetFuel() > 0) {
 			x = CURSYSTEM.x * Multiplicator;
 			y = CURSYSTEM.y * Multiplicator;
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setColor(Color.BLACK);
 			paint.setStrokeWidth(5);
-			canvas.drawCircle(x, y, mGameState.GetFuel() * Multiplicator, paint);
+			canvas.drawCircle(x, y, mGameState.Ship.GetFuel() * Multiplicator, paint);
 			paint.setStrokeWidth(0);
 		}
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);

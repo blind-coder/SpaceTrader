@@ -988,7 +988,7 @@ public class GameState implements Serializable {
 		for (i = 1; i < GameState.MAXCREW; ++i) {
 			Ship.crew[i] = -1;
 		}
-		Ship.fuel = GetFuelTanks();
+		Ship.fuel = Ship.GetFuelTanks();
 		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
 		Ship.tribbles = 0;
 
@@ -1240,13 +1240,6 @@ public class GameState implements Serializable {
 		return 1 + GetRandom(5) + GetRandom(6);
 	}
 
-	public int GetFuelTanks() {
-		// *************************************************************************
-		// Determine size of fueltanks
-		// *************************************************************************
-		return (HasGadget(this.Ship, FUELCOMPACTOR) ? 18 : ShipTypes.ShipTypes[Ship.type].fuelTanks);
-	}
-
 	public boolean HasGadget(Ship sh, int Gg) {
 		int i;
 
@@ -1377,25 +1370,16 @@ public class GameState implements Serializable {
 			// Trade-in value is three-fourths the original price
 			((ShipTypes.ShipTypes[Ship.type].price * (Ship.tribbles > 0 && !ForInsurance ? 1 : 3)) / 4)
 				// subtract repair costs
-				- (GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
+				- (Ship.GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
 				// subtract costs to fill tank with fuel
-				- (ShipTypes.ShipTypes[Ship.type].fuelTanks - GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel;
+				- (ShipTypes.ShipTypes[Ship.type].fuelTanks - Ship
+				.GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel;
 		// Add 2/3 of the price of each item of equipment
 		for (i = 0; i < MAXWEAPON; ++i) { if (Ship.weapon[i] >= 0) { CurPrice += WEAPONSELLPRICE(i); } }
 		for (i = 0; i < MAXSHIELD; ++i) { if (Ship.shield[i] >= 0) { CurPrice += SHIELDSELLPRICE(i); } }
 		for (i = 0; i < MAXGADGET; ++i) { if (Ship.gadget[i] >= 0) { CurPrice += GADGETSELLPRICE(i); } }
 
 		return CurPrice;
-	}
-
-	public int GetHullStrength() {
-		if (ScarabStatus == 3) {
-			return ShipTypes.ShipTypes[Ship.type].hullStrength + UPGRADEDHULL;
-		} else { return ShipTypes.ShipTypes[Ship.type].hullStrength; }
-	}
-
-	public int GetFuel() {
-		return Math.min(Ship.fuel, GetFuelTanks());
 	}
 
 	public int WEAPONSELLPRICE(int a) {
@@ -1432,7 +1416,11 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		if (Difficulty == BEGINNER || Difficulty == EASY) {
 			return (Level + 1);
-		} else if (Difficulty == IMPOSSIBLE) { return Math.max(1, Level - 1); } else { return Level; }
+		} else if (Difficulty == IMPOSSIBLE) {
+			return Math.max(1, Level - 1);
+		} else {
+			return Level;
+		}
 	}
 
 	public void RecalculateSellPrices() {
@@ -1549,7 +1537,7 @@ public class GameState implements Serializable {
 			BuyingPrice[i] = 0;
 		}
 
-		Ship.fuel = GetFuelTanks();
+		Ship.fuel = Ship.GetFuelTanks();
 		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
 	}
 

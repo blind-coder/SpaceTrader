@@ -115,12 +115,7 @@ public class RenderShip extends View {
 			} else {
 				shieldPercent = -1;
 			}
-			// TODO: correctly move GetHullStrength to Ship class
-			if (mShip == gameState.Ship){
-				dmgPercent = (mShip.hull * 100) / gameState.GetHullStrength();
-			} else {
-				dmgPercent = (mShip.hull * 100) / ShipTypes.ShipTypes[mShip.type].hullStrength;
-			}
+			dmgPercent = (mShip.hull * 100) / mShip.GetHullStrength();
 		}
 
 		if (shieldPercent > 0){
