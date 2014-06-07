@@ -1274,7 +1274,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 
-		i = gameState.HasShield(gameState.Ship, GameState.LIGHTNINGSHIELD);
+		i = gameState.Ship.HasShield(GameState.LIGHTNINGSHIELD);
 		if (i > 0) {
 			if (ShipTypes.ShipTypes[Index].shieldSlots < i) {
 				// can't transfer the Lightning Shields. How often would this happen?
@@ -1290,7 +1290,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 
-		if (gameState.HasGadget(gameState.Ship, GameState.FUELCOMPACTOR)) {
+		if (gameState.Ship.HasGadget(GameState.FUELCOMPACTOR)) {
 			if (ShipTypes.ShipTypes[Index].gadgetSlots == 0) {
 				// can't transfer the Fuel Compactor
 				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
@@ -1306,7 +1306,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 
-		if (gameState.HasWeapon(gameState.Ship, GameState.MORGANLASERWEAPON, true)) {
+		if (gameState.Ship.HasWeapon(GameState.MORGANLASERWEAPON, true)) {
 			if (ShipTypes.ShipTypes[Index].weaponSlots == 0) {
 				// can't transfer the Laser
 				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
@@ -1338,7 +1338,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final int cntLightning, final int numLightning, final boolean hasCompactor, final boolean hasMorganLaser) {
 		final int[] extra = new int[1];
 		extra[0] = ex;
-		if (cntLightning < gameState.HasShield(gameState.Ship, GameState.LIGHTNINGSHIELD
+		if (cntLightning < gameState.Ship.HasShield(GameState.LIGHTNINGSHIELD
 		) && ShipTypes.ShipTypes[Index].shieldSlots - (numLightning + 1) > 0) {
 			if (gameState.ShipPrice[Index] + extra[0] <= gameState.ToSpend()) {
 				Popup popup;
@@ -1528,8 +1528,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			        Index - GameState.MAXWEAPONTYPE
 			);
 		} else if (Index >= GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE + GameState.MAXGADGETTYPE) {
-			if (gameState.HasGadget(gameState.Ship,
-			                        Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)
+			if (gameState.Ship.HasGadget(Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)
 			) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE))) {
 				Popup popup;
 				popup = new Popup(this, "You Already Have One",
@@ -2837,7 +2836,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		// if Wild is aboard, make sure ship is armed!
 		if (gameState.WildStatus == 1) {
-			if (!gameState.HasWeapon(gameState.Ship, GameState.BEAMLASERWEAPON, false)) {
+			if (!gameState.Ship.HasWeapon(GameState.BEAMLASERWEAPON, false)) {
 				popup = new Popup(this, "Wild Won't Stay Aboard",
 				                  "Jonathan Wild isn't willing to go with you if you are not armed with at least a Beam Laser.",
 				                  "", "Stay here", "Goodbye Wild", cbShowNextPopup,
@@ -4035,8 +4034,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Trader = false;
 		Police = false;
 		Mantis = false;
-		HaveMilitaryLaser = gameState.HasWeapon(Ship, GameState.MILITARYLASERWEAPON, true);
-		HaveReflectiveShield = gameState.HasShield(Ship, GameState.REFLECTIVESHIELD) > 0;
+		HaveMilitaryLaser = gameState.Ship.HasWeapon(GameState.MILITARYLASERWEAPON, true);
+		HaveReflectiveShield = gameState.Ship.HasShield(GameState.REFLECTIVESHIELD) > 0;
 
 		// if timespace is ripped, we may switch the warp system here.
 		if (gameState.PossibleToGoThroughRip && gameState.ExperimentStatus == 12 && gameState.FabricRipProbability > 0 &&

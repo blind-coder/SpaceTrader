@@ -1240,47 +1240,6 @@ public class GameState implements Serializable {
 		return 1 + GetRandom(5) + GetRandom(6);
 	}
 
-	public boolean HasGadget(Ship sh, int Gg) {
-		int i;
-
-		for (i = 0; i < MAXGADGET; ++i) {
-			if (sh.gadget[i] < 0) { continue; }
-			if (sh.gadget[i] == Gg) { return true; }
-		}
-
-		return false;
-	}
-
-	int HasShield(Ship Sh, int Gg) {
-		// *************************************************************************
-		// Determines whether a certain shield type is on board
-		// *************************************************************************
-		int i, retVal;
-
-		retVal = 0;
-		for (i = 0; i < MAXSHIELD; ++i) {
-			if (Sh.shield[i] < 0) { continue; }
-			if (Sh.shield[i] == Gg) { retVal++; }
-		}
-
-		return retVal;
-	}
-
-	boolean HasWeapon(Ship Sh, int Gg, boolean exactCompare) {
-		// *************************************************************************
-		// Determines whether a certain weapon type is on board. If exactCompare is
-		// false, then better weapons will also return TRUE
-		// *************************************************************************
-		int i;
-
-		for (i = 0; i < MAXWEAPON; ++i) {
-			if (Sh.weapon[i] < 0) { continue; }
-			if ((Sh.weapon[i] == Gg) || (Sh.weapon[i] > Gg && !exactCompare)) { return true; }
-		}
-
-		return false;
-	}
-
 	int GetForHire() {
 		int ForHire = -1;
 		int i;
@@ -1816,7 +1775,7 @@ public class GameState implements Serializable {
 					++j;
 					sum += Gadgets.mGadgets[j].chance;
 				}
-				if (!HasGadget(Opponent, j)) { if (j > f) { f = j; } }
+				if (!Opponent.HasGadget(j)) { if (j > f) { f = j; } }
 				++e;
 			}
 			Opponent.gadget[i] = f;

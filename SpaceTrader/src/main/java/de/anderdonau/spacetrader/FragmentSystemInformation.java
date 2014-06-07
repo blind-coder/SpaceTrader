@@ -769,7 +769,7 @@ public class FragmentSystemInformation extends Fragment {
 					welcomeScreen.addPopup(popup);
 					return;
 				}
-				if (!gameState.HasWeapon(gameState.Ship, GameState.BEAMLASERWEAPON, false)) {
+				if (!gameState.Ship.HasWeapon(GameState.BEAMLASERWEAPON, false)) {
 					popup = new Popup(welcomeScreen, "Wild Won't Stay Aboard", String.format(
 						"Jonathan Wild isn't about to go with you if you're not armed with at least a Beam Laser. He'd rather take his chances hiding out here on %s.",
 						gameState.SolarSystemName[CURSYSTEM.nameIndex]

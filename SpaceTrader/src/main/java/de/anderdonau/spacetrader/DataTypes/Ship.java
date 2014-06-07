@@ -174,8 +174,7 @@ public class Ship implements Serializable {
 	}
 
 	public boolean isCloakedTo(Ship Opp) {
-		return (gameState.HasGadget(this, GameState.CLOAKINGDEVICE) && (EngineerSkill() > Opp
-			.EngineerSkill()));
+		return (HasGadget(GameState.CLOAKINGDEVICE) && (EngineerSkill() > Opp.EngineerSkill()));
 	}
 
 	public boolean AnyEmptySlots() {
@@ -255,7 +254,7 @@ public class Ship implements Serializable {
 			}
 		}
 
-		if (gameState.HasGadget(this, GameState.TARGETINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+		if (HasGadget(GameState.TARGETINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
 
 		return gameState.AdaptDifficulty(MaxSkill);
 	}
@@ -276,8 +275,8 @@ public class Ship implements Serializable {
 			}
 		}
 
-		if (gameState.HasGadget(this, GameState.NAVIGATINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
-		if (gameState.HasGadget(this, GameState.CLOAKINGDEVICE)) { MaxSkill += GameState.CLOAKBONUS; }
+		if (HasGadget(GameState.NAVIGATINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+		if (HasGadget(GameState.CLOAKINGDEVICE)) { MaxSkill += GameState.CLOAKBONUS; }
 
 		return gameState.AdaptDifficulty(MaxSkill);
 	}
@@ -319,7 +318,7 @@ public class Ship implements Serializable {
 			}
 		}
 
-		if (gameState.HasGadget(this, GameState.AUTOREPAIRSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+		if (HasGadget(GameState.AUTOREPAIRSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
 
 		return gameState.AdaptDifficulty(MaxSkill);
 	}
@@ -336,12 +335,51 @@ public class Ship implements Serializable {
 		// *************************************************************************
 		// Determine size of fueltanks
 		// *************************************************************************
-		return (gameState.HasGadget(this, GameState.FUELCOMPACTOR) ? 18 :
-		        ShipTypes.ShipTypes[type].fuelTanks);
+		return (HasGadget(GameState.FUELCOMPACTOR) ? 18 : ShipTypes.ShipTypes[type].fuelTanks);
 	}
 
 	public int GetFuel() {
 		return Math.min(fuel, GetFuelTanks());
 	}
 
+	public boolean HasGadget(int g) {
+		int i;
+
+		for (i = 0; i < GameState.MAXGADGET; ++i) {
+			if (gadget[i] < 0) { continue; }
+			if (gadget[i] == g) { return true; }
+		}
+
+		return false;
+	}
+
+	public int HasShield(int g) {
+		// *************************************************************************
+		// Determines whether a certain shield type is on board
+		// *************************************************************************
+		int i, retVal;
+
+		retVal = 0;
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
+			if (shield[i] < 0) { continue; }
+			if (shield[i] == g) { retVal++; }
+		}
+
+		return retVal;
+	}
+
+	public boolean HasWeapon(int g, boolean exactCompare) {
+		// *************************************************************************
+		// Determines whether a certain weapon type is on board. If exactCompare is
+		// false, then better weapons will also return TRUE
+		// *************************************************************************
+		int i;
+
+		for (i = 0; i < GameState.MAXWEAPON; ++i) {
+			if (weapon[i] < 0) { continue; }
+			if ((weapon[i] == g) || (weapon[i] > g && !exactCompare)) { return true; }
+		}
+
+		return false;
+	}
 }
