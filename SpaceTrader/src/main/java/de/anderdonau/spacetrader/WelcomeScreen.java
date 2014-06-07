@@ -18,6 +18,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -1639,6 +1641,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			public void execute(Popup popup, View view) {
 				if (Index < GameState.MAXWEAPONTYPE) {
 					gameState.Credits += gameState.WEAPONSELLPRICE(Index);
+					//noinspection ManualArrayCopy
 					for (int i = Index + 1; i < GameState.MAXWEAPON; ++i) {
 						gameState.Ship.weapon[i - 1] = gameState.Ship.weapon[i];
 					}
@@ -1668,6 +1671,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.Credits += gameState.GADGETSELLPRICE(
 						Index - GameState.MAXWEAPON - GameState.MAXSHIELD
 					);
+					//noinspection ManualArrayCopy
 					for (int i =
 						Index - GameState.MAXWEAPON - GameState.MAXSHIELD + 1; i < GameState.MAXGADGET; ++i) {
 						gameState.Ship.gadget[i - 1] = gameState.Ship.gadget[i];
@@ -2072,7 +2076,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
 		int i;
-		for (i = 0; gameState.SolarSystem[i] != Current; i++) { ; }
+		//noinspection StatementWithEmptyBody
+		for (i = 0; gameState.SolarSystem[i] != Current; i++) { }
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 
@@ -2403,6 +2408,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			@Override
 			public void execute(Popup popup, View view) {
 				EditText editText = (EditText) view;
+				//noinspection ConstantConditions
 				String buf = editText.getText().toString();
 				if (buf.length() < 2) {
 					return;
@@ -2924,7 +2930,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		CURSYSTEM.countDown = GameState.CountDown;
 		if (gameState.WormholeExists(COMMANDER.curSystem, WarpSystem) || viaSingularity) {
-			Distance = 0;
 			gameState.ArrivedViaWormhole = true;
 		} else {
 			Distance = gameState.RealDistance(CURSYSTEM, WarpSystem);
@@ -3270,6 +3275,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					int i = GameState.MAXWEAPON - 1;
 					while (i >= 0) {
 						if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
+							//noinspection ManualArrayCopy
 							for (int m = i + 1; m < GameState.MAXWEAPON; ++m) {
 								gameState.Ship.weapon[m - 1] = gameState.Ship.weapon[m];
 							}
@@ -3313,6 +3319,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					int i = GameState.MAXWEAPON - 1;
 					while (i >= 0) {
 						if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
+							//noinspection ManualArrayCopy
 							for (int m = i + 1; m < GameState.MAXWEAPON; ++m) {
 								gameState.Ship.weapon[m - 1] = gameState.Ship.weapon[m];
 							}
@@ -4866,6 +4873,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (imageView == null) {
 					continue;
 				}
+				//noinspection ConstantConditions
 				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(
 					imageView.getLayoutParams()
 				);
@@ -5099,7 +5107,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		buf += buf2;
 		if (CommanderGotHit) {
 			buf += " hits you.";
-		} else if (!(PrevEncounterType == GameState.POLICEFLEE || PrevEncounterType == GameState.TRADERFLEE || PrevEncounterType == GameState.PIRATEFLEE) && !CommanderGotHit) {
+		} else if (!(PrevEncounterType == GameState.POLICEFLEE ||
+			PrevEncounterType == GameState.TRADERFLEE ||
+			PrevEncounterType == GameState.PIRATEFLEE)) {
 			buf += " missed you.";
 		} else {
 			buf = "";
@@ -5123,6 +5133,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		((FragmentEncounter) currentFragment).EncounterDisplayNextAction(false);
 
+		//noinspection ConstantConditions
 		buf = ((FragmentEncounter) currentFragment).EncounterText.getText().toString() + "\n" + buf;
 		((FragmentEncounter) currentFragment).EncounterText.setText(buf);
 
@@ -5136,6 +5147,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		return true;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public boolean ExecuteAttack(Ship Attacker, Ship Defender, boolean Flees, boolean CommanderUnderAttack) {
 		// *************************************************************************
 		// An attack: Attacker attacks Defender, Flees indicates if Defender is fleeing
@@ -5447,16 +5459,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			saveGame();
 		}
 
-		if (gameState.Days % 3 == 0) { // Show an ad every 3 days
-			// Create the interstitial.
+		boolean isOnline = false;
+
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnected()) {
+			isOnline = true;
+		}
+		if (isOnline && (gameState.Days % 3 == 0)) { // Show an ad every 3 days
 			interstitial = new InterstitialAd(this);
 			interstitial.setAdUnitId("ca-app-pub-2751649723763471/1614767347");
 
-			// Create ad request.
 			AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
 				.build();
 
-			// Begin loading your interstitial.
 			interstitial.loadAd(adRequest);
 
 			final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Please wait")
@@ -5464,13 +5480,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			alertDialog.show();
 			final Handler waiter = new Handler();
 			final Runnable runnable = new Runnable() {
+				int count = 0;
+
 				@Override
 				public void run() {
 					if (interstitial.isLoaded()) {
 						alertDialog.dismiss();
 						interstitial.show();
 					} else {
-						waiter.postDelayed(this, 100);
+						this.count++;
+						if (this.count < 500) {
+							waiter.postDelayed(this, 100);
+						} else {
+							alertDialog.dismiss();
+						}
 					}
 				}
 			};

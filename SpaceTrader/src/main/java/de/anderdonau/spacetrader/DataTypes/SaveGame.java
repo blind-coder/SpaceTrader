@@ -9,7 +9,6 @@
 package de.anderdonau.spacetrader.DataTypes;
 
 import java.io.Serializable;
-import java.util.Random;
 
 import de.anderdonau.spacetrader.GameState;
 
@@ -18,7 +17,7 @@ public class SaveGame implements Serializable {
 	public Ship Opponent;
 	public Ship Ship;
 	public SolarSystem[] SolarSystem = new SolarSystem[GameState.MAXSOLARSYSTEM];
-	public String NameCommander;
+	public String  NameCommander;
 	public boolean AlreadyPaidForNewspaper;
 	public boolean AlwaysIgnorePirates;
 	public boolean AlwaysIgnorePolice;
@@ -51,26 +50,24 @@ public class SaveGame implements Serializable {
 	public boolean TextualEncounters;
 	public boolean TrackAutoOff;
 	public boolean TribbleMessage;
-	public int Credits;
-	public int Debt;
-	public int MonsterHull;
-	public int PirateKills;
-	public int PoliceKills;
-	public int PoliceRecordScore;
-	public int ReputationScore;
-	public int TraderKills;
-	public int[] BuyPrice = new int[GameState.MAXTRADEITEM];
+	public int     Credits;
+	public int     Debt;
+	public int     MonsterHull;
+	public int     PirateKills;
+	public int     PoliceKills;
+	public int     PoliceRecordScore;
+	public int     ReputationScore;
+	public int     TraderKills;
+	public int[] BuyPrice    = new int[GameState.MAXTRADEITEM];
 	public int[] BuyingPrice = new int[GameState.MAXTRADEITEM];
-	public int[] SellPrice = new int[GameState.MAXTRADEITEM];
-	public int[] ShipPrice = new int[GameState.MAXSHIPTYPE];
+	public int[] SellPrice   = new int[GameState.MAXTRADEITEM];
+	public int[] ShipPrice   = new int[GameState.MAXSHIPTYPE];
 	public int Clicks;
-	public int CurForm;
 	public int Days;
 	public int DragonflyStatus;
 	public int EncounterType;
 	public int ExperimentStatus;
 	public int FabricRipProbability;
-	public int GalacticChartSystem;
 	public int InvasionStatus;
 	public int JaporiDiseaseStatus;
 	public int JarekStatus;
@@ -93,12 +90,12 @@ public class SaveGame implements Serializable {
 
 	public SaveGame(GameState g) {
 		int i;
-		for (i=0; i<GameState.MAXCREWMEMBER; i++) {
+		for (i = 0; i < GameState.MAXCREWMEMBER; i++) {
 			this.Mercenary[i] = g.Mercenary[i];
 		}
 		this.Opponent = g.Opponent;
 		this.Ship = g.Ship;
-		for (i=0; i<GameState.MAXSOLARSYSTEM; i++){
+		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			this.SolarSystem[i] = g.SolarSystem[i];
 		}
 		this.NameCommander = g.NameCommander;
@@ -144,13 +141,11 @@ public class SaveGame implements Serializable {
 		this.TraderKills = g.TraderKills;
 
 		this.Clicks = g.Clicks;
-		this.CurForm = g.CurForm;
 		this.Days = g.Days;
 		this.DragonflyStatus = g.DragonflyStatus;
 		this.EncounterType = g.EncounterType;
 		this.ExperimentStatus = g.ExperimentStatus;
 		this.FabricRipProbability = g.FabricRipProbability;
-		this.GalacticChartSystem = g.GalacticChartSystem;
 		this.InvasionStatus = g.InvasionStatus;
 		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
 		this.JarekStatus = g.JarekStatus;
@@ -170,15 +165,15 @@ public class SaveGame implements Serializable {
 		this.WildStatus = g.WildStatus;
 		this.Difficulty = GameState.getDifficulty();
 
-		for (i=0; i<GameState.MAXWORMHOLE; i++){
+		for (i = 0; i < GameState.MAXWORMHOLE; i++) {
 			this.Wormhole[i] = g.Wormhole[i];
 		}
-		for (i=0; i<GameState.MAXTRADEITEM; i++){
+		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
 			this.BuyPrice[i] = g.BuyPrice[i];
 			this.BuyingPrice[i] = g.BuyingPrice[i];
 			this.SellPrice[i] = g.SellPrice[i];
 		}
-		for (i=0; i<GameState.MAXSHIPTYPE; i++){
+		for (i = 0; i < GameState.MAXSHIPTYPE; i++) {
 			this.ShipPrice[i] = g.ShipPrice[i];
 		}
 	}

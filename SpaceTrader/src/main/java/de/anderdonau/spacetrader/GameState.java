@@ -13,9 +13,7 @@ import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
-import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
 import de.anderdonau.spacetrader.DataTypes.Politics;
-import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
@@ -33,7 +31,7 @@ public class GameState implements Serializable {
 	// Number of Gadgets over standard
 	public static final int           EXTRASHIELDS                = 1;
 	// Number of Shields over standard
-	public static final int           EXTRASHIPS                  = 5;
+	// public static final int           EXTRASHIPS                  = 5;
 	// Number of Ships over standard
 	public static final int           DEFSEEDX                    = 521288629;
 	public static final int           DEFSEEDY                    = 362436069;
@@ -96,7 +94,7 @@ public class GameState implements Serializable {
 	public static final int           MORGANLASERPOWER            = 85; // fixme!
 	// Shields
 	public static final int           MAXSHIELDTYPE               = 2;
-	public static final int           ENERGYSHIELD                = 0;
+	// public static final int           ENERGYSHIELD                = 0;
 	public static final int           ESHIELDPOWER                = 100;
 	public static final int           REFLECTIVESHIELD            = 1;
 	public static final int           RSHIELDPOWER                = 200;
@@ -140,7 +138,7 @@ public class GameState implements Serializable {
 	// Trader will sell products in orbit
 	public static final int           TRADERBUY                   = 25;
 	// Trader will buy products in orbit
-	public static final int           TRADERNOTRADE               = 26;
+	// public static final int           TRADERNOTRADE               = 26;
 	// Player has declined to transact with Trader
 	public static final int           MAXTRADER                   = 29;
 	// Space Monster Actions
@@ -187,7 +185,7 @@ public class GameState implements Serializable {
 	public static final int           NIXSYSTEM                   = 67;
 	public static final int           OGSYSTEM                    = 70;
 	public static final int           REGULASSYSTEM               = 82;
-	public static final int           SOLSYSTEM                   = 92;
+	// public static final int           SOLSYSTEM                   = 92;
 	public static final int           UTOPIASYSTEM                = 109;
 	public static final int           ZALKONSYSTEM                = 118;
 	// Special events
@@ -255,7 +253,6 @@ public class GameState implements Serializable {
 	public static final int           CHANCEOFTRADEINORBIT        = 100;
 	// Political systems (governments)
 	public static final int           MAXPOLITICS                 = 17;
-	public static final int           MAXSTRENGTH                 = 8;
 	public static final int           ANARCHY                     = 0;
 	// Tech levels.
 	public static final int           MAXTECHLEVEL                = 8;
@@ -275,10 +272,6 @@ public class GameState implements Serializable {
 	// number of newspaper names per Political situation
 	public static final int           MAXSTORIES                  = 4;
 	// number of canned stories per Political situation
-	public static final int           NEWSINDENT1                 = 5;
-	// pixels to indent= 1;t line of news story
-	public static final int           NEWSINDENT2                 = 5;
-	// pixels to indent= 2;d line of news story
 	public static final int           STORYPROBABILITY            = 50 / MAXTECHLEVEL;
 	// probability of a story being shown
 	public static final int           MAXSPECIALNEWSEVENTS        = 5;
@@ -302,12 +295,10 @@ public class GameState implements Serializable {
 	public static final int           ATTACKTRADERSCORE           = -2;
 	public static final int           PLUNDERTRADERSCORE          = -2;
 	public static final int           KILLTRADERSCORE             = -4;
-	public static final int           ATTACKPIRATESCORE           = 0;
 	public static final int           KILLPIRATESCORE             = 1;
 	public static final int           PLUNDERPIRATESCORE          = -1;
 	public static final int           TRAFFICKING                 = -1;
 	public static final int           FLEEFROMINSPECTION          = -2;
-	public static final int           TAKEMARIENARCOTICS          = -4;
 	// Police Record Score
 	public static final int           PSYCHOPATHSCORE             = -70;
 	public static final int           VILLAINSCORE                = -30;
@@ -330,10 +321,9 @@ public class GameState implements Serializable {
 	public static final int           DEADLYREP                   = 600;
 	public static final int           ELITESCORE                  = 1500;
 	// Debt Control
-	public static final int           DEBTWARNING                 = 75000;
 	public static final int           DEBTTOOLARGE                = 100000;
 	public static final int           MAXRESOURCES                = 13;
-	public static final int           NOSPECIALRESOURCES          = 0;
+	// public static final int           NOSPECIALRESOURCES          = 0;
 	public static final int           MINERALRICH                 = 1;
 	public static final int           MINERALPOOR                 = 2;
 	public static final int           DESERT                      = 3;
@@ -350,17 +340,8 @@ public class GameState implements Serializable {
 	public static final int           MAXWORMHOLE                 = 6;
 	public static final int           GALAXYWIDTH                 = 150;
 	public static final int           GALAXYHEIGHT                = 110;
-	public static final int           SHORTRANGEWIDTH             = 160;
-	public static final int           SHORTRANGEHEIGHT            = 160;
-	public static final int           SHORTRANGEBOUNDSX           = 10;
-	public static final int           BOUNDSX                     = 5;
-	public static final int           BOUNDSY                     = 20;
 	public static final int           MINDISTANCE                 = 6;
 	public static final int           CLOSEDISTANCE               = 13;
-	public static final int           WORMHOLEDISTANCE            = 3;
-	public static final int           EXTRAERASE                  = 3;
-	// (There are new functions for crunching down booleans and nibbles, which gain us a little room...)
-	public static final int           MAXFORFUTUREUSE             = 96;
 	// Resources. Some systems have special resources, which influences some prices.
 	// this is in percentage, and will decrease by one every day.
 	public static final int           FABRICRIPINITIALPROBABILITY = 25;
@@ -375,8 +356,6 @@ public class GameState implements Serializable {
 	static              int           Difficulty                  = NORMAL;     // Difficulty level
 	public final        String[]      levelDesc                   =
 		new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
-	final               PoliceRecord  PoliceRecord                = new PoliceRecord();
-	final               Reputation    Reputation                  = new Reputation();
 	final               String[]      Status                      =
 		{"under no particular pressure",  // Uneventful
 		 "at war",        // Ore and Weapons in demand
@@ -481,10 +460,8 @@ public class GameState implements Serializable {
 	public              int           SkillPointsLeft             = 16;
 	// Skillpoints to distribute at start of game
 	public              int           CheatCounter                = 0;
-	public              int           CurForm                     = 0;// Form to return to
 	public              int           Days                        = 0;// Number of days playing
 	public              int           EncounterType               = 0;// Type of current encounter
-	public              int           GalacticChartSystem         = 0;
 	// Current system on Galactic chart
 	public              int           LeaveEmpty                  = 0;
 	// Number of cargo bays to leave empty when buying goods
@@ -535,8 +512,6 @@ public class GameState implements Serializable {
 	// bit map for which Very Rare Encounter(s) have taken place (see traveler.c, around line= 1850;
 	public              int           WildStatus                  = 0;
 	// Jonathan Wild:= 0;not delivered;= 1;on board;= 2;delivered
-	public              boolean       APLscreen                   = false;
-	// Is true is the APL screen was last shown after the SRC
 	public              boolean       AlreadyPaidForNewspaper     = false;
 	// once you buy a paper on a system, you don't have to pay again.
 	public              boolean       AlwaysIgnorePirates         = false;
@@ -602,8 +577,6 @@ public class GameState implements Serializable {
 	// Automatically stop tracking a system when you get to it?
 	public              boolean       TribbleMessage              = false;
 	// Is true if the Ship Yard on the current system informed you about the tribbles
-	public              boolean       UseHWButtons                = false;
-	// by default, don't use Hardware W buttons
 	public              int[]         Wormhole                    = new int[GameState.MAXWORMHOLE];
 	public              int[]         NewsEvents                  = new int[MAXSPECIALNEWSEVENTS];
 	public CrewMember[] Mercenary;
@@ -1036,13 +1009,11 @@ public class GameState implements Serializable {
 		this.TraderKills = g.TraderKills;
 
 		this.Clicks = g.Clicks;
-		this.CurForm = g.CurForm;
 		this.Days = g.Days;
 		this.DragonflyStatus = g.DragonflyStatus;
 		this.EncounterType = g.EncounterType;
 		this.ExperimentStatus = g.ExperimentStatus;
 		this.FabricRipProbability = g.FabricRipProbability;
-		this.GalacticChartSystem = g.GalacticChartSystem;
 		this.InvasionStatus = g.InvasionStatus;
 		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
 		this.JarekStatus = g.JarekStatus;
@@ -1184,7 +1155,8 @@ public class GameState implements Serializable {
 
 	public boolean WormholeExists(int a, SolarSystem s) {
 		int i;
-		for (i = 0; SolarSystem[i] != s; i++) { ; }
+		//noinspection StatementWithEmptyBody
+		for (i = 0; SolarSystem[i] != s; i++) { }
 		return WormholeExists(a, i);
 	}
 

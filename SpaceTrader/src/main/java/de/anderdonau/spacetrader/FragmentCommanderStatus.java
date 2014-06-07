@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
+import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 
 public class FragmentCommanderStatus extends Fragment {
@@ -53,22 +55,22 @@ public class FragmentCommanderStatus extends Fragment {
 		);
 
 		i = 0;
-		while (i < GameState.MAXPOLICERECORD && gameState.PoliceRecordScore >= gameState.PoliceRecord.minScore[i]) {
+		while (i < GameState.MAXPOLICERECORD && gameState.PoliceRecordScore >= PoliceRecord.minScore[i]) {
 			++i;
 		}
 		--i;
 		if (i < 0) { ++i; }
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPoliceRecord);
-		tv.setText(gameState.PoliceRecord.name[i]);
+		tv.setText(PoliceRecord.name[i]);
 
 		i = 0;
-		while (i < GameState.MAXREPUTATION && gameState.ReputationScore >= gameState.Reputation.minScore[i]) {
+		while (i < GameState.MAXREPUTATION && gameState.ReputationScore >= Reputation.minScore[i]) {
 			++i;
 		}
 		--i;
 		if (i < 0) { i = 0; }
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusReputation);
-		tv.setText(gameState.Reputation.name[i]);
+		tv.setText(Reputation.name[i]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
 		tv.setText(gameState.levelDesc[GameState.getDifficulty()]);

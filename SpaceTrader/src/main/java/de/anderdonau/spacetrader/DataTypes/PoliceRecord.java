@@ -14,12 +14,12 @@ import de.anderdonau.spacetrader.GameState;
  * Created by blindcoder on 4/24/14.
  */
 public class PoliceRecord {
-	public int[] minScore =
+	public static int[] minScore =
 		{-100, GameState.PSYCHOPATHSCORE, GameState.VILLAINSCORE, GameState.CRIMINALSCORE,
 		 GameState.DUBIOUSSCORE, GameState.CLEANSCORE, GameState.LAWFULSCORE, GameState.TRUSTEDSCORE,
 		 GameState.HELPERSCORE, GameState.HEROSCORE};
 
-	public String[] name =
+	public static String[] name =
 		{"Psycho", "Villain", "Crook", "Criminal", "Dubious", "Clean", "Lawful", "Trusted", "Helper",
 		 "Hero"};
 }
