@@ -38,13 +38,13 @@ public class FragmentCommanderStatus extends Fragment {
 		tv.setText(gameState.NameCommander);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPilot);
-		tv.setText(String.format("%d [%d]", COMMANDER.pilot, gameState.PilotSkill(Ship)));
+		tv.setText(String.format("%d [%d]", COMMANDER.pilot, Ship.PilotSkill()));
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusFighter);
-		tv.setText(String.format("%d [%d]", COMMANDER.fighter, gameState.FighterSkill(Ship)));
+		tv.setText(String.format("%d [%d]", COMMANDER.fighter, Ship.FighterSkill()));
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusTrader);
-		tv.setText(String.format("%d [%d]", COMMANDER.trader, gameState.TraderSkill(Ship)));
+		tv.setText(String.format("%d [%d]", COMMANDER.trader, Ship.TraderSkill()));
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusEngineer);
-		tv.setText(String.format("%d [%d]", COMMANDER.engineer, gameState.EngineerSkill(Ship)));
+		tv.setText(String.format("%d [%d]", COMMANDER.engineer, Ship.EngineerSkill()));
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusKills);
 		tv.setText(String.format("%d",
@@ -53,20 +53,20 @@ public class FragmentCommanderStatus extends Fragment {
 		);
 
 		i = 0;
-		while (i < GameState.MAXPOLICERECORD && gameState.PoliceRecordScore >= gameState.PoliceRecord.minScore[i])
+		while (i < GameState.MAXPOLICERECORD && gameState.PoliceRecordScore >= gameState.PoliceRecord.minScore[i]) {
 			++i;
+		}
 		--i;
-		if (i < 0)
-			++i;
+		if (i < 0) { ++i; }
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPoliceRecord);
 		tv.setText(gameState.PoliceRecord.name[i]);
 
 		i = 0;
-		while (i < GameState.MAXREPUTATION && gameState.ReputationScore >= gameState.Reputation.minScore[i])
+		while (i < GameState.MAXREPUTATION && gameState.ReputationScore >= gameState.Reputation.minScore[i]) {
 			++i;
+		}
 		--i;
-		if (i < 0)
-			i = 0;
+		if (i < 0) { i = 0; }
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusReputation);
 		tv.setText(gameState.Reputation.name[i]);
 

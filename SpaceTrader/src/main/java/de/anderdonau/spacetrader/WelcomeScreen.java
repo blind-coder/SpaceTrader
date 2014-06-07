@@ -147,7 +147,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (check != 0) {
 				GooglePlayServicesUtil.getErrorDialog(check, this, 0);
 			} else {
-		    /* additional check for cheatcode */
+			  /* additional check for cheatcode */
 				SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
 				final boolean hideAds = settings.getBoolean("hideAds", false);
 
@@ -1777,8 +1777,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Math.min(gameState.ToSpend() / gameState.BuyPrice[Index], CURSYSTEM.qty[Index])
 		), "Amount",
 		                  "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
-		                  Math.min(gameState.ToSpend() / gameState.BuyPrice[Index],
-		                           CURSYSTEM.qty[Index]
+		                  Math.min(gameState.ToSpend() / gameState.BuyPrice[Index], CURSYSTEM.qty[Index]
 		                  ), "Buy", "Don't buy", new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
@@ -2086,9 +2085,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			if (gameState.SolarSystem[i] == Current) { break; }
 
-			if (gameState.WormholeExists(COMMANDER.curSystem, i)) { return i; } else if (gameState.RealDistance(
-				CURSYSTEM, gameState.SolarSystem[i]
-			) <= gameState.GetFuel() && gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
+			if (gameState.WormholeExists(COMMANDER.curSystem, i)) { return i; } else if (gameState
+				.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
+				) <= gameState.GetFuel() && gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
 			) > 0) { return i; }
 
 			if (Back) { --i; } else { ++i; }
@@ -2466,8 +2465,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 									);
 									break;
 								case GameState.ALIENARTIFACT:
-									questbuf += String.format("Artifact: %s\n",
-									                          gameState.SolarSystemName[s.nameIndex]
+									questbuf += String.format("Artifact: %s\n", gameState.SolarSystemName[s.nameIndex]
 									);
 									break;
 								case GameState.ARTIFACTDELIVERY:
@@ -2477,8 +2475,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 									}
 									break;
 								case GameState.TRIBBLE:
-									questbuf += String.format("Tribbles: %s\n",
-									                          gameState.SolarSystemName[s.nameIndex]
+									questbuf += String.format("Tribbles: %s\n", gameState.SolarSystemName[s.nameIndex]
 									);
 									break;
 								case GameState.GETREACTOR:
@@ -2490,8 +2487,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 									questbuf += String.format("Jarek: %s\n", gameState.SolarSystemName[s.nameIndex]);
 									break;
 								case GameState.ALIENINVASION:
-									questbuf += String.format("Invasion: %s\n",
-									                          gameState.SolarSystemName[s.nameIndex]
+									questbuf += String.format("Invasion: %s\n", gameState.SolarSystemName[s.nameIndex]
 									);
 									break;
 								case GameState.EXPERIMENT:
@@ -2772,7 +2768,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int oldtraderskill;
 		Ship Ship = gameState.Ship;
 
-		oldtraderskill = gameState.TraderSkill(Ship);
+		oldtraderskill = Ship.TraderSkill();
 		if (Ship.crew[1] == -1) { FirstFree = 1; } else if (Ship.crew[2] == -1) { FirstFree = 2; }
 
 		if ((FirstFree < 0) || (gameState.AvailableQuarters() <= FirstFree)) {
@@ -2789,7 +2785,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Ship.crew[FirstFree] = ForHire;
 		}
 		changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-		if (oldtraderskill != gameState.TraderSkill(Ship)) {
+		if (oldtraderskill != Ship.TraderSkill()) {
 			gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
 		}
 	}
@@ -2816,13 +2812,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			public void execute(Popup popup, View view) {
 				Ship Ship = gameState.Ship;
 				int oldtraderskill;
-				oldtraderskill = gameState.TraderSkill(Ship);
+				oldtraderskill = Ship.TraderSkill();
 				if (i == 1) {
 					Ship.crew[1] = Ship.crew[2];
 				}
 				Ship.crew[2] = -1;
 				changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-				if (oldtraderskill != gameState.TraderSkill(Ship)) {
+				if (oldtraderskill != Ship.TraderSkill()) {
 					gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
 				}
 			}
@@ -4063,7 +4059,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		while (gameState.Clicks > 0) {
 			// Engineer may do some repairs
-			Repairs = gameState.GetRandom(gameState.EngineerSkill(Ship)) >> 1;
+			Repairs = gameState.GetRandom(Ship.EngineerSkill()) >> 1;
 			Ship.hull += Repairs;
 			if (Ship.hull > gameState.GetHullStrength()) {
 				Repairs = Ship.hull - gameState.GetHullStrength();
@@ -4592,7 +4588,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		gameState.TribbleMessage = false;
 
-		Ship.hull += gameState.GetRandom(gameState.EngineerSkill(Ship));
+		Ship.hull += gameState.GetRandom(Ship.EngineerSkill());
 		if (Ship.hull > gameState.GetHullStrength()) { Ship.hull = gameState.GetHullStrength(); }
 
 		TryAutoRepair = true;
@@ -4992,8 +4988,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				}
 
 				return (false);
-			} else if ((gameState.GetRandom(7) + (gameState.PilotSkill(Ship) / 3)) * 2 >= gameState
-				.GetRandom(gameState.PilotSkill(Opponent)) * (2 + GameState.getDifficulty())) {
+			} else if ((gameState.GetRandom(7) + (Ship.PilotSkill() / 3)) * 2 >= gameState.GetRandom(
+				Opponent.PilotSkill()
+			) * (2 + GameState.getDifficulty())) {
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
 				if (CommanderGotHit) {
@@ -5018,8 +5015,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} else if (gameState.EncounterType == GameState.POLICEFLEE || gameState.EncounterType == GameState.TRADERFLEE ||
 			gameState.EncounterType == GameState.PIRATEFLEE || gameState.EncounterType == GameState.TRADERSURRENDER ||
 			gameState.EncounterType == GameState.PIRATESURRENDER) {
-			if (gameState.GetRandom(gameState.PilotSkill(Ship)) * 4 <= gameState.GetRandom(
-				(7 + (gameState.PilotSkill(Opponent) / 3))
+			if (gameState.GetRandom(Ship.PilotSkill()) * 4 <= gameState.GetRandom(
+				(7 + (Opponent.PilotSkill() / 3))
 			) * 2) {
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
@@ -5154,9 +5151,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		// Fighterskill attacker is pitted against pilotskill defender; if defender
 		// is fleeing the attacker has a free shot, but the chance to hit is smaller
-		if (gameState.GetRandom(gameState.FighterSkill(Attacker
-		) + ShipTypes.ShipTypes[Defender.type].size
-		) < (Flees ? 2 : 1) * gameState.GetRandom(5 + (gameState.PilotSkill(Defender) >> 1)))
+		if (gameState.GetRandom(Attacker.FighterSkill() + ShipTypes.ShipTypes[Defender.type].size
+		) < (Flees ? 2 : 1) * gameState.GetRandom(5 + (Defender.PilotSkill() >> 1)))
 		// Misses
 		{ return false; }
 
@@ -5169,12 +5165,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Damage = gameState.GetRandom(((Attacker.TotalWeapons(GameState.PULSELASERWEAPON,
 				                                                     GameState.PULSELASERWEAPON
 				) + Attacker.TotalWeapons(GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON
-				)) * (100 + 2 * gameState.EngineerSkill(Attacker)) / 100)
+				)) * (100 + 2 * Attacker.EngineerSkill()) / 100)
 				);
 			}
 		} else {
-			Damage = gameState.GetRandom((Attacker.TotalWeapons(-1, -1) * (100 + 2 * gameState
-				.EngineerSkill(Attacker)) / 100)
+			Damage = gameState.GetRandom((Attacker.TotalWeapons(-1, -1) * (100 + 2 * Attacker
+				.EngineerSkill()) / 100)
 			);
 		}
 
@@ -5205,7 +5201,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// this is subtracted from the hull, modified by the engineering skill
 		// of the defender.
 		if (Damage > 0) {
-			Damage -= gameState.GetRandom(gameState.EngineerSkill(Defender));
+			Damage -= gameState.GetRandom(Defender.EngineerSkill());
 			if (Damage <= 0) { Damage = 1; }
 			// At least 2 shots on Normal level are needed to destroy the hull
 			// (3 on Easy, 4 on Beginner, 1 on Hard or Impossible). For opponents,
@@ -5269,8 +5265,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// Gadgets aren't counted in the price, because they are already taken into account in
 		// the skill adjustment of the price.
 
-		CurPrice = CurPrice * (2 * gameState.PilotSkill(Sh) + gameState.EngineerSkill(Sh
-		) + 3 * gameState.FighterSkill(Sh)) / 60;
+		CurPrice = CurPrice * (2 * Sh.PilotSkill() + Sh.EngineerSkill() + 3 * Sh.FighterSkill()) / 60;
 
 		return CurPrice;
 	}

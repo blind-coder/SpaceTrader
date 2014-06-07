@@ -174,8 +174,8 @@ public class Ship implements Serializable {
 	}
 
 	public boolean isCloakedTo(Ship Opp) {
-		return (gameState.HasGadget(this, GameState.CLOAKINGDEVICE) && (gameState.EngineerSkill(this
-		) > gameState.EngineerSkill(Opp)));
+		return (gameState.HasGadget(this, GameState.CLOAKINGDEVICE) && (EngineerSkill() > Opp
+			.EngineerSkill()));
 	}
 
 	public boolean AnyEmptySlots() {
@@ -239,4 +239,88 @@ public class Ship implements Serializable {
 		return sum;
 	}
 
+	public int FighterSkill() {
+		// *************************************************************************
+		// Fighter skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = gameState.Mercenary[crew[0]].fighter;
+
+		for (i = 1; i < GameState.MAXCREW; ++i) {
+			if (crew[i] < 0) { break; }
+			if (gameState.Mercenary[crew[i]].fighter > MaxSkill) {
+				MaxSkill = gameState.Mercenary[crew[i]].fighter;
+			}
+		}
+
+		if (gameState.HasGadget(this, GameState.TARGETINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+
+		return gameState.AdaptDifficulty(MaxSkill);
+	}
+
+	public int PilotSkill() {
+		// *************************************************************************
+		// Pilot skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = gameState.Mercenary[crew[0]].pilot;
+
+		for (i = 1; i < GameState.MAXCREW; ++i) {
+			if (crew[i] < 0) { break; }
+			if (gameState.Mercenary[crew[i]].pilot > MaxSkill) {
+				MaxSkill = gameState.Mercenary[crew[i]].pilot;
+			}
+		}
+
+		if (gameState.HasGadget(this, GameState.NAVIGATINGSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+		if (gameState.HasGadget(this, GameState.CLOAKINGDEVICE)) { MaxSkill += GameState.CLOAKBONUS; }
+
+		return gameState.AdaptDifficulty(MaxSkill);
+	}
+
+	public int TraderSkill() {
+		// *************************************************************************
+		// Trader skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = gameState.Mercenary[crew[0]].trader;
+
+		for (i = 1; i < GameState.MAXCREW; ++i) {
+			if (crew[i] < 0) { break; }
+			if (gameState.Mercenary[crew[i]].trader > MaxSkill) {
+				MaxSkill = gameState.Mercenary[crew[i]].trader;
+			}
+		}
+
+		if (gameState.JarekStatus >= 2) { ++MaxSkill; }
+
+		return gameState.AdaptDifficulty(MaxSkill);
+	}
+
+	public int EngineerSkill() {
+		// *************************************************************************
+		// Engineer skill
+		// *************************************************************************
+		int i;
+		int MaxSkill;
+
+		MaxSkill = gameState.Mercenary[crew[0]].engineer;
+
+		for (i = 1; i < GameState.MAXCREW; ++i) {
+			if (crew[i] < 0) { break; }
+			if (gameState.Mercenary[crew[i]].engineer > MaxSkill) {
+				MaxSkill = gameState.Mercenary[crew[i]].engineer;
+			}
+		}
+
+		if (gameState.HasGadget(this, GameState.AUTOREPAIRSYSTEM)) { MaxSkill += GameState.SKILLBONUS; }
+
+		return gameState.AdaptDifficulty(MaxSkill);
+	}
 }

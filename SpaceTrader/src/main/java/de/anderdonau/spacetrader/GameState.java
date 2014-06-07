@@ -1415,8 +1415,8 @@ public class GameState implements Serializable {
 		// Determine base price of item
 		// *************************************************************************
 		SolarSystem CURSYSTEM = SolarSystem[Mercenary[0].curSystem];
-		return ((ItemTechLevel > CURSYSTEM.techLevel) ? 0 : ((Price * (100 - TraderSkill(Ship
-		))) / 100));
+		return ((ItemTechLevel > CURSYSTEM.techLevel) ? 0 :
+		        ((Price * (100 - Ship.TraderSkill())) / 100));
 	}
 
 	int BaseSellPrice(int Index, int Price) {
@@ -1433,83 +1433,6 @@ public class GameState implements Serializable {
 		if (Difficulty == BEGINNER || Difficulty == EASY) {
 			return (Level + 1);
 		} else if (Difficulty == IMPOSSIBLE) { return Math.max(1, Level - 1); } else { return Level; }
-	}
-
-	public int FighterSkill(Ship Sh) {
-		// *************************************************************************
-		// Fighter skill
-		// *************************************************************************
-		int i;
-		int MaxSkill;
-
-		MaxSkill = Mercenary[Sh.crew[0]].fighter;
-
-		for (i = 1; i < MAXCREW; ++i) {
-			if (Sh.crew[i] < 0) { break; }
-			if (Mercenary[Sh.crew[i]].fighter > MaxSkill) { MaxSkill = Mercenary[Sh.crew[i]].fighter; }
-		}
-
-		if (HasGadget(Sh, TARGETINGSYSTEM)) { MaxSkill += SKILLBONUS; }
-
-		return AdaptDifficulty(MaxSkill);
-	}
-
-	public int PilotSkill(Ship Sh) {
-		// *************************************************************************
-		// Pilot skill
-		// *************************************************************************
-		int i;
-		int MaxSkill;
-
-		MaxSkill = Mercenary[Sh.crew[0]].pilot;
-
-		for (i = 1; i < MAXCREW; ++i) {
-			if (Sh.crew[i] < 0) { break; }
-			if (Mercenary[Sh.crew[i]].pilot > MaxSkill) { MaxSkill = Mercenary[Sh.crew[i]].pilot; }
-		}
-
-		if (HasGadget(Sh, NAVIGATINGSYSTEM)) { MaxSkill += SKILLBONUS; }
-		if (HasGadget(Sh, CLOAKINGDEVICE)) { MaxSkill += CLOAKBONUS; }
-
-		return AdaptDifficulty(MaxSkill);
-	}
-
-	int TraderSkill(Ship Sh) {
-		// *************************************************************************
-		// Trader skill
-		// *************************************************************************
-		int i;
-		int MaxSkill;
-
-		MaxSkill = Mercenary[Sh.crew[0]].trader;
-
-		for (i = 1; i < MAXCREW; ++i) {
-			if (Sh.crew[i] < 0) { break; }
-			if (Mercenary[Sh.crew[i]].trader > MaxSkill) { MaxSkill = Mercenary[Sh.crew[i]].trader; }
-		}
-
-		if (JarekStatus >= 2) { ++MaxSkill; }
-
-		return AdaptDifficulty(MaxSkill);
-	}
-
-	public int EngineerSkill(Ship Sh) {
-		// *************************************************************************
-		// Engineer skill
-		// *************************************************************************
-		int i;
-		int MaxSkill;
-
-		MaxSkill = Mercenary[Sh.crew[0]].engineer;
-
-		for (i = 1; i < MAXCREW; ++i) {
-			if (Sh.crew[i] < 0) { break; }
-			if (Mercenary[Sh.crew[i]].engineer > MaxSkill) { MaxSkill = Mercenary[Sh.crew[i]].engineer; }
-		}
-
-		if (HasGadget(Sh, AUTOREPAIRSYSTEM)) { MaxSkill += SKILLBONUS; }
-
-		return AdaptDifficulty(MaxSkill);
 	}
 
 	public void RecalculateSellPrices() {
@@ -1573,8 +1496,8 @@ public class GameState implements Serializable {
 
 	public int BASESHIPPRICE(int a) {
 		// The Difficulty part is commented in the original PalmOS source, too, but I think it maybe should be activated -- BRS
-		return (((ShipTypes.ShipTypes[a].price * (100 - TraderSkill(Ship
-		))) / 100) /* * (Difficulty < 3 ? 1 : (Difficulty + 3)) / (Difficulty < 3 ? 1 : 5)*/);
+		return (((ShipTypes.ShipTypes[a].price * (100 - Ship
+			.TraderSkill())) / 100) /* * (Difficulty < 3 ? 1 : (Difficulty + 3)) / (Difficulty < 3 ? 1 : 5)*/);
 	}
 
 	public int BASEWEAPONPRICE(int a) {
@@ -1758,7 +1681,7 @@ public class GameState implements Serializable {
 					BuyPrice[i] = SellPrice[i];
 				}
 				// BuyPrice = SellPrice + 1 to 12% (depending on trader skill (minimum is 1, max 12))
-				BuyPrice[i] = (BuyPrice[i] * (103 + (MAXSKILL - TraderSkill(Ship))) / 100);
+				BuyPrice[i] = (BuyPrice[i] * (103 + (MAXSKILL - Ship.TraderSkill())) / 100);
 				if (BuyPrice[i] <= SellPrice[i]) {
 					BuyPrice[i] = SellPrice[i] + 1;
 				}
@@ -2096,7 +2019,7 @@ public class GameState implements Serializable {
 		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
 			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) { return; }
 
-		oldtraderskill = TraderSkill(Ship);
+		oldtraderskill = Ship.TraderSkill();
 
 		Redo = true;
 		while (Redo) {
@@ -2110,7 +2033,7 @@ public class GameState implements Serializable {
 			COMMANDER.fighter += 1;
 		} else if (d == 2) {
 			COMMANDER.trader += 1;
-			if (oldtraderskill != TraderSkill(Ship)) { RecalculateBuyPrices(COMMANDER.curSystem); }
+			if (oldtraderskill != Ship.TraderSkill()) { RecalculateBuyPrices(COMMANDER.curSystem); }
 		} else { COMMANDER.engineer += 1; }
 	}
 
@@ -2125,7 +2048,7 @@ public class GameState implements Serializable {
 		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
 			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) { return; }
 
-		oldtraderskill = TraderSkill(Ship);
+		oldtraderskill = Ship.TraderSkill();
 
 		Redo = true;
 		while (Redo) {
@@ -2139,7 +2062,7 @@ public class GameState implements Serializable {
 			COMMANDER.fighter -= amount;
 		} else if (d == 2) {
 			COMMANDER.trader -= amount;
-			if (oldtraderskill != TraderSkill(Ship)) { RecalculateBuyPrices(COMMANDER.curSystem); }
+			if (oldtraderskill != Ship.TraderSkill()) { RecalculateBuyPrices(COMMANDER.curSystem); }
 		} else { COMMANDER.engineer -= amount; }
 	}
 
