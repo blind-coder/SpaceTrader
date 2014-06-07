@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class FragmentStartNewGame extends Fragment {
 	private GameState gameState;
 	private View rootView = null;
-	
+
 	public FragmentStartNewGame() {
 		gameState = new GameState("Jameson");
 	}
@@ -34,14 +34,21 @@ public class FragmentStartNewGame extends Fragment {
 		gameState.DeterminePrices(gameState.Mercenary[0].curSystem);
 
 		GameState.setDifficulty(s.getProgress());
+
+		if (s.getProgress() < GameState.NORMAL) {
+			if (gameState.SolarSystem[gameState.Mercenary[0].curSystem].special < 0) {
+				gameState.SolarSystem[gameState.Mercenary[0].curSystem].special = GameState.LOTTERYWINNER;
+			}
+		}
+
 		s = (SeekBar) findViewById(R.id.skillPilot);
-		gameState.Mercenary[0].pilot = s.getProgress()+1;
+		gameState.Mercenary[0].pilot = s.getProgress() + 1;
 		s = (SeekBar) findViewById(R.id.skillFighter);
-		gameState.Mercenary[0].fighter = s.getProgress()+1;
+		gameState.Mercenary[0].fighter = s.getProgress() + 1;
 		s = (SeekBar) findViewById(R.id.skillTrader);
-		gameState.Mercenary[0].trader = s.getProgress()+1;
+		gameState.Mercenary[0].trader = s.getProgress() + 1;
 		s = (SeekBar) findViewById(R.id.skillEngineer);
-		gameState.Mercenary[0].engineer = s.getProgress()+1;
+		gameState.Mercenary[0].engineer = s.getProgress() + 1;
 		return gameState;
 	}
 
@@ -116,16 +123,20 @@ public class FragmentStartNewGame extends Fragment {
 
 			}
 		};
-		((SeekBar) rootView.findViewById(R.id.skillEngineer))
-			.setOnSeekBarChangeListener(skillChangeListener);
-		((SeekBar) rootView.findViewById(R.id.skillPilot))
-			.setOnSeekBarChangeListener(skillChangeListener);
-		((SeekBar) rootView.findViewById(R.id.skillFighter))
-			.setOnSeekBarChangeListener(skillChangeListener);
-		((SeekBar) rootView.findViewById(R.id.skillTrader))
-			.setOnSeekBarChangeListener(skillChangeListener);
-		((SeekBar) rootView.findViewById(R.id.levelBar))
-			.setOnSeekBarChangeListener(levelChangeListener);
+		((SeekBar) rootView.findViewById(R.id.skillEngineer)).setOnSeekBarChangeListener(
+			skillChangeListener
+		);
+		((SeekBar) rootView.findViewById(R.id.skillPilot)).setOnSeekBarChangeListener(
+			skillChangeListener
+		);
+		((SeekBar) rootView.findViewById(R.id.skillFighter)).setOnSeekBarChangeListener(
+			skillChangeListener
+		);
+		((SeekBar) rootView.findViewById(R.id.skillTrader)).setOnSeekBarChangeListener(
+			skillChangeListener
+		);
+		((SeekBar) rootView.findViewById(R.id.levelBar)).setOnSeekBarChangeListener(levelChangeListener
+		);
 
 		return rootView;
 	}

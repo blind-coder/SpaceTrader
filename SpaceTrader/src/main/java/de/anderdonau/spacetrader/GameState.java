@@ -26,12 +26,6 @@ import de.anderdonau.spacetrader.DataTypes.Tradeitems;
 import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 public class GameState implements Serializable {
-	// Special Enables      // Comment these out to disable code
-	public static final boolean       _STRA_CHEAT_                = true; // Cheat Enable
-	public static final boolean       _STRA_SHIPYARDCREDITS_      = true;
-	// Display Trade Credits in Ship Yard
-	public static final boolean       _INCLUDE_DEBUG_DIALOGS_     = true;
-	// Include code for displaying Debug Alerts
 	// Add Ships, Weapons, Shields, and Gadgets that don't show up normally
 	public static final int           EXTRAWEAPONS                = 1;
 	// Number of weapons over standard
@@ -44,11 +38,6 @@ public class GameState implements Serializable {
 	public static final int           DEFSEEDX                    = 521288629;
 	public static final int           DEFSEEDY                    = 362436069;
 	public static final int           MAXTRADEITEM                = 10;
-	public static final int           MAXCREDITS                  = 99999999;
-	public static final int           MAXPRICE                    = 99999;
-	public static final int           MAXQUANTITY                 = 999;
-	// Activity level of police, traders or pirates
-	public static final int           MAXACTIVITY                 = 8;
 	// System status: normally this is uneventful, but sometimes a system has a
 	// special event occurring. This influences some prices.
 	public static final int           MAXSTATUS                   = 8;
@@ -61,7 +50,6 @@ public class GameState implements Serializable {
 	public static final int           CROPFAILURE                 = 6;
 	public static final int           LACKOFWORKERS               = 7;
 	// Difficulty levels
-	public static final int           MAXDIFFICULTY               = 5;
 	public static final int           BEGINNER                    = 0;
 	public static final int           EASY                        = 1;
 	public static final int           NORMAL                      = 2;
@@ -206,7 +194,6 @@ public class GameState implements Serializable {
 	public static final int           COSTMOON                    = 500000;
 	public static final int           MAXSPECIALEVENT             = 37;
 	public static final int           ENDFIXED                    = 7;
-	public static final int           MAXTEXT                     = 9;
 	public static final int           DRAGONFLYDESTROYED          = 0;
 	public static final int           FLYBARATAS                  = 1;
 	public static final int           FLYMELINA                   = 2;
