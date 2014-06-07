@@ -1521,34 +1521,6 @@ public class GameState implements Serializable {
 		for (i = 0; i < MAXTRADEITEM; ++i) { SellPrice[i] = (SellPrice[i] * 100) / 90; }
 	}
 
-	public int TotalCargoBays() {
-		// *************************************************************************
-		// Calculate total cargo bays
-		// *************************************************************************
-		int Bays;
-		int i;
-
-		Bays = ShipTypes.ShipTypes[Ship.type].cargoBays;
-		for (i = 0; i < MAXGADGET; ++i) { if (Ship.gadget[i] == EXTRABAYS) { Bays += 5; } }
-		if (JaporiDiseaseStatus == 1) { Bays -= 10; }
-		// since the quest ends when the reactor
-		if (ReactorStatus > 0 && ReactorStatus < 21) { Bays -= (5 + 10 - (ReactorStatus - 1) / 2); }
-
-		return Bays;
-	}
-
-	public int FilledCargoBays() {
-		// *************************************************************************
-		// Calculate total filled cargo bays
-		// *************************************************************************
-		int sum, i;
-
-		sum = 0;
-		for (i = 0; i < MAXTRADEITEM; ++i) { sum = sum + Ship.cargo[i]; }
-
-		return sum;
-	}
-
 	public int MercenaryMoney() {
 		int i, ToPay;
 

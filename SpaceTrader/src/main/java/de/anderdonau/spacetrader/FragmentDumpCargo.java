@@ -47,7 +47,10 @@ public class FragmentDumpCargo extends Fragment {
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtDumpCargoBays);
-		tv.setText(String.format("%d/%d", gameState.FilledCargoBays(), gameState.TotalCargoBays()));
+		tv.setText(String.format("%d/%d", gameState.Ship.FilledCargoBays(),
+		                         gameState.Ship.TotalCargoBays()
+		)
+		);
 
 		return rootView;
 	}

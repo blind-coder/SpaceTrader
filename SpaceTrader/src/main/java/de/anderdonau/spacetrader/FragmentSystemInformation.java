@@ -123,8 +123,8 @@ public class FragmentSystemInformation extends Fragment {
 		if ((CURSYSTEM.special < 0) ||
 			(CURSYSTEM.special == GameState.BUYTRIBBLE && gameState.Ship.tribbles <= 0) ||
 			(CURSYSTEM.special == GameState.ERASERECORD && gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) ||
-			(CURSYSTEM.special == GameState.CARGOFORSALE && (gameState.FilledCargoBays() > gameState
-				.TotalCargoBays() - 3)) ||
+			(CURSYSTEM.special == GameState.CARGOFORSALE && (gameState.Ship.FilledCargoBays() > gameState
+				.Ship.TotalCargoBays() - 3)) ||
 			((CURSYSTEM.special == GameState.DRAGONFLY || CURSYSTEM.special == GameState.JAPORIDISEASE ||
 				CURSYSTEM.special == GameState.ALIENARTIFACT || CURSYSTEM.special == GameState.AMBASSADORJAREK ||
 				CURSYSTEM.special == GameState.EXPERIMENT) && (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE)) ||
@@ -585,7 +585,7 @@ public class FragmentSystemInformation extends Fragment {
 
 		switch (CURSYSTEM.special) {
 			case GameState.GETREACTOR:
-				if (gameState.FilledCargoBays() > gameState.TotalCargoBays() - 15) {
+				if (gameState.Ship.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 15) {
 					popup = new Popup(welcomeScreen, "Not Enough Bays",
 					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
 					                  welcomeScreen.cbShowNextPopup
@@ -925,7 +925,7 @@ public class FragmentSystemInformation extends Fragment {
 				break;
 
 			case GameState.JAPORIDISEASE:
-				if (gameState.FilledCargoBays() > gameState.TotalCargoBays() - 10) {
+				if (gameState.Ship.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 10) {
 					popup = new Popup(welcomeScreen, "Not Enough Bays",
 					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
 					                  welcomeScreen.cbShowNextPopup

@@ -62,8 +62,8 @@ public class FragmentAveragePrices extends Fragment {
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListBays);
-		tv.setText(String.format("Bays: %d/%d", gameState.FilledCargoBays(),
-		                         gameState.TotalCargoBays()
+		tv.setText(String.format("Bays: %d/%d", gameState.Ship.FilledCargoBays(),
+		                         gameState.Ship.TotalCargoBays()
 		)
 		);
 

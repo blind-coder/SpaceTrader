@@ -98,8 +98,8 @@ public class FragmentSellCargo extends Fragment {
 			}
 		}
 		tv = (TextView) rootView.findViewById(R.id.txtSellCargoBays);
-		tv.setText(String.format("Bays: %d/%d", gameState.FilledCargoBays(),
-		                         gameState.TotalCargoBays()
+		tv.setText(String.format("Bays: %d/%d", gameState.Ship.FilledCargoBays(),
+		                         gameState.Ship.TotalCargoBays()
 		)
 		);
 		tv = (TextView) rootView.findViewById(R.id.txtSellCargoCash);

@@ -95,7 +95,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	InterstitialAd interstitial;
 
 	private PopupQueue           popupQueue      = new PopupQueue();
-	final  Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
+	final   Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
 		@Override
 		public void execute(Popup popup, View view) {
 			WelcomeScreen.this.showNextPopup();
@@ -147,7 +147,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (check != 0) {
 				GooglePlayServicesUtil.getErrorDialog(check, this, 0);
 			} else {
-	      /* additional check for cheatcode */
+		    /* additional check for cheatcode */
 				SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
 				final boolean hideAds = settings.getBoolean("hideAds", false);
 
@@ -204,6 +204,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME || gameState == null) {
@@ -245,6 +246,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+
 	public void restoreActionBar() {
 		ActionBar actionBar = getActionBar();
 		assert actionBar != null;
@@ -252,6 +254,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setTitle("Commands");
 	}
+
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -265,11 +268,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		return true;
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (mNavigationDrawerFragment != null){
-			if (!mNavigationDrawerFragment.isDrawerOpen()){
-				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER){
+		if (mNavigationDrawerFragment != null) {
+			if (!mNavigationDrawerFragment.isDrawerOpen()) {
+				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER) {
 					MenuInflater inflater = getMenuInflater();
 					inflater.inflate(R.menu.in_game, menu);
 				}
@@ -279,6 +283,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -294,7 +299,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (id != R.id.submenuGame && id != R.id.submenuHelp) {
 			drawer_layout.closeDrawers();
 		}
-		switch (id){
+		switch (id) {
 			case R.id.hotkey1:
 				call = gameState.Shortcuts[gameState.Shortcut1][0];
 				break;
@@ -311,18 +316,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				changeFragment(FRAGMENTS.OPTIONS);
 				return true;
 			case R.id.menuNewGame:
-				popup = new Popup(this,
-				                  "Really start new game?",
+				popup = new Popup(this, "Really start new game?",
 				                  "If you start a new game your current game will be deleted!\nYou will not be added to the high score table!",
-				                  "", "Yes", "No",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  mContext.deleteFile("savegame.txt");
-						                  changeFragment(FRAGMENTS.NEW_GAME);
-						                  popupQueue.clear();
-					                  }
-				                  }, cbShowNextPopup
+				                  "", "Yes", "No", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						mContext.deleteFile("savegame.txt");
+						changeFragment(FRAGMENTS.NEW_GAME);
+						popupQueue.clear();
+					}
+				}, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -352,16 +355,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				return true;
 			case R.id.menuHelpMenu:
 				popup = new Popup(this, "Tips",
-				                  "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n"+
-					                  "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n"+
-					                  "\"\"Game\" gives access to game functions:\n"+
+				                  "The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n" +
+					                  "\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n" +
+					                  "\"\"Game\" gives access to game functions:\n" +
 					                  "- \"New Game\" starts a new game.\n" +
-					                  "- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n"+
-					                  "- \"Options\" gives access to the game preferences.\n"+
-					                  "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n"+
-					                  "- \"High Scores\" shows the high-score list.\n"+
-					                  "- \"Clear High Scores\" wipes the current high-score list.",
-				                  "", "OK", cbShowNextPopup
+					                  "- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n" +
+					                  "- \"Options\" gives access to the game preferences.\n" +
+					                  "- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n" +
+					                  "- \"High Scores\" shows the high-score list.\n" +
+					                  "- \"Clear High Scores\" wipes the current high-score list.", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -407,7 +410,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Ship Equipment",
 				                  "There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
 					                  "Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
-					                  "The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n"+
+					                  "The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n" +
 					                  "As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
 					                  "Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
 					                  "Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
@@ -434,7 +437,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.menuHelpFirstSteps:
 				popup = new Popup(this, "First Steps",
 				                  "Here I will describe the steps you will undertake the first days as a trader:\n" +
-					                  "You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n"+
+					                  "You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n" +
 					                  "Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
 					                  "If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
 					                  "After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
@@ -455,12 +458,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                  "A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
 					                  "I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
 					                  "A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
-					                  "Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n"+
+					                  "Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n" +
 					                  "Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
 					                  "DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
 					                  "Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
 					                  "Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
-					                  "Thank you all. You were a tremendous help, and I am very grateful for that.\n"+
+					                  "Thank you all. You were a tremendous help, and I am very grateful for that.\n" +
 					                  "Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
 					                  "An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
 				                  "", "OK", cbShowNextPopup
@@ -469,56 +472,54 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 				return true;
 			case R.id.menuHelpCredits:
-				popup = new Popup(this, "Credits", "Android port Copyright 2014 by Benjamin Schieder\n"+
-					                  "Linux port Copyright 2010 by Benjamin Schieder\n"+
-					                  "Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
-					                  "New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
-					                  "Original Copyright 2000-2002 by Pieter Spronck\n"+
-					                  "Design and programming: Pieter Spronck\"\n"+
-					                  "Additional design and programming: Samuel Goldstein, Sam Anderson\n"+
-					                  "Graphics: Alexander Lawrence\n" +
-					                  "Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
-					                  "Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
-					                  "David J. Webb for \"Solar Wars\"\n" +
-					                  "Matt Lee for \"Dope Wars\"\n" +
-					                  "DrWowe for solving the \"Special\" bug\n" +
-					                  "All the beta testers\nAnd all the players that sent me their ideas\n" +
-					                  "Space Trader is released under a GNU General Public License",
-				                  "", "OK", cbShowNextPopup
+				popup = new Popup(this, "Credits", "Android port Copyright 2014 by Benjamin Schieder\n" +
+					"Linux port Copyright 2010 by Benjamin Schieder\n" +
+					"Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
+					"New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
+					"Original Copyright 2000-2002 by Pieter Spronck\n" +
+					"Design and programming: Pieter Spronck\"\n" +
+					"Additional design and programming: Samuel Goldstein, Sam Anderson\n" +
+					"Graphics: Alexander Lawrence\n" +
+					"Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
+					"Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
+					"David J. Webb for \"Solar Wars\"\n" +
+					"Matt Lee for \"Dope Wars\"\n" +
+					"DrWowe for solving the \"Special\" bug\n" +
+					"All the beta testers\nAnd all the players that sent me their ideas\n" +
+					"Space Trader is released under a GNU General Public License", "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpLicense:
-				popup = new Popup(this, "License",
-				                  "The game code is licensed under the GPLv2",
-				                  "", "OK", cbShowNextPopup
+				popup = new Popup(this, "License", "The game code is licensed under the GPLv2", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 		}
-		if (call.equals("B")){
+		if (call.equals("B")) {
 			changeFragment(FRAGMENTS.BUY_CARGO);
-		} else if (call.equals("S")){
+		} else if (call.equals("S")) {
 			changeFragment(FRAGMENTS.SELL_CARGO);
-		} else if (call.equals("Y")){
+		} else if (call.equals("Y")) {
 			changeFragment(FRAGMENTS.SHIPYARD);
-		} else if (call.equals("E")){
+		} else if (call.equals("E")) {
 			changeFragment(FRAGMENTS.BUY_EQUIPMENT);
-		} else if (call.equals("Q")){
+		} else if (call.equals("Q")) {
 			changeFragment(FRAGMENTS.SELL_EQUIPMENT);
-		} else if (call.equals("P")){
+		} else if (call.equals("P")) {
 			changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-		} else if (call.equals("K")){
+		} else if (call.equals("K")) {
 			changeFragment(FRAGMENTS.BANK);
-		} else if (call.equals("I")){
+		} else if (call.equals("I")) {
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-		} else if (call.equals("C")){
+		} else if (call.equals("C")) {
 			changeFragment(FRAGMENTS.COMMANDER_STATUS);
-		} else if (call.equals("G")){
+		} else if (call.equals("G")) {
 			changeFragment(FRAGMENTS.GALACTIC_CHART);
-		} else if (call.equals("W")){
+		} else if (call.equals("W")) {
 			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -529,22 +530,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	/*
 	 * Popup functions must be here to be in the right context.
 	 */
-	public void showNextPopup(){
-		if (popupQueue.isEmpty())
-			return;
+	public void showNextPopup() {
+		if (popupQueue.isEmpty()) { return; }
 
 		Popup popup = popupQueue.peek();
-		if (popup.dialog != null && popup.dialog.isShowing())
-			return;
-		if (popup.wasShown)
-			popupQueue.pop();
-		if (popupQueue.isEmpty())
-			return;
+		if (popup.dialog != null && popup.dialog.isShowing()) { return; }
+		if (popup.wasShown) { popupQueue.pop(); }
+		if (popupQueue.isEmpty()) { return; }
 
 		popup = popupQueue.peek();
 		popup.show();
 	}
-	public void addPopup(Popup popup){
+
+	public void addPopup(Popup popup) {
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -552,7 +550,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	/*
 	 * Heart and Soul of UI: changer of fragments.
 	 */
-	public void changeFragment(FRAGMENTS fragment){
+	public void changeFragment(FRAGMENTS fragment) {
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -562,7 +560,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			transaction.show(mNavigationDrawerFragment);
 		}
 
-		switch (fragment){
+		switch (fragment) {
 			case AVERAGE_PRICES:
 				currentFragment = new FragmentAveragePrices(this, gameState);
 				break;
@@ -643,14 +641,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	// FragmentStartNewGame
 	@SuppressWarnings("UnusedParameters")
 	public void StartNewGameStartGameCallback(View view) {
-		gameState = ((FragmentStartNewGame)currentFragment).getGameState();
+		gameState = ((FragmentStartNewGame) currentFragment).getGameState();
 		this.saveGame();
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
+
 	// FragmentSystemInformation
 	@SuppressWarnings("UnusedParameters")
-	public void SystemInformationNewspaperCallback(View view){
-		((FragmentSystemInformation)currentFragment).showNewspaper();
+	public void SystemInformationNewspaperCallback(View view) {
+		((FragmentSystemInformation) currentFragment).showNewspaper();
 	}
 
 	@SuppressWarnings("UnusedParameters")
@@ -660,11 +659,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 	@SuppressWarnings("UnusedParameters")
 	public void SystemInformationSpecialCallback(View view) {
-		((FragmentSystemInformation)currentFragment).special();
+		((FragmentSystemInformation) currentFragment).special();
 	}
+
 	// FragmentCommanderStatus
 	@SuppressWarnings("UnusedParameters")
-	public void CommanderStatusQuestsCallback(View view){
+	public void CommanderStatusQuestsCallback(View view) {
 		String quests = "";
 		if (gameState.MonsterStatus == 1) {
 			quests += "Kill the space monster at Acamar.\n";
@@ -672,14 +672,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.DragonflyStatus >= 1 && gameState.DragonflyStatus <= 4) {
 			quests += "Follow the Dragonfly to ";
-			if (gameState.DragonflyStatus == 1)
+			if (gameState.DragonflyStatus == 1) {
 				quests += "Baratas.\n";
-			else if (gameState.DragonflyStatus == 2)
+			} else if (gameState.DragonflyStatus == 2) {
 				quests += "Melina.\n";
-			else if (gameState.DragonflyStatus == 3)
+			} else if (gameState.DragonflyStatus == 3) {
 				quests += "Regulas.\n";
-			else if (gameState.DragonflyStatus == 4)
-				quests += "Zalkon.\n";
+			} else if (gameState.DragonflyStatus == 4) { quests += "Zalkon.\n"; }
 		} else if (gameState.SolarSystem[GameState.ZALKONSYSTEM].special == GameState.INSTALLLIGHTNINGSHIELD) {
 			quests += "Get your lightning shield at Zalkon.\n";
 		}
@@ -705,7 +704,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// this fashion. SjG 10 July 2002
 		if (gameState.InvasionStatus >= 1 && gameState.InvasionStatus < 7) {
 			quests += "Inform Gemulon about alien invasion";
-			if (gameState.InvasionStatus == 6){
+			if (gameState.InvasionStatus == 6) {
 				quests += " by tomorrow";
 			} else {
 				quests += String.format(" within %d days", gameState.InvasionStatus);
@@ -718,7 +717,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.ExperimentStatus >= 1 && gameState.ExperimentStatus < 11) {
 			quests += "Stop Dr. Fehler's experiment at Daled ";
 
-			if (gameState.ExperimentStatus == 10){
+			if (gameState.ExperimentStatus == 10) {
 				quests += "by tomorrow";
 			} else {
 				quests += String.format("within %d days", 11 - gameState.ExperimentStatus);
@@ -751,8 +750,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			quests += "Claim your moon at Utopia.\n";
 		}
 
-		if (quests.length() == 0)
-			quests = "There are no open quests.\n";
+		if (quests.length() == 0) { quests = "There are no open quests.\n"; }
 
 		Popup popup = new Popup(this, "Open Quests", quests, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
@@ -763,10 +761,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void CommanderStatusSpecialCargoCallback(View view) {
 		String buf = "";
 		if (gameState.Ship.tribbles > 0) {
-			if (gameState.Ship.tribbles >= GameState.MAXTRIBBLES){
+			if (gameState.Ship.tribbles >= GameState.MAXTRIBBLES) {
 				buf += "An infestation of tribbles.\n";
 			} else {
-				buf += String.format("%d cute furry tribble%s.\n", gameState.Ship.tribbles, gameState.Ship.tribbles == 1 ? "" : "s");
+				buf += String.format("%d cute furry tribble%s.\n", gameState.Ship.tribbles,
+				                     gameState.Ship.tribbles == 1 ? "" : "s"
+				);
 			}
 		}
 
@@ -781,14 +781,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 			buf += "An unstable reactor taking up 5 bays.\n";
-			buf += String.format("%d bay%s of enriched fuel.\n", 10 - ((gameState.ReactorStatus - 1) / 2), (10 - ((gameState.ReactorStatus - 1) / 2)) > 1 ? "s" : "");
+			buf += String.format("%d bay%s of enriched fuel.\n", 10 - ((gameState.ReactorStatus - 1) / 2),
+			                     (10 - ((gameState.ReactorStatus - 1) / 2)) > 1 ? "s" : ""
+			);
 
 		}
 		if (gameState.CanSuperWarp) {
 			buf += "A Portable Singularity.\n";
 		}
 
-		if (buf.length() == 0){
+		if (buf.length() == 0) {
 			buf = "No special cargo.";
 		}
 
@@ -798,7 +800,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void CommanderStatusShipCallback(View view){
+	public void CommanderStatusShipCallback(View view) {
 		int i, j, k, FirstEmptySlot;
 		String buf;
 
@@ -808,32 +810,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		buf += "Equipment:\n";
 
-		for (i=0; i<GameState.MAXWEAPONTYPE+GameState.EXTRAWEAPONS; ++i) {
+		for (i = 0; i < GameState.MAXWEAPONTYPE + GameState.EXTRAWEAPONS; ++i) {
 			j = 0;
-			for (k=0; k<GameState.MAXWEAPON; ++k) {
-				if (gameState.Ship.weapon[k] == i)
-					++j;
+			for (k = 0; k < GameState.MAXWEAPON; ++k) {
+				if (gameState.Ship.weapon[k] == i) { ++j; }
 			}
 			if (j > 0) {
 				buf += String.format("%d %s%s\n", j, Weapons.mWeapons[i].name, j > 1 ? "s" : "");
 			}
 		}
 
-		for (i=0; i<GameState.MAXSHIELDTYPE+GameState.EXTRASHIELDS; ++i) {
+		for (i = 0; i < GameState.MAXSHIELDTYPE + GameState.EXTRASHIELDS; ++i) {
 			j = 0;
-			for (k=0; k<GameState.MAXSHIELD; ++k) {
-				if (gameState.Ship.shield[k] == i)
-					++j;
+			for (k = 0; k < GameState.MAXSHIELD; ++k) {
+				if (gameState.Ship.shield[k] == i) { ++j; }
 			}
 			if (j > 0) {
 				buf += String.format("%d %s%s\n", j, Shields.mShields[i].name, j > 1 ? "s" : "");
 			}
 		}
-		for (i=0; i<GameState.MAXGADGETTYPE+GameState.EXTRAGADGETS; ++i) {
+		for (i = 0; i < GameState.MAXGADGETTYPE + GameState.EXTRAGADGETS; ++i) {
 			j = 0;
-			for (k=0; k<GameState.MAXGADGET; ++k) {
-				if (gameState.Ship.gadget[k] == i)
-					++j;
+			for (k = 0; k < GameState.MAXGADGET; ++k) {
+				if (gameState.Ship.gadget[k] == i) { ++j; }
 			}
 			if (j > 0) {
 				if (i == GameState.EXTRABAYS) {
@@ -888,23 +887,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	// FragmentBank
 	@SuppressWarnings("UnusedParameters")
-	public void btnBankGetLoan(View view){
+	public void btnBankGetLoan(View view) {
 		Popup popup;
-		if (gameState.Debt >= gameState.MaxLoan()){
-			popup = new Popup(this,
-			                  "Debt too high!", "Your debt is too high to get another loan.", "", "OK",
-			                  cbShowNextPopup
+		if (gameState.Debt >= gameState.MaxLoan()) {
+			popup = new Popup(this, "Debt too high!", "Your debt is too high to get another loan.", "",
+			                  "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
-		popup = new Popup(this,
-		                  "Get Loan",
-		                  String.format("How much do you want?\nYou can borrow up to %d credits.", gameState.MaxLoan()),
-		                  "Credits", "", gameState.MaxLoan(), "Get loan", "Don't get loan",
+		popup = new Popup(this, "Get Loan", String.format(
+			"How much do you want?\nYou can borrow up to %d credits.", gameState.MaxLoan()
+		), "Credits", "", gameState.MaxLoan(), "Get loan", "Don't get loan",
 		                  new Popup.buttonCallback() {
 			                  @Override
 			                  public void execute(Popup popup, View view) {
@@ -917,99 +915,90 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					                  changeFragment(FRAGMENTS.BANK);
 				                  }
 			                  }
-		                  },
-		                  cbShowNextPopup,
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  gameState.Credits += gameState.MaxLoan();
-				                  gameState.Debt += gameState.MaxLoan();
-				                  changeFragment(FRAGMENTS.BANK);
-				                  showNextPopup();
-			                  }
-		                  }
-		);
-		popupQueue.push(popup);
-		showNextPopup();
-	}
-
-	@SuppressWarnings("UnusedParameters")
-	public void btnBankPaybackLoan(View view){
-		Popup popup;
-		if (gameState.Debt <= 0){
-			popup = new Popup(this,
-			                  "No debt.", "You don't have a loan to pay back.", "", "OK", cbShowNextPopup);
-			popupQueue.push(popup);
-			showNextPopup();
-			return;
+		                  }, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				gameState.Credits += gameState.MaxLoan();
+				gameState.Debt += gameState.MaxLoan();
+				changeFragment(FRAGMENTS.BANK);
+				showNextPopup();
+			}
 		}
-		popup = new Popup(this,
-		                  "Payback Loan",
-		                  String.format("You have a debt of %d credits.\nHow much do you want to pay back?", gameState.Debt),
-		                  "Credits", "", gameState.Debt, "Pay back", "Don't pay back",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  SeekBar seekBar = (SeekBar) view;
-													int amount = seekBar.getProgress();
-													if (amount > 0) {
-														amount = Math.min(gameState.Debt, amount);
-														if (amount > gameState.Credits) {
-															Popup popup1 = new Popup(popup.context,
-															                         "Not enough credits!",
-															                         String.format("You only have %d credits. You can't pay back more than that!",
-															                                       gameState.Credits
-															                         ),
-															                         "", "OK", cbShowNextPopup
-															);
-															popupQueue.push(popup1);
-															return;
-														}
-														gameState.Credits -= amount;
-														gameState.Debt -= amount;
-														changeFragment(FRAGMENTS.BANK);
-													}
-												}
-											}, cbShowNextPopup,
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  int amount = Math.min(gameState.Debt, gameState.Credits);
-				                  gameState.Credits -= amount;
-				                  gameState.Debt -= amount;
-				                  changeFragment(FRAGMENTS.BANK);
-			                  }
-		                  }
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnBankBuyInsurance(View view){
+	public void btnBankPaybackLoan(View view) {
 		Popup popup;
-		if (gameState.Insurance){
-			popup = new Popup(this,
-			                  "Stop Insurance",
-			                  "Do you really wish to stop your insurance and lose your no-claim?", "",
-			                  "Yes", "No",
-			                  new Popup.buttonCallback() {
-													@Override
-													public void execute(Popup popup, View view) {
-														gameState.Insurance = false;
-														gameState.NoClaim = 0;
-														changeFragment(FRAGMENTS.BANK);
-													}
-												},
+		if (gameState.Debt <= 0) {
+			popup = new Popup(this, "No debt.", "You don't have a loan to pay back.", "", "OK",
 			                  cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
+			return;
+		}
+		popup = new Popup(this, "Payback Loan", String.format(
+			"You have a debt of %d credits.\nHow much do you want to pay back?", gameState.Debt
+		), "Credits", "", gameState.Debt, "Pay back", "Don't pay back", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				SeekBar seekBar = (SeekBar) view;
+				int amount = seekBar.getProgress();
+				if (amount > 0) {
+					amount = Math.min(gameState.Debt, amount);
+					if (amount > gameState.Credits) {
+						Popup popup1 = new Popup(popup.context, "Not enough credits!", String.format(
+							"You only have %d credits. You can't pay back more than that!", gameState.Credits
+						), "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						return;
+					}
+					gameState.Credits -= amount;
+					gameState.Debt -= amount;
+					changeFragment(FRAGMENTS.BANK);
+				}
+			}
+		}, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				int amount = Math.min(gameState.Debt, gameState.Credits);
+				gameState.Credits -= amount;
+				gameState.Debt -= amount;
+				changeFragment(FRAGMENTS.BANK);
+			}
+		}
+		);
+		popupQueue.push(popup);
+		showNextPopup();
+	}
+
+	@SuppressWarnings("UnusedParameters")
+	public void btnBankBuyInsurance(View view) {
+		Popup popup;
+		if (gameState.Insurance) {
+			popup = new Popup(this, "Stop Insurance",
+			                  "Do you really wish to stop your insurance and lose your no-claim?", "",
+			                  "Yes", "No", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					gameState.Insurance = false;
+					gameState.NoClaim = 0;
+					changeFragment(FRAGMENTS.BANK);
+				}
+			}, cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
 		} else {
-			if (!gameState.EscapePod){
-				popup = new Popup(this,
-				                  "No Escape Pod", "Insurance isn't useful for you, since you don't have an escape pod.",
-				                  "", "OK", cbShowNextPopup);
+			if (!gameState.EscapePod) {
+				popup = new Popup(this, "No Escape Pod",
+				                  "Insurance isn't useful for you, since you don't have an escape pod.", "",
+				                  "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1018,8 +1007,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			changeFragment(FRAGMENTS.BANK);
 		}
 	}
+
 	// FragmentShipyard
-	public void btnShipyardBuyFuel(int amount){
+	public void btnShipyardBuyFuel(int amount) {
 		int MaxFuel;
 		int Parsecs;
 
@@ -1036,43 +1026,42 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnShipyardBuyFuel(View view){
+	public void btnShipyardBuyFuel(View view) {
 		Popup popup;
-		popup = new Popup(this,
-		                  "Buy Fuel", "How much do you want to spend maximally on fuel?", "Credits",
+		popup = new Popup(this, "Buy Fuel", "How much do you want to spend maximally on fuel?",
+		                  "Credits",
 		                  "Enter the amount of credits you wish to spend on fuel and tap OK. Your fuel tank will be filled with as much fuel as you can buy with that amount of credits.",
-		                  gameState.Credits, "Buy fuel", "Don't buy fuel",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  SeekBar seekBar = (SeekBar) view;
-				                  try {
-					                  int amount = seekBar.getProgress();
-					                  btnShipyardBuyFuel(amount);
-				                  } catch (NumberFormatException e) {
-					                  Popup popup1 = new Popup(popup.context,
-					                                           "Error", e.getLocalizedMessage(), "", "OK",
-					                                           cbShowNextPopup);
-					                  popupQueue.push(popup1);
-				                  }
-			                  }
-		                  }, cbShowNextPopup,
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  btnShipyardBuyMaxFuel(null);
-			                  }
-		                  }
+		                  gameState.Credits, "Buy fuel", "Don't buy fuel", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				SeekBar seekBar = (SeekBar) view;
+				try {
+					int amount = seekBar.getProgress();
+					btnShipyardBuyFuel(amount);
+				} catch (NumberFormatException e) {
+					Popup popup1 = new Popup(popup.context, "Error", e.getLocalizedMessage(), "", "OK",
+					                         cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+				}
+			}
+		}, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				btnShipyardBuyMaxFuel(null);
+			}
+		}
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnShipyardBuyMaxFuel(View view){
+	public void btnShipyardBuyMaxFuel(View view) {
 		btnShipyardBuyFuel(gameState.Credits);
 	}
-	public void btnShipyardBuyRepairs(int amount){
+
+	public void btnShipyardBuyRepairs(int amount) {
 		int MaxRepairs;
 		int Percentage;
 
@@ -1089,15 +1078,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnShipyardBuyRepairs(View view){
+	public void btnShipyardBuyRepairs(View view) {
 		Popup popup;
-		popup = new Popup(this,
-		                  "Buy Repairs",
-		                  "How much do you want to spend maximally on repairs?",
+		popup = new Popup(this, "Buy Repairs", "How much do you want to spend maximally on repairs?",
 		                  "Credits",
 		                  "Enter the amount of credits you wish to spend on repairs and tap OK. Your ship will be repaired as much as possible for the amount of credits.",
-		                  gameState.Credits,
-		                  "Buy Repairs", "Don't buy repairs",
+		                  gameState.Credits, "Buy Repairs", "Don't buy repairs",
 		                  new Popup.buttonCallback() {
 			                  @Override
 			                  public void execute(Popup popup, View view) {
@@ -1105,51 +1091,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				                  int amount = seekBar.getProgress();
 				                  btnShipyardBuyRepairs(amount);
 			                  }
-		                  }, cbShowNextPopup,
-		                  new Popup.buttonCallback(){
-			                  @Override
-		                  public void execute(Popup popup, View view){
-				                  btnShipyardBuyRepairs(popup.max);
-			                  }
-		                  }
+		                  }, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				btnShipyardBuyRepairs(popup.max);
+			}
+		}
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnShipyardBuyFullRepairs(View view){
+	public void btnShipyardBuyFullRepairs(View view) {
 		btnShipyardBuyRepairs(gameState.Credits);
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnShipyardBuyEscapePod(View view){
+	public void btnShipyardBuyEscapePod(View view) {
 		Popup popup;
-		popup = new Popup(this,
-		                  "Buy Escape Pod",
-		                  "Do you want to buy an escape pod for 2000 credits?",
+		popup = new Popup(this, "Buy Escape Pod", "Do you want to buy an escape pod for 2000 credits?",
 		                  "When your ship has an escape pod, when it is destroyed, you are automatically ejected from it and you will be picked up by the Space Corps after a few days and dropped on a nearby system. You will lose your ship and cargo, but not your life. If you also have taken an insurance on your ship at the bank, the bank will fully refund your ship's costs. Your crew will also be saved in their own escape pods, but they will return to their home systems.",
-		                  "Buy pod", "Don't buy pod",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  gameState.Credits -= 2000;
-				                  gameState.EscapePod = true;
-				                  changeFragment(FRAGMENTS.SHIPYARD);
-			                  }
-		                  }, cbShowNextPopup
+		                  "Buy pod", "Don't buy pod", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				gameState.Credits -= 2000;
+				gameState.EscapePod = true;
+				changeFragment(FRAGMENTS.SHIPYARD);
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	// FragmentBuyNewShip
 	@SuppressWarnings("UnusedParameters")
-	public void btnBuyNewShip(View view){
+	public void btnBuyNewShip(View view) {
 		changeFragment(FRAGMENTS.BUY_NEW_SHIP);
 	}
-	public void btnBuyNewShipInfo(View view){
+
+	public void btnBuyNewShipInfo(View view) {
 		gameState.ShipInfoId = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnInfoWasp:
 				gameState.ShipInfoId++;
 			case R.id.btnInfoTermite:
@@ -1173,14 +1157,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		changeFragment(FRAGMENTS.SHIP_INFO);
 	}
-	public void btnBuyNewShipStep1(View view){
+
+	public void btnBuyNewShipStep1(View view) {
 		int Index;
 		int i, j;
 		int extra = 0;
 		boolean hasCompactor = false;
 		boolean hasMorganLaser = false;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnBuyFlea:
 				Index = 0;
 				break;
@@ -1215,12 +1200,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index = 0;
 		}
 		j = 0;
-		for (i=0; i<GameState.MAXCREW; ++i)
-			if (gameState.Ship.crew[i] >= 0)
-				++j;
+		for (i = 0; i < GameState.MAXCREW; ++i) { if (gameState.Ship.crew[i] >= 0) { ++j; } }
 		if (j > ShipTypes.ShipTypes[Index].crewQuarters) {
-			Popup popup = new Popup(this,
-			                        "Too Many Crewmembers",
+			Popup popup = new Popup(this, "Too Many Crewmembers",
 			                        "The new ship you picked doesn't have enough quarters for all of your crewmembers. First you will have to fire one or more of them.",
 			                        "", "OK", cbShowNextPopup
 			);
@@ -1229,37 +1211,33 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 
-		if (gameState.ShipPrice[Index] == 0){
-			Popup popup = new Popup(this,
-			                        "Ship Not Available",
-			                        "That type of ship is not available in the current system.",
-			                        "", "OK", cbShowNextPopup
+		if (gameState.ShipPrice[Index] == 0) {
+			Popup popup = new Popup(this, "Ship Not Available",
+			                        "That type of ship is not available in the current system.", "", "OK",
+			                        cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
-		} else if ((gameState.ShipPrice[Index] > 0) && (gameState.Debt > 0)){
+		} else if ((gameState.ShipPrice[Index] > 0) && (gameState.Debt > 0)) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "You Are In Debt",
-			                  "You can't buy that as long as you have debts.",
+			popup = new Popup(this, "You Are In Debt", "You can't buy that as long as you have debts.",
 			                  "Before you can buy a new ship or new equipment, you must settle your debts at the bank.",
 			                  "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
-		} else if (gameState.ShipPrice[Index] > gameState.ToSpend()){
-			Popup popup = new Popup(this,
-			                        "Not Enough Money",
-			                        "You don't have enough money to buy this ship.", "", "OK", cbShowNextPopup
+		} else if (gameState.ShipPrice[Index] > gameState.ToSpend()) {
+			Popup popup = new Popup(this, "Not Enough Money",
+			                        "You don't have enough money to buy this ship.", "", "OK",
+			                        cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		} else if ((gameState.JarekStatus == 1) && (gameState.WildStatus == 1) && (ShipTypes.ShipTypes[Index].crewQuarters < 3)) {
-			Popup popup = new Popup(this,
-			                        "Passengers Needs Quarters",
+			Popup popup = new Popup(this, "Passengers Needs Quarters",
 			                        "You must get a ship with enough crew quarters so that Ambassador Jarek and Jonathan Wild can stay on board.",
 			                        "", "OK", cbShowNextPopup
 			);
@@ -1268,8 +1246,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		} else if ((gameState.JarekStatus == 1) && (ShipTypes.ShipTypes[Index].crewQuarters < 2)) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "Passenger Needs Quarters",
+			popup = new Popup(this, "Passenger Needs Quarters",
 			                  "You must get a ship with enough crew quarters so that Ambassador Jarek can stay on board.",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -1278,18 +1255,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		} else if ((gameState.WildStatus == 1) && (ShipTypes.ShipTypes[Index].crewQuarters < 2)) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "Passenger Needs Quarters",
+			popup = new Popup(this, "Passenger Needs Quarters",
 			                  "You must get a ship with enough crew quarters so that Jonathan Wild can stay on board.",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
-		} else if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21){
+		} else if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "Shipyard Engineer",
+			popup = new Popup(this, "Shipyard Engineer",
 			                  "Sorry! We can't take your ship as a trade-in. That Ion Reactor looks dangerous, and we have no way of removing it. Come back when you've gotten rid of it.",
 			                  "You can't sell your ship as long as you have an Ion Reactor on board. Deliver the Reactor to Nix, and then you'll be able to get a new ship.",
 			                  "OK", cbShowNextPopup
@@ -1303,8 +1278,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (i > 0) {
 			if (ShipTypes.ShipTypes[Index].shieldSlots < i) {
 				// can't transfer the Lightning Shields. How often would this happen?
-				Popup popup = new Popup(this,
-				                        "Can't Transfer Item", String.format(
+				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer your Lightning Shield because the new ship has insufficient shield slots!",
 					ShipTypes.ShipTypes[Index].name
 				), "", "OK", cbShowNextPopup
@@ -1312,15 +1286,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				extra += i*30000;
+				extra += i * 30000;
 			}
 		}
 
 		if (gameState.HasGadget(gameState.Ship, GameState.FUELCOMPACTOR)) {
 			if (ShipTypes.ShipTypes[Index].gadgetSlots == 0) {
 				// can't transfer the Fuel Compactor
-				Popup popup = new Popup(this,
-				                        "Can't Transfer Item", String.format(
+				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer your Fuel Compactor because the new ship has insufficient gadget slots!",
 					ShipTypes.ShipTypes[Index].name
 				), "", "OK", cbShowNextPopup
@@ -1336,8 +1309,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.HasWeapon(gameState.Ship, GameState.MORGANLASERWEAPON, true)) {
 			if (ShipTypes.ShipTypes[Index].weaponSlots == 0) {
 				// can't transfer the Laser
-				Popup popup = new Popup(this,
-				                        "Can't Transfer Item", String.format(
+				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer Morgans Laser because the new ship has insufficient weapon slots!",
 					ShipTypes.ShipTypes[Index].name
 				), "", "OK", cbShowNextPopup
@@ -1351,8 +1323,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (gameState.ShipPrice[Index] + extra > gameState.ToSpend()) {
-			Popup popup = new Popup(this,
-			                        "Not Enough Money",
+			Popup popup = new Popup(this, "Not Enough Money",
 			                        "You won't have enough money to buy this ship and pay the cost to transfer all of your unique equipment. You should choose carefully which items you wish to transfer!",
 			                        "", "OK", cbShowNextPopup
 			);
@@ -1363,55 +1334,61 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		btnBuyNewShipStep1CheckLightningShields(Index, extra, 0, 0, hasCompactor, hasMorganLaser);
 	}
-	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final int cntLightning, final int numLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+
+	public void btnBuyNewShipStep1CheckLightningShields(final int Index, final int ex, final int cntLightning, final int numLightning, final boolean hasCompactor, final boolean hasMorganLaser) {
 		final int[] extra = new int[1];
 		extra[0] = ex;
-		if (cntLightning < gameState.HasShield(gameState.Ship, GameState.LIGHTNINGSHIELD) && ShipTypes.ShipTypes[Index].shieldSlots - (numLightning + 1) > 0) {
+		if (cntLightning < gameState.HasShield(gameState.Ship, GameState.LIGHTNINGSHIELD
+		) && ShipTypes.ShipTypes[Index].shieldSlots - (numLightning + 1) > 0) {
 			if (gameState.ShipPrice[Index] + extra[0] <= gameState.ToSpend()) {
 				Popup popup;
-				popup = new Popup(this,
-				                  "Transfer Lightning Shield",
+				popup = new Popup(this, "Transfer Lightning Shield",
 				                  "I see you have a lightning shield. I'll transfer it to your new ship for 30000 credits.",
 				                  "For the sum of 30000 credits, you get to keep your unique lightning shield! This may seem to be a lot of money, but you must remember that this is the exact amount the shield is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
-				                  "Transfer shield", "Leave shield",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  extra[0] += 30000;
-						                  btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning+1, hasCompactor, hasMorganLaser);
-					                  }
-				                  },
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning, hasCompactor, hasMorganLaser);
-					                  }
-				                  }
+				                  "Transfer shield", "Leave shield", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						extra[0] += 30000;
+						btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning + 1,
+						                                        numLightning + 1, hasCompactor, hasMorganLaser
+						);
+					}
+				}, new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning + 1, numLightning,
+						                                        hasCompactor, hasMorganLaser
+						);
+					}
+				}
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				Popup popup = new Popup(this,
-				                        "Can't Transfer Item",
+				Popup popup = new Popup(this, "Can't Transfer Item",
 				                        "Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!",
 				                        "", "OK", cbShowNextPopup
 				);
-				btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning+1, numLightning, hasCompactor, hasMorganLaser);
+				btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning + 1, numLightning,
+				                                        hasCompactor, hasMorganLaser
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
 		} else {
-			btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], numLightning, hasCompactor, hasMorganLaser);
+			btnBuyNewShipStep1CheckFuelCompactor(Index, extra[0], numLightning, hasCompactor,
+			                                     hasMorganLaser
+			);
 		}
 	}
-	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final int addLightning, final boolean hasCompactor, final boolean hasMorganLaser){
+
+	public void btnBuyNewShipStep1CheckFuelCompactor(final int Index, final int ex, final int addLightning, final boolean hasCompactor, final boolean hasMorganLaser) {
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasCompactor && ShipTypes.ShipTypes[Index].gadgetSlots > 0) {
 			if (gameState.ShipPrice[Index] + extra[0] <= gameState.ToSpend()) {
 				Popup popup;
-				popup = new Popup(this,
-				                  "Transfer Fuel Compactor",
+				popup = new Popup(this, "Transfer Fuel Compactor",
 				                  "I see you have a fuel compactor. I'll transfer it to your new ship for 20000 credits.",
 				                  "For the sum of 20000 credits, you get to keep your unique fuel compactor! This may seem to be a lot of money, but you must remember that this is the exact amount the fuel compactor is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
 				                  "Transfer Fuel Compactor", "Leave Fuel Compactor",
@@ -1423,22 +1400,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						                                                      true, hasMorganLaser
 						                  );
 					                  }
-				                  },
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning,
-						                                                      false, hasMorganLaser
-						                  );
-					                  }
-				                  }
+				                  }, new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser
+						);
+					}
+				}
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
 				Popup popup;
-				popup = new Popup(this,
-				                  "Can't Transfer Item",
+				popup = new Popup(this, "Can't Transfer Item",
 				                  "Unfortunately, if you make this trade, you won't be able to afford to transfer your Fuel Compactor to the new ship!",
 				                  "", "OK", cbShowNextPopup
 				);
@@ -1449,36 +1423,34 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
 	}
-	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final int addLightning, final boolean addCompactor, boolean hasMorganLaser){
+
+	public void btnBuyNewShipStep1CheckMorgansLaser(final int Index, int ex, final int addLightning, final boolean addCompactor, boolean hasMorganLaser) {
 		final int[] extra = new int[1];
 		extra[0] = ex;
 		if (hasMorganLaser && ShipTypes.ShipTypes[Index].weaponSlots > 0) {
 			if (gameState.ShipPrice[Index] + extra[0] <= gameState.ToSpend()) {
 				Popup popup;
-				popup = new Popup(this,
-				                  "Transfer Morgan's Laser",
-				                  "I see you have a customized laser. I'll transfer it to your new ship for 33333 credits.", "For the sum of 33333 credits, you get to keep the laser given to you by Henry Morgan! This may seem to be a lot of money, but you must remember that this is the exact amount the laser is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
-				                  "Transfer Laser", "Leave Laser",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-															extra[0] += 33333;
-															btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, true);
-														}
-													},
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
-					                  }
-				                  }
+				popup = new Popup(this, "Transfer Morgan's Laser",
+				                  "I see you have a customized laser. I'll transfer it to your new ship for 33333 credits.",
+				                  "For the sum of 33333 credits, you get to keep the laser given to you by Henry Morgan! This may seem to be a lot of money, but you must remember that this is the exact amount the laser is currently worth, and it has already been subtracted from the price for which the new ship is offered. So actually, this is a very good deal.",
+				                  "Transfer Laser", "Leave Laser", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						extra[0] += 33333;
+						btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, true);
+					}
+				}, new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
+					}
+				}
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
 				Popup popup;
-				popup = new Popup(this,
-				                  "Can't Transfer Item",
+				popup = new Popup(this, "Can't Transfer Item",
 				                  "Unfortunately, if you make this trade, you won't be able to afford to transfer Morgan's Laser to the new ship!",
 				                  "", "OK", cbShowNextPopup
 				);
@@ -1489,40 +1461,38 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
 	}
-	public void btnBuyNewShipStep2(final int Index, final int extra, final int addLightning, final boolean addCompactor, final boolean addMorganLaser){
-		Popup popup = new Popup(this,
-		                        "Buy New Ship",
-		              String.format("Are you sure you wish to trade in your %s for a new %s%s?",
-		                            ShipTypes.ShipTypes[gameState.Ship.type].name,
-		                            ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning > 0 || addMorganLaser) ?
-		                            ", and transfer your unique equipment to the new ship" : ""
-		              ), "",
-		              "Buy ship", "Don't buy ship",
-		              new Popup.buttonCallback() {
-			              @Override
-			              public void execute(Popup popup, View view) {
-											gameState.BuyShip(Index);
-											gameState.Credits -= extra;
-											if (addCompactor)
-												gameState.Ship.gadget[0] = GameState.FUELCOMPACTOR;
-				              for (int i=0; i < addLightning; i++)
-												gameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
-											if (addMorganLaser)
-												gameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON;
-											gameState.Ship.tribbles = 0;
-											btnBuyNewShip(null);
-										}
-									}, cbShowNextPopup
+
+	public void btnBuyNewShipStep2(final int Index, final int extra, final int addLightning, final boolean addCompactor, final boolean addMorganLaser) {
+		Popup popup = new Popup(this, "Buy New Ship", String.format(
+			"Are you sure you wish to trade in your %s for a new %s%s?",
+			ShipTypes.ShipTypes[gameState.Ship.type].name, ShipTypes.ShipTypes[Index].name,
+			(addCompactor || addLightning > 0 || addMorganLaser) ?
+			", and transfer your unique equipment to the new ship" : ""
+		), "", "Buy ship", "Don't buy ship", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				gameState.BuyShip(Index);
+				gameState.Credits -= extra;
+				if (addCompactor) { gameState.Ship.gadget[0] = GameState.FUELCOMPACTOR; }
+				for (int i = 0; i < addLightning; i++) {
+					gameState.Ship.shield[i] = GameState.LIGHTNINGSHIELD;
+				}
+				if (addMorganLaser) { gameState.Ship.weapon[0] = GameState.MORGANLASERWEAPON; }
+				gameState.Ship.tribbles = 0;
+				btnBuyNewShip(null);
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	// FragmentBuyEquipment
-	public void BuyEquipmentButtonCallback(View view){
+	public void BuyEquipmentButtonCallback(View view) {
 		int Index;
 
 		Index = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnBuyCloakingSystem:
 				Index++;
 			case R.id.btnBuyTargetingSystem:
@@ -1544,24 +1514,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnBuyPulseLaser:
 				Index++;
 				break;
-			default: return;
+			default:
+				return;
 		}
-		if (Index < GameState.MAXWEAPONTYPE){
+		if (Index < GameState.MAXWEAPONTYPE) {
 			BuyItem(ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon,
 			        gameState.BASEWEAPONPRICE(Index), Weapons.mWeapons[Index].name, Index
 			);
-		} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
+		} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)) {
 			BuyItem(ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield,
 			        gameState.BASESHIELDPRICE(Index - GameState.MAXWEAPONTYPE),
 			        Shields.mShields[Index - GameState.MAXWEAPONTYPE].name,
 			        Index - GameState.MAXWEAPONTYPE
 			);
-		} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
-			if (gameState.HasGadget(gameState.Ship, Index-(GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE))){
+		} else if (Index >= GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE + GameState.MAXGADGETTYPE) {
+			if (gameState.HasGadget(gameState.Ship,
+			                        Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)
+			) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE))) {
 				Popup popup;
-				popup = new Popup(this,
-				                  "You Already Have One",
-				                  "It's not useful to buy more than one of this item.", "", "OK", cbShowNextPopup
+				popup = new Popup(this, "You Already Have One",
+				                  "It's not useful to buy more than one of this item.", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -1575,7 +1548,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 	}
-	public void BuyItem(int Slots, final int[] Item, final int Price, String Name, final int ItemIndex){
+
+	public void BuyItem(int Slots, final int[] Item, final int Price, String Name, final int ItemIndex) {
 		// *************************************************************************
 		// Buy an item: Slots is the number of slots, Item is the array in the
 		// Ship record which contains the item type, Price is the costs,
@@ -1586,62 +1560,55 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		FirstEmptySlot = gameState.GetFirstEmptySlot(Slots, Item);
 
-		if (Price <= 0){
-			popup = new Popup(this,
-			                  "Not Available",
-			                  "That item is not available in this system.",
+		if (Price <= 0) {
+			popup = new Popup(this, "Not Available", "That item is not available in this system.",
 			                  "Each item is only available in a system which has the technological development needed to produce it.",
 			                  "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.Debt > 0) {
-			popup = new Popup(this,
-			                  "You Have A Debt",
-			                  "You can't buy that as long as you have debts.", "", "OK", cbShowNextPopup
+			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
+			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
-		} else if (Price > gameState.ToSpend()){
-			popup = new Popup(this,
-			                  "Not enough money",
-			                  "You do not have enough money to buy this item.",
+		} else if (Price > gameState.ToSpend()) {
+			popup = new Popup(this, "Not enough money", "You do not have enough money to buy this item.",
 			                  "If you can't pay the price mentioned to the right of an item, you can't get it. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
 			                  "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
-		} else if (FirstEmptySlot < 0){
-			popup = new Popup(this,
-			                  "Not Enough Slots",
+		} else if (FirstEmptySlot < 0) {
+			popup = new Popup(this, "Not Enough Slots",
 			                  "You have already filled all of your available slots for this type of item.",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
-			popup = new Popup(this,
-			                  "Buy " + Name,
-			                  String.format("Do you wish to buy this item for %d credits?", Price),
-			                  "Tap Yes if you want to buy the item in the title for the price mentioned.",
-			                  "Buy", "Don't buy",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-														Item[FirstEmptySlot] = ItemIndex;
-														gameState.Credits -= Price;
-					                  changeFragment(FRAGMENTS.BUY_EQUIPMENT);
-													}
-												}, cbShowNextPopup
+			popup = new Popup(this, "Buy " + Name, String.format(
+				"Do you wish to buy this item for %d credits?", Price
+			), "Tap Yes if you want to buy the item in the title for the price mentioned.", "Buy",
+			                  "Don't buy", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					Item[FirstEmptySlot] = ItemIndex;
+					gameState.Credits -= Price;
+					changeFragment(FRAGMENTS.BUY_EQUIPMENT);
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 	}
+
 	// FragmentSellEquipment
-	public void btnSellEquipmentOnClick(View view){
+	public void btnSellEquipmentOnClick(View view) {
 		int idx = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnSellEquipmentGadget3:
 				idx++;
 			case R.id.btnSellEquipmentGadget2:
@@ -1661,67 +1628,70 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			case R.id.btnSellEquipmentWeapon1:
 				idx++;
 				break;
-			default: return;
+			default:
+				return;
 		}
 		final int Index = idx;
 		Popup popup;
-		popup = new Popup(this,
-		                  "Sell Item",
-		                  "Are you sure you want to sell this item?",
+		popup = new Popup(this, "Sell Item", "Are you sure you want to sell this item?",
 		                  "Selling an item will return to you about 75% of what you first paid for it. If you sell a ship as a whole, all items on it will automatically be sold.",
-		              "Sell Item", "Don't sell item",
-		              new Popup.buttonCallback() {
-			              @Override
-			              public void execute(Popup popup, View view) {
-											if (Index < GameState.MAXWEAPONTYPE){
-												gameState.Credits += gameState.WEAPONSELLPRICE(Index);
-												for (int i=Index+1; i<GameState.MAXWEAPON; ++i)
-													gameState.Ship.weapon[i-1] = gameState.Ship.weapon[i];
-												gameState.Ship.weapon[GameState.MAXWEAPON-1] = -1;
-											} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE)){
-												gameState.Credits += gameState.SHIELDSELLPRICE(Index - GameState.MAXWEAPON);
-												for (int i=Index-GameState.MAXWEAPON+1; i<GameState.MAXSHIELD; ++i){
-													gameState.Ship.shield[i-1] = gameState.Ship.shield[i];
-													gameState.Ship.shieldStrength[i-1] = gameState.Ship.shieldStrength[i];
-												}
-												gameState.Ship.shield[GameState.MAXSHIELD-1] = -1;
-												gameState.Ship.shieldStrength[GameState.MAXSHIELD-1] = 0;
-											} else if (Index >= GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE+GameState.MAXSHIELDTYPE+GameState.MAXGADGETTYPE){
-												if (gameState.Ship.gadget[Index - GameState.MAXWEAPON - GameState.MAXSHIELD]==GameState.EXTRABAYS){
-													if (gameState.FilledCargoBays() > gameState.TotalCargoBays() - 5){
-														Popup popup1;
-														popup1 = new Popup(popup.context,
-														                   "Cargo Bays Full",
-														                   "The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
-														                   "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.",
-														                   "OK", cbShowNextPopup
-														);
-														popupQueue.push(popup1);
-														showNextPopup();
-														return;
-													}
-												}
-												gameState.Credits += gameState.GADGETSELLPRICE( Index - GameState.MAXWEAPON - GameState.MAXSHIELD);
-												for (int i=Index-GameState.MAXWEAPON-GameState.MAXSHIELD+1;i<GameState.MAXGADGET; ++i)
-													gameState.Ship.gadget[i-1] = gameState.Ship.gadget[i];
-												gameState.Ship.gadget[GameState.MAXGADGET-1] = -1;
-											}
-				              changeFragment(FRAGMENTS.SELL_EQUIPMENT);
-			              }
-									}, cbShowNextPopup
+		                  "Sell Item", "Don't sell item", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				if (Index < GameState.MAXWEAPONTYPE) {
+					gameState.Credits += gameState.WEAPONSELLPRICE(Index);
+					for (int i = Index + 1; i < GameState.MAXWEAPON; ++i) {
+						gameState.Ship.weapon[i - 1] = gameState.Ship.weapon[i];
+					}
+					gameState.Ship.weapon[GameState.MAXWEAPON - 1] = -1;
+				} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)) {
+					gameState.Credits += gameState.SHIELDSELLPRICE(Index - GameState.MAXWEAPON);
+					for (int i = Index - GameState.MAXWEAPON + 1; i < GameState.MAXSHIELD; ++i) {
+						gameState.Ship.shield[i - 1] = gameState.Ship.shield[i];
+						gameState.Ship.shieldStrength[i - 1] = gameState.Ship.shieldStrength[i];
+					}
+					gameState.Ship.shield[GameState.MAXSHIELD - 1] = -1;
+					gameState.Ship.shieldStrength[GameState.MAXSHIELD - 1] = 0;
+				} else if (Index >= GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE + GameState.MAXGADGETTYPE) {
+					if (gameState.Ship.gadget[Index - GameState.MAXWEAPON - GameState.MAXSHIELD] == GameState.EXTRABAYS) {
+						if (gameState.Ship.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 5) {
+							Popup popup1;
+							popup1 = new Popup(popup.context, "Cargo Bays Full",
+							                   "The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
+							                   "First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.",
+							                   "OK", cbShowNextPopup
+							);
+							popupQueue.push(popup1);
+							showNextPopup();
+							return;
+						}
+					}
+					gameState.Credits += gameState.GADGETSELLPRICE(
+						Index - GameState.MAXWEAPON - GameState.MAXSHIELD
+					);
+					for (int i =
+						Index - GameState.MAXWEAPON - GameState.MAXSHIELD + 1; i < GameState.MAXGADGET; ++i) {
+						gameState.Ship.gadget[i - 1] = gameState.Ship.gadget[i];
+					}
+					gameState.Ship.gadget[GameState.MAXGADGET - 1] = -1;
+				}
+				changeFragment(FRAGMENTS.SELL_EQUIPMENT);
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	// FragmentBuyCargo
-	public void btnBuyCargoCallback(View view){
+	public void btnBuyCargoCallback(View view) {
 		int idx;
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		Popup popup;
 
 		idx = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnPriceListBuy10:
 			case R.id.btnBuyCargo10:
 				idx++;
@@ -1754,8 +1724,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				idx++;
 				break;
 			default:
-				popup = new Popup(this,
-				                  "Error", "No cargo selected.", "", "OK", cbShowNextPopup
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -1764,9 +1733,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		final int Index = idx;
 		if (gameState.Debt > GameState.DEBTTOOLARGE) {
-			popup = new Popup(this,
-			                  "You Have A Debt",
-			                  "You can't buy that as long as you have debts.", "", "OK", cbShowNextPopup
+			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
+			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -1774,27 +1742,28 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (CURSYSTEM.qty[Index] <= 0 || gameState.BuyPrice[Index] <= 0) {
-			popup = new Popup(this,
-			                  "Nothing Available", "None of these goods are available.", "", "OK", cbShowNextPopup
+			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "", "OK",
+			                  cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
-		if (gameState.TotalCargoBays() - gameState.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
-			popup = new Popup(this,
-			                  "No Empty Bays", "You don't have any empty cargo holds available at the moment",
-			            "", "OK", cbShowNextPopup
+		if (gameState.Ship.TotalCargoBays() - gameState.Ship
+			.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
+			popup = new Popup(this, "No Empty Bays",
+			                  "You don't have any empty cargo holds available at the moment", "", "OK",
+			                  cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
-		if (gameState.ToSpend() < gameState.BuyPrice[Index] ) {
-			popup = new Popup(this,
-			                  "Not Enough Money", "You don't have enough money to spend on any of these goods.",
+		if (gameState.ToSpend() < gameState.BuyPrice[Index]) {
+			popup = new Popup(this, "Not Enough Money",
+			                  "You don't have enough money to spend on any of these goods.",
 			                  "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
 			                  "OK", cbShowNextPopup
 			);
@@ -1803,55 +1772,52 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 
-		popup = new Popup(this,
-		                  "Buy Cargo",
-		                  String.format("How many do you want to buy?\nAt %d cr. each you can afford %d.",
-		                          gameState.BuyPrice[idx],
-		                          Math.min(gameState.ToSpend() / gameState.BuyPrice[Index], CURSYSTEM.qty[Index])
-		                  ),
-		                  "Amount",
+		popup = new Popup(this, "Buy Cargo", String.format(
+			"How many do you want to buy?\nAt %d cr. each you can afford %d.", gameState.BuyPrice[idx],
+			Math.min(gameState.ToSpend() / gameState.BuyPrice[Index], CURSYSTEM.qty[Index])
+		), "Amount",
 		                  "Specify the amount to buy and tap the OK button. If you specify more than there is available, or than you can afford, or than your cargo bays can hold, the maximum possible amount will be bought. If you don't want to buy anything, tap the Cancel button.",
-		                  Math.min(gameState.ToSpend() / gameState.BuyPrice[Index], CURSYSTEM.qty[Index]),
-		                  "Buy", "Don't buy",
-											new Popup.buttonCallback() {
-												@Override
-												public void execute(Popup popup, View view) {
-													int Amount;
-													SeekBar seekBar = (SeekBar)view;
-							            Amount = seekBar.getProgress();
-							            if (Amount > 0) {
-								            BuyCargo(Index, Amount);
-								            if (currentState == FRAGMENTS.AVERAGE_PRICES){
-									            changeFragment(FRAGMENTS.AVERAGE_PRICES);
-								            } else {
-									            changeFragment(FRAGMENTS.BUY_CARGO);
-								            }
-							            }
-						            }
-					            }, cbShowNextPopup,
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  BuyCargo(Index, popup.max);
-				                  if (currentState == FRAGMENTS.AVERAGE_PRICES){
-					                  changeFragment(FRAGMENTS.AVERAGE_PRICES);
-				                  } else {
-					                  changeFragment(FRAGMENTS.BUY_CARGO);
-				                  }
-			                  }
-		                  }
+		                  Math.min(gameState.ToSpend() / gameState.BuyPrice[Index],
+		                           CURSYSTEM.qty[Index]
+		                  ), "Buy", "Don't buy", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				int Amount;
+				SeekBar seekBar = (SeekBar) view;
+				Amount = seekBar.getProgress();
+				if (Amount > 0) {
+					BuyCargo(Index, Amount);
+					if (currentState == FRAGMENTS.AVERAGE_PRICES) {
+						changeFragment(FRAGMENTS.AVERAGE_PRICES);
+					} else {
+						changeFragment(FRAGMENTS.BUY_CARGO);
+					}
+				}
+			}
+		}, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				BuyCargo(Index, popup.max);
+				if (currentState == FRAGMENTS.AVERAGE_PRICES) {
+					changeFragment(FRAGMENTS.AVERAGE_PRICES);
+				} else {
+					changeFragment(FRAGMENTS.BUY_CARGO);
+				}
+			}
+		}
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
-	public void btnBuyCargoAllCallback(View view){
+
+	public void btnBuyCargoAllCallback(View view) {
 		int idx;
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		Popup popup;
 
 		idx = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnBuyCargoAll10:
 				idx++;
 			case R.id.btnBuyCargoAll9:
@@ -1874,8 +1840,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				idx++;
 				break;
 			default:
-				popup = new Popup(this,
-				                  "Error", "No cargo selected.", "", "OK", cbShowNextPopup
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -1884,28 +1849,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		final int Index = idx;
 		if (gameState.Debt > GameState.DEBTTOOLARGE) {
-			popup = new Popup(this,
-			                  "You Have A Debt", "You can't buy that as long as you have debts.", "",
-			                  "OK", cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			return;
-		}
-
-		if (CURSYSTEM.qty[Index] <= 0 || gameState.BuyPrice[Index] <= 0) {
-			popup = new Popup(this,
-			                  "Nothing Available", "None of these goods are available.", "", "OK",
-			                  cbShowNextPopup
-			);
-			popupQueue.push(popup);
-			showNextPopup();
-			return;
-		}
-
-		if (gameState.TotalCargoBays() - gameState.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
-			popup = new Popup(this,
-			                  "No Empty Bays", "You don't have any empty cargo holds available at the moment",
+			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
@@ -1913,9 +1857,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			return;
 		}
 
-		if (gameState.ToSpend() < gameState.BuyPrice[Index] ) {
-			popup = new Popup(this,
-			                  "Not Enough Money", "You don't have enough money to spend on any of these goods.",
+		if (CURSYSTEM.qty[Index] <= 0 || gameState.BuyPrice[Index] <= 0) {
+			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			return;
+		}
+
+		if (gameState.Ship.TotalCargoBays() - gameState.Ship
+			.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
+			popup = new Popup(this, "No Empty Bays",
+			                  "You don't have any empty cargo holds available at the moment", "", "OK",
+			                  cbShowNextPopup
+			);
+			popupQueue.push(popup);
+			showNextPopup();
+			return;
+		}
+
+		if (gameState.ToSpend() < gameState.BuyPrice[Index]) {
+			popup = new Popup(this, "Not Enough Money",
+			                  "You don't have enough money to spend on any of these goods.",
 			                  "At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
 			                  "OK", cbShowNextPopup
 			);
@@ -1927,13 +1891,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		BuyCargo(Index, 999);
 		changeFragment(FRAGMENTS.BUY_CARGO);
 	}
+
 	// FragmentSellCargo
-	public void btnSellCargoCallback(View view){
+	public void btnSellCargoCallback(View view) {
 		int Index;
 		Popup popup;
 
 		Index = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnSellCargo10:
 				Index++;
 			case R.id.btnSellCargo9:
@@ -1964,9 +1929,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 
-		if (gameState.Ship.cargo[Index] <= 0){
-			popup = new Popup(this,
-			                  "None To Sell", "You have none of these goods in your cargo bays.",
+		if (gameState.Ship.cargo[Index] <= 0) {
+			popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
 			                  "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
 			                  "OK", cbShowNextPopup
 			);
@@ -1974,10 +1938,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 			return;
 		}
-		if (gameState.SellPrice[Index] <= 0)
-		{
-			popup = new Popup(this,
-			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
+		if (gameState.SellPrice[Index] <= 0) {
+			popup = new Popup(this, "Not Interested",
+			                  "Nobody in this system is interested in buying these goods.",
 			                  "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
 			                  "OK", cbShowNextPopup
 			);
@@ -1987,48 +1950,47 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		final int idx = Index;
-		popup = new Popup(this,
-		                  "Sell Cargo", String.format(
+		popup = new Popup(this, "Sell Cargo", String.format(
 			"How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.\nYou paid about %d cr. each.",
 			gameState.Ship.cargo[Index], gameState.SellPrice[Index],
-		                                gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ? "loss" : "profit",
-		                                Math.abs(gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index]),
-		                                gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ? (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]) - gameState.SellPrice[Index] :
-		                                gameState.SellPrice[Index] - (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index])
-			                          ),
-		                  "Amount",
+			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ?
+			"loss" : "profit", Math.abs(
+			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index]
+		), gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ?
+			 (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]) - gameState.SellPrice[Index] :
+			 gameState.SellPrice[Index] - (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index])
+		), "Amount",
 		                  "If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
-		                  gameState.Ship.cargo[Index],
-		                  "Sell cargo", "Don't sell cargo",
-											new Popup.buttonCallback() {
-												@Override
-												public void execute(Popup popup, View view) {
-							            int Amount;
-													SeekBar seekBar = (SeekBar) view;
-							            Amount = seekBar.getProgress();
-							            if (Amount > 0){
-								            SellCargo(idx, Amount, GameState.SELLCARGO);
-								            changeFragment(FRAGMENTS.SELL_CARGO);
-							            }
-						            }
-											}, cbShowNextPopup,
+		                  gameState.Ship.cargo[Index], "Sell cargo", "Don't sell cargo",
 		                  new Popup.buttonCallback() {
 			                  @Override
 			                  public void execute(Popup popup, View view) {
-				                  SellCargo(idx, 999, GameState.SELLCARGO);
-				                  changeFragment(FRAGMENTS.SELL_CARGO);
+				                  int Amount;
+				                  SeekBar seekBar = (SeekBar) view;
+				                  Amount = seekBar.getProgress();
+				                  if (Amount > 0) {
+					                  SellCargo(idx, Amount, GameState.SELLCARGO);
+					                  changeFragment(FRAGMENTS.SELL_CARGO);
+				                  }
 			                  }
-		                  }
+		                  }, cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				SellCargo(idx, 999, GameState.SELLCARGO);
+				changeFragment(FRAGMENTS.SELL_CARGO);
+			}
+		}
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
-	public void btnSellCargoAllCallback(View view){
+
+	public void btnSellCargoAllCallback(View view) {
 		Popup popup;
 		int Index;
 
 		Index = -1;
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnSellCargoAll10:
 				Index++;
 			case R.id.btnSellCargoAll9:
@@ -2057,9 +2019,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				return;
 		}
 
-		if (gameState.Ship.cargo[Index] <= 0){
-			popup = new Popup(this, "None To Sell",
-			                  "You have none of these goods in your cargo bays.",
+		if (gameState.Ship.cargo[Index] <= 0) {
+			popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
 			                  "On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
 			                  "OK", cbShowNextPopup
 			);
@@ -2067,9 +2028,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 			return;
 		}
-		if (gameState.SellPrice[Index] <= 0){
-			popup = new Popup(this,
-			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
+		if (gameState.SellPrice[Index] <= 0) {
+			popup = new Popup(this, "Not Interested",
+			                  "Nobody in this system is interested in buying these goods.",
 			                  "Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
 			                  "OK", cbShowNextPopup
 			);
@@ -2081,71 +2042,66 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		SellCargo(Index, 999, GameState.SELLCARGO);
 		changeFragment(FRAGMENTS.SELL_CARGO);
 	}
+
 	// FragmentWarpSystemInformation
 	@SuppressWarnings("UnusedParameters")
-	public void btnAveragePricesForm(View view){
+	public void btnAveragePricesForm(View view) {
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
+
 	// FragmentAveragePrices
 	@SuppressWarnings("UnusedParameters")
-	public void btnToggleAverageDiffPrices(View view){
+	public void btnToggleAverageDiffPrices(View view) {
 		gameState.PriceDifferences = !gameState.PriceDifferences;
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
-	public void btnNextSystem(View view){
+
+	public void btnNextSystem(View view) {
 		gameState.WarpSystem = NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev);
 		WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnWarpSystemInformation(View view){
+	public void btnWarpSystemInformation(View view) {
 		changeFragment(FRAGMENTS.WARP_SYSTEM_INFORMATION);
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnDoWarp(View view){
+	public void btnDoWarp(View view) {
 		DoWarp(false);
 	}
+
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
 		int i;
 		for (i = 0; gameState.SolarSystem[i] != Current; i++) { ; }
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 
-		if (Back)
-			--i;
-		else
-			++i;
+		if (Back) { --i; } else { ++i; }
 
 		while (true) {
-			if (i < 0)
-				i = GameState.MAXSOLARSYSTEM - 1;
-			else if (i >= GameState.MAXSOLARSYSTEM)
+			if (i < 0) { i = GameState.MAXSOLARSYSTEM - 1; } else if (i >= GameState.MAXSOLARSYSTEM) {
 				i = 0;
-			if (gameState.SolarSystem[i] == Current)
-				break;
+			}
+			if (gameState.SolarSystem[i] == Current) { break; }
 
-			if (gameState.WormholeExists(COMMANDER.curSystem, i))
-				return i;
-			else if (gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
+			if (gameState.WormholeExists(COMMANDER.curSystem, i)) { return i; } else if (gameState.RealDistance(
+				CURSYSTEM, gameState.SolarSystem[i]
 			) <= gameState.GetFuel() && gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
-			) > 0)
-				return i;
+			) > 0) { return i; }
 
-			if (Back)
-				--i;
-			else
-				++i;
+			if (Back) { --i; } else { ++i; }
 		}
 
 		return -1;
 	}
+
 	// FragmentOptions
-	public void btnSetOption(View view){
+	public void btnSetOption(View view) {
 		CheckBox checkBox = (CheckBox) view;
 
-		switch (checkBox.getId()){
+		switch (checkBox.getId()) {
 			case R.id.chkBoxIgnorePolice:
 				gameState.AlwaysIgnorePolice = checkBox.isChecked();
 				break;
@@ -2159,7 +2115,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.AlwaysIgnoreTradeInOrbit = checkBox.isChecked();
 				break;
 			case R.id.chkBoxAutoFuel:
-				gameState.AutoFuel  = checkBox.isChecked();
+				gameState.AutoFuel = checkBox.isChecked();
 				break;
 			case R.id.chkBoxAutoRepair:
 				gameState.AutoRepair = checkBox.isChecked();
@@ -2187,6 +2143,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+
 	// FragmentPlunder
 	public void PlunderCargo(int Index, int Amount) {
 		// *************************************************************************
@@ -2196,41 +2153,42 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Popup popup;
 
 		if (gameState.Opponent.cargo[Index] <= 0) {
-			popup = new Popup(this,
-			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-			                  "You can only steal what your victim actually has.", "OK",
-			                  cbShowNextPopup
+			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
-		if (gameState.TotalCargoBays() - gameState.FilledCargoBays() <= 0){
-			popup = new Popup(this,
-			                  "Cargo Bays Full",
+		if (gameState.Ship.TotalCargoBays() - gameState.Ship.FilledCargoBays() <= 0) {
+			popup = new Popup(this, "Cargo Bays Full",
 			                  "You have no empty cargo bays. Dump some cargo or leave the victims cargo in his bays.",
-			                  "",  "OK", cbShowNextPopup
+			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
-		ToPlunder = Math.min(Amount, gameState.Opponent.cargo[Index] );
-		ToPlunder = Math.min(ToPlunder, gameState.TotalCargoBays() - gameState.FilledCargoBays());
+		ToPlunder = Math.min(Amount, gameState.Opponent.cargo[Index]);
+		ToPlunder = Math.min(ToPlunder,
+		                     gameState.Ship.TotalCargoBays() - gameState.Ship.FilledCargoBays()
+		);
 
 		gameState.Ship.cargo[Index] += ToPlunder;
 		gameState.Opponent.cargo[Index] -= ToPlunder;
 
-		if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER && Index == GameState.NARCOTICS && Amount > 0)
+		if (gameState.EncounterType == GameState.MARIECELESTEENCOUNTER && Index == GameState.NARCOTICS && Amount > 0) {
 			gameState.JustLootedMarie = true;
+		}
 		changeFragment(FRAGMENTS.PLUNDER);
 	}
-	public void btnPlunderAllCargoQty(View view){
+
+	public void btnPlunderAllCargoQty(View view) {
 		int Index = -1;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnPlunderCargoAll10:
 				Index++;
 			case R.id.btnPlunderCargoAll9:
@@ -2253,23 +2211,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 		}
-		if (gameState.Opponent.cargo[Index] <= 0){
+		if (gameState.Opponent.cargo[Index] <= 0) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-			                  "You can only steal what your victim actually has.", "OK",
-			                  cbShowNextPopup
+			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
-      PlunderCargo(Index, 999);
+			PlunderCargo(Index, 999);
 		}
 	}
-	public void btnPlunderCargoQty(View view){
+
+	public void btnPlunderCargoQty(View view) {
 		int Index = -1;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnPlunderCargo10:
 				Index++;
 			case R.id.btnPlunderCargo9:
@@ -2292,41 +2249,33 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 		}
-		if (gameState.Opponent.cargo[Index] <= 0){
+		if (gameState.Opponent.cargo[Index] <= 0) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-			                  "You can only steal what your victim actually has.", "OK",
-			                  cbShowNextPopup
+			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
+			                  "You can only steal what your victim actually has.", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
 			final int idx = Index;
 			Popup popup;
-			popup = new Popup(this,
-			                  "Plunder",
-			                  String.format("Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
-			                                Tradeitems.mTradeitems[idx].name,
-				                              gameState.Opponent.cargo[idx]
-			                  ), "Amount", "",
-			                  gameState.Opponent.cargo[idx],
-			                  "Steal", "Don't steal",
-												new Popup.buttonCallback() {
-													@Override
-													public void execute(Popup popup, View view) {
-														SeekBar seekBar = (SeekBar) view;
-														int Amount = seekBar.getProgress();
-								            if (Amount > 0)
-									            PlunderCargo(idx, Amount);
-							            }
-						            }, cbShowNextPopup,
+			popup = new Popup(this, "Plunder", String.format(
+				"Stealing %s.\nYour victim has %d of these goods. How many do you want to steal?",
+				Tradeitems.mTradeitems[idx].name, gameState.Opponent.cargo[idx]
+			), "Amount", "", gameState.Opponent.cargo[idx], "Steal", "Don't steal",
 			                  new Popup.buttonCallback() {
 				                  @Override
 				                  public void execute(Popup popup, View view) {
-					                  PlunderCargo(idx, popup.max);
+					                  SeekBar seekBar = (SeekBar) view;
+					                  int Amount = seekBar.getProgress();
+					                  if (Amount > 0) { PlunderCargo(idx, Amount); }
 				                  }
-			                  }
+			                  }, cbShowNextPopup, new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					PlunderCargo(idx, popup.max);
+				}
+			}
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -2334,19 +2283,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnDumpForm(View view){
+	public void btnDumpForm(View view) {
 		changeFragment(FRAGMENTS.DUMP);
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnPlunderDone(View view){
+	public void btnPlunderDone(View view) {
 		Travel();
 	}
+
 	// FragmentDump
-	public void btnDumpAllCargoQty(View view){
+	public void btnDumpAllCargoQty(View view) {
 		int Index = -1;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnDumpCargoAll10:
 				Index++;
 			case R.id.btnDumpCargoAll9:
@@ -2369,10 +2319,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 		}
-		if (gameState.Ship.cargo[Index] <= 0){
+		if (gameState.Ship.cargo[Index] <= 0) {
 			Popup popup;
-			popup = new Popup(this,
-			                  "None to dump", "You have none of these goods.",
+			popup = new Popup(this, "None to dump", "You have none of these goods.",
 			                  "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
 			                  "OK", cbShowNextPopup
 			);
@@ -2382,11 +2331,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			SellCargo(Index, 999, GameState.JETTISONCARGO);
 		}
 	}
-	public void btnDumpCargoQty(View view){
+
+	public void btnDumpCargoQty(View view) {
 		int Index = -1;
 		Popup popup;
 
-		switch (view.getId()){
+		switch (view.getId()) {
 			case R.id.btnDumpCargo10:
 				Index++;
 			case R.id.btnDumpCargo9:
@@ -2409,9 +2359,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 		}
-		if (gameState.Ship.cargo[Index] <= 0){
-			popup = new Popup(this,
-			                  "None to dump", "You have none of these goods.",
+		if (gameState.Ship.cargo[Index] <= 0) {
+			popup = new Popup(this, "None to dump", "You have none of these goods.",
 			                  "On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
 			                  "OK", cbShowNextPopup
 			);
@@ -2419,30 +2368,23 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		} else {
 			final int idx = Index;
-			popup = new Popup(this,
-			                  "Discard Cargo",
-			                  String.format("Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
-			                                Tradeitems.mTradeitems[idx].name, gameState.Ship.cargo[idx],
-			                                gameState.BuyingPrice[idx] / gameState.Ship.cargo[idx]
-			                  ),
-			                  "Amount", "",
-			                  gameState.Ship.cargo[idx],
-			                  "Discard", "Keep",
-			                  new Popup.buttonCallback(){
-				                  @Override
-													public void execute(Popup popup, View view){
-					                  SeekBar seekBar = (SeekBar) view;
-								            int Amount = seekBar.getProgress();
-								            if (Amount > 0)
-									            SellCargo(idx, Amount, GameState.JETTISONCARGO);
-							            }
-						            }, cbShowNextPopup,
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  SellCargo(idx, popup.max, GameState.JETTISONCARGO);
-				                  }
-			                  }
+			popup = new Popup(this, "Discard Cargo", String.format(
+				"Discarding %s.\nYou can jettison up to %d units. You paid about %d cr. per unit. It costs nothing to jettison cargo. How many to you want to dump?",
+				Tradeitems.mTradeitems[idx].name, gameState.Ship.cargo[idx],
+				gameState.BuyingPrice[idx] / gameState.Ship.cargo[idx]
+			), "Amount", "", gameState.Ship.cargo[idx], "Discard", "Keep", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					SeekBar seekBar = (SeekBar) view;
+					int Amount = seekBar.getProgress();
+					if (Amount > 0) { SellCargo(idx, Amount, GameState.JETTISONCARGO); }
+				}
+			}, cbShowNextPopup, new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					SellCargo(idx, popup.max, GameState.JETTISONCARGO);
+				}
+			}
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -2450,160 +2392,166 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void btnDumpDone(View view){
+	public void btnDumpDone(View view) {
 		changeFragment(FRAGMENTS.PLUNDER);
 	}
+
 	// FragmentGalacticChart
 	@SuppressWarnings("UnusedParameters")
-	public void btnGalacticChartFind(View view){
+	public void btnGalacticChartFind(View view) {
 		Popup popup;
-		popup = new Popup(this,
-		                  "Find System",
-		                  "Please enter the system name to find:", "System", "",
-		                  "Find", "Cancel",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  EditText editText = (EditText) view;
-					                String buf = editText.getText().toString();
-					                if (buf.length() < 2){
-						                return;
-					                }
-					                if (buf.equals("Cheetah")) {
-						                if (++gameState.CheatCounter < 3){
-							                Popup popup1 = new Popup(popup.context,
-							                                         "Cheetah!",
-							                                         String.format("Strike %d!", gameState.CheatCounter),
-							                                         "", "OK", cbShowNextPopup
-							                );
-							                popupQueue.push(popup1);
-							                showNextPopup();
-						                }
+		popup = new Popup(this, "Find System", "Please enter the system name to find:", "System", "",
+		                  "Find", "Cancel", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				EditText editText = (EditText) view;
+				String buf = editText.getText().toString();
+				if (buf.length() < 2) {
+					return;
+				}
+				if (buf.equals("Cheetah")) {
+					if (++gameState.CheatCounter < 3) {
+						Popup popup1 = new Popup(popup.context, "Cheetah!", String.format("Strike %d!",
+						                                                                  gameState.CheatCounter
+						), "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					}
 
-						                if (gameState.CheatCounter == 3){
-							                Popup popup1 = new Popup(popup.context,
-							                                         "Cheat mode enabled",
-							                                         "Cheat mode has been enabled. You will NOT be added to the highscore list!",
-							                                         "Winners never cheat. Cheaters never win.", "OK",
-							                                         cbShowNextPopup
-							                );
-							                popupQueue.push(popup1);
-							                showNextPopup();
-						                }
-						                if (gameState.CheatCounter > 3)
-							                gameState.CheatCounter = 3;
+					if (gameState.CheatCounter == 3) {
+						Popup popup1 = new Popup(popup.context, "Cheat mode enabled",
+						                         "Cheat mode has been enabled. You will NOT be added to the highscore list!",
+						                         "Winners never cheat. Cheaters never win.", "OK",
+						                         cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					}
+					if (gameState.CheatCounter > 3) { gameState.CheatCounter = 3; }
 
-					                }
-													if (gameState.CheatCounter >= 3){
-						                if (buf.equals("Moolah")) {
-							                gameState.Credits += 100000;
-						                } else
-						                if (buf.startsWith("Go ") && buf.length() > 3) {
-							                int i = 0;
-							                while (i < GameState.MAXSOLARSYSTEM) {
-								                if (gameState.SolarSystemName[i].equals(buf.substring(3)))
-									                break;
-								                ++i;
-							                }
-							                if (i < GameState.MAXSOLARSYSTEM) {
-								                gameState.Mercenary[0].curSystem = i;
-								                gameState.RecalculateBuyPrices(i);
-								                changeFragment(FRAGMENTS.GALACTIC_CHART);
-							                }
-						                } else
-					                  if (buf.equals("Quests")) {
-							                String questbuf = "";
+				}
+				if (gameState.CheatCounter >= 3) {
+					if (buf.equals("Moolah")) {
+						gameState.Credits += 100000;
+					} else if (buf.startsWith("Go ") && buf.length() > 3) {
+						int i = 0;
+						while (i < GameState.MAXSOLARSYSTEM) {
+							if (gameState.SolarSystemName[i].equals(buf.substring(3))) { break; }
+							++i;
+						}
+						if (i < GameState.MAXSOLARSYSTEM) {
+							gameState.Mercenary[0].curSystem = i;
+							gameState.RecalculateBuyPrices(i);
+							changeFragment(FRAGMENTS.GALACTIC_CHART);
+						}
+					} else if (buf.equals("Quests")) {
+						String questbuf = "";
 
-							                for (int i=0; i<GameState.MAXSOLARSYSTEM; ++i) {
-								                SolarSystem s = gameState.SolarSystem[i];
-								                switch (s.special){
-									                case GameState.DRAGONFLY:
-									                  questbuf += String.format("Dragonfly: %s\n", gameState.SolarSystemName[s.nameIndex]);
-										                break;
-									                case GameState.SPACEMONSTER:
-										                questbuf += String.format("Spacemonster: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.JAPORIDISEASE:
-									                  questbuf += String.format("Disease: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.ALIENARTIFACT:
-									                  questbuf += String.format("Artifact: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-								                  case GameState.ARTIFACTDELIVERY:
-									                  if (gameState.ArtifactOnBoard)
-									                    questbuf += String.format("Berger: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.TRIBBLE:
-										                questbuf += String.format("Tribbles: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.GETREACTOR:
-										                questbuf += String.format("Get reactor: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.AMBASSADORJAREK:
-										                questbuf += String.format("Jarek: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.ALIENINVASION:
-										                questbuf += String.format("Invasion: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.EXPERIMENT:
-										                questbuf += String.format("Experiment: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-									                case GameState.TRANSPORTWILD:
-										                questbuf += String.format("Wild: %s\n", gameState.SolarSystemName[s.nameIndex]);
-									                  break;
-								                  case GameState.SCARAB:
-										                questbuf += String.format("Scarab: %s\n", gameState.SolarSystemName[s.nameIndex]);
-										                break;
-									                case GameState.SCARABDESTROYED:
-										                if (gameState.ScarabStatus > 0 && gameState.ScarabStatus < 2)
-										                  questbuf += String.format("Scarab: %s\n", gameState.SolarSystemName[s.nameIndex]);
-										                break;
-								                }
-							                }
-							                Popup popup1 = new Popup(popup.context,
-							                                         "Quests", questbuf, "", "OK", cbShowNextPopup
-							                );
-						                  popupQueue.push(popup1);
-						                  showNextPopup();
-				                    } else if (buf.equals("Very rare")) {
-						                  changeFragment(FRAGMENTS.VERY_RARE_CHEAT);
-					                  }
-													} else {
-							                int i = 0;
-							                while (i < GameState.MAXSOLARSYSTEM) {
-								                if (buf.equalsIgnoreCase(gameState.SolarSystemName[i]))
-									                break;
-								                ++i;
-							                }
-							                if (i >= GameState.MAXSOLARSYSTEM) {
-								                i = gameState.Mercenary[0].curSystem;
-							                }
-							                gameState.WarpSystem = i;
-							                WarpSystem = gameState.SolarSystem[i];
-														changeFragment(FRAGMENTS.GALACTIC_CHART);
-						                }
-					                }
-			                  },
-			                  cbShowNextPopup
+						for (int i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
+							SolarSystem s = gameState.SolarSystem[i];
+							switch (s.special) {
+								case GameState.DRAGONFLY:
+									questbuf += String.format("Dragonfly: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.SPACEMONSTER:
+									questbuf += String.format("Spacemonster: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.JAPORIDISEASE:
+									questbuf += String.format("Disease: %s\n", gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.ALIENARTIFACT:
+									questbuf += String.format("Artifact: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.ARTIFACTDELIVERY:
+									if (gameState.ArtifactOnBoard) {
+										questbuf += String.format("Berger: %s\n", gameState.SolarSystemName[s.nameIndex]
+										);
+									}
+									break;
+								case GameState.TRIBBLE:
+									questbuf += String.format("Tribbles: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.GETREACTOR:
+									questbuf += String.format("Get reactor: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.AMBASSADORJAREK:
+									questbuf += String.format("Jarek: %s\n", gameState.SolarSystemName[s.nameIndex]);
+									break;
+								case GameState.ALIENINVASION:
+									questbuf += String.format("Invasion: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.EXPERIMENT:
+									questbuf += String.format("Experiment: %s\n",
+									                          gameState.SolarSystemName[s.nameIndex]
+									);
+									break;
+								case GameState.TRANSPORTWILD:
+									questbuf += String.format("Wild: %s\n", gameState.SolarSystemName[s.nameIndex]);
+									break;
+								case GameState.SCARAB:
+									questbuf += String.format("Scarab: %s\n", gameState.SolarSystemName[s.nameIndex]);
+									break;
+								case GameState.SCARABDESTROYED:
+									if (gameState.ScarabStatus > 0 && gameState.ScarabStatus < 2) {
+										questbuf += String.format("Scarab: %s\n", gameState.SolarSystemName[s.nameIndex]
+										);
+									}
+									break;
+							}
+						}
+						Popup popup1 = new Popup(popup.context, "Quests", questbuf, "", "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+					} else if (buf.equals("Very rare")) {
+						changeFragment(FRAGMENTS.VERY_RARE_CHEAT);
+					}
+				} else {
+					int i = 0;
+					while (i < GameState.MAXSOLARSYSTEM) {
+						if (buf.equalsIgnoreCase(gameState.SolarSystemName[i])) { break; }
+						++i;
+					}
+					if (i >= GameState.MAXSOLARSYSTEM) {
+						i = gameState.Mercenary[0].curSystem;
+					}
+					gameState.WarpSystem = i;
+					WarpSystem = gameState.SolarSystem[i];
+					changeFragment(FRAGMENTS.GALACTIC_CHART);
+				}
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void SuperWarpButtonCallback(View view){
+	public void SuperWarpButtonCallback(View view) {
 		Popup popup;
 		if (gameState.TrackedSystem < 0) {
-			popup = new Popup(this,
-			                  "No System Selected",
+			popup = new Popup(this, "No System Selected",
 			                  "To use the Portable Singularity, track a system before clicking on this button. (You can't use the Singularity to enter a Wormhole).",
 			                  "", "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.TrackedSystem == gameState.Mercenary[0].curSystem) {
-			popup = new Popup(this,
-			                  "Cannot Jump",
+			popup = new Popup(this, "Cannot Jump",
 			                  "You are tracking the system where you are currently located. It's useless to jump to your current location.",
 			                  "Track another system than the one where you are currently are located, then tap the Singularity button to jump.",
 			                  "OK", cbShowNextPopup
@@ -2611,159 +2559,203 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
-			popup = new Popup(this,
-			                  "Use Singularity?",
+			popup = new Popup(this, "Use Singularity?",
 			                  "Do you wish to use the Portable Singularity to transport immediately to " + gameState.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex] + "?",
-			                  "", "Jump!", "Stay",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-														gameState.WarpSystem = gameState.TrackedSystem;
-														WarpSystem = gameState.SolarSystem[gameState.TrackedSystem];
-														gameState.CanSuperWarp = false;
-														DoWarp(true);
-													}
-												}, cbShowNextPopup
+			                  "", "Jump!", "Stay", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					gameState.WarpSystem = gameState.TrackedSystem;
+					WarpSystem = gameState.SolarSystem[gameState.TrackedSystem];
+					gameState.CanSuperWarp = false;
+					DoWarp(true);
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 	}
+
 	// FragmentShortcuts
-	public void btnSetShortcut(View view){
-		switch (view.getId()){
+	public void btnSetShortcut(View view) {
+		switch (view.getId()) {
 			case R.id.btnShortcut1BuyCargo:
-				gameState.Shortcut1 = 0; break;
+				gameState.Shortcut1 = 0;
+				break;
 			case R.id.btnShortcut2BuyCargo:
-				gameState.Shortcut2 = 0; break;
+				gameState.Shortcut2 = 0;
+				break;
 			case R.id.btnShortcut3BuyCargo:
-				gameState.Shortcut3 = 0; break;
+				gameState.Shortcut3 = 0;
+				break;
 			case R.id.btnShortcut4BuyCargo:
-				gameState.Shortcut4 = 0; break;
+				gameState.Shortcut4 = 0;
+				break;
 			case R.id.btnShortcut1SellCargo:
-				gameState.Shortcut1 = 1; break;
+				gameState.Shortcut1 = 1;
+				break;
 			case R.id.btnShortcut2SellCargo:
-				gameState.Shortcut2 = 1; break;
+				gameState.Shortcut2 = 1;
+				break;
 			case R.id.btnShortcut3SellCargo:
-				gameState.Shortcut3 = 1; break;
+				gameState.Shortcut3 = 1;
+				break;
 			case R.id.btnShortcut4SellCargo:
-				gameState.Shortcut4 = 1; break;
+				gameState.Shortcut4 = 1;
+				break;
 			case R.id.btnShortcut1ShipYard:
-				gameState.Shortcut1 = 2; break;
+				gameState.Shortcut1 = 2;
+				break;
 			case R.id.btnShortcut2ShipYard:
-				gameState.Shortcut2 = 2; break;
+				gameState.Shortcut2 = 2;
+				break;
 			case R.id.btnShortcut3ShipYard:
-				gameState.Shortcut3 = 2; break;
+				gameState.Shortcut3 = 2;
+				break;
 			case R.id.btnShortcut4ShipYard:
-				gameState.Shortcut4 = 2; break;
+				gameState.Shortcut4 = 2;
+				break;
 			case R.id.btnShortcut1BuyEquipment:
-				gameState.Shortcut1 = 3; break;
+				gameState.Shortcut1 = 3;
+				break;
 			case R.id.btnShortcut2BuyEquipment:
-				gameState.Shortcut2 = 3; break;
+				gameState.Shortcut2 = 3;
+				break;
 			case R.id.btnShortcut3BuyEquipment:
-				gameState.Shortcut3 = 3; break;
+				gameState.Shortcut3 = 3;
+				break;
 			case R.id.btnShortcut4BuyEquipment:
-				gameState.Shortcut4 = 3; break;
+				gameState.Shortcut4 = 3;
+				break;
 			case R.id.btnShortcut1SellEquipment:
-				gameState.Shortcut1 = 4; break;
+				gameState.Shortcut1 = 4;
+				break;
 			case R.id.btnShortcut2SellEquipment:
-				gameState.Shortcut2 = 4; break;
+				gameState.Shortcut2 = 4;
+				break;
 			case R.id.btnShortcut3SellEquipment:
-				gameState.Shortcut3 = 4; break;
+				gameState.Shortcut3 = 4;
+				break;
 			case R.id.btnShortcut4SellEquipment:
-				gameState.Shortcut4 = 4; break;
+				gameState.Shortcut4 = 4;
+				break;
 			case R.id.btnShortcut1Personnel:
-				gameState.Shortcut1 = 5; break;
+				gameState.Shortcut1 = 5;
+				break;
 			case R.id.btnShortcut2Personnel:
-				gameState.Shortcut2 = 5; break;
+				gameState.Shortcut2 = 5;
+				break;
 			case R.id.btnShortcut3Personnel:
-				gameState.Shortcut3 = 5; break;
+				gameState.Shortcut3 = 5;
+				break;
 			case R.id.btnShortcut4Personnel:
-				gameState.Shortcut4 = 5; break;
+				gameState.Shortcut4 = 5;
+				break;
 			case R.id.btnShortcut1Bank:
-				gameState.Shortcut1 = 6; break;
+				gameState.Shortcut1 = 6;
+				break;
 			case R.id.btnShortcut2Bank:
-				gameState.Shortcut2 = 6; break;
+				gameState.Shortcut2 = 6;
+				break;
 			case R.id.btnShortcut3Bank:
-				gameState.Shortcut3 = 6; break;
+				gameState.Shortcut3 = 6;
+				break;
 			case R.id.btnShortcut4Bank:
-				gameState.Shortcut4 = 6; break;
+				gameState.Shortcut4 = 6;
+				break;
 			case R.id.btnShortcut1SystemInfo:
-				gameState.Shortcut1 = 7; break;
+				gameState.Shortcut1 = 7;
+				break;
 			case R.id.btnShortcut2SystemInfo:
-				gameState.Shortcut2 = 7; break;
+				gameState.Shortcut2 = 7;
+				break;
 			case R.id.btnShortcut3SystemInfo:
-				gameState.Shortcut3 = 7; break;
+				gameState.Shortcut3 = 7;
+				break;
 			case R.id.btnShortcut4SystemInfo:
-				gameState.Shortcut4 = 7; break;
+				gameState.Shortcut4 = 7;
+				break;
 			case R.id.btnShortcut1CommanderStatus:
-				gameState.Shortcut1 = 8; break;
+				gameState.Shortcut1 = 8;
+				break;
 			case R.id.btnShortcut2CommanderStatus:
-				gameState.Shortcut2 = 8; break;
+				gameState.Shortcut2 = 8;
+				break;
 			case R.id.btnShortcut3CommanderStatus:
-				gameState.Shortcut3 = 8; break;
+				gameState.Shortcut3 = 8;
+				break;
 			case R.id.btnShortcut4CommanderStatus:
-				gameState.Shortcut4 = 8; break;
+				gameState.Shortcut4 = 8;
+				break;
 			case R.id.btnShortcut1GalacticChart:
-				gameState.Shortcut1 = 9; break;
+				gameState.Shortcut1 = 9;
+				break;
 			case R.id.btnShortcut2GalacticChart:
-				gameState.Shortcut2 = 9; break;
+				gameState.Shortcut2 = 9;
+				break;
 			case R.id.btnShortcut3GalacticChart:
-				gameState.Shortcut3 = 9; break;
+				gameState.Shortcut3 = 9;
+				break;
 			case R.id.btnShortcut4GalacticChart:
-				gameState.Shortcut4 = 9; break;
+				gameState.Shortcut4 = 9;
+				break;
 			case R.id.btnShortcut1WarpChart:
-				gameState.Shortcut1 = 10; break;
+				gameState.Shortcut1 = 10;
+				break;
 			case R.id.btnShortcut2WarpChart:
-				gameState.Shortcut2 = 10; break;
+				gameState.Shortcut2 = 10;
+				break;
 			case R.id.btnShortcut3WarpChart:
-				gameState.Shortcut3 = 10; break;
+				gameState.Shortcut3 = 10;
+				break;
 			case R.id.btnShortcut4WarpChart:
-				gameState.Shortcut4 = 10; break;
+				gameState.Shortcut4 = 10;
+				break;
 		}
 		invalidateOptionsMenu();
 	}
+
 	// FragmentVeryRareCheats
-	public void btnVeryRareCheckboxCallback(View view){
+	public void btnVeryRareCheckboxCallback(View view) {
 		CheckBox checkBox = (CheckBox) view;
-		switch (checkBox.getId()){
+		switch (checkBox.getId()) {
 			case R.id.chkBoxCheatAhab:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYAHAB;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYAHAB;
 				}
 				break;
 			case R.id.chkBoxCheatHuie:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYHUIE;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYHUIE;
 				}
 				break;
 			case R.id.chkBoxCheatConrad:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYCONRAD;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYCONRAD;
 				}
 				break;
 			case R.id.chkBoxCheatGoodTonic:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYBOTTLEGOOD;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYBOTTLEGOOD;
 				}
 				break;
 			case R.id.chkBoxCheatBadTonic:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYBOTTLEOLD;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYBOTTLEOLD;
 				}
 				break;
 			case R.id.chkBoxCheatMarieCeleste:
-				if (checkBox.isChecked()){
+				if (checkBox.isChecked()) {
 					gameState.VeryRareEncounter |= GameState.ALREADYMARIE;
 				} else {
 					gameState.VeryRareEncounter ^= GameState.ALREADYMARIE;
@@ -2771,6 +2763,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 		}
 	}
+
 	// FragmentPersonnelRoster
 	@SuppressWarnings("UnusedParameters")
 	public void btnPersonnelRosterHireCallback(View view) {
@@ -2780,10 +2773,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Ship Ship = gameState.Ship;
 
 		oldtraderskill = gameState.TraderSkill(Ship);
-		if (Ship.crew[1] == -1)
-			FirstFree = 1;
-		else if (Ship.crew[2] == -1)
-			FirstFree = 2;
+		if (Ship.crew[1] == -1) { FirstFree = 1; } else if (Ship.crew[2] == -1) { FirstFree = 2; }
 
 		if ((FirstFree < 0) || (gameState.AvailableQuarters() <= FirstFree)) {
 			Popup popup;
@@ -2799,9 +2789,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Ship.crew[FirstFree] = ForHire;
 		}
 		changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-		if (oldtraderskill != gameState.TraderSkill(Ship))
+		if (oldtraderskill != gameState.TraderSkill(Ship)) {
 			gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
+		}
 	}
+
 	public void btnPersonnelRosterFireCallback(View view) {
 		final int i;
 
@@ -2830,14 +2822,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				}
 				Ship.crew[2] = -1;
 				changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-				if (oldtraderskill != gameState.TraderSkill(Ship))
+				if (oldtraderskill != gameState.TraderSkill(Ship)) {
 					gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
+				}
 			}
 		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	// FragmentEncounter
 	public void DoWarp(boolean viaSingularity) {
 		int i, Distance;
@@ -2909,10 +2903,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		// Check for enough money to pay Wormhole Tax
-		if (gameState.InsuranceMoney() + gameState.MercenaryMoney() + gameState
-			.WormholeTax(COMMANDER.curSystem,
-			             WarpSystem
-			) > gameState.Credits) {
+		if (gameState.InsuranceMoney() + gameState.MercenaryMoney() + gameState.WormholeTax(
+			COMMANDER.curSystem, WarpSystem
+		) > gameState.Credits) {
 			popup = new Popup(this, "Wormhole Tax",
 			                  "You don't have enough money to pay for the wormhole tax.",
 			                  "Wormhole tax must be paid when you want to warp through a wormhole. It depends on the type of your ship.",
@@ -2930,10 +2923,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		for (i = 0; i < GameState.MAXSHIELD; ++i) {
-			if (gameState.Ship.shield[i] < 0)
-				break;
-			gameState.Ship.shieldStrength[i] =
-				Shields.mShields[gameState.Ship.shield[i]].power;
+			if (gameState.Ship.shield[i] < 0) { break; }
+			gameState.Ship.shieldStrength[i] = Shields.mShields[gameState.Ship.shield[i]].power;
 		}
 
 		CURSYSTEM.countDown = GameState.CountDown;
@@ -2951,8 +2942,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			// normal warp.
 			gameState.PayInterest();
 			IncDays(1);
-			if (gameState.Insurance)
-				++gameState.NoClaim;
+			if (gameState.Insurance) { ++gameState.NoClaim; }
 		} else {
 			// add the singularity news story
 			gameState.addNewsEvent(GameState.ARRIVALVIASINGULARITY);
@@ -2962,17 +2952,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.Inspected = false;
 		gameState.LitterWarning = false;
 		gameState.MonsterHull = (gameState.MonsterHull * 105) / 100;
-		if (gameState.MonsterHull > ShipTypes.ShipTypes[gameState.SpaceMonster.type].hullStrength)
+		if (gameState.MonsterHull > ShipTypes.ShipTypes[gameState.SpaceMonster.type].hullStrength) {
 			gameState.MonsterHull = ShipTypes.ShipTypes[gameState.SpaceMonster.type].hullStrength;
+		}
 		if (gameState.Days % 3 == 0) {
-			if (gameState.PoliceRecordScore > GameState.CLEANSCORE)
-				--gameState.PoliceRecordScore;
+			if (gameState.PoliceRecordScore > GameState.CLEANSCORE) { --gameState.PoliceRecordScore; }
 		}
 		if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
-			if (GameState.getDifficulty() <= GameState.NORMAL)
+			if (GameState.getDifficulty() <= GameState.NORMAL) {
 				++gameState.PoliceRecordScore;
-			else if (gameState.Days % GameState.getDifficulty() == 0)
-				++gameState.PoliceRecordScore;
+			} else if (gameState.Days % GameState.getDifficulty() == 0) { ++gameState.PoliceRecordScore; }
 		}
 
 		gameState.PossibleToGoThroughRip = true;
@@ -2989,31 +2978,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			i = gameState.Ship.getRandomTradeableItem(GameState.TRADERBUY);
 
 			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
-				if (gameState.GetRandom(100) <= 45)
-					gameState.SellPrice[i] *= 0.8;
-				else
+				if (gameState.GetRandom(100) <= 45) { gameState.SellPrice[i] *= 0.8; } else {
 					gameState.SellPrice[i] *= 1.1;
+				}
 			} else {
-				if (gameState.GetRandom(100) <= 10)
-					gameState.SellPrice[i] *= 0.9;
-				else
+				if (gameState.GetRandom(100) <= 10) { gameState.SellPrice[i] *= 0.9; } else {
 					gameState.SellPrice[i] *= 1.1;
+				}
 			}
 
 			gameState.SellPrice[i] /= Tradeitems.mTradeitems[i].roundOff;
 			++gameState.SellPrice[i];
 			gameState.SellPrice[i] *= Tradeitems.mTradeitems[i].roundOff;
-			if (gameState.SellPrice[i] < Tradeitems.mTradeitems[i].minTradePrice)
+			if (gameState.SellPrice[i] < Tradeitems.mTradeitems[i].minTradePrice) {
 				gameState.SellPrice[i] = Tradeitems.mTradeitems[i].minTradePrice;
-			if (gameState.SellPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice)
+			}
+			if (gameState.SellPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice) {
 				gameState.SellPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
+			}
 
-			String buf = String
-				.format("The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?",
-				        Tradeitems.mTradeitems[i].name, gameState.SellPrice[i],
-				        gameState.Ship.cargo[i],
-				        gameState.BuyingPrice[i] / gameState.Ship.cargo[i]
-				);
+			String buf = String.format(
+				"The trader wants to buy %s, and offers %d cr. each.\nYou have %d units available and paid about %d cr. per unit.\nHow many do you wish to sell?",
+				Tradeitems.mTradeitems[i].name, gameState.SellPrice[i], gameState.Ship.cargo[i],
+				gameState.BuyingPrice[i] / gameState.Ship.cargo[i]
+			);
 
 			Popup popup;
 			popup = new Popup(this, "Trade offer", buf, "Amount", "", gameState.Ship.cargo[i], "Trade",
@@ -3033,11 +3021,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						gameState.Opponent.cargo[i] = Amount;
 						gameState.Credits += Amount * gameState.SellPrice[i];
 						Popup popup1;
-						popup1 = new Popup(popup.context, "Trade Completed",
-						                   String.format("%s %s. It's been a pleasure doing business with you.",
-						                                 "Thanks for selling us the",
-						                                 Tradeitems.mTradeitems[i].name
-						                   ), "", "OK", cbShowNextPopup
+						popup1 = new Popup(popup.context, "Trade Completed", String.format(
+							"%s %s. It's been a pleasure doing business with you.", "Thanks for selling us the",
+							Tradeitems.mTradeitems[i].name
+						), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
 						showNextPopup();
@@ -3054,11 +3041,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					gameState.Opponent.cargo[i] = Amount;
 					gameState.Credits += Amount * gameState.SellPrice[i];
 					Popup popup1;
-					popup1 = new Popup(popup.context, "Trade Completed",
-					                   String.format("%s %s. It's been a pleasure doing business with you.",
-					                                 "Thanks for selling us the",
-					                                 Tradeitems.mTradeitems[i].name
-					                   ), "", "OK", cbShowNextPopup
+					popup1 = new Popup(popup.context, "Trade Completed", String.format(
+						"%s %s. It's been a pleasure doing business with you.", "Thanks for selling us the",
+						Tradeitems.mTradeitems[i].name
+					), "", "OK", cbShowNextPopup
 					);
 					popupQueue.push(popup1);
 					showNextPopup();
@@ -3070,30 +3056,29 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} else if (gameState.EncounterType == GameState.TRADERSELL) {
 			i = gameState.Opponent.getRandomTradeableItem(GameState.TRADERSELL);
 			if (i == GameState.NARCOTICS || i == GameState.FIREARMS) {
-				if (gameState.GetRandom(100) <= 45)
-					gameState.BuyPrice[i] *= 1.1;
-				else
+				if (gameState.GetRandom(100) <= 45) { gameState.BuyPrice[i] *= 1.1; } else {
 					gameState.BuyPrice[i] *= 0.8;
+				}
 			} else {
-				if (gameState.GetRandom(100) <= 10)
-					gameState.BuyPrice[i] *= 1.1;
-				else
+				if (gameState.GetRandom(100) <= 10) { gameState.BuyPrice[i] *= 1.1; } else {
 					gameState.BuyPrice[i] *= 0.9;
+				}
 			}
 
 			gameState.BuyPrice[i] /= Tradeitems.mTradeitems[i].roundOff;
 			gameState.BuyPrice[i] *= Tradeitems.mTradeitems[i].roundOff;
-			if (gameState.BuyPrice[i] < Tradeitems.mTradeitems[i].minTradePrice)
+			if (gameState.BuyPrice[i] < Tradeitems.mTradeitems[i].minTradePrice) {
 				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].minTradePrice;
-			if (gameState.BuyPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice)
+			}
+			if (gameState.BuyPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice) {
 				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
+			}
 
-			String buf = String
-				.format("The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?",
-				        Tradeitems.mTradeitems[i].name, gameState.BuyPrice[i],
-				        gameState.Opponent.cargo[i],
-				        gameState.Credits / gameState.BuyPrice[i]
-				);
+			String buf = String.format(
+				"The trader wants to sell %s for the price of %d cr. each.\n The trader has %d units for sale. You can afford %d units.\nHow many do you wish to buy?",
+				Tradeitems.mTradeitems[i].name, gameState.BuyPrice[i], gameState.Opponent.cargo[i],
+				gameState.Credits / gameState.BuyPrice[i]
+			);
 
 			Popup popup;
 			popup = new Popup(this, "Trade Offer", buf, "Amount", "", gameState.Opponent.cargo[i],
@@ -3112,11 +3097,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						gameState.Credits -= (Amount * gameState.BuyPrice[i]);
 
 						Popup popup1;
-						popup1 = new Popup(popup.context, "Trade Completed",
-						                   String.format("%s %s. It's been a pleasure doing business with you.",
-						                                 "Thanks for buying the",
-						                                 Tradeitems.mTradeitems[i].name
-						                   ), "", "OK", cbShowNextPopup
+						popup1 = new Popup(popup.context, "Trade Completed", String.format(
+							"%s %s. It's been a pleasure doing business with you.", "Thanks for buying the",
+							Tradeitems.mTradeitems[i].name
+						), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
 						showNextPopup();
@@ -3134,11 +3118,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						gameState.Credits -= (Amount * gameState.BuyPrice[i]);
 
 						Popup popup1;
-						popup1 = new Popup(popup.context, "Trade Completed",
-						                   String.format("%s %s. It's been a pleasure doing business with you.",
-						                                 "Thanks for buying the",
-						                                 Tradeitems.mTradeitems[i].name
-						                   ), "", "OK", cbShowNextPopup
+						popup1 = new Popup(popup.context, "Trade Completed", String.format(
+							"%s %s. It's been a pleasure doing business with you.", "Thanks for buying the",
+							Tradeitems.mTradeitems[i].name
+						), "", "OK", cbShowNextPopup
 						);
 						popupQueue.push(popup1);
 						showNextPopup();
@@ -3158,15 +3141,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Popup popup;
 
 		if (gameState.WildStatus == 1) {
-			buf = String
-				.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
-				        "You have Jonathan Wild on board!\n", "Wild will be arrested, too.\n"
-				);
+			buf = String.format(
+				"%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
+				"You have Jonathan Wild on board!\n", "Wild will be arrested, too.\n"
+			);
 		} else if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-			buf = String
-				.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
-				        "You have an illegal Reactor on board!\n ", "They will destroy the reactor.\n"
-				);
+			buf = String.format(
+				"%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine.\n%sAre you sure you want to do that?",
+				"You have an illegal Reactor on board!\n ", "They will destroy the reactor.\n"
+			);
 		}
 
 		if (gameState.WildStatus == 1 || (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21)) {
@@ -3182,8 +3165,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		} else {
 			// Police Record becomes dubious, if it wasn't already.
-			if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
+			if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
 				gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+			}
 			gameState.Ship.cargo[GameState.NARCOTICS] = 0;
 			gameState.Ship.cargo[GameState.FIREARMS] = 0;
 
@@ -3224,10 +3208,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
 
-		if (gameState.ENCOUNTERTRADER(gameState.EncounterType))
+		if (gameState.ENCOUNTERTRADER(gameState.EncounterType)) {
 			gameState.PoliceRecordScore += GameState.PLUNDERTRADERSCORE;
-		else
-			gameState.PoliceRecordScore += GameState.PLUNDERPIRATESCORE;
+		} else { gameState.PoliceRecordScore += GameState.PLUNDERPIRATESCORE; }
 		changeFragment(FRAGMENTS.PLUNDER);
 		// Travel(); // is called from Done button in PlunderForm
 	}
@@ -3252,24 +3235,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 								gameState.Ship.shieldStrength[m - 1] = gameState.Ship.shieldStrength[m];
 							}
 							gameState.Ship.shield[GameState.MAXSHIELD - 1] = -1;
-							gameState.Ship.shieldStrength[GameState.MAXSHIELD-1] = 0;
+							gameState.Ship.shieldStrength[GameState.MAXSHIELD - 1] = 0;
 							i = -1;
 						}
 						i--;
 					}
 					// add points to piloting skill
 					// two points if you're on beginner-normal, one otherwise
-					if (GameState.getDifficulty() < GameState.HARD)
+					if (GameState.getDifficulty() < GameState.HARD) {
 						gameState.Mercenary[0].pilot += 2;
-					else
-						gameState.Mercenary[0].pilot += 1;
+					} else { gameState.Mercenary[0].pilot += 1; }
 
 					if (gameState.Mercenary[0].pilot > GameState.MAXSKILL) {
 						gameState.Mercenary[0].pilot = GameState.MAXSKILL;
 					}
 					Popup popup1;
-					popup1 = new Popup(popup.context,
-					                   "Training completed",
+					popup1 = new Popup(popup.context, "Training completed",
 					                   "After a few hours of training with a top expert, you feel your abilities have improved significantly.",
 					                   "Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
 					                   "OK", cbShowNextPopup
@@ -3284,94 +3265,88 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			showNextPopup();
 		} else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER) {
 			// Trade a military laser for skill points in engineering?
-			popup = new Popup(this,
-			                  "Meet Captain Conrad",
+			popup = new Popup(this, "Meet Captain Conrad",
 			                  "Captain Conrad is in need of a military laser. She offers to trade you some engineering training for your military laser. Do you wish to trade?",
 			                  "Captain Conrad is in need of a military laser to test a new shield design she's been working on. Unfortunately, she's used up her R&D budget for the year.\nThe deal she's offering is a trade, rather than cash, for the laser. She'll trade you some engineering lessons in exchange for your military laser (she only needs one, so if you have more than one, you'll keep the others.",
-			                  "Trade", "Keep",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  // remove the last military laser
-					                  int i=GameState.MAXWEAPON - 1;
-					                  while (i>=0) {
-						                  if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
-							                  for (int m=i+1; m<GameState.MAXWEAPON; ++m) {
-								                  gameState.Ship.weapon[m-1] = gameState.Ship.weapon[m];
-							                  }
-							                  gameState.Ship.weapon[GameState.MAXWEAPON-1] = -1;
-							                  i = -1;
-						                  }
-						                  i--;
-					                  }
-					                  // add points to engineering skill
-					                  // two points if you're on beginner-normal, one otherwise
-					                  if (GameState.getDifficulty() < GameState.HARD)
-						                  gameState.Mercenary[0].engineer += 2;
-					                  else
-						                  gameState.Mercenary[0].engineer += 1;
+			                  "Trade", "Keep", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					// remove the last military laser
+					int i = GameState.MAXWEAPON - 1;
+					while (i >= 0) {
+						if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
+							for (int m = i + 1; m < GameState.MAXWEAPON; ++m) {
+								gameState.Ship.weapon[m - 1] = gameState.Ship.weapon[m];
+							}
+							gameState.Ship.weapon[GameState.MAXWEAPON - 1] = -1;
+							i = -1;
+						}
+						i--;
+					}
+					// add points to engineering skill
+					// two points if you're on beginner-normal, one otherwise
+					if (GameState.getDifficulty() < GameState.HARD) {
+						gameState.Mercenary[0].engineer += 2;
+					} else { gameState.Mercenary[0].engineer += 1; }
 
-					                  if (gameState.Mercenary[0].engineer > GameState.MAXSKILL)
-						                  gameState.Mercenary[0].engineer = GameState.MAXSKILL;
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Training completed",
-					                                     "After a few hours of training with a top expert, you feel your abilities have improved significantly.",
-					                                     "Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
-					                                     "OK", cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-					                  Travel();
-				                  }
-			                  }, cbShowNextPopup
+					if (gameState.Mercenary[0].engineer > GameState.MAXSKILL) {
+						gameState.Mercenary[0].engineer = GameState.MAXSKILL;
+					}
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Training completed",
+					                   "After a few hours of training with a top expert, you feel your abilities have improved significantly.",
+					                   "Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
+					                   "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+					Travel();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER) {
 			// Trade a military laser for skill points in trading?
-			popup = new Popup(this,
-			                  "Meet Captain Huie",
+			popup = new Popup(this, "Meet Captain Huie",
 			                  "Captain Huie is in need of a military laser. She offers to exchange some bargaining training for your military laser. Do you wish to trade?",
 			                  "Captain Huie is in need of a military laser for an upcoming mission, but would rather hold onto her cash to buy her cargo.\nThe deal she's offering is a trade, rather than cash, for the laser. She'll give you some secrets of doing business in exchange for your military laser.\nCaptain Huie is known far and wide for driving a hard bargain; she was Trade Commissioner of the Galactic Council for over twenty years.",
-			                  "Trade", "Keep",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  // remove the last military laser
-					                  int i=GameState.MAXWEAPON - 1;
-					                  while (i>=0) {
-						                  if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
-							                  for (int m=i+1; m<GameState.MAXWEAPON; ++m) {
-								                  gameState.Ship.weapon[m-1] = gameState.Ship.weapon[m];
-							                  }
-							                  gameState.Ship.weapon[GameState.MAXWEAPON-1] = -1;
-							                  i = -1;
-						                  }
-						                  i--;
-					                  }
-					                  // add points to trading skill
-					                  // two points if you're on beginner-normal, one otherwise
-					                  if (GameState.getDifficulty() < GameState.HARD)
-						                  gameState.Mercenary[0].trader += 2;
-					                  else
-						                  gameState.Mercenary[0].trader += 1;
+			                  "Trade", "Keep", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					// remove the last military laser
+					int i = GameState.MAXWEAPON - 1;
+					while (i >= 0) {
+						if (gameState.Ship.weapon[i] == GameState.MILITARYLASERWEAPON) {
+							for (int m = i + 1; m < GameState.MAXWEAPON; ++m) {
+								gameState.Ship.weapon[m - 1] = gameState.Ship.weapon[m];
+							}
+							gameState.Ship.weapon[GameState.MAXWEAPON - 1] = -1;
+							i = -1;
+						}
+						i--;
+					}
+					// add points to trading skill
+					// two points if you're on beginner-normal, one otherwise
+					if (GameState.getDifficulty() < GameState.HARD) {
+						gameState.Mercenary[0].trader += 2;
+					} else { gameState.Mercenary[0].trader += 1; }
 
-					                  if (gameState.Mercenary[0].trader > GameState.MAXSKILL)
-						                  gameState.Mercenary[0].trader = GameState.MAXSKILL;
-					                  gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Training completed",
-					                                     "After a few hours of training with a top expert, you feel your abilities have improved significantly.",
-					                                     "Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
-					                                     "OK", cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-					                  Travel();
-				                  }
-			                  }, cbShowNextPopup
+					if (gameState.Mercenary[0].trader > GameState.MAXSKILL) {
+						gameState.Mercenary[0].trader = GameState.MAXSKILL;
+					}
+					gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Training completed",
+					                   "After a few hours of training with a top expert, you feel your abilities have improved significantly.",
+					                   "Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
+					                   "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+					Travel();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -3381,44 +3356,39 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonDrinkCallback(View view) {
 		Popup popup;
-		popup = new Popup(this,
-		                  "Drink Contents?",
+		popup = new Popup(this, "Drink Contents?",
 		                  "You have come across an extremely rare bottle of Captain Marmoset's Amazing Skill Tonic! The \"use-by\" date is illegible, but might still be good. Would you like to drink it?",
 		                  "Floating in orbit, you come across a bottle of Captain Marmoset's Amazing Skill Tonic. This concoction has been extremely hard to find since the elusive Captain Marmoset left on a mission to the heart of a comet.\nIn the old days, this stuff went for thousands of credits a bottle, since people reported significant gains in their abilitiesafter quaffing a bottle.\nThe \"best used by\" date stamped on the bottle has become illegible. The tonic might still be good. Then again, it's not clear what happens when the Tonic breaks down...",
-		                  "Drink it", "Leave it",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  if (gameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
-					                  // two points if you're on beginner-normal, one otherwise
-					                  gameState.IncreaseRandomSkill();
-					                  if (GameState.getDifficulty() < GameState.HARD)
-						                  gameState.IncreaseRandomSkill();
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Tonic consumed",
-					                                     "Mmmmm. Captain Marmoset's Amazing Skill Tonic not only fills you with energy, but tastes like a fine single-malt.",
-					                                     "Captain Marmoset's Amazing Skill Tonic goes down very smoothly. You feel a slight tingling in your fingertips.",
-					                                     "OK", cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-				                  } else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER) {
-					                  // Quaff the out of date bottle of Skill Tonic?
-					                  gameState.TonicTweakRandomSkill();
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Tonic consumed",
-					                                     "While you don't know what it was supposed to taste like, you get the feeling that this dose of tonic was a bit off.",
-					                                     "Captain Marmoset's Amazing Skill Tonic tasted very strange, like slightly salty red wine. You feel a bit dizzy, and your teeth itch for a while.",
-					                                     "OK", cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-				                  }
-				                  Travel();
-			                  }
-		                  }, cbShowNextPopup
+		                  "Drink it", "Leave it", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				if (gameState.EncounterType == GameState.BOTTLEGOODENCOUNTER) {
+					// two points if you're on beginner-normal, one otherwise
+					gameState.IncreaseRandomSkill();
+					if (GameState.getDifficulty() < GameState.HARD) { gameState.IncreaseRandomSkill(); }
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Tonic consumed",
+					                   "Mmmmm. Captain Marmoset's Amazing Skill Tonic not only fills you with energy, but tastes like a fine single-malt.",
+					                   "Captain Marmoset's Amazing Skill Tonic goes down very smoothly. You feel a slight tingling in your fingertips.",
+					                   "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+				} else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER) {
+					// Quaff the out of date bottle of Skill Tonic?
+					gameState.TonicTweakRandomSkill();
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Tonic consumed",
+					                   "While you don't know what it was supposed to taste like, you get the feeling that this dose of tonic was a bit off.",
+					                   "Captain Marmoset's Amazing Skill Tonic tasted very strange, like slightly salty red wine. You feel a bit dizzy, and your teeth itch for a while.",
+					                   "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+				}
+				Travel();
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
@@ -3433,16 +3403,18 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Politics.mPolitics[WarpSystem.politics].bribeLevel <= 0) {
 			title = "No bribe";
 			text = "These police officers can't be bribed.";
-			hint = "Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
+			hint =
+				"Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
 		}
 		if (gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
 			title = "No bribe";
-			text = "We'd love to take your money, but Space Command already knows you've got illegal goods onboard.";
-			hint = "Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
+			text =
+				"We'd love to take your money, but Space Command already knows you've got illegal goods onboard.";
+			hint =
+				"Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
 		}
-		if (!title.equals("")){
-			popup = new Popup(this,
-			                  title, text, hint, "OK", cbShowNextPopup
+		if (!title.equals("")) {
+			popup = new Popup(this, title, text, hint, "OK", cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -3450,16 +3422,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (gameState.EncounterType == GameState.POLICEINSPECTION && gameState.Ship.cargo[GameState.FIREARMS] <= 0 && gameState.Ship.cargo[GameState.NARCOTICS] <= 0 && gameState.WildStatus != 1) {
-			popup = new Popup(this,
-			                  "You Have Nothing Illegal",
+			popup = new Popup(this, "You Have Nothing Illegal",
 			                  "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
-			                  "", "Bribe", "Don't bribe",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  EncounterButtonBrideCallbackStep2();
-				                  }
-			                  }, cbShowNextPopup
+			                  "", "Bribe", "Don't bribe", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					EncounterButtonBrideCallbackStep2();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -3467,45 +3437,38 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		EncounterButtonBrideCallbackStep2();
 	}
-	public void EncounterButtonBrideCallbackStep2(){
+
+	public void EncounterButtonBrideCallbackStep2() {
 		int Bribe;
 		// Bribe depends on how easy it is to bribe the police and commander's current worth
-		Bribe = gameState.CurrentWorth() /
-			((10 + 5 * (GameState.IMPOSSIBLE - GameState.getDifficulty())) * Politics.mPolitics[WarpSystem.politics].bribeLevel);
-		if (Bribe % 100 != 0)
-			Bribe += (100 - (Bribe % 100));
+		Bribe = gameState.CurrentWorth() / ((10 + 5 * (GameState.IMPOSSIBLE - GameState
+			.getDifficulty())) * Politics.mPolitics[WarpSystem.politics].bribeLevel);
+		if (Bribe % 100 != 0) { Bribe += (100 - (Bribe % 100)); }
 		if (gameState.WildStatus == 1 || (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21)) {
-			if (GameState.getDifficulty() <= GameState.NORMAL)
-				Bribe *= 2;
-			else
-				Bribe *= 3;
+			if (GameState.getDifficulty() <= GameState.NORMAL) { Bribe *= 2; } else { Bribe *= 3; }
 		}
 		Bribe = Math.max(100, Math.min(Bribe, 10000));
 
 		final int b = Bribe;
 		Popup popup;
-		popup = new Popup(this,
-		                  "Offer Bribe",
-		                  String.format("These police officers are willing to forego inspection for the amount for %d credits.", Bribe),
-		                  "", "Pay", "Forget it",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  if (gameState.Credits < b) {
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "Not enough cash",
-					                                     "You don't have enough cash for a bribe.", "", "OK",
-					                                     cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-				                  } else {
-					                  gameState.Credits -= b;
-					                  Travel();
-				                  }
-			                  }
-		                  }, cbShowNextPopup
+		popup = new Popup(this, "Offer Bribe", String.format(
+			"These police officers are willing to forego inspection for the amount for %d credits.", Bribe
+		), "", "Pay", "Forget it", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				if (gameState.Credits < b) {
+					Popup popup1;
+					popup1 = new Popup(popup.context, "Not enough cash",
+					                   "You don't have enough cash for a bribe.", "", "OK", cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+				} else {
+					gameState.Credits -= b;
+					Travel();
+				}
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
@@ -3519,30 +3482,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.Opponent.type == GameState.MANTISTYPE) {
 			if (gameState.ArtifactOnBoard) {
-				popup = new Popup(this,
-				                  "Surrender",
+				popup = new Popup(this, "Surrender",
 				                  "If you surrender to the aliens, they will steal the artifact. Are you sure you wish to do that?",
 				                  "The aliens are only after the artifact. They will let you live, and even let you keep your cargo, but you won't be able to finish your quest.",
-				                  "Surrender", "Fight",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  Popup popup1;
-						                  popup1 = new Popup(popup.context,
-						                                     "Artifact Relinquished", "The aliens take the artifact from you.",
-						                                     "The aliens have taken the artifact from you. Well, it's rightfully theirs, so you probably shouldn't complain. You won't receive any reward from professor Berger, though.",
-						                                     "OK", cbShowNextPopup
-						                  );
-						                  popupQueue.push(popup1);
-						                  gameState.ArtifactOnBoard = false;
-					                  }
-				                  }, cbShowNextPopup
+				                  "Surrender", "Fight", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Artifact Relinquished",
+						                   "The aliens take the artifact from you.",
+						                   "The aliens have taken the artifact from you. Well, it's rightfully theirs, so you probably shouldn't complain. You won't receive any reward from professor Berger, though.",
+						                   "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						gameState.ArtifactOnBoard = false;
+					}
+				}, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				popup = new Popup(this,
-				                  "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
 				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
@@ -3551,8 +3511,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		} else if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
 			if (gameState.PoliceRecordScore <= GameState.PSYCHOPATHSCORE) {
-				popup = new Popup(this,
-				                  "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
 				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
@@ -3561,15 +3520,23 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			} else {
 				String buf;
 				if (gameState.WildStatus == 1) {
-					buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?", "You have Jonathan Wild on board! ", "Wild will be arrested, too. ");
+					buf = String.format(
+						"%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?",
+						"You have Jonathan Wild on board! ", "Wild will be arrested, too. "
+					);
 				} else if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-					buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?", "You have an illegal Reactor on board! ", "They will destroy the reactor. ");
+					buf = String.format(
+						"%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?",
+						"You have an illegal Reactor on board! ", "They will destroy the reactor. "
+					);
 				} else {
-					buf = String.format("%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?", "", "");
+					buf = String.format(
+						"%sIf you surrender, you will spend some time in prison and will have to pay a hefty fine. %sAre you sure you want to do that?",
+						"", ""
+					);
 				}
 
-				popup = new Popup(this,
-				                  "Surrender", buf, "", "Surrender", "Fight",
+				popup = new Popup(this, "Surrender", buf, "", "Surrender", "Fight",
 				                  new Popup.buttonCallback() {
 					                  @Override
 					                  public void execute(Popup popup, View view) {
@@ -3586,27 +3553,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.Raided = true;
 
 			TotalCargo = 0;
-			for (i=0; i<GameState.MAXTRADEITEM; ++i)
-				TotalCargo += gameState.Ship.cargo[i];
+			for (i = 0; i < GameState.MAXTRADEITEM; ++i) { TotalCargo += gameState.Ship.cargo[i]; }
 			if (TotalCargo <= 0) {
-				Blackmail = Math.min( 25000, Math.max( 500, gameState.CurrentWorth() / 20 ) );
-				popup = new Popup(this,
-				                  "Pirates Find No Cargo",
+				Blackmail = Math.min(25000, Math.max(500, gameState.CurrentWorth() / 20));
+				popup = new Popup(this, "Pirates Find No Cargo",
 				                  "The pirates are very angry that they find no cargo on your ship. To stop them from destroying you, you have no choice but to pay them an amount equal to 5% of your current worth.",
 				                  "If you have nothing in your cargo holds, the pirates will blow up your ship unless you pay them some money, equal to 5% of your current worth, which will be subtracted from your cash, unless you don't have enough of that, in which case it will be added to your debt. At least it's better than dying.",
 				                  "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
-				if (gameState.Credits >= Blackmail)
-					gameState.Credits -= Blackmail;
-				else {
+				if (gameState.Credits >= Blackmail) { gameState.Credits -= Blackmail; } else {
 					gameState.Debt += (Blackmail - gameState.Credits);
 					gameState.Credits = 0;
 				}
 			} else {
-				popup = new Popup(this,
-				                  "Looting",
+				popup = new Popup(this, "Looting",
 				                  "The pirates board your ship and transfer as much of your cargo to their own ship as their cargo bays can hold.",
 				                  "The pirates steal from you what they can carry, but at least you get out of it alive.",
 				                  "OK", cbShowNextPopup
@@ -3615,15 +3577,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 
 				Bays = ShipTypes.ShipTypes[gameState.Opponent.type].cargoBays;
-				for (i=0; i<GameState.MAXGADGET; ++i)
-					if (gameState.Opponent.gadget[i] == GameState.EXTRABAYS)
-						Bays += 5;
-				for (i=0; i<GameState.MAXTRADEITEM; ++i)
-					Bays -= gameState.Opponent.cargo[i];
+				for (i = 0; i < GameState.MAXGADGET; ++i) {
+					if (gameState.Opponent.gadget[i] == GameState.EXTRABAYS) { Bays += 5; }
+				}
+				for (i = 0; i < GameState.MAXTRADEITEM; ++i) { Bays -= gameState.Opponent.cargo[i]; }
 
 				// Pirates steal everything
 				if (Bays >= TotalCargo) {
-					for (i=0; i<GameState.MAXTRADEITEM; ++i) {
+					for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
 						gameState.Ship.cargo[i] = 0;
 						gameState.BuyingPrice[i] = 0;
 					}
@@ -3632,7 +3593,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					while (Bays > 0) {
 						i = gameState.GetRandom(GameState.MAXTRADEITEM);
 						if (gameState.Ship.cargo[i] > 0) {
-							gameState.BuyingPrice[i] = (gameState.BuyingPrice[i] * (gameState.Ship.cargo[i] - 1)) / gameState.Ship.cargo[i];
+							gameState.BuyingPrice[i] =
+								(gameState.BuyingPrice[i] * (gameState.Ship.cargo[i] - 1)) / gameState.Ship.cargo[i];
 							--gameState.Ship.cargo[i];
 							--Bays;
 						}
@@ -3642,8 +3604,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if ((gameState.WildStatus == 1) && (ShipTypes.ShipTypes[gameState.Opponent.type].crewQuarters > 1)) {
 				// Wild hops onto Pirate Ship
 				gameState.WildStatus = 0;
-				popup = new Popup(this,
-				                  "Wild Goes with Pirates",
+				popup = new Popup(this, "Wild Goes with Pirates",
 				                  "The Pirate Captain turns out to be an old associate of Jonathan Wild's, and invites him to go to Kravat aboard the Pirate ship. Wild accepts the offer and thanks you for the ride.",
 				                  "Jonathan Wild figures that it's probably safer to get a ride home with his old associate than stay on your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police?",
 				                  "OK", cbShowNextPopup
@@ -3652,8 +3613,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				showNextPopup();
 			} else if (gameState.WildStatus == 1) {
 				// no room on pirate ship
-				popup = new Popup(this,
-				                  "Wild Chats with Pirates",
+				popup = new Popup(this, "Wild Chats with Pirates",
 				                  "The Pirate Captain turns out to be an old associate of Jonathan Wild's. They talk about old times, and you get the feeling that Wild would switch ships if the Pirates had any quarters available.",
 				                  "Jonathan Wild would have preferred to get a ride home with his old associate than stay in your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police? But the Pirates have no quarters available, so he grudgingly stays aboard your ship.",
 				                  "OK", cbShowNextPopup
@@ -3663,8 +3623,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 				// pirates puzzled by reactor
-				popup = new Popup(this,
-				                  "Pirates Examine Reactor",
+				popup = new Popup(this, "Pirates Examine Reactor",
 				                  "The Pirates poke around the Ion Reactor while trying to figure out if it's valuable. They finally conclude that the Reactor is worthless, not to mention dangerous, and leave it on your ship.",
 				                  "The good news is that you still have the Ion Reactor. The bad news is that you still have to worry about managing its depleting fuel store.",
 				                  "OK", cbShowNextPopup
@@ -3683,8 +3642,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.AutoFlee = false;
 
 		if (gameState.Ship.TotalWeapons(-1, -1) <= 0) {
-			popup = new Popup(this,
-			                  "No Weapons", "You can't attack without weapons!",
+			popup = new Popup(this, "No Weapons", "You can't attack without weapons!",
 			                  "You either are flying a ship without any weapon slots, so your only option is to flee from fights, or you haven't bought any weapons yet. Sorry, no weapons, no attacking.",
 			                  "OK", cbShowNextPopup
 			);
@@ -3695,18 +3653,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.EncounterType == GameState.POLICEINSPECTION &&
 			gameState.Ship.cargo[GameState.FIREARMS] <= 0 &&
-			gameState.Ship.cargo[GameState.NARCOTICS] <= 0){
-			popup = new Popup(this,
-			                  "You Have Nothing Illegal",
+			gameState.Ship.cargo[GameState.NARCOTICS] <= 0) {
+			popup = new Popup(this, "You Have Nothing Illegal",
 			                  "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
-			                  "", "Attack", "Stay",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  EncounterButtonAttackCallbackStep2();
-					                  showNextPopup();
-				                  }
-			                  }, cbShowNextPopup
+			                  "", "Attack", "Stay", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					EncounterButtonAttackCallbackStep2();
+					showNextPopup();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -3714,37 +3670,39 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		EncounterButtonAttackCallbackStep2();
 	}
-	public void EncounterButtonAttackCallbackStep2(){
+
+	public void EncounterButtonAttackCallbackStep2() {
 		Popup popup;
-		if (gameState.ENCOUNTERPOLICE(gameState.EncounterType) || gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE){
-				popup = new Popup(this,
-				                  "Attack Police",
+		if (gameState.ENCOUNTERPOLICE(gameState.EncounterType
+		) || gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+			if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
+				popup = new Popup(this, "Attack Police",
 				                  "Are you sure you wish to attack the police? This will turn you into a criminal!",
 				                  "If you attack the police, they know you are a die-hard criminal and will immediately label you as such.",
-				                  "Attack", "Don't attack",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE)
-							                  gameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+				                  "Attack", "Don't attack", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
+							gameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+						}
 
-						                  gameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
+						gameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
 
-						                  if (gameState.EncounterType == GameState.POLICEIGNORE || gameState.EncounterType == GameState.POLICEINSPECTION || gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-							                  gameState.EncounterType = GameState.POLICEATTACK;
-						                  }
-						                  EncounterButtonAttackCallbackStartAttack();
-					                  }
-				                  }, cbShowNextPopup
+						if (gameState.EncounterType == GameState.POLICEIGNORE || gameState.EncounterType == GameState.POLICEINSPECTION || gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
+							gameState.EncounterType = GameState.POLICEATTACK;
+						}
+						EncounterButtonAttackCallbackStartAttack();
+					}
+				}, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
 			}
 			/* Duplicated from Yes Callback */
-			if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE)
+			if (gameState.PoliceRecordScore > GameState.CRIMINALSCORE) {
 				gameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+			}
 
 			gameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
 
@@ -3754,31 +3712,30 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.EncounterType = GameState.POLICEATTACK;
 			}
 		} else if (gameState.ENCOUNTERPIRATE(gameState.EncounterType)) {
-			if (gameState.EncounterType == GameState.PIRATEIGNORE)
+			if (gameState.EncounterType == GameState.PIRATEIGNORE) {
 				gameState.EncounterType = GameState.PIRATEATTACK;
+			}
 		} else if (gameState.ENCOUNTERTRADER(gameState.EncounterType)) {
 			if (gameState.EncounterType == GameState.TRADERIGNORE || gameState.EncounterType == GameState.TRADERBUY || gameState.EncounterType == GameState.TRADERSELL) {
 				if (gameState.PoliceRecordScore >= GameState.CLEANSCORE) {
-					popup = new Popup(this,
-					                  "Attack Trader",
+					popup = new Popup(this, "Attack Trader",
 					                  "Are you sure you wish to attack the trader? This will immediately set your police record to dubious!",
 					                  "While attacking a trader is not considered to be as bad as attacking the police (since no police is present, they cannot judge the exact circumstances of the attack), it will make the police suspicious of you.",
-					                  "Attack", "Don't attack",
-					                  new Popup.buttonCallback() {
-						                  @Override
-						                  public void execute(Popup popup, View view) {
-							                  gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-							                  if (gameState.EncounterType != GameState.TRADERFLEE) {
-								                  if (gameState.Opponent.TotalWeapons(-1, -1) <= 0)
-									                  gameState.EncounterType = GameState.TRADERFLEE;
-								                  else if (gameState.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type))
-									                  gameState.EncounterType = GameState.TRADERFLEE;
-								                  else
-									                  gameState.EncounterType = GameState.TRADERATTACK;
-							                  }
-							                  EncounterButtonAttackCallbackStartAttack();
-						                  }
-					                  }, cbShowNextPopup
+					                  "Attack", "Don't attack", new Popup.buttonCallback() {
+						@Override
+						public void execute(Popup popup, View view) {
+							gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+							if (gameState.EncounterType != GameState.TRADERFLEE) {
+								if (gameState.Opponent.TotalWeapons(-1, -1) <= 0) {
+									gameState.EncounterType = GameState.TRADERFLEE;
+								} else if (gameState.GetRandom(GameState.ELITESCORE
+								) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type)) {
+									gameState.EncounterType = GameState.TRADERFLEE;
+								} else { gameState.EncounterType = GameState.TRADERATTACK; }
+							}
+							EncounterButtonAttackCallbackStartAttack();
+						}
+					}, cbShowNextPopup
 					);
 					popupQueue.push(popup);
 					showNextPopup();
@@ -3789,46 +3746,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			/* Duplicated from Yes callback */
 			if (gameState.EncounterType != GameState.TRADERFLEE) {
-				if (gameState.Opponent.TotalWeapons(-1, -1) <= 0)
+				if (gameState.Opponent.TotalWeapons(-1, -1) <= 0) {
 					gameState.EncounterType = GameState.TRADERFLEE;
-				else if (gameState.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type))
+				} else if (gameState.GetRandom(GameState.ELITESCORE
+				) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type)) {
 					gameState.EncounterType = GameState.TRADERFLEE;
-				else
-					gameState.EncounterType = GameState.TRADERATTACK;
+				} else { gameState.EncounterType = GameState.TRADERATTACK; }
 			}
 		} else if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
-			if (gameState.EncounterType == GameState.SPACEMONSTERIGNORE)
+			if (gameState.EncounterType == GameState.SPACEMONSTERIGNORE) {
 				gameState.EncounterType = GameState.SPACEMONSTERATTACK;
+			}
 		} else if (gameState.ENCOUNTERDRAGONFLY(gameState.EncounterType)) {
-			if (gameState.EncounterType == GameState.DRAGONFLYIGNORE)
+			if (gameState.EncounterType == GameState.DRAGONFLYIGNORE) {
 				gameState.EncounterType = GameState.DRAGONFLYATTACK;
+			}
 		} else if (gameState.ENCOUNTERSCARAB(gameState.EncounterType)) {
-			if (gameState.EncounterType == GameState.SCARABIGNORE)
+			if (gameState.EncounterType == GameState.SCARABIGNORE) {
 				gameState.EncounterType = GameState.SCARABATTACK;
+			}
 		} else if (gameState.ENCOUNTERFAMOUS(gameState.EncounterType)) {
-			if (gameState.EncounterType != GameState.FAMOUSCAPATTACK){
-				popup = new Popup(this,
-				                  "Really attack?",
+			if (gameState.EncounterType != GameState.FAMOUSCAPATTACK) {
+				popup = new Popup(this, "Really attack?",
 				                  "Famous Captains get famous by, among other things, destroying everyone who attacks them. Do you really want to attack?",
 				                  "You grew up on stories of the adventures of the Great Captains. You heard how they explored the galaxy, invented technologies... and destroyed many, many pirates and villains in combat. Are you sure you want to attack one of these greats?",
-				                  "Yes", "No",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-						                  if (gameState.PoliceRecordScore > GameState.VILLAINSCORE)
-							                  gameState.PoliceRecordScore = GameState.VILLAINSCORE;
-						                  gameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
-						                  if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER)
-							                  gameState.addNewsEvent(GameState.CAPTAINHUIEATTACKED);
-						                  else if (gameState.EncounterType == GameState.CAPTAINAHABENCOUNTER)
-							                  gameState.addNewsEvent(GameState.CAPTAINAHABATTACKED);
-						                  else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER)
-							                  gameState.addNewsEvent(GameState.CAPTAINCONRADATTACKED);
+				                  "Yes", "No", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						if (gameState.PoliceRecordScore > GameState.VILLAINSCORE) {
+							gameState.PoliceRecordScore = GameState.VILLAINSCORE;
+						}
+						gameState.PoliceRecordScore += GameState.ATTACKTRADERSCORE;
+						if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER) {
+							gameState.addNewsEvent(GameState.CAPTAINHUIEATTACKED);
+						} else if (gameState.EncounterType == GameState.CAPTAINAHABENCOUNTER) {
+							gameState.addNewsEvent(GameState.CAPTAINAHABATTACKED);
+						} else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER) {
+							gameState.addNewsEvent(GameState.CAPTAINCONRADATTACKED);
+						}
 
-						                  gameState.EncounterType = GameState.FAMOUSCAPATTACK;
-						                  EncounterButtonAttackCallbackStartAttack();
-					                  }
-				                  }, cbShowNextPopup
+						gameState.EncounterType = GameState.FAMOUSCAPATTACK;
+						EncounterButtonAttackCallbackStartAttack();
+					}
+				}, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -3837,13 +3797,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		EncounterButtonAttackCallbackStartAttack();
 	}
-	public void EncounterButtonAttackCallbackStartAttack(){
-		if (gameState.Continuous)
-			gameState.AutoAttack = true;
-		if (ExecuteAction(false))
-			return;
-		if (gameState.Ship.hull <= 0)
-			return;
+
+	public void EncounterButtonAttackCallbackStartAttack() {
+		if (gameState.Continuous) { gameState.AutoAttack = true; }
+		if (ExecuteAction(false)) { return; }
+		if (gameState.Ship.hull <= 0) { return; }
 		Travel();
 	}
 
@@ -3863,17 +3821,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.EncounterType == GameState.POLICEINSPECTION && gameState.Ship.cargo[GameState.FIREARMS] <= 0 &&
 			gameState.Ship.cargo[GameState.NARCOTICS] <= 0 && gameState.WildStatus != 1 &&
-			(gameState.ReactorStatus == 0 || gameState.ReactorStatus == 21)){
-			popup = new Popup(this,
-			                  "You Have Nothing Illegal",
+			(gameState.ReactorStatus == 0 || gameState.ReactorStatus == 21)) {
+			popup = new Popup(this, "You Have Nothing Illegal",
 			                  "Are you sure you want to do that? You are not carrying illegal goods, so you have nothing to fear!",
-			                  "", "Flee", "Stay",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  EncounterButtonFleeCallbackStep2();
-				                  }
-			                  }, cbShowNextPopup
+			                  "", "Flee", "Stay", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					EncounterButtonFleeCallbackStep2();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -3881,61 +3837,55 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		EncounterButtonFleeCallbackStep2();
 	}
-	public void EncounterButtonFleeCallbackStep2(){
+
+	public void EncounterButtonFleeCallbackStep2() {
 		Popup popup;
 		if (gameState.EncounterType == GameState.POLICEINSPECTION) {
 			gameState.EncounterType = GameState.POLICEATTACK;
-			if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
-				gameState.PoliceRecordScore = GameState.DUBIOUSSCORE - (GameState.getDifficulty() < GameState.NORMAL ? 0 : 1);
-			else
-				gameState.PoliceRecordScore += GameState.FLEEFROMINSPECTION;
+			if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
+				gameState.PoliceRecordScore =
+					GameState.DUBIOUSSCORE - (GameState.getDifficulty() < GameState.NORMAL ? 0 : 1);
+			} else { gameState.PoliceRecordScore += GameState.FLEEFROMINSPECTION; }
 		} else if (gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			popup = new Popup(this,
-			                  "Criminal Act!",
+			popup = new Popup(this, "Criminal Act!",
 			                  "Are you sure you want to do that? The Customs Police know you have engaged in criminal activity, and will report it!",
-			                  "", "Flee", "Stay",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  gameState.EncounterType = GameState.POLICEATTACK;
-					                  if (gameState.PoliceRecordScore >= GameState.CRIMINALSCORE)
-						                  gameState.PoliceRecordScore = GameState.CRIMINALSCORE;
-					                  else
-						                  gameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE;
-					                  EncounterButtonFleeCallbackStartFleeing();
-				                  }
-			                  }, cbShowNextPopup
+			                  "", "Flee", "Stay", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					gameState.EncounterType = GameState.POLICEATTACK;
+					if (gameState.PoliceRecordScore >= GameState.CRIMINALSCORE) {
+						gameState.PoliceRecordScore = GameState.CRIMINALSCORE;
+					} else { gameState.PoliceRecordScore += GameState.ATTACKPOLICESCORE; }
+					EncounterButtonFleeCallbackStartFleeing();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 		EncounterButtonFleeCallbackStartFleeing();
 	}
-	public void EncounterButtonFleeCallbackStartFleeing(){
-		if (gameState.Continuous)
-			gameState.AutoFlee = true;
-		if (ExecuteAction(true))
-			return;
-		if (gameState.Ship.hull <= 0)
-			return;
+
+	public void EncounterButtonFleeCallbackStartFleeing() {
+		if (gameState.Continuous) { gameState.AutoFlee = true; }
+		if (ExecuteAction(true)) { return; }
+		if (gameState.Ship.hull <= 0) { return; }
 		Travel();
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void EncounterButtonSubmitCallback(View view){
+	public void EncounterButtonSubmitCallback(View view) {
 		Popup popup;
 		gameState.AutoAttack = false;
 		gameState.AutoFlee = false;
 
 		String buf, buf2;
 
-		if (gameState.EncounterType == GameState.POLICEINSPECTION &&
-			(gameState.Ship.cargo[GameState.FIREARMS] > 0 ||
-				gameState.Ship.cargo[GameState.NARCOTICS] > 0 || gameState.WildStatus == 1 ||
-				(gameState.ReactorStatus > 1 && gameState.ReactorStatus < 21))) {
+		if (gameState.EncounterType == GameState.POLICEINSPECTION && (gameState.Ship.cargo[GameState.FIREARMS] > 0 ||
+			gameState.Ship.cargo[GameState.NARCOTICS] > 0 || gameState.WildStatus == 1 ||
+			(gameState.ReactorStatus > 1 && gameState.ReactorStatus < 21))) {
 			if (gameState.WildStatus == 1) {
-				if (gameState.Ship.cargo[GameState.FIREARMS] > 0 ||
-					gameState.Ship.cargo[GameState.NARCOTICS] > 0) {
+				if (gameState.Ship.cargo[GameState.FIREARMS] > 0 || gameState.Ship.cargo[GameState.NARCOTICS] > 0) {
 					buf = "Jonathan Wild and illegal goods";
 				} else {
 					buf = "Jonathan Wild";
@@ -3952,77 +3902,70 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				buf = "illegal goods";
 				buf2 = "";
 			}
-			popup = new Popup(this,
-			                  "You Have Illegal Goods",
-			                  String.format("Are you sure you want to let the police search you? You are carrying %s! %s", buf, buf2),
+			popup = new Popup(this, "You Have Illegal Goods", String.format(
+				"Are you sure you want to let the police search you? You are carrying %s! %s", buf, buf2
+			),
 			                  "Only when you are carrying illegal goods, the police will do something you don't like, so if you aren't carrying anything illegal, you usually should just submit, and not try to attack, flee or bribe.\nIf you are carrying illegal goods and the police searches you, they will impound the goods and fine you. You normally don't want to let the police search you when you are carrying illegal goods (firearms and narcotics), unless you are afraid they might kill you if you try to do something else.",
-			                  "Yes", "No",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  if ((gameState.Ship.cargo[GameState.FIREARMS] > 0) ||
-						                  (gameState.Ship.cargo[GameState.NARCOTICS] > 0)) {
-						                  int Fine;
-						                  // If you carry illegal goods, they are impounded and you are fined
-						                  gameState.Ship.cargo[GameState.FIREARMS] = 0;
-						                  gameState.BuyingPrice[GameState.FIREARMS] = 0;
-						                  gameState.Ship.cargo[GameState.NARCOTICS] = 0;
-						                  gameState.BuyingPrice[GameState.NARCOTICS] = 0;
-						                  Fine = gameState.CurrentWorth() / ((GameState.IMPOSSIBLE+2-GameState.getDifficulty()) * 10);
-						                  if (Fine % 50 != 0)
-							                  Fine += (50 - (Fine % 50));
-						                  Fine = Math.max(100, Math.min(Fine, 10000));
-						                  if (gameState.Credits >= Fine)
-							                  gameState.Credits -= Fine;
-						                  else {
-							                  gameState.Debt += (Fine - gameState.Credits);
-							                  gameState.Credits = 0;
-						                  }
+			                  "Yes", "No", new Popup.buttonCallback() {
+				@Override
+				public void execute(Popup popup, View view) {
+					if ((gameState.Ship.cargo[GameState.FIREARMS] > 0) || (gameState.Ship.cargo[GameState.NARCOTICS] > 0)) {
+						int Fine;
+						// If you carry illegal goods, they are impounded and you are fined
+						gameState.Ship.cargo[GameState.FIREARMS] = 0;
+						gameState.BuyingPrice[GameState.FIREARMS] = 0;
+						gameState.Ship.cargo[GameState.NARCOTICS] = 0;
+						gameState.BuyingPrice[GameState.NARCOTICS] = 0;
+						Fine = gameState.CurrentWorth() / ((GameState.IMPOSSIBLE + 2 - GameState
+							.getDifficulty()) * 10);
+						if (Fine % 50 != 0) { Fine += (50 - (Fine % 50)); }
+						Fine = Math.max(100, Math.min(Fine, 10000));
+						if (gameState.Credits >= Fine) { gameState.Credits -= Fine; } else {
+							gameState.Debt += (Fine - gameState.Credits);
+							gameState.Credits = 0;
+						}
 
-						                  Popup popup1;
-						                  popup1 = new Popup(popup.context,
-						                                     "Caught",
-						                                     String.format("The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
-						                                                   Fine
-						                                     ),
-						                                     "Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt.",
-						                                     "OK", cbShowNextPopup
-						                  );
-						                  popupQueue.push(popup1);
-						                  showNextPopup();
-						                  gameState.PoliceRecordScore += GameState.TRAFFICKING;
-					                  }
-					                  if (gameState.WildStatus == 1) {
-						                  // Jonathan Wild Captured, and your status damaged.
-						                  Arrested();
-						                  return;
-					                  }
-					                  if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-						                  // Police confiscate the Reactor.
-						                  // Of course, this can only happen if somehow your
-						                  // reactor on board -- otherwise you'll be arrested
-						                  // before we get to this point. (no longer true - 25 August 2002)
-						                  Popup popup1;
-						                  popup1 = new Popup(popup.context,
-						                                     "Police Confiscate Reactor",
-						                                     "The Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.",
-						                                     "The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store.",
-						                                     "OK", cbShowNextPopup
-						                  );
-						                  popupQueue.push(popup1);
-						                  showNextPopup();
-						                  gameState.ReactorStatus = 0;
-					                  }
-					                  Travel();
-					                  showNextPopup();
-				                  }
-			                  }, cbShowNextPopup
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Caught", String.format(
+							"The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
+							Fine
+						),
+						                   "Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt.",
+						                   "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+						gameState.PoliceRecordScore += GameState.TRAFFICKING;
+					}
+					if (gameState.WildStatus == 1) {
+						// Jonathan Wild Captured, and your status damaged.
+						Arrested();
+						return;
+					}
+					if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
+						// Police confiscate the Reactor.
+						// Of course, this can only happen if somehow your
+						// reactor on board -- otherwise you'll be arrested
+						// before we get to this point. (no longer true - 25 August 2002)
+						Popup popup1;
+						popup1 = new Popup(popup.context, "Police Confiscate Reactor",
+						                   "The Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.",
+						                   "The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store.",
+						                   "OK", cbShowNextPopup
+						);
+						popupQueue.push(popup1);
+						showNextPopup();
+						gameState.ReactorStatus = 0;
+					}
+					Travel();
+					showNextPopup();
+				}
+			}, cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
-			popup = new Popup(this,
-			                  "Nothing Found",
+			popup = new Popup(this, "Nothing Found",
 			                  "The police find nothing illegal in your cargo holds, and apologize for the inconvenience.",
 			                  "", "OK", cbShowNextPopup
 			);
@@ -4034,19 +3977,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void EncounterButtonIntCallback(View view){
+	public void EncounterButtonIntCallback(View view) {
 		gameState.AutoFlee = gameState.AutoAttack = false;
-		((FragmentEncounter)currentFragment).btnInt.setVisibility(View.INVISIBLE);
-		((FragmentEncounter)currentFragment).pBarEncounter.setVisibility(View.INVISIBLE);
+		((FragmentEncounter) currentFragment).btnInt.setVisibility(View.INVISIBLE);
+		((FragmentEncounter) currentFragment).pBarEncounter.setVisibility(View.INVISIBLE);
 	}
 
 	@SuppressWarnings("UnusedParameters")
-	public void EncounterButtonTribbleCallback(View view){
+	public void EncounterButtonTribbleCallback(View view) {
 		Popup popup;
 		popup = new Popup(this, "Squeek!", "Squeek!", "Squeek! Squeek!", "Squeek!", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	public void IncDays(int Amount) {
 		gameState.Days += Amount;
 		if (gameState.InvasionStatus > 0 && gameState.InvasionStatus < 8) {
@@ -4060,8 +4004,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 			gameState.ReactorStatus += Amount;
-			if (gameState.ReactorStatus > 20)
-				gameState.ReactorStatus = 20;
+			if (gameState.ReactorStatus > 20) { gameState.ReactorStatus = 20; }
 		} // TODO is there something missing here?
 
 		if (gameState.ExperimentStatus > 0 && gameState.ExperimentStatus < 12) {
@@ -4083,6 +4026,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.FabricRipProbability -= Amount;
 		}
 	}
+
 	public void Travel() {
 		int EncounterTest, StartClicks, i, j, Repairs, rareEncounter, previousTribbles, FirstEmptySlot;
 		boolean Pirate, Trader, Police, Mantis, TryAutoRepair, FoodOnBoard;
@@ -4100,8 +4044,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		// if timespace is ripped, we may switch the warp system here.
 		if (gameState.PossibleToGoThroughRip && gameState.ExperimentStatus == 12 && gameState.FabricRipProbability > 0 &&
-			(gameState
-				.GetRandom(100) < gameState.FabricRipProbability || gameState.FabricRipProbability == 25)) {
+			(gameState.GetRandom(100
+			) < gameState.FabricRipProbability || gameState.FabricRipProbability == 25)) {
 			popup = new Popup(this, "Timespace Fabric Rip",
 			                  "You have flown through a tear in the timespace continuum caused by Dr. Fehler's failed experiment. You may not have reached your planned destination!",
 			                  "", "OK", cbShowNextPopup
@@ -4124,20 +4068,17 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (Ship.hull > gameState.GetHullStrength()) {
 				Repairs = Ship.hull - gameState.GetHullStrength();
 				Ship.hull = gameState.GetHullStrength();
-			} else
-				Repairs = 0;
+			} else { Repairs = 0; }
 
 			// Shields are easier to repair
 			Repairs = 2 * Repairs;
 			for (i = 0; i < GameState.MAXSHIELD; ++i) {
-				if (Ship.shield[i] < 0)
-					break;
+				if (Ship.shield[i] < 0) { break; }
 				Ship.shieldStrength[i] += Repairs;
 				if (Ship.shieldStrength[i] > Shields.mShields[Ship.shield[i]].power) {
 					Repairs = Ship.shieldStrength[i] - Shields.mShields[Ship.shield[i]].power;
 					Ship.shieldStrength[i] = Shields.mShields[Ship.shield[i]].power;
-				} else
-					Repairs = 0;
+				} else { Repairs = 0; }
 			}
 
 			// Encounter with space monster
@@ -4148,10 +4089,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 8 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 1 + GameState.getDifficulty();
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.SPACEMONSTERIGNORE;
-				else
-					gameState.EncounterType = GameState.SPACEMONSTERATTACK;
+				} else { gameState.EncounterType = GameState.SPACEMONSTERATTACK; }
 				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
@@ -4164,10 +4104,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.SCARABIGNORE;
-				else
-					gameState.EncounterType = GameState.SCARABATTACK;
+				} else { gameState.EncounterType = GameState.SCARABATTACK; }
 				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
@@ -4178,37 +4117,36 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.Mercenary[gameState.Opponent.crew[0]].fighter = 6 + GameState.getDifficulty();
 				gameState.Mercenary[gameState.Opponent.crew[0]].trader = 1;
 				gameState.Mercenary[gameState.Opponent.crew[0]].engineer = 6 + GameState.getDifficulty();
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.DRAGONFLYIGNORE;
-				else
-					gameState.EncounterType = GameState.DRAGONFLYATTACK;
+				} else { gameState.EncounterType = GameState.DRAGONFLYATTACK; }
 				changeFragment(FRAGMENTS.ENCOUNTER);
 				return;
 			}
 
 			if (WarpSystem == gameState.SolarSystem[GameState.GEMULONSYSTEM] && gameState.InvasionStatus > 7) {
-				if (gameState.GetRandom(10) > 4)
-					Mantis = true;
+				if (gameState.GetRandom(10) > 4) { Mantis = true; }
 			} else {
 				// Check if it is time for an encounter
 				EncounterTest = gameState.GetRandom(44 - (2 * GameState.getDifficulty()));
 
 				// encounters are half as likely if you're in a flea.
-				if (Ship.type == 0)
-					EncounterTest *= 2;
+				if (Ship.type == 0) { EncounterTest *= 2; }
 
 				if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates && !gameState.Raided) // When you are already raided, other pirates have little to gain
+				{
 					Pirate = true;
-				else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates + gameState
+				} else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates + gameState
 					.STRENGTHPOLICE(WarpSystem))
-					// StrengthPolice adapts itself to your criminal record: you'll
-					// encounter more police if you are a hardened criminal.
+				// StrengthPolice adapts itself to your criminal record: you'll
+				// encounter more police if you are a hardened criminal.
+				{
 					Police = true;
-				else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates +
+				} else if (EncounterTest < Politics.mPolitics[WarpSystem.politics].strengthPirates +
 					gameState.STRENGTHPOLICE(WarpSystem) +
-					Politics.mPolitics[WarpSystem.politics].strengthTraders)
+					Politics.mPolitics[WarpSystem.politics].strengthTraders) {
 					Trader = true;
-				else if (gameState.WildStatus == 1 && WarpSystem == gameState.SolarSystem[GameState.KRAVATSYSTEM]) {
+				} else if (gameState.WildStatus == 1 && WarpSystem == gameState.SolarSystem[GameState.KRAVATSYSTEM]) {
 					// if you're coming in to Kravat & you have Wild onboard, there'll be swarms o' cops.
 					rareEncounter = gameState.GetRandom(100);
 					if (GameState.getDifficulty() <= GameState.EASY && rareEncounter < 25) {
@@ -4219,9 +4157,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						Police = true;
 					}
 				}
-				if (!(Trader || Police || Pirate))
-					if (gameState.ArtifactOnBoard && gameState.GetRandom(20) <= 3)
-						Mantis = true;
+				if (!(Trader || Police || Pirate)) {
+					if (gameState.ArtifactOnBoard && gameState.GetRandom(20) <= 3) { Mantis = true; }
+				}
 			}
 
 			// Encounter with police
@@ -4229,25 +4167,23 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.GenerateOpponent(GameState.POLICE);
 				gameState.EncounterType = GameState.POLICEIGNORE;
 				// If you are cloaked, they don't see you
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.POLICEIGNORE;
-				else if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
+				} else if (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE) {
 					// If you're a criminal, the police will tend to attack
 					if (gameState.Opponent.TotalWeapons(-1, -1) <= 0) {
-						if (gameState.Opponent.isCloakedTo(Ship))
+						if (gameState.Opponent.isCloakedTo(Ship)) {
 							gameState.EncounterType = GameState.POLICEIGNORE;
-						else
-							gameState.EncounterType = GameState.POLICEFLEE;
+						} else { gameState.EncounterType = GameState.POLICEFLEE; }
 					}
-					if (gameState.ReputationScore < GameState.AVERAGESCORE)
+					if (gameState.ReputationScore < GameState.AVERAGESCORE) {
 						gameState.EncounterType = GameState.POLICEATTACK;
-					else if (gameState
-						.GetRandom(GameState.ELITESCORE) > (gameState.ReputationScore / (1 + gameState.Opponent.type)))
+					} else if (gameState.GetRandom(GameState.ELITESCORE
+					) > (gameState.ReputationScore / (1 + gameState.Opponent.type))) {
 						gameState.EncounterType = GameState.POLICEATTACK;
-					else if (gameState.Opponent.isCloakedTo(Ship))
+					} else if (gameState.Opponent.isCloakedTo(Ship)) {
 						gameState.EncounterType = GameState.POLICEIGNORE;
-					else
-						gameState.EncounterType = GameState.POLICEFLEE;
+					} else { gameState.EncounterType = GameState.POLICEFLEE; }
 				} else if (gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE &&
 					gameState.PoliceRecordScore < GameState.CLEANSCORE && !gameState.Inspected) {
 					// If you're reputation is dubious, the police will inspect you
@@ -4278,8 +4214,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				}
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
-				if (gameState.EncounterType == GameState.POLICEIGNORE && gameState.Opponent.isCloakedTo(
-					Ship
+				if (gameState.EncounterType == GameState.POLICEIGNORE && gameState.Opponent.isCloakedTo(Ship
 				)) {
 					--gameState.Clicks;
 					continue;
@@ -4297,24 +4232,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			// Encounter with pirate
 			else if (Pirate || Mantis) {
-				if (Mantis)
-					gameState.GenerateOpponent(GameState.MANTIS);
-				else
+				if (Mantis) { gameState.GenerateOpponent(GameState.MANTIS); } else {
 					gameState.GenerateOpponent(GameState.PIRATE);
+				}
 
 				// If you have a cloak, they don't see you
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.PIRATEIGNORE;
+				}
 
-					// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
-				else if (gameState.Opponent.type >= 7 || gameState
-					.GetRandom(GameState.ELITESCORE) > (gameState.ReputationScore * 4) / (1 + gameState.Opponent.type))
+				// Pirates will mostly attack, but they are cowardly: if your rep is too high, they tend to flee
+				else if (gameState.Opponent.type >= 7 || gameState.GetRandom(GameState.ELITESCORE
+				) > (gameState.ReputationScore * 4) / (1 + gameState.Opponent.type)) {
 					gameState.EncounterType = GameState.PIRATEATTACK;
-				else
-					gameState.EncounterType = GameState.PIRATEFLEE;
+				} else { gameState.EncounterType = GameState.PIRATEFLEE; }
 
-				if (Mantis)
-					gameState.EncounterType = GameState.PIRATEATTACK;
+				if (Mantis) { gameState.EncounterType = GameState.PIRATEATTACK; }
 
 				// if Pirates are in a better ship, they won't flee, even if you have a very scary
 				// reputation.
@@ -4340,31 +4273,31 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.GenerateOpponent(GameState.TRADER);
 				gameState.EncounterType = GameState.TRADERIGNORE;
 				// If you are cloaked, they don't see you
-				if (Ship.isCloakedTo(gameState.Opponent))
+				if (Ship.isCloakedTo(gameState.Opponent)) {
 					gameState.EncounterType = GameState.TRADERIGNORE;
-					// If you're a criminal, traders tend to flee if you've got at least some reputation
+				}
+				// If you're a criminal, traders tend to flee if you've got at least some reputation
 				else if (gameState.PoliceRecordScore <= GameState.CRIMINALSCORE) {
-					if (gameState
-						.GetRandom(GameState.ELITESCORE) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type)) {
-						if (gameState.Opponent.isCloakedTo(Ship))
+					if (gameState.GetRandom(GameState.ELITESCORE
+					) <= (gameState.ReputationScore * 10) / (1 + gameState.Opponent.type)) {
+						if (gameState.Opponent.isCloakedTo(Ship)) {
 							gameState.EncounterType = GameState.TRADERIGNORE;
-						else
-							gameState.EncounterType = GameState.TRADERFLEE;
+						} else { gameState.EncounterType = GameState.TRADERFLEE; }
 					}
 				}
 
 				// Will there be trade in orbit?
-				if (gameState.EncounterType == GameState.TRADERIGNORE && (gameState
-					.GetRandom(1000) < gameState.ChanceOfTradeInOrbit)) {
-					if (gameState.FilledCargoBays() < gameState.TotalCargoBays() && gameState.Opponent
-						.HasTradeableItems(gameState.WarpSystem, GameState.TRADERSELL
-						))
-						gameState.EncounterType = GameState.TRADERSELL;
+				if (gameState.EncounterType == GameState.TRADERIGNORE && (gameState.GetRandom(1000
+				) < gameState.ChanceOfTradeInOrbit)) {
+					if (gameState.Ship.FilledCargoBays() < gameState.Ship.TotalCargoBays() && gameState
+						.Opponent.HasTradeableItems(gameState.WarpSystem, GameState.TRADERSELL
+						)) { gameState.EncounterType = GameState.TRADERSELL; }
 
 					// we fudge on whether the trader has capacity to carry the stuff he's buying.
 					if (Ship.HasTradeableItems(gameState.WarpSystem, GameState.TRADERBUY
-					) && gameState.EncounterType != GameState.TRADERSELL)
+					) && gameState.EncounterType != GameState.TRADERSELL) {
 						gameState.EncounterType = GameState.TRADERBUY;
+					}
 				}
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
@@ -4396,8 +4329,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			//    will affect skills depending on game difficulty level.
 			// 6. Encounter a good bottle of Captain Marmoset's Skill Tonic, which will invoke
 			//    IncreaseRandomSkill one or two times, depending on game difficulty.
-			else if ((gameState.Days > 10) && (gameState
-				.GetRandom(1000) < gameState.ChanceOfVeryRareEncounter)) {
+			else if ((gameState.Days > 10) && (gameState.GetRandom(1000
+			) < gameState.ChanceOfVeryRareEncounter)) {
 				rareEncounter = gameState.GetRandom(GameState.MAXVERYRAREENCOUNTER);
 
 				switch (rareEncounter) {
@@ -4514,10 +4447,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		// Debt Reminder
 		if (gameState.Debt > 0 && gameState.RemindLoans && gameState.Days % 5 == 0) {
-			popup = new Popup(this, "Loan Notification", String
-				.format("The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
-				        gameState.Debt
-				),
+			popup = new Popup(this, "Loan Notification", String.format(
+				"The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
+				gameState.Debt
+			),
 			                  "The Bank Officer will contact you every five days to remind you of your debt. You can turn off these warnings on the second page of Game Options.",
 			                  "OK", cbShowNextPopup
 			);
@@ -4739,6 +4672,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
+
 	public void Arrested() {
 		// *************************************************************************
 		// You get arrested
@@ -4778,8 +4712,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.crew[1] >= 0) {
 			buf += "\n\nMercenaries Leave\n\nAny mercenaries who were traveling with you have left.";
 			// "You can't pay your mercenaries while you are imprisoned, and so they have sought new employment."
-			for (i = 1; i < GameState.MAXCREW; ++i)
-				gameState.Ship.crew[i] = -1;
+			for (i = 1; i < GameState.MAXCREW; ++i) { gameState.Ship.crew[i] = -1; }
 		}
 
 		if (gameState.JaporiDiseaseStatus == 1) {
@@ -4810,15 +4743,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Arrival();
 		IncDays(Imprisonment);
 
-		if (gameState.Credits >= Fine)
-			gameState.Credits -= Fine;
-		else {
+		if (gameState.Credits >= Fine) { gameState.Credits -= Fine; } else {
 			gameState.Credits += gameState.CurrentShipPrice(true);
 
-			if (gameState.Credits >= Fine)
-				gameState.Credits -= Fine;
-			else
-				gameState.Credits = 0;
+			if (gameState.Credits >= Fine) { gameState.Credits -= Fine; } else { gameState.Credits = 0; }
 
 			buf +=
 				"\n\nShip Sold\n\nBecause you don't have the credits to pay your fine, your ship is sold.";
@@ -4846,8 +4774,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 
-		for (i = 0; i < Imprisonment; ++i)
-			gameState.PayInterest();
+		for (i = 0; i < Imprisonment; ++i) { gameState.PayInterest(); }
 
 		Popup popup;
 		popup = new Popup(this, "Arrested", buf, "", "OK", cbShowNextPopup);
@@ -4859,46 +4786,45 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void ShuffleStatus() {
 		int i;
 
-		for (i=0; i<GameState.MAXSOLARSYSTEM; ++i)
-		{
-			if (gameState.SolarSystem[i].status > 0)
-			{
-				if (gameState.GetRandom(100) < 15)
+		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
+			if (gameState.SolarSystem[i].status > 0) {
+				if (gameState.GetRandom(100) < 15) {
 					gameState.SolarSystem[i].status = GameState.UNEVENTFUL;
-			}
-			else if (gameState.GetRandom(100) < 15)
+				}
+			} else if (gameState.GetRandom(100) < 15) {
 				gameState.SolarSystem[i].status = 1 + gameState.GetRandom(GameState.MAXSTATUS - 1);
+			}
 		}
 	}
+
 	public void ChangeQuantities() {
 		int i, j;
 
-		for (i=0; i<GameState.MAXSOLARSYSTEM; ++i)
-		{
-			if (gameState.SolarSystem[i].countDown > 0)
-			{
+		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
+			if (gameState.SolarSystem[i].countDown > 0) {
 				--gameState.SolarSystem[i].countDown;
 				if (gameState.SolarSystem[i].countDown > GameState.CountDown) {
 					gameState.SolarSystem[i].countDown = GameState.CountDown;
-				} else if (gameState.SolarSystem[i].countDown <= 0)
+				} else if (gameState.SolarSystem[i].countDown <= 0) {
 					gameState.SolarSystem[i].initializeTradeitems();
-				else {
+				} else {
 					for (j = 0; j < GameState.MAXTRADEITEM; ++j) {
 						if (((j == GameState.NARCOTICS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].drugsOK)) ||
 							((j == GameState.FIREARMS) && (!Politics.mPolitics[gameState.SolarSystem[i].politics].firearmsOK)) ||
 							(gameState.SolarSystem[i].techLevel < Tradeitems.mTradeitems[j].techProduction)) {
 							gameState.SolarSystem[i].qty[j] = 0;
 						} else {
-							gameState.SolarSystem[i].qty[j] = gameState.SolarSystem[i].qty[j] + gameState.GetRandom(5) - gameState.GetRandom(5);
-							if (gameState.SolarSystem[i].qty[j] < 0)
-								gameState.SolarSystem[i].qty[j] = 0;
+							gameState.SolarSystem[i].qty[j] =
+								gameState.SolarSystem[i].qty[j] + gameState.GetRandom(5) - gameState.GetRandom(5);
+							if (gameState.SolarSystem[i].qty[j] < 0) { gameState.SolarSystem[i].qty[j] = 0; }
 						}
 					}
 				}
 			}
 		}
 	}
-	public boolean ExecuteAction(final Boolean CommanderFlees){
+
+	public boolean ExecuteAction(final Boolean CommanderFlees) {
 		// *************************************************************************
 		// A fight round
 		// Return value indicates whether fight continues into another round
@@ -4920,39 +4846,44 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.EncounterType == GameState.TRADERATTACK || gameState.EncounterType == GameState.SPACEMONSTERATTACK ||
 			gameState.EncounterType == GameState.DRAGONFLYATTACK || gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER ||
 			gameState.EncounterType == GameState.SCARABATTACK || gameState.EncounterType == GameState.FAMOUSCAPATTACK) {
-			CommanderGotHit = ExecuteAttack(Opponent, Ship, CommanderFlees, true );
+			CommanderGotHit = ExecuteAttack(Opponent, Ship, CommanderFlees, true);
 		}
 
 		OpponentGotHit = false;
 
 		if (!CommanderFlees) {
 			if (gameState.EncounterType == GameState.POLICEFLEE || gameState.EncounterType == GameState.TRADERFLEE || gameState.EncounterType == GameState.PIRATEFLEE) {
-				OpponentGotHit = ExecuteAttack(Ship, Opponent, true, false );
+				OpponentGotHit = ExecuteAttack(Ship, Opponent, true, false);
 			} else {
-				OpponentGotHit = ExecuteAttack(Ship, Opponent, false, false );
+				OpponentGotHit = ExecuteAttack(Ship, Opponent, false, false);
 			}
 		}
 
 		if (CommanderGotHit) {
-			((FragmentEncounter)currentFragment).playerShipNeedsUpdate = true;
+			((FragmentEncounter) currentFragment).playerShipNeedsUpdate = true;
 			Bitmap tribble = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.tribble);
 			ViewGroup container = (ViewGroup) findViewById(R.id.container);
-			for (i=0; i<=GameState.TRIBBLESONSCREEN; ++i) {
-				int resID = mContext.getResources().getIdentifier("tribbleButton"+String.valueOf(i), "id", mContext.getPackageName());
+			for (i = 0; i <= GameState.TRIBBLESONSCREEN; ++i) {
+				int resID = mContext.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
+				                                                  mContext.getPackageName()
+				);
 				ImageView imageView = (ImageView) container.findViewById(resID);
-				if (imageView == null){
+				if (imageView == null) {
 					continue;
 				}
-				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView.getLayoutParams());
-				marginParams.setMargins(gameState.GetRandom(container.getWidth()-tribble.getWidth()),
-				                        gameState.GetRandom(container.getHeight()-tribble.getHeight()),
-				                        0, 0);
+				ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(
+					imageView.getLayoutParams()
+				);
+				marginParams.setMargins(gameState.GetRandom(container.getWidth() - tribble.getWidth()),
+				                        gameState.GetRandom(container.getHeight() - tribble.getHeight()), 0,
+				                        0
+				);
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
 				imageView.setLayoutParams(layoutParams);
 			}
 		}
 		if (OpponentGotHit) {
-			((FragmentEncounter)currentFragment).opponentShipNeedsUpdate = true;
+			((FragmentEncounter) currentFragment).opponentShipNeedsUpdate = true;
 		}
 
 		// Determine whether someone gets destroyed
@@ -4964,8 +4895,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				EscapeWithPod();
 			} else {
 				popup = new Popup(this, "Both Destroyed",
-				                  "You and your opponent have managed to destroy each other.",
-				                  "", "OK", cbShowNextPopup
+				                  "You and your opponent have managed to destroy each other.", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -4976,22 +4907,22 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.AutoAttack = false;
 			gameState.AutoFlee = false;
 
-			if (gameState.ENCOUNTERPIRATE(gameState.EncounterType) && Opponent.type != GameState.MANTISTYPE && gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) {
-				popup = new Popup(this,
-				                  "Bounty received",
-				                  String.format("You earned a bounty of %d cr.", GetBounty(Opponent)),
-				                  "", "OK", cbShowNextPopup
+			if (gameState.ENCOUNTERPIRATE(gameState.EncounterType
+			) && Opponent.type != GameState.MANTISTYPE && gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) {
+				popup = new Popup(this, "Bounty received", String.format("You earned a bounty of %d cr.",
+				                                                         GetBounty(Opponent)
+				), "", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				popup = new Popup(this, "You win", "You have destroyed your opponent.",
-				                  "", "OK", cbShowNextPopup
+				popup = new Popup(this, "You win", "You have destroyed your opponent.", "", "OK",
+				                  cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
-			if (gameState.ENCOUNTERPOLICE( gameState.EncounterType )) {
+			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
 				++gameState.PoliceKills;
 				gameState.PoliceRecordScore += GameState.KILLPOLICESCORE;
 			} else if (gameState.ENCOUNTERFAMOUS(gameState.EncounterType)) {
@@ -5009,12 +4940,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					Scoop();
 				}
 				++gameState.PirateKills;
-			} else if (gameState.ENCOUNTERTRADER( gameState.EncounterType )) {
+			} else if (gameState.ENCOUNTERTRADER(gameState.EncounterType)) {
 				++gameState.TraderKills;
 				gameState.PoliceRecordScore += GameState.KILLTRADERSCORE;
 				Scoop();
-			}
-			else if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
+			} else if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
 				++gameState.PirateKills;
 				gameState.PoliceRecordScore += GameState.KILLPIRATESCORE;
 				gameState.MonsterStatus = 2;
@@ -5027,7 +4957,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.PoliceRecordScore += GameState.KILLPIRATESCORE;
 				gameState.ScarabStatus = 2;
 			}
-			gameState.ReputationScore += 1 + (Opponent.type>>1);
+			gameState.ReputationScore += 1 + (Opponent.type >> 1);
 			return (false);
 		} else if (Ship.hull <= 0) {
 			gameState.AutoAttack = false;
@@ -5036,9 +4966,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (gameState.EscapePod) {
 				EscapeWithPod();
 			} else {
-				popup = new Popup(this, "You Lose",
-				                  "Your ship has been destroyed by your opponent.", "", "OK",
-				                  cbShowNextPopup
+				popup = new Popup(this, "You Lose", "Your ship has been destroyed by your opponent.", "",
+				                  "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -5053,50 +4982,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
 
-				popup = new Popup(this, "Escaped",
-				                  "You have managed to escape your opponent.",
+				popup = new Popup(this, "Escaped", "You have managed to escape your opponent.",
 				                  "Just because this is Beginner level.", "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
-				if (gameState.ENCOUNTERMONSTER(gameState.EncounterType))
+				if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
 					gameState.MonsterHull = Opponent.hull;
+				}
 
 				return (false);
-			} else if ((gameState.GetRandom( 7 ) + (gameState.PilotSkill(Ship) / 3)) * 2 >= gameState.GetRandom(gameState.PilotSkill(Opponent) ) * (2 + GameState.getDifficulty())) {
+			} else if ((gameState.GetRandom(7) + (gameState.PilotSkill(Ship) / 3)) * 2 >= gameState
+				.GetRandom(gameState.PilotSkill(Opponent)) * (2 + GameState.getDifficulty())) {
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
 				if (CommanderGotHit) {
-					popup = new Popup(this, "You Escaped",
-					                  "You got hit, but still managed to escape.", "", "OK",
-					                  cbShowNextPopup
+					popup = new Popup(this, "You Escaped", "You got hit, but still managed to escape.", "",
+					                  "OK", cbShowNextPopup
 					);
 					popupQueue.push(popup);
 					showNextPopup();
 				} else {
-					popup = new Popup(this, "Escaped",
-					                  "You have managed to escape your opponent.", "", "OK",
+					popup = new Popup(this, "Escaped", "You have managed to escape your opponent.", "", "OK",
 					                  cbShowNextPopup
 					);
 					popupQueue.push(popup);
 					showNextPopup();
 				}
-				if (gameState.ENCOUNTERMONSTER( gameState.EncounterType ))
+				if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
 					gameState.MonsterHull = Opponent.hull;
+				}
 
 				return (false);
 			}
-		}
-		else if (gameState.EncounterType == GameState.POLICEFLEE || gameState.EncounterType == GameState.TRADERFLEE ||
+		} else if (gameState.EncounterType == GameState.POLICEFLEE || gameState.EncounterType == GameState.TRADERFLEE ||
 			gameState.EncounterType == GameState.PIRATEFLEE || gameState.EncounterType == GameState.TRADERSURRENDER ||
-			gameState.EncounterType == GameState.PIRATESURRENDER){
-			if (gameState.GetRandom(gameState.PilotSkill(Ship)) * 4 <=
-				gameState.GetRandom( (7 + (gameState.PilotSkill(Opponent) / 3))) * 2){
+			gameState.EncounterType == GameState.PIRATESURRENDER) {
+			if (gameState.GetRandom(gameState.PilotSkill(Ship)) * 4 <= gameState.GetRandom(
+				(7 + (gameState.PilotSkill(Opponent) / 3))
+			) * 2) {
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
-				popup = new Popup(this, "Opponent Escaped",
-				                  "Your opponent has managed to escape.", "", "OK",
-				                  cbShowNextPopup
+				popup = new Popup(this, "Opponent Escaped", "Your opponent has managed to escape.", "",
+				                  "OK", cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -5108,85 +5036,69 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		PrevEncounterType = gameState.EncounterType;
 
 		if (Opponent.hull < OpponentHull) {
-			if (gameState.ENCOUNTERPOLICE( gameState.EncounterType )) {
-				if (Opponent.hull < OpponentHull >> 1){
+			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
+				if (Opponent.hull < OpponentHull >> 1) {
 					if (Ship.hull < ShipHull >> 1) {
-						if (gameState.GetRandom( 10 ) > 5)
-							gameState.EncounterType = GameState.POLICEFLEE;
-					}
-					else
-						gameState.EncounterType = GameState.POLICEFLEE;
+						if (gameState.GetRandom(10) > 5) { gameState.EncounterType = GameState.POLICEFLEE; }
+					} else { gameState.EncounterType = GameState.POLICEFLEE; }
 				}
 			} else if (gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
 				gameState.EncounterType = GameState.POLICEATTACK;
-			} else if (gameState.ENCOUNTERPIRATE( gameState.EncounterType )) {
+			} else if (gameState.ENCOUNTERPIRATE(gameState.EncounterType)) {
 				if (Opponent.hull < (OpponentHull * 2) / 3) {
 					if (Ship.hull < (ShipHull * 2) / 3) {
-						if (gameState.GetRandom( 10 ) > 3)
-							gameState.EncounterType = GameState.PIRATEFLEE;
+						if (gameState.GetRandom(10) > 3) { gameState.EncounterType = GameState.PIRATEFLEE; }
 					} else {
 						gameState.EncounterType = GameState.PIRATEFLEE;
-						if (gameState.GetRandom( 10 ) > 8 && Opponent.type < GameState.MAXSHIPTYPE)
+						if (gameState.GetRandom(10) > 8 && Opponent.type < GameState.MAXSHIPTYPE) {
 							gameState.EncounterType = GameState.PIRATESURRENDER;
+						}
 					}
 				}
-			} else if (gameState.ENCOUNTERTRADER( gameState.EncounterType )) {
+			} else if (gameState.ENCOUNTERTRADER(gameState.EncounterType)) {
 				if (Opponent.hull < (OpponentHull * 2) / 3) {
-					if (gameState.GetRandom( 10 ) > 3)
+					if (gameState.GetRandom(10) > 3) {
 						gameState.EncounterType = GameState.TRADERSURRENDER;
-					else
-						gameState.EncounterType = GameState.TRADERFLEE;
+					} else { gameState.EncounterType = GameState.TRADERFLEE; }
 				} else if (Opponent.hull < (OpponentHull * 9) / 10) {
-					if (Ship.hull < (ShipHull * 2) / 3)
-					{
+					if (Ship.hull < (ShipHull * 2) / 3) {
 						// If you get damaged a lot, the trader tends to keep shooting
-						if (gameState.GetRandom( 10 ) > 7)
-							gameState.EncounterType = GameState.TRADERFLEE;
-					}
-					else if (Ship.hull < (ShipHull * 9) / 10)
-					{
-						if (gameState.GetRandom( 10 ) > 3)
-							gameState.EncounterType = GameState.TRADERFLEE;
-					}
-					else
-						gameState.EncounterType = GameState.TRADERFLEE;
+						if (gameState.GetRandom(10) > 7) { gameState.EncounterType = GameState.TRADERFLEE; }
+					} else if (Ship.hull < (ShipHull * 9) / 10) {
+						if (gameState.GetRandom(10) > 3) { gameState.EncounterType = GameState.TRADERFLEE; }
+					} else { gameState.EncounterType = GameState.TRADERFLEE; }
 				}
 			}
 		}
 
 		if (PrevEncounterType != gameState.EncounterType) {
-			if (!(gameState.AutoAttack &&
-				(gameState.EncounterType == GameState.TRADERFLEE || gameState.EncounterType == GameState.PIRATEFLEE || gameState.EncounterType == GameState.POLICEFLEE)))
+			if (!(gameState.AutoAttack && (gameState.EncounterType == GameState.TRADERFLEE || gameState.EncounterType == GameState.PIRATEFLEE || gameState.EncounterType == GameState.POLICEFLEE))) {
 				gameState.AutoAttack = false;
+			}
 			gameState.AutoFlee = false;
 		}
 
-		((FragmentEncounter)currentFragment).playerShipNeedsUpdate=true;
-		((FragmentEncounter)currentFragment).opponentShipNeedsUpdate=true;
+		((FragmentEncounter) currentFragment).playerShipNeedsUpdate = true;
+		((FragmentEncounter) currentFragment).opponentShipNeedsUpdate = true;
 
-		((FragmentEncounter)currentFragment).EncounterDisplayShips();
-		((FragmentEncounter)currentFragment).EncounterButtons();
+		((FragmentEncounter) currentFragment).EncounterDisplayShips();
+		((FragmentEncounter) currentFragment).EncounterButtons();
 
 		String buf = "The ";
 		String buf2 = "";
-		if (gameState.ENCOUNTERPOLICE( PrevEncounterType ))
-			buf2 = "police ship";
-		else if (gameState.ENCOUNTERPIRATE( PrevEncounterType )) {
-			if (Opponent.type == GameState.MANTISTYPE)
-				buf2 = "alien ship";
-			else
+		if (gameState.ENCOUNTERPOLICE(PrevEncounterType)) { buf2 = "police ship"; } else if (gameState
+			.ENCOUNTERPIRATE(PrevEncounterType)) {
+			if (Opponent.type == GameState.MANTISTYPE) { buf2 = "alien ship"; } else {
 				buf2 = "pirate ship";
-		}
-		else if (gameState.ENCOUNTERTRADER( PrevEncounterType ))
+			}
+		} else if (gameState.ENCOUNTERTRADER(PrevEncounterType)) {
 			buf2 = "trader ship";
-		else if (gameState.ENCOUNTERMONSTER( PrevEncounterType ))
+		} else if (gameState.ENCOUNTERMONSTER(PrevEncounterType)) {
 			buf2 = "monster";
-		else if (gameState.ENCOUNTERDRAGONFLY( PrevEncounterType ))
+		} else if (gameState.ENCOUNTERDRAGONFLY(PrevEncounterType)) {
 			buf2 = "Dragonfly";
-		else if (gameState.ENCOUNTERSCARAB( PrevEncounterType ))
-			buf2 = "Scarab";
-		else if (gameState.ENCOUNTERFAMOUS( PrevEncounterType))
-			buf2 = "Captain";
+		} else if (gameState.ENCOUNTERSCARAB(PrevEncounterType)) { buf2 = "Scarab"; } else if (gameState
+			.ENCOUNTERFAMOUS(PrevEncounterType)) { buf2 = "Captain"; }
 
 		buf += buf2;
 		if (CommanderGotHit) {
@@ -5198,27 +5110,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (OpponentGotHit) {
-			buf +=  "\nYou hit the "+buf2+".";
+			buf += "\nYou hit the " + buf2 + ".";
 		}
 
 		if (!CommanderFlees && !OpponentGotHit) {
-			buf += "\n"+"You missed the "+buf2+".";
+			buf += "\n" + "You missed the " + buf2 + ".";
 		}
 
 		if (PrevEncounterType == GameState.POLICEFLEE || PrevEncounterType == GameState.TRADERFLEE || PrevEncounterType == GameState.PIRATEFLEE) {
-			buf += "\nThe "+buf2+" didn't get away.";
+			buf += "\nThe " + buf2 + " didn't get away.";
 		}
 
 		if (CommanderFlees) {
-			buf += "\nThe "+buf2+" is still following you.";
+			buf += "\nThe " + buf2 + " is still following you.";
 		}
 
-		((FragmentEncounter)currentFragment).EncounterDisplayNextAction(false);
+		((FragmentEncounter) currentFragment).EncounterDisplayNextAction(false);
 
-		buf = ((FragmentEncounter)currentFragment).EncounterText.getText().toString() + "\n" + buf;
-		((FragmentEncounter)currentFragment).EncounterText.setText(buf);
+		buf = ((FragmentEncounter) currentFragment).EncounterText.getText().toString() + "\n" + buf;
+		((FragmentEncounter) currentFragment).EncounterText.setText(buf);
 
-		if (gameState.Continuous && (gameState.AutoAttack || gameState.AutoFlee)){
+		if (gameState.Continuous && (gameState.AutoAttack || gameState.AutoFlee)) {
 			// Make sure there's always just one delayRunnable queued.
 			// Otherwise several are queued if player keeps tapping Attack/Flee buttons.
 			delayHandler.removeCallbacksAndMessages(null);
@@ -5227,6 +5139,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 		return true;
 	}
+
 	public boolean ExecuteAttack(Ship Attacker, Ship Defender, boolean Flees, boolean CommanderUnderAttack) {
 		// *************************************************************************
 		// An attack: Attacker attacks Defender, Flees indicates if Defender is fleeing
@@ -5235,54 +5148,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int i;
 
 		// On beginner level, if you flee, you will escape unharmed.
-		if (GameState.getDifficulty() == GameState.BEGINNER && CommanderUnderAttack && Flees)
+		if (GameState.getDifficulty() == GameState.BEGINNER && CommanderUnderAttack && Flees) {
 			return false;
+		}
 
 		// Fighterskill attacker is pitted against pilotskill defender; if defender
 		// is fleeing the attacker has a free shot, but the chance to hit is smaller
 		if (gameState.GetRandom(gameState.FighterSkill(Attacker
 		) + ShipTypes.ShipTypes[Defender.type].size
 		) < (Flees ? 2 : 1) * gameState.GetRandom(5 + (gameState.PilotSkill(Defender) >> 1)))
-			// Misses
-			return false;
+		// Misses
+		{ return false; }
 
-		if (Attacker.TotalWeapons(-1, -1) <= 0)
+		if (Attacker.TotalWeapons(-1, -1) <= 0) {
 			Damage = 0;
-		else if (Defender.type == GameState.SCARABTYPE) {
+		} else if (Defender.type == GameState.SCARABTYPE) {
 			if (Attacker.TotalWeapons(GameState.PULSELASERWEAPON, GameState.PULSELASERWEAPON
 			) <= 0 && Attacker.TotalWeapons(GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON
-			) <= 0)
-				Damage = 0;
-			else
+			) <= 0) { Damage = 0; } else {
 				Damage = gameState.GetRandom(((Attacker.TotalWeapons(GameState.PULSELASERWEAPON,
 				                                                     GameState.PULSELASERWEAPON
 				) + Attacker.TotalWeapons(GameState.MORGANLASERWEAPON, GameState.MORGANLASERWEAPON
 				)) * (100 + 2 * gameState.EngineerSkill(Attacker)) / 100)
 				);
+			}
 		} else {
 			Damage = gameState.GetRandom((Attacker.TotalWeapons(-1, -1) * (100 + 2 * gameState
 				.EngineerSkill(Attacker)) / 100)
 			);
 		}
 
-		if (Damage <= 0L)
-			return false;
+		if (Damage <= 0L) { return false; }
 
 		// Reactor on board -- damage is boosted!
-		if (CommanderUnderAttack && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21)
-		{
-			if (GameState.getDifficulty() < GameState.NORMAL)
-				Damage *= 1 + (GameState.getDifficulty() + 1)*0.25;
-			else
-				Damage *= 1 + (GameState.getDifficulty() + 1)*0.33;
+		if (CommanderUnderAttack && gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
+			if (GameState.getDifficulty() < GameState.NORMAL) {
+				Damage *= 1 + (GameState.getDifficulty() + 1) * 0.25;
+			} else { Damage *= 1 + (GameState.getDifficulty() + 1) * 0.33; }
 		}
 
 		// First, shields are depleted
-		for (i=0; i<GameState.MAXSHIELD; ++i)
-		{
-			if (Defender.shield[i] < 0)
-				break;
-			if (Damage <= Defender.shieldStrength[i]){
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
+			if (Defender.shield[i] < 0) { break; }
+			if (Damage <= Defender.shieldStrength[i]) {
 				Defender.shieldStrength[i] -= Damage;
 				Damage = 0;
 				break;
@@ -5296,76 +5204,77 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		// If there still is damage after the shields have been depleted,
 		// this is subtracted from the hull, modified by the engineering skill
 		// of the defender.
-		if (Damage > 0)
-		{
+		if (Damage > 0) {
 			Damage -= gameState.GetRandom(gameState.EngineerSkill(Defender));
-			if (Damage <= 0)
-				Damage = 1;
+			if (Damage <= 0) { Damage = 1; }
 			// At least 2 shots on Normal level are needed to destroy the hull
 			// (3 on Easy, 4 on Beginner, 1 on Hard or Impossible). For opponents,
 			// it is always 2.
-			if (CommanderUnderAttack && gameState.ScarabStatus == 3)
-				Damage = Math.min( Damage, (gameState.GetHullStrength()/
-					(CommanderUnderAttack ? Math.max(1, (GameState.IMPOSSIBLE-GameState.getDifficulty()) ) : 2)) );
-			else
-				Damage = Math.min(Damage,
-				                  (ShipTypes.ShipTypes[Defender.type].hullStrength / (CommanderUnderAttack ? Math.max(1,
-				                                                                                         (GameState.IMPOSSIBLE - GameState.getDifficulty())
-				                                                                                ) : 2))
+			if (CommanderUnderAttack && gameState.ScarabStatus == 3) {
+				Damage = Math.min(Damage, (gameState.GetHullStrength() / (CommanderUnderAttack ? Math.max(1,
+				                                                                                          (GameState.IMPOSSIBLE - GameState
+					                                                                                          .getDifficulty())
+				) : 2))
 				);
+			} else {
+				Damage = Math.min(Damage,
+				                  (ShipTypes.ShipTypes[Defender.type].hullStrength / (CommanderUnderAttack ?
+				                                                                      Math.max(1,
+				                                                                               (GameState.IMPOSSIBLE - GameState
+					                                                                               .getDifficulty())
+				                                                                      ) : 2))
+				);
+			}
 			Defender.hull -= Damage;
-			if (Defender.hull < 0)
-				Defender.hull = 0;
+			if (Defender.hull < 0) { Defender.hull = 0; }
 		}
 
-		if (Damage != prevDamage)
-		{
-			if (CommanderUnderAttack)
-			{
-				((FragmentEncounter)currentFragment).playerShipNeedsUpdate = true;
-			}
-			else
-			{
-				((FragmentEncounter)currentFragment).opponentShipNeedsUpdate = true;
+		if (Damage != prevDamage) {
+			if (CommanderUnderAttack) {
+				((FragmentEncounter) currentFragment).playerShipNeedsUpdate = true;
+			} else {
+				((FragmentEncounter) currentFragment).opponentShipNeedsUpdate = true;
 			}
 		}
 
 		return true;
 	}
+
 	public int GetBounty(Ship sh) {
 		// *************************************************************************
 		// calculate bounty
 		// *************************************************************************
-		int bounty = EnemyShipPrice( sh );
+		int bounty = EnemyShipPrice(sh);
 
 		bounty /= 200;
 		bounty /= 25;
 		bounty *= 25;
-		if (bounty <= 0)
-			bounty = 25;
-		if (bounty > 2500)
-			bounty = 2500;
+		if (bounty <= 0) { bounty = 25; }
+		if (bounty > 2500) { bounty = 2500; }
 
 		return bounty;
 	}
+
 	public int EnemyShipPrice(Ship Sh) {
 		int i;
 		int CurPrice;
 
 		CurPrice = ShipTypes.ShipTypes[Sh.type].price;
-		for (i=0; i<GameState.MAXWEAPON; ++i)
-			if (Sh.weapon[i] >= 0)
-				CurPrice += Weapons.mWeapons[Sh.weapon[i]].price;
-		for (i=0; i<GameState.MAXSHIELD; ++i)
-			if (Sh.shield[i] >= 0)
-				CurPrice += Shields.mShields[Sh.shield[i]].price;
+		for (i = 0; i < GameState.MAXWEAPON; ++i) {
+			if (Sh.weapon[i] >= 0) { CurPrice += Weapons.mWeapons[Sh.weapon[i]].price; }
+		}
+		for (i = 0; i < GameState.MAXSHIELD; ++i) {
+			if (Sh.shield[i] >= 0) { CurPrice += Shields.mShields[Sh.shield[i]].price; }
+		}
 		// Gadgets aren't counted in the price, because they are already taken into account in
 		// the skill adjustment of the price.
 
-		CurPrice = CurPrice * (2 * gameState.PilotSkill( Sh ) + gameState.EngineerSkill( Sh ) + 3 * gameState.FighterSkill( Sh )) / 60;
+		CurPrice = CurPrice * (2 * gameState.PilotSkill(Sh) + gameState.EngineerSkill(Sh
+		) + 3 * gameState.FighterSkill(Sh)) / 60;
 
 		return CurPrice;
 	}
+
 	void EscapeWithPod() {
 		// *************************************************************************
 		// Your escape pod ejects you
@@ -5373,16 +5282,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Popup popup;
 		gameState.AutoAttack = gameState.AutoFlee = false;
 
-		popup = new Popup(this,
-		                  "Escape Pod activated",
+		popup = new Popup(this, "Escape Pod activated",
 		                  "Just before the final demise of your ship, your escape pod gets activated and ejects you. After a few days, the Space Corps picks you up and drops you off at a nearby space port.",
 		                  "", "OK", cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 
-		if (gameState.ScarabStatus == 3)
-			gameState.ScarabStatus = 0;
+		if (gameState.ScarabStatus == 3) { gameState.ScarabStatus = 0; }
 
 		Arrival();
 
@@ -5441,8 +5348,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (gameState.Ship.tribbles > 0) {
-			popup = new Popup(this, "Tribbles killed",
-			                  "Your tribbles all died in the explosion.",
+			popup = new Popup(this, "Tribbles killed", "Your tribbles all died in the explosion.",
 			                  "Don't be too sad. They were incredibly annoying, weren't they?", "OK",
 			                  cbShowNextPopup
 			);
@@ -5461,8 +5367,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			gameState.Credits += gameState.CurrentShipPriceWithoutCargo(true);
 		}
 
-		popup = new Popup(this,
-		                  "Flea built",
+		popup = new Popup(this, "Flea built",
 		                  "In 3 days and with 500 credits, you manage to convert your pod into a Flea.",
 		                  "Your ship has been destroyed, but luckily, you are clever enough to convert your pod into a Flea type of ship, so you can continue your journey, or trade it in for a better ship.",
 		                  "OK", cbShowNextPopup
@@ -5470,21 +5375,19 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popupQueue.push(popup);
 		showNextPopup();
 
-		if (gameState.Credits > 500)
-			gameState.Credits -= 500;
-		else
-		{
+		if (gameState.Credits > 500) { gameState.Credits -= 500; } else {
 			gameState.Debt += (500 - gameState.Credits);
 			gameState.Credits = 0;
 		}
 
-		IncDays( 3 );
+		IncDays(3);
 
 		gameState.CreateFlea();
 
 		gameState.AutoAttack = gameState.AutoFlee = false;
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
+
 	public void Scoop() {
 		// *************************************************************************
 		// You can pick up canisters left by a destroyed ship
@@ -5494,52 +5397,49 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		// Chance 50% to pick something up on Normal level, 33% on Hard level, 25% on
 		// Impossible level, and 100% on Easy or Beginner
-		if (GameState.getDifficulty() >= GameState.NORMAL)
-			if (gameState.GetRandom(GameState.getDifficulty()) != 1)
-				return;
+		if (GameState.getDifficulty() >= GameState.NORMAL) {
+			if (gameState.GetRandom(GameState.getDifficulty()) != 1) { return; }
+		}
 
 		// More chance to pick up a cheap good
 		d = gameState.GetRandom(GameState.MAXTRADEITEM);
-		if (d >= 5)
-			d = gameState.GetRandom(GameState.MAXTRADEITEM);
+		if (d >= 5) { d = gameState.GetRandom(GameState.MAXTRADEITEM); }
 
 		final int item = d;
-		popup = new Popup(this,
-		                  "Scoop Canister",
-		                  String.format("A canister from the destroyed ship, labeled %s, drifts within range of your scoops.", Tradeitems.mTradeitems[d].name),
-		                  "", "Pick up", "Let go",
-		                  new Popup.buttonCallback() {
-			                  @Override
-			                  public void execute(Popup popup, View view) {
-				                  if (gameState.FilledCargoBays() >= gameState.TotalCargoBays()) {
-					                  Popup popup1;
-					                  popup1 = new Popup(popup.context,
-					                                     "No Room To Scoop",
-					                                     "You don't have any room in your cargo holds. Do you wish to jettison goods to make room, or just let it go?",
-					                                     "", "Make room", "Let go",
-					                                     new Popup.buttonCallback() {
-						                                     @Override
-						                                     public void execute(Popup popup, View view) {
-							                                     for (int i=0; i<GameState.MAXTRADEITEM; i++)
-								                                     gameState.Opponent.cargo[i] = 0;
-							                                     gameState.Opponent.cargo[item] = 1;
-							                                     changeFragment(FRAGMENTS.PLUNDER); // Travel() is called from PlunderDoneButton
-						                                     }
-					                                     }, cbShowNextPopup
-					                  );
-					                  popupQueue.push(popup1);
-					                  showNextPopup();
-					                  return;
-				                  }
+		popup = new Popup(this, "Scoop Canister", String.format(
+			"A canister from the destroyed ship, labeled %s, drifts within range of your scoops.",
+			Tradeitems.mTradeitems[d].name
+		), "", "Pick up", "Let go", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				if (gameState.Ship.FilledCargoBays() >= gameState.Ship.TotalCargoBays()) {
+					Popup popup1;
+					popup1 = new Popup(popup.context, "No Room To Scoop",
+					                   "You don't have any room in your cargo holds. Do you wish to jettison goods to make room, or just let it go?",
+					                   "", "Make room", "Let go", new Popup.buttonCallback() {
+						@Override
+						public void execute(Popup popup, View view) {
+							for (int i = 0; i < GameState.MAXTRADEITEM; i++) { gameState.Opponent.cargo[i] = 0; }
+							gameState.Opponent.cargo[item] = 1;
+							changeFragment(FRAGMENTS.PLUNDER); // Travel() is called from PlunderDoneButton
+						}
+					}, cbShowNextPopup
+					);
+					popupQueue.push(popup1);
+					showNextPopup();
+					return;
+				}
 
-				                  if (gameState.FilledCargoBays() < gameState.TotalCargoBays())
-					                  ++gameState.Ship.cargo[item];
-			                  }
-		                  }, cbShowNextPopup
+				if (gameState.Ship.FilledCargoBays() < gameState.Ship.TotalCargoBays()) {
+					++gameState.Ship.cargo[item];
+				}
+			}
+		}, cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	public void Arrival() {
 		gameState.Clicks = 0;
 		gameState.Mercenary[0].curSystem = gameState.WarpSystem;
@@ -5549,7 +5449,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.DeterminePrices(gameState.WarpSystem);
 		gameState.AlreadyPaidForNewspaper = false;
 
-		if (gameState.SaveOnArrival){
+		if (gameState.SaveOnArrival) {
 			saveGame();
 		}
 
@@ -5584,7 +5484,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 
-	public void BuyCargo(int Index,int Amount) {
+	public void BuyCargo(int Index, int Amount) {
 		// *************************************************************************
 		// Buy amount of cargo
 		// *************************************************************************
@@ -5592,7 +5492,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		SolarSystem CURSYSTEM = gameState.SolarSystem[gameState.Mercenary[0].curSystem];
 
 		ToBuy = Math.min(Amount, CURSYSTEM.qty[Index]);
-		ToBuy = Math.min(ToBuy, gameState.TotalCargoBays() - gameState.FilledCargoBays() - gameState.LeaveEmpty);
+		ToBuy = Math.min(ToBuy, gameState.Ship.TotalCargoBays() - gameState.Ship
+			.FilledCargoBays() - gameState.LeaveEmpty
+		);
 		ToBuy = Math.min(ToBuy, gameState.ToSpend() / gameState.BuyPrice[Index]);
 
 		gameState.Ship.cargo[Index] += ToBuy;
@@ -5600,6 +5502,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		gameState.BuyingPrice[Index] += ToBuy * gameState.BuyPrice[Index];
 		CURSYSTEM.qty[Index] -= ToBuy;
 	}
+
 	public void SellCargo(final int Index, int Amount, int Operation) {
 		// *************************************************************************
 		// Sell or Jettison amount of cargo
@@ -5610,25 +5513,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Popup popup;
 
 		if (Ship.cargo[Index] <= 0) {
-			if (Operation == GameState.SELLCARGO)
-				popup = new Popup(this,
-				                  "None To Sell", "You have none of these goods in your cargo bays.", "",
-				                  "OK", cbShowNextPopup
+			if (Operation == GameState.SELLCARGO) {
+				popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
+				                  "", "OK", cbShowNextPopup
 				);
-			else
-				popup = new Popup(this,
-				                  "None To Dump", "You have none of these goods in your cargo bays.", "",
-				                  "OK", cbShowNextPopup
+			} else {
+				popup = new Popup(this, "None To Dump", "You have none of these goods in your cargo bays.",
+				                  "", "OK", cbShowNextPopup
 				);
+			}
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
 		if (gameState.SellPrice[Index] <= 0 && Operation == GameState.SELLCARGO) {
-			popup = new Popup(this,
-			                  "Not Interested", "Nobody in this system is interested in buying these goods.",
-			                  "", "OK", cbShowNextPopup
+			popup = new Popup(this, "Not Interested",
+			                  "Nobody in this system is interested in buying these goods.", "", "OK",
+			                  cbShowNextPopup
 			);
 			popupQueue.push(popup);
 			showNextPopup();
@@ -5641,24 +5543,21 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Operation == GameState.JETTISONCARGO) {
 			if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE && !gameState.LitterWarning) {
 				gameState.LitterWarning = true;
-				popup = new Popup(this,
-				                  "Space Littering",
+				popup = new Popup(this, "Space Littering",
 				                  "Dumping cargo in space is considered littering. If the police finds your dumped goods and tracks them to you, this will influence your record. Do you really wish to dump?",
 				                  "Space litterers will at least be considered dubious. If you are already a dubious character, space littering will only add to your list of offences.",
-				                  "Yes", "No",
-				                  new Popup.buttonCallback() {
-					                  @Override
-					                  public void execute(Popup popup, View view) {
-															gameState.Ship.cargo[Index] -= ToJettison;
-															if (gameState.GetRandom(10) < GameState.getDifficulty() + 1) {
-																if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
-																	gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-																else
-																	--gameState.PoliceRecordScore;
-																gameState.addNewsEvent(GameState.CAUGHTLITTERING);
-															}
-														}
-													}, cbShowNextPopup
+				                  "Yes", "No", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						gameState.Ship.cargo[Index] -= ToJettison;
+						if (gameState.GetRandom(10) < GameState.getDifficulty() + 1) {
+							if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
+								gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+							} else { --gameState.PoliceRecordScore; }
+							gameState.addNewsEvent(GameState.CAUGHTLITTERING);
+						}
+					}
+				}, cbShowNextPopup
 				);
 				popupQueue.push(popup);
 				showNextPopup();
@@ -5666,10 +5565,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			gameState.Ship.cargo[Index] -= ToJettison;
 			if (gameState.GetRandom(10) < GameState.getDifficulty() + 1) {
-				if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE)
+				if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
 					gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-				else
-					--gameState.PoliceRecordScore;
+				} else { --gameState.PoliceRecordScore; }
 				gameState.addNewsEvent(GameState.CAUGHTLITTERING);
 			}
 		}
@@ -5678,12 +5576,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			ToSell = Math.min(ToSell, gameState.ToSpend() / 5 * (GameState.getDifficulty() + 1));
 		}
 
-		gameState.BuyingPrice[Index] = (gameState.BuyingPrice[Index] * (Ship.cargo[Index] - ToSell)) / Ship.cargo[Index];
+		gameState.BuyingPrice[Index] =
+			(gameState.BuyingPrice[Index] * (Ship.cargo[Index] - ToSell)) / Ship.cargo[Index];
 		Ship.cargo[Index] -= ToSell;
-		if (Operation == GameState.SELLCARGO)
+		if (Operation == GameState.SELLCARGO) {
 			gameState.Credits += ToSell * gameState.SellPrice[Index];
-		if (Operation == GameState.DUMPCARGO)
+		}
+		if (Operation == GameState.DUMPCARGO) {
 			gameState.Credits -= ToSell * 5 * (GameState.getDifficulty() + 1);
+		}
 		//if (Operation == GameState.JETTISONCARGO) {
 		//}
 	}
@@ -5710,26 +5611,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 	}
 
-	public void btnDestroyed(){
+	public void btnDestroyed() {
 		mContext.deleteFile("savegame.txt");
 		EndOfGame(GameState.KILLED);
 	}
+
 	int GetScore(int EndStatus, int Days, int Worth, int Level) {
 		int d;
 
-		Worth = (Worth < 1000000 ? Worth : 1000000 + ((Worth - 1000000) / 10) );
+		Worth = (Worth < 1000000 ? Worth : 1000000 + ((Worth - 1000000) / 10));
 
-		if (EndStatus == GameState.KILLED)
-			return (Level+1)*((Worth * 90) / 50000);
-		else if (EndStatus == GameState.RETIRED)
-			return (Level+1)*((Worth * 95) / 50000);
-		else {
-			d = ((Level+1)*100) - Days;
-			if (d < 0)
-				d = 0;
-			return (Level+1)*((Worth + (d * 1000)) / 500);
+		if (EndStatus == GameState.KILLED) {
+			return (Level + 1) * ((Worth * 90) / 50000);
+		} else if (EndStatus == GameState.RETIRED) {
+			return (Level + 1) * ((Worth * 95) / 50000);
+		} else {
+			d = ((Level + 1) * 100) - Days;
+			if (d < 0) { d = 0; }
+			return (Level + 1) * ((Worth + (d * 1000)) / 500);
 		}
 	}
+
 	void EndOfGame(int EndStatus) {
 		int i, j;
 		Boolean Scored;
@@ -5740,27 +5642,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Scored = false;
 		a = GetScore(EndStatus, gameState.Days, gameState.CurrentWorth(), GameState.getDifficulty());
 
-		for (i=0; i<GameState.MAXHIGHSCORE; i++){
+		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
 			Hscores[i] = new HighScore(getApplicationContext(), i);
 		}
 
-		for (i=0; i<GameState.MAXHIGHSCORE; i++){
-			b = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(), Hscores[i].getDifficulty());
+		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
+			b = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(),
+			             Hscores[i].getDifficulty()
+			);
 
 			if ((a > b) || (a == b && gameState.CurrentWorth() > Hscores[i].getWorth()) ||
-				    (a == b && gameState.CurrentWorth() == Hscores[i].getWorth() &&
-					     gameState.Days > Hscores[i].getDays()
-				    )
-				){
+				(a == b && gameState.CurrentWorth() == Hscores[i].getWorth() &&
+					gameState.Days > Hscores[i].getDays())) {
 				Scored = true;
 
-				if (!(gameState.GameLoaded) && gameState.CheatCounter < 3){
-					for (j=GameState.MAXHIGHSCORE-1; j>i; --j) {
-						Hscores[j].setName(Hscores[j-1].getName());
-						Hscores[j].setStatus(Hscores[j-1].getStatus());
-						Hscores[j].setDays(Hscores[j-1].getDays());
-						Hscores[j].setWorth(Hscores[j-1].getWorth());
-						Hscores[j].setDifficulty(Hscores[j-1].getDifficulty());
+				if (!(gameState.GameLoaded) && gameState.CheatCounter < 3) {
+					for (j = GameState.MAXHIGHSCORE - 1; j > i; --j) {
+						Hscores[j].setName(Hscores[j - 1].getName());
+						Hscores[j].setStatus(Hscores[j - 1].getStatus());
+						Hscores[j].setDays(Hscores[j - 1].getDays());
+						Hscores[j].setWorth(Hscores[j - 1].getWorth());
+						Hscores[j].setDifficulty(Hscores[j - 1].getDifficulty());
 					}
 
 					Hscores[i].setName(gameState.NameCommander);
@@ -5777,7 +5679,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Scored && gameState.GameLoaded) {
 			buf = "Without loading a savegame, you";
 			buf2 = "would have made the high-score list.";
-		} else if (Scored && gameState.CheatCounter >= 3){
+		} else if (Scored && gameState.CheatCounter >= 3) {
 			buf = "Cheat mode was active.";
 			buf2 = "You are not added to the high-score list.";
 		} else if (Scored) {
@@ -5787,19 +5689,21 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			buf = "Alas! This is not enough to enter";
 			buf2 = "the high-score list.";
 		}
-		popup = new Popup(this,
-		                  "Final score",
-		                  String.format("You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (a / 50), ((a%50)/5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" : (EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon")), buf, buf2),
-		                  "", "OK", cbShowNextPopup
+		popup = new Popup(this, "Final score", String.format(
+			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (a / 50), ((a % 50) / 5),
+			gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+			                 (EndStatus == GameState.RETIRED ? "retired on a barren moon" :
+			                  "retired on an utopian moon")), buf, buf2
+		), "", "OK", cbShowNextPopup
 		);
 		popupQueue.push(popup);
 		showNextPopup();
 
-		if (Scored && !gameState.GameLoaded)
-			ViewHighScores();
+		if (Scored && !gameState.GameLoaded) { ViewHighScores(); }
 
 		changeFragment(FRAGMENTS.NEW_GAME);
 	}
+
 	void ViewHighScores() {
 		int i;
 		int Percentage;
@@ -5807,12 +5711,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		Popup popup;
 
 		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
-		for (i=0; i<GameState.MAXHIGHSCORE; i++){
+		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
 			Hscores[i] = new HighScore(getApplicationContext(), i);
 		}
 
-		for (i=0; i<GameState.MAXHIGHSCORE; ++i) {
-			if (Hscores[i].getName().isEmpty()){
+		for (i = 0; i < GameState.MAXHIGHSCORE; ++i) {
+			if (Hscores[i].getName().isEmpty()) {
 				msg += "Empty\n\n\n\n";
 				continue;
 			}
@@ -5820,14 +5724,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Percentage = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(),
 			                      Hscores[i].getDifficulty()
 			);
-			msg += String.format("%d. %-20s %3d.%d%%\n", i+1, Hscores[i].getName(), (Percentage / 50), ((Percentage%50) / 5));
+			msg += String.format("%d. %-20s %3d.%d%%\n", i + 1, Hscores[i].getName(), (Percentage / 50),
+			                     ((Percentage % 50) / 5)
+			);
 
-			if (Hscores[i].getStatus() == GameState.MOON)
-				msg += "Claimed moon";
-			else if (Hscores[i].getStatus() == GameState.RETIRED)
-				msg += "Retired";
-			else
+			if (Hscores[i].getStatus() == GameState.MOON) { msg += "Claimed moon"; } else if (Hscores[i]
+				.getStatus() == GameState.RETIRED) { msg += "Retired"; } else {
 				msg += "Was killed";
+			}
 			msg += String.format(" in %d day%s, worth %d credits on %s level\n\n", Hscores[i].getDays(),
 			                     Hscores[i].getDays() == 1 ? "" : "s", Hscores[i].getWorth(),
 			                     gameState.levelDesc[Hscores[i].getDifficulty()]

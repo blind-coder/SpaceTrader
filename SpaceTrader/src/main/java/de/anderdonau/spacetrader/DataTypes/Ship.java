@@ -198,4 +198,45 @@ public class Ship implements Serializable {
 		}
 		return false;
 	}
+
+	public int TotalCargoBays() {
+		// *************************************************************************
+		// Calculate total cargo bays
+		// *************************************************************************
+		int Bays;
+		int i;
+
+		Bays = ShipTypes.ShipTypes[type].cargoBays;
+		for (i = 0; i < GameState.MAXGADGET; ++i) {
+			if (gadget[i] == GameState.EXTRABAYS) {
+				Bays += 5;
+			}
+		}
+		if (this != gameState.Ship) {
+			return Bays;
+		}
+
+		if (gameState.JaporiDiseaseStatus == 1) {
+			Bays -= 10;
+		}
+		if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
+			Bays -= (5 + 10 - (gameState.ReactorStatus - 1) / 2);
+		}
+		return Bays;
+	}
+
+	public int FilledCargoBays() {
+		// *************************************************************************
+		// Calculate total filled cargo bays
+		// *************************************************************************
+		int sum, i;
+
+		sum = 0;
+		for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+			sum = sum + cargo[i];
+		}
+
+		return sum;
+	}
+
 }
