@@ -12,33 +12,35 @@ import de.anderdonau.spacetrader.GameState;
 import de.anderdonau.spacetrader.R;
 
 public class ShipTypes {
-	public static final int FLEA         = 0;
-	public static final int GNAT         = 1;
-	public static final int FIREFLY      = 2;
-	public static final int MOSQUITO     = 3;
-	public static final int BUMBLEBEE    = 4;
-	public static final int BEETLE       = 5;
-	public static final int HORNET       = 6;
-	public static final int GRASSHOPPER  = 7;
-	public static final int TERMITE      = 8;
-	public static final int WASP         = 9;
-	public static final int SPACEMONSTER = 10;
-	public static final int DRAGONFLY    = 11;
-	public static final int MANTIS       = 12;
-	public static final int SCARAB       = 13;
-	public static final int BOTTLE       = 14;
-
-	public static ShipType[] ShipTypes = {new ShipType("Flea", 10, 0, 0, 0, 1, GameState.MAXRANGE, 4,
-	                                                   1, 2000, 5, 2, 25, -1, -1, 0, 1, 0,
-	                                                   R.drawable.flea_ssck,
-	                                                   R.drawable.flea_ssck_damaged,
-	                                                   R.drawable.flea_ssck_shield
+	public static final int        FLEA         = 0;
+	public static final int        GNAT         = 1;
+	public static final int        FIREFLY      = 2;
+	public static final int        MOSQUITO     = 3;
+	public static final int        BUMBLEBEE    = 4;
+	public static final int        BEETLE       = 5;
+	public static final int        HORNET       = 6;
+	public static final int        GRASSHOPPER  = 7;
+	public static final int        TERMITE      = 8;
+	public static final int        WASP         = 9;
+	public static final int        SPACEMONSTER = 10;
+	public static final int        DRAGONFLY    = 11;
+	public static final int        MANTIS       = 12;
+	public static final int        SCARAB       = 13;
+	public static final int        BOTTLE       = 14;
+	public static       ShipType[] ShipTypes    = {new ShipType("Flea", 10, 0, 0, 0, 1,
+	                                                            GameState.MAXRANGE, 4, 1, 2000, 5, 2,
+	                                                            25, -1, -1, 0, 1, 0,
+	                                                            R.drawable.flea_ssck,
+	                                                            R.drawable.flea_ssck_damaged,
+	                                                            R.drawable.flea_ssck_shield
 	), new ShipType("Gnat", 15, 1, 0, 1, 1, 14, 5, 2, 10000, 50, 28, 100, 0, 0, 0, 1, 1,
-	                R.drawable.gnat, R.drawable.gnat_damaged, R.drawable.gnat_shield
+	                R.drawable.gnat_ssck, R.drawable.gnat_ssck_damaged, R.drawable.gnat_ssck_shield
 	), new ShipType("Firefly", 20, 1, 1, 1, 1, 17, 5, 3, 25000, 75, 20, 100, 0, 0, 0, 1, 1,
-	                R.drawable.firefly, R.drawable.firefly_damaged, R.drawable.firefly_shield
+	                R.drawable.firefly_ssck, R.drawable.firefly_ssck_damaged,
+	                R.drawable.firefly_ssck_shield
 	), new ShipType("Mosquito", 15, 2, 1, 1, 1, 13, 5, 5, 30000, 100, 20, 100, 0, 1, 0, 1, 1,
-	                R.drawable.mosquito, R.drawable.mosquito_damaged, R.drawable.mosquito_shield
+	                R.drawable.mosquito_ssck, R.drawable.mosquito_ssck_damaged,
+	                R.drawable.mosquito_ssck_shield
 	), new ShipType("Bumblebee", 25, 1, 2, 2, 2, 15, 5, 7, 60000, 125, 15, 100, 1, 1, 0, 1, 2,
 	                R.drawable.bumblebee, R.drawable.bumblebee_damaged, R.drawable.bumblebee_shield
 	), new ShipType("Beetle", 50, 0, 1, 1, 3, 14, 5, 10, 80000, 50, 3, 50, -1, -1, 0, 1, 2,
@@ -52,18 +54,12 @@ public class ShipTypes {
 	                R.drawable.termite, R.drawable.termite_damaged, R.drawable.termite_shield
 	), new ShipType("Wasp", 35, 3, 2, 2, 3, 14, 7, 20, 300000, 500, 2, 200, 5, 6, 4, 5, 4,
 	                R.drawable.wasp, R.drawable.wasp_damaged, R.drawable.wasp_shield
-	),
-	                                      // The ships below can't be bought
-	                                      new ShipType("Spacemonster", 0, 3, 0, 0, 1, 1, 8, 1, 500000,
-	                                                   0, 0, 500, 8, 8, 8, 1, 4,
-	                                                   R.drawable.spacemonster,
-	                                                   R.drawable.spacemonster_damaged,
-	                                                   R.drawable.spacemonster_shield
-	                                      ), new ShipType("Dragonfly", 0, 2, 3, 2, 1, 1, 8, 1, 500000,
-	                                                      0, 0, 10, 8, 8, 8, 1, 1,
-	                                                      R.drawable.dragonfly,
-	                                                      R.drawable.dragonfly_damaged,
-	                                                      R.drawable.dragonfly_shield
+	), new ShipType("Spacemonster", 0, 3, 0, 0, 1, 1, 8, 1, 500000, 0, 0, 500, 8, 8, 8, 1, 4,
+	                // These ships can't be bought
+	                R.drawable.spacemonster, R.drawable.spacemonster_damaged,
+	                R.drawable.spacemonster_shield
+	), new ShipType("Dragonfly", 0, 2, 3, 2, 1, 1, 8, 1, 500000, 0, 0, 10, 8, 8, 8, 1, 1,
+	                R.drawable.dragonfly, R.drawable.dragonfly_damaged, R.drawable.dragonfly_shield
 	), new ShipType("Mantis", 0, 3, 1, 3, 3, 1, 8, 1, 500000, 0, 0, 300, 8, 8, 8, 1, 2,
 	                R.drawable.mantis, R.drawable.mantis_damaged, R.drawable.mantis_shield
 	), new ShipType("Scarab", 20, 2, 0, 0, 2, 1, 8, 1, 500000, 0, 0, 400, 8, 8, 8, 1, 3,
@@ -83,17 +79,17 @@ public class ShipTypes {
 		public int    minTechLevel;  // Minimum tech level needed to build ship
 		public int    costOfFuel;  // Cost to fill one tank with fuel
 		public int    price;     // Base ship cost
+		public int    occurrence;   // Percentage of the ships you meet
+		public int    hullStrength;  // Hull strength
+		public int    police;     // Encountered as police with at least this strength
+		public int    pirates;    // idem Pirates
+		public int    traders;    // idem Traders
+		public int    repairCosts; // Repair costs for 1 point of hull strength.
+		public int    size;      // Determines how easy it is to hit this ship
+		public int    drawable; // Android resource of the image
+		public int    drawable_damaged; // Android resource of the image
+		public int    drawable_shield; // Android resource of the image
 		int bounty;     // Base bounty
-		public int occurrence;   // Percentage of the ships you meet
-		public int hullStrength;  // Hull strength
-		public int police;     // Encountered as police with at least this strength
-		public int pirates;    // idem Pirates
-		public int traders;    // idem Traders
-		public int repairCosts; // Repair costs for 1 point of hull strength.
-		public int size;      // Determines how easy it is to hit this ship
-		public int drawable; // Android resource of the image
-		public int drawable_damaged; // Android resource of the image
-		public int drawable_shield; // Android resource of the image
 
 		public ShipType(String name, int cargoBays, int weaponSlots, int shieldSlots, int gadgetSlots, int crewQuarters, int fuelTanks, int minTechLevel, int costOfFuel, int price, int bounty, int occurrence, int hullStrength, int police, int pirates, int traders, int repairCosts, int size, int drawable, int drawable_damaged, int drawable_shield) {
 			this.name = name;

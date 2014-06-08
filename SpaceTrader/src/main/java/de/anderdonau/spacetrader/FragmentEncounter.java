@@ -48,13 +48,13 @@ public class FragmentEncounter extends Fragment {
 		int d, i;
 
 		EncounterPlayerShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerShip);
+		EncounterPlayerShip.setGameState(gameState);
 		EncounterPlayerShip.setShip(Ship);
 		EncounterPlayerShip.setRotate(false);
-		EncounterPlayerShip.setGameState(gameState);
 		EncounterOpponentShip = (RenderShip) rootView.findViewById(R.id.EncounterPlayerOpponent);
+		EncounterOpponentShip.setGameState(gameState);
 		EncounterOpponentShip.setShip(Opponent);
 		EncounterOpponentShip.setRotate(true);
-		EncounterOpponentShip.setGameState(gameState);
 
 		btnAttack = (Button) rootView.findViewById(R.id.btnAttack);
 		btnFlee = (Button) rootView.findViewById(R.id.btnFlee);
