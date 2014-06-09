@@ -42,14 +42,16 @@ public class ShipTypes {
 	                R.drawable.mosquito_ssck, R.drawable.mosquito_ssck_damaged,
 	                R.drawable.mosquito_ssck_shield
 	), new ShipType("Bumblebee", 25, 1, 2, 2, 2, 15, 5, 7, 60000, 125, 15, 100, 1, 1, 0, 1, 2,
-	                R.drawable.bumblebee, R.drawable.bumblebee_damaged, R.drawable.bumblebee_shield
+	                R.drawable.bumblebee_ssck, R.drawable.bumblebee_ssck_damaged,
+	                R.drawable.bumblebee_ssck_shield
 	), new ShipType("Beetle", 50, 0, 1, 1, 3, 14, 5, 10, 80000, 50, 3, 50, -1, -1, 0, 1, 2,
 	                R.drawable.beetle, R.drawable.beetle_damaged, R.drawable.beetle_shield
 	), new ShipType("Hornet", 20, 3, 2, 1, 2, 16, 6, 15, 100000, 200, 6, 150, 2, 3, 1, 2, 3,
-	                R.drawable.hornet, R.drawable.hornet_damaged, R.drawable.hornet_shield
+	                R.drawable.hornet_ssck, R.drawable.hornet_ssck_damaged,
+	                R.drawable.hornet_ssck_shield
 	), new ShipType("Grasshopper", 30, 2, 2, 3, 3, 15, 6, 15, 150000, 300, 2, 150, 3, 4, 2, 3, 3,
-	                R.drawable.grasshopper, R.drawable.grasshopper_damaged,
-	                R.drawable.grasshopper_shield
+	                R.drawable.grasshopper_ssck, R.drawable.grasshopper_ssck_damaged,
+	                R.drawable.grasshopper_ssck_shield
 	), new ShipType("Termite", 60, 1, 3, 2, 3, 13, 7, 20, 225000, 300, 2, 200, 4, 5, 3, 4, 4,
 	                R.drawable.termite, R.drawable.termite_damaged, R.drawable.termite_shield
 	), new ShipType("Wasp", 35, 3, 2, 2, 3, 14, 7, 20, 300000, 500, 2, 200, 5, 6, 4, 5, 4,
@@ -59,9 +61,11 @@ public class ShipTypes {
 	                R.drawable.spacemonster, R.drawable.spacemonster_damaged,
 	                R.drawable.spacemonster_shield
 	), new ShipType("Dragonfly", 0, 2, 3, 2, 1, 1, 8, 1, 500000, 0, 0, 10, 8, 8, 8, 1, 1,
-	                R.drawable.dragonfly, R.drawable.dragonfly_damaged, R.drawable.dragonfly_shield
+	                R.drawable.dragonfly_ssck, R.drawable.dragonfly_ssck_damaged,
+	                R.drawable.dragonfly_ssck_shield
 	), new ShipType("Mantis", 0, 3, 1, 3, 3, 1, 8, 1, 500000, 0, 0, 300, 8, 8, 8, 1, 2,
-	                R.drawable.mantis, R.drawable.mantis_damaged, R.drawable.mantis_shield
+	                R.drawable.mantis_ssck, R.drawable.mantis_ssck_damaged,
+	                R.drawable.mantis_ssck_damaged_shield
 	), new ShipType("Scarab", 20, 2, 0, 0, 2, 1, 8, 1, 500000, 0, 0, 400, 8, 8, 8, 1, 3,
 	                R.drawable.scarab, R.drawable.scarab_damaged, R.drawable.scarab_shield
 	), new ShipType("Bottle", 0, 0, 0, 0, 0, 1, 8, 1, 100, 0, 0, 10, 8, 8, 8, 1, 1, R.drawable.bottle,

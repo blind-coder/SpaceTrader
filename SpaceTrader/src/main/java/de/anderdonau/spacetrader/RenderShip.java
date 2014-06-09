@@ -75,14 +75,11 @@ public class RenderShip extends View {
 			bitmap_shield = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_shield);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(), R.drawable.beetle_damaged);
 		} else {
-			bitmap = BitmapFactory.decodeResource(getResources(), ShipTypes.ShipTypes[mShip.type].drawable
-			);
+			bitmap = BitmapFactory.decodeResource(getResources(), mShip.getType().drawable);
 			bitmap_damaged = BitmapFactory.decodeResource(getResources(),
-			                                              ShipTypes.ShipTypes[mShip.type].drawable_damaged
+			                                              mShip.getType().drawable_damaged
 			);
-			bitmap_shield = BitmapFactory.decodeResource(getResources(),
-			                                             ShipTypes.ShipTypes[mShip.type].drawable_shield
-			);
+			bitmap_shield = BitmapFactory.decodeResource(getResources(), mShip.getType().drawable_shield);
 		}
 	}
 

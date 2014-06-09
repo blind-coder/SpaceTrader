@@ -382,4 +382,8 @@ public class Ship implements Serializable {
 
 		return false;
 	}
+
+	public ShipTypes.ShipType getType() {
+		return ShipTypes.ShipTypes[type];
+	}
 }

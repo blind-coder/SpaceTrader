@@ -10,7 +10,6 @@ package de.anderdonau.spacetrader.DataTypes;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -137,10 +136,11 @@ public class Popup {
 	public void showMessage() {
 		AlertDialog.Builder confirm = new AlertDialog.Builder(context);
 		confirm.setTitle(title);
-		TextView textView = new TextView(context);
-		textView.setAutoLinkMask(Linkify.ALL);
-		textView.setText(content);
-		confirm.setView(textView);
+		//TextView textView = new TextView(context);
+		//textView.setAutoLinkMask(Linkify.ALL);
+		//textView.setText(content);
+		//confirm.setView(textView);
+		confirm.setMessage(content);
 		confirm.setCancelable(false);
 		confirm.setPositiveButton(positive, new DialogInterface.OnClickListener() {
 			@Override
