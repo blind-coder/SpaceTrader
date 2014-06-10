@@ -451,6 +451,86 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			case R.id.menuClearHighscore:
 				return true;
 			case R.id.menuHelpCurrentScreen:
+				String helpText = "No help available.";
+				switch (currentState) {
+					case AVERAGE_PRICES:
+						helpText =
+							"This screen shows the average prices you get for goods in the target system. If the trade good is shown in a bold font, it means the average price mentioned here is better than the buying price in the current system. \nNote that these prices do take into account the system size, government and tech level. Special resources (like rich soil) are also taken into account if you know about them. Special situations (like war) are temporary and are therefore not taken into account. \nRemember that criminals can't sell their goods directly, but have to use an intermediary, who keeps 10 percent of the selling price for himself. This is also not taken into account in the calculation of the average prices. \nThe button \"Price Differences\" switches to an overview of the differences between the average prices in the target system and the buying prices in the current system. When price differences are shown, this button is replaced by an \"Absolute Prices\" button, which, if tapped, will switch back to absolute prices.\nThe buttons labeled @<- and @-> can be used to scroll through the systems which are within range.\nTo return to the target system information screen, tap the System Information button and to return to the short range chart, tap the Shot Range Chart button. You can also immediately go into warp by tapping the Warp button.";
+						break;
+					case BANK:
+						helpText =
+							"At the bank you can get a loan, if you are really in need of cash. As long as your police record is at least clean, you can have a loan of at least 1000 credits, more if you are rich yourself. When you don't have a clean police record, the bank will maximally lend you 500 credits.\nWhen your debt is more than the amount the bank is willing to lend you, you won't get a new loan. There is an interest of 10%% to be paid daily, which will be subtracted from your cash right before you warp to another system. If you don't have enough cash, this will simply add to your debt. Settle your debts as quickly as possible, because as long as you have debts, you won't be able to buy a new ship or new equipment for your ship.\nAt the bank, you can also buy insurance for your ship. This is only useful if you also have an escape pod on your ship, because the insurance pays out when your ship gets destroyed and you manage to escape in a pod. The cost of the insurance is to be paid daily: 0.25 percent of the trade-in value of your current ship, including its equipment (but excluding cargo). For each day you fly without claim, 1%% is subtracted from the amount to be paid. Note that if you stop your insurance, your \"no claim\" returns to zero percent. Also note that if the trade-in value of your ship changes, your insurance costs also change.";
+						break;
+					case BUY_CARGO:
+						helpText =
+							"Use this screen to buy cargo. The leftmost column shows quantities available. The second column shows the name of the goods. The fourth column shows the price. To buy goods, either tap the quantity cell, after which you can specify how much you want to buy, or tap the \"Max\" cell, which will automatically buy the maximum number of items, limited by the quantity available, the number of empty cargo holds you have, and your cash position. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.";
+						break;
+					case BUY_EQUIPMENT:
+						helpText =
+							"Tap the Buy button to the left of a piece of equipment to buy it for the price to the right of it. Note that each ship type can only carry a limited number of items in each equipment category.\nThe three categories are weapons, shields and gadgets. The weapons category contains the three types of lasers, the shields category contains the two types of shields, and the gadget category contains the following gadgets: 1) 5 extra cargo bays; 2)  auto-repair system (which helps your engineering functions); 3) navigating system (which helps you pilot your ship); 4) targeting system (which helps you fighting); and 5) cloaking device (which allows you to travel undetected, unless you attack yourself or your opponent has a better engineer than you).\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.";
+						break;
+					case BUY_NEW_SHIP:
+						helpText =
+							"Information on a ship type you can get buy tapping the Info button to the right of it. Buy a new ship by tapping the corresponding Buy button. The price quoted for the ship takes into account the discount you get for trading in your current ship, including its  equipment and cargo. The ship delivered to you will lack any equipment and cargo. Note that if you are carrying cargo which the current system isn't interested in, you lose that cargo also without receiving any compensation for it.\nIf you have an escape pod it will be transferred to your new ship. Insurance will also be transferred, including your no-claim.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.";
+						break;
+					case COMMANDER_STATUS:
+						helpText =
+							"On the Commander Status screen you can examine your skills, your reputation and your total worth. Note that if your police record indicates that you are a criminal or worse, you have to use an intermediary to sell goods, who charges 10 percent of the selling price for his services. The numbers within brackets with the skills are the skill values which take into account mercenaries and equipment on your ship.\nThe Ship button allows you to examine your current ship. The Quests button allows you to see details on the quests you are currently on.";
+						break;
+					case DUMP:
+						helpText = "If you want to dump cargo, you have to pay for its correct disposal.";
+						break;
+					case ENCOUNTER:
+						break;
+					case GALACTIC_CHART:
+						helpText =
+							"Tapping a system on the galactic chart shows information on that system at the bottom of the screen. Tapping on a wormhole will display a line indicating the system to which the wormhole goes, as well as the name of both systems.\nTapping a system twice will cause that system to be tracked. On the Short-Range chart, a line will indicate the direction to the tracked system. Tapping on a tracked system will turn off tracking.\nSystems you have already visited are blue, unvisited systems are green, and wormholes are black.\nThe Find button allows you to enter a system name, on which the chart will then focus; you also have the option to track the system.";
+						break;
+					case NEW_GAME:
+						break;
+					case OPTIONS:
+						break;
+					case PERSONNEL_ROSTER:
+						helpText =
+							"On the Personnel Roster screen, there are three areas. The upper two are reserved for mercenaries in your service. If you have hired someone, he or she is visible in one of these areas. To fire someone in your service, just tap the corresponding Fire button.\nThe bottom area is reserved for a mercenary who is for hire in the current system. To hire him or her, just tap the Hire button. Note that if you fire someone, he or she will probably decide to return to his or her home system.";
+						break;
+					case PLUNDER:
+						helpText =
+							"You are allowed to plunder your opponent's cargo to your heart's content. Just steal whatever is to your liking. This works exactly as the Buy Cargo option when you are docked, except that you don't have to pay anything. You are, of course, limited to the amount your own cargo bays can hold. If you holds are already full, you can jettison selections from your cargo into space by tapping the Dump button. Tap the Done button when you are finished.";
+						break;
+					case SELL_CARGO:
+						helpText =
+							"Use this screen to sell cargo. The leftmost column shows quantities you have stored in your cargo holds. The second column shows the name of the goods. If the name of the goods is in bold, it means you can sell these goods with a profit. The fourth column shows the price you can get for your goods. To sell, either tap the quantity cell, after which you can specify how much you want to sell, or tap the \"All\" cell, which will automatically sell all goods you own of the selected item.";
+						break;
+					case SELL_EQUIPMENT:
+						helpText =
+							"To sell a piece of equipment for the price indicated to the right of it, tap the Sell button to the left of it.";
+						break;
+					case SHIPYARD:
+						helpText =
+							"At the Ship Yard, you can buy fuel, get your hull repaired, buy an escape pod, or even buy a new ship. When you buy a new ship, the total worth of your current ship (including equipment and cargo) is subtracted from the price of a new ship.\nAn escape pod will automatically eject you and your crew from your ship when it gets destroyed.\nIf you want to automatically buy a full tank and/or automatically get a full hull repair when you dock at a new system, you can check the appropriate options in the Options menu, available through the game menu.\nWhen buying a new ship or an escape pod, if you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.";
+						break;
+					case SHIP_INFO:
+						helpText = "The Ship Information screen shows the specs of the selected ship type.";
+						break;
+					case SHORTCUTS:
+						break;
+					case SHORT_RANGE_CHART:
+						helpText =
+							"Tap the system you wish to warp to. The game will show you what is known about that system, or the average price list for that system (depending on your preferences and what you viewed last). You can warp from that screen.\nSystems you have visited are blue, other systems are green, and wormholes are black.\nThe wide circle shows the range you can fly on your current fuel tanks. If it seems a bit small, you should visit the Ship Yard to refill your tanks.\nA wormhole is a hole into the space-time continuum which leads somewhere else in the galaxy. Before you can warp through the wormhole, you must first fly to the system that owns it, which is displayed to the left of it. From that system, you can tap the wormhole and warp immediately to the system at the other side.\nIf you are Tracking a system (which you can do from the Galactic Chart), there will be a line from your current system in the direction of the system being tracked, and the distance will be displayed at the top of the screen.";
+						break;
+					case SYSTEM_INFORMATION:
+						helpText =
+							"This screen shows information on the system where you are currently docked. You can click on the News button to buy a newspaper, which will have headlines about local and nearby events. If there is a Special button visible, tap it to get a special offer, only available in this system. If there is a mercenary available in this system, a Mercenary For Hire button is visible. Tapping it will take you to the Personnel Roster.";
+						break;
+					case VERY_RARE_CHEAT:
+						break;
+					case WARP_SYSTEM_INFORMATION:
+						break;
+				}
+				popup = new Popup(this, "Tips", helpText, "", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
 				return true;
 			case R.id.menuHelpMenu:
 				popup = new Popup(this, "Tips",
