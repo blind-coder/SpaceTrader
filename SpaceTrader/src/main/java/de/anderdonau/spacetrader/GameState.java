@@ -883,7 +883,7 @@ public class GameState implements Serializable {
 		ScarabStatus = 0;
 		JaporiDiseaseStatus = 0;
 		MoonBought = false;
-		MonsterHull = ShipTypes.ShipTypes[SpaceMonster.type].hullStrength;
+		MonsterHull = SpaceMonster.getType().hullStrength;
 		EscapePod = false;
 		Insurance = false;
 		RemindLoans = true;
@@ -932,7 +932,7 @@ public class GameState implements Serializable {
 			Ship.crew[i] = -1;
 		}
 		Ship.fuel = Ship.GetFuelTanks();
-		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
+		Ship.hull = Ship.getType().hullStrength;
 		Ship.tribbles = 0;
 
 		SkillPointsLeft = 16;
@@ -1166,7 +1166,7 @@ public class GameState implements Serializable {
 
 	public int WormholeTax(int a, SolarSystem b) {
 		if (WormholeExists(a, b)) {
-			return (ShipTypes.ShipTypes[Ship.type].costOfFuel * 25);
+			return (Ship.getType().costOfFuel * 25);
 		}
 
 		return 0;
@@ -1197,8 +1197,7 @@ public class GameState implements Serializable {
 	}
 
 	public int AvailableQuarters() {
-		return ShipTypes.ShipTypes[Ship.type].crewQuarters - (JarekStatus == 1 ? 1 : 0) - (
-			WildStatus == 1 ? 1 : 0);
+		return Ship.getType().crewQuarters - (JarekStatus == 1 ? 1 : 0) - (WildStatus == 1 ? 1 : 0);
 	}
 
 	public int MercenaryPriceHire(int idx) {
@@ -1295,12 +1294,11 @@ public class GameState implements Serializable {
 
 		CurPrice =
 			// Trade-in value is three-fourths the original price
-			((ShipTypes.ShipTypes[Ship.type].price * (Ship.tribbles > 0 && !ForInsurance ? 1 : 3)) / 4)
+			((Ship.getType().price * (Ship.tribbles > 0 && !ForInsurance ? 1 : 3)) / 4)
 				// subtract repair costs
-				- (Ship.GetHullStrength() - Ship.hull) * ShipTypes.ShipTypes[Ship.type].repairCosts
+				- (Ship.GetHullStrength() - Ship.hull) * Ship.getType().repairCosts
 				// subtract costs to fill tank with fuel
-				- (ShipTypes.ShipTypes[Ship.type].fuelTanks - Ship
-				.GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel;
+				- (Ship.getType().fuelTanks - Ship.GetFuel()) * Ship.getType().costOfFuel;
 		// Add 2/3 of the price of each item of equipment
 		for (i = 0; i < MAXWEAPON; ++i) {
 			if (Ship.weapon[i] >= 0) {
@@ -1481,7 +1479,7 @@ public class GameState implements Serializable {
 		}
 
 		Ship.fuel = Ship.GetFuelTanks();
-		Ship.hull = ShipTypes.ShipTypes[Ship.type].hullStrength;
+		Ship.hull = Ship.getType().hullStrength;
 	}
 
 	public void BuyShip(int Index) {
@@ -1762,11 +1760,11 @@ public class GameState implements Serializable {
 		}
 
 		// Determine the gadgets
-		if (ShipTypes.ShipTypes[Opponent.type].gadgetSlots <= 0) {
+		if (Opponent.getType().gadgetSlots <= 0) {
 			d = 0;
 		} else if (Difficulty <= HARD) {
-			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].gadgetSlots + 1);
-			if (d < ShipTypes.ShipTypes[Opponent.type].gadgetSlots) {
+			d = GetRandom(Opponent.getType().gadgetSlots + 1);
+			if (d < Opponent.getType().gadgetSlots) {
 				if (Tries > 4) {
 					++d;
 				} else if (Tries > 2) {
@@ -1774,7 +1772,7 @@ public class GameState implements Serializable {
 				}
 			}
 		} else {
-			d = ShipTypes.ShipTypes[Opponent.type].gadgetSlots;
+			d = Opponent.getType().gadgetSlots;
 		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
@@ -1804,7 +1802,7 @@ public class GameState implements Serializable {
 		}
 
 		// Determine the number of cargo bays
-		Bays = ShipTypes.ShipTypes[Opponent.type].cargoBays;
+		Bays = Opponent.getType().cargoBays;
 		for (i = 0; i < MAXGADGET; ++i) {
 			if (Opponent.gadget[i] == EXTRABAYS) {
 				Bays += 5;
@@ -1850,19 +1848,19 @@ public class GameState implements Serializable {
 		}
 
 		// Fill the fuel tanks
-		Opponent.fuel = ShipTypes.ShipTypes[Opponent.type].fuelTanks;
+		Opponent.fuel = Opponent.getType().fuelTanks;
 
 		// No tribbles on board
 		Opponent.tribbles = 0;
 
 		// Fill the weapon slots (if possible, at least one weapon)
-		if (ShipTypes.ShipTypes[Opponent.type].weaponSlots <= 0) {
+		if (Opponent.getType().weaponSlots <= 0) {
 			d = 0;
-		} else if (ShipTypes.ShipTypes[Opponent.type].weaponSlots <= 1) {
+		} else if (Opponent.getType().weaponSlots <= 1) {
 			d = 1;
 		} else if (Difficulty <= HARD) {
-			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].weaponSlots);
-			if (d < ShipTypes.ShipTypes[Opponent.type].weaponSlots) {
+			d = 1 + GetRandom(Opponent.getType().weaponSlots);
+			if (d < Opponent.getType().weaponSlots) {
 				if (Tries > 4 && Difficulty >= HARD) {
 					++d;
 				} else if (Tries > 3 || Difficulty >= HARD) {
@@ -1870,7 +1868,7 @@ public class GameState implements Serializable {
 				}
 			}
 		} else {
-			d = ShipTypes.ShipTypes[Opponent.type].weaponSlots;
+			d = Opponent.getType().weaponSlots;
 		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
@@ -1898,11 +1896,11 @@ public class GameState implements Serializable {
 		}
 
 		// Fill the shield slots
-		if (ShipTypes.ShipTypes[Opponent.type].shieldSlots <= 0) {
+		if (Opponent.getType().shieldSlots <= 0) {
 			d = 0;
 		} else if (Difficulty <= HARD) {
-			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].shieldSlots + 1);
-			if (d < ShipTypes.ShipTypes[Opponent.type].shieldSlots) {
+			d = GetRandom(Opponent.getType().shieldSlots + 1);
+			if (d < Opponent.getType().shieldSlots) {
 				if (Tries > 3) {
 					++d;
 				} else if (Tries > 1) {
@@ -1910,7 +1908,7 @@ public class GameState implements Serializable {
 				}
 			}
 		} else {
-			d = ShipTypes.ShipTypes[Opponent.type].shieldSlots;
+			d = Opponent.getType().shieldSlots;
 		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
@@ -1955,10 +1953,10 @@ public class GameState implements Serializable {
 		k = 0;
 		// If there are shields, the hull will probably be stronger
 		if (Opponent.shield[0] >= 0 && GetRandom(10) <= 7) {
-			Opponent.hull = ShipTypes.ShipTypes[Opponent.type].hullStrength;
+			Opponent.hull = Opponent.getType().hullStrength;
 		} else {
 			while (i < 5) {
-				d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].hullStrength);
+				d = 1 + GetRandom(Opponent.getType().hullStrength);
 				if (d > k) {
 					k = d;
 				}
@@ -1968,7 +1966,7 @@ public class GameState implements Serializable {
 		}
 
 		if (Opp == MANTIS || Opp == FAMOUSCAPTAIN) {
-			Opponent.hull = ShipTypes.ShipTypes[Opponent.type].hullStrength;
+			Opponent.hull = Opponent.getType().hullStrength;
 		}
 
 
@@ -1983,12 +1981,12 @@ public class GameState implements Serializable {
 			Mercenary[Opponent.crew[0]].engineer = MAXSKILL;
 		}
 		if (Difficulty <= HARD) {
-			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].crewQuarters);
-			if (Difficulty >= HARD && d < ShipTypes.ShipTypes[Opponent.type].crewQuarters) {
+			d = 1 + GetRandom(Opponent.getType().crewQuarters);
+			if (Difficulty >= HARD && d < Opponent.getType().crewQuarters) {
 				++d;
 			}
 		} else {
-			d = ShipTypes.ShipTypes[Opponent.type].crewQuarters;
+			d = Opponent.getType().crewQuarters;
 		}
 		for (i = 1; i < d; ++i) {
 			Opponent.crew[i] = GetRandom(MAXCREWMEMBER);

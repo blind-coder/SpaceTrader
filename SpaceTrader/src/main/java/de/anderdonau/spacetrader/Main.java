@@ -902,7 +902,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		int i, j, k, FirstEmptySlot;
 		String buf;
 
-		buf = String.format("Type: %s%s\n", ShipTypes.ShipTypes[gameState.Ship.type].name,
+		buf = String.format("Type: %s%s\n", gameState.Ship.getType().name,
 			gameState.ScarabStatus == 3 ? "/hardened hull" : "");
 
 		buf += "Equipment:\n";
@@ -953,28 +953,28 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		if (gameState.Ship.AnyEmptySlots()) {
 			buf += "Unfilled:\n";
 
-			FirstEmptySlot = gameState.GetFirstEmptySlot(
-				ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon);
+			FirstEmptySlot = gameState.GetFirstEmptySlot(gameState.Ship.getType().weaponSlots,
+				gameState.Ship.weapon);
 			if (FirstEmptySlot >= 0) {
 				buf += String.format("%d weapon slot%s\n",
-					ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots - FirstEmptySlot,
-					(ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots - FirstEmptySlot) == 1 ? "" : "s");
+					gameState.Ship.getType().weaponSlots - FirstEmptySlot,
+					(gameState.Ship.getType().weaponSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
 
-			FirstEmptySlot = gameState.GetFirstEmptySlot(
-				ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield);
+			FirstEmptySlot = gameState.GetFirstEmptySlot(gameState.Ship.getType().shieldSlots,
+				gameState.Ship.shield);
 			if (FirstEmptySlot >= 0) {
 				buf += String.format("%d shield slot%s\n",
-					ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots - FirstEmptySlot,
-					(ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots - FirstEmptySlot) == 1 ? "" : "s");
+					gameState.Ship.getType().shieldSlots - FirstEmptySlot,
+					(gameState.Ship.getType().shieldSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
 
-			FirstEmptySlot = gameState.GetFirstEmptySlot(
-				ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget);
+			FirstEmptySlot = gameState.GetFirstEmptySlot(gameState.Ship.getType().gadgetSlots,
+				gameState.Ship.gadget);
 			if (FirstEmptySlot >= 0) {
 				buf += String.format("%d gadget slot%s\n",
-					ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots - FirstEmptySlot,
-					(ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots - FirstEmptySlot) == 1 ? "" : "s");
+					gameState.Ship.getType().gadgetSlots - FirstEmptySlot,
+					(gameState.Ship.getType().gadgetSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
 		}
 		Popup popup = new Popup(this, "Ship Status", buf, "", "OK", cbShowNextPopup);
@@ -1101,15 +1101,15 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		int MaxFuel;
 		int Parsecs;
 
-		MaxFuel = (gameState.Ship.GetFuelTanks() - gameState.Ship
-			.GetFuel()) * ShipTypes.ShipTypes[gameState.Ship.type].costOfFuel;
+		MaxFuel = (gameState.Ship.GetFuelTanks() - gameState.Ship.GetFuel()) * gameState.Ship
+			.getType().costOfFuel;
 		amount = Math.min(amount, MaxFuel);
 		amount = Math.min(amount, gameState.Credits);
 
-		Parsecs = amount / ShipTypes.ShipTypes[gameState.Ship.type].costOfFuel;
+		Parsecs = amount / gameState.Ship.getType().costOfFuel;
 
 		gameState.Ship.fuel += Parsecs;
-		gameState.Credits -= Parsecs * ShipTypes.ShipTypes[gameState.Ship.type].costOfFuel;
+		gameState.Credits -= Parsecs * gameState.Ship.getType().costOfFuel;
 		changeFragment(FRAGMENTS.SHIPYARD);
 	}
 
@@ -1152,15 +1152,15 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		int MaxRepairs;
 		int Percentage;
 
-		MaxRepairs = (gameState.Ship
-			.GetHullStrength() - gameState.Ship.hull) * ShipTypes.ShipTypes[gameState.Ship.type].repairCosts;
+		MaxRepairs = (gameState.Ship.GetHullStrength() - gameState.Ship.hull) * gameState.Ship
+			.getType().repairCosts;
 		amount = Math.min(amount, MaxRepairs);
 		amount = Math.min(amount, gameState.Credits);
 
-		Percentage = amount / ShipTypes.ShipTypes[gameState.Ship.type].repairCosts;
+		Percentage = amount / gameState.Ship.getType().repairCosts;
 
 		gameState.Ship.hull += Percentage;
-		gameState.Credits -= Percentage * ShipTypes.ShipTypes[gameState.Ship.type].repairCosts;
+		gameState.Credits -= Percentage * gameState.Ship.getType().repairCosts;
 		changeFragment(FRAGMENTS.SHIPYARD);
 	}
 
@@ -1527,9 +1527,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	public void btnBuyNewShipStep2(final int Index, final int extra, final int addLightning, final boolean addCompactor, final boolean addMorganLaser) {
 		Popup popup = new Popup(this, "Buy New Ship", String.format(
-			"Are you sure you wish to trade in your %s for a new %s%s?",
-			ShipTypes.ShipTypes[gameState.Ship.type].name, ShipTypes.ShipTypes[Index].name,
-			(addCompactor || addLightning > 0 || addMorganLaser) ?
+			"Are you sure you wish to trade in your %s for a new %s%s?", gameState.Ship.getType().name,
+			ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning > 0 || addMorganLaser) ?
 				", and transfer your unique equipment to the new ship" : ""), "", "Buy ship",
 			"Don't buy ship", new Popup.buttonCallback() {
 			@Override
@@ -1584,10 +1583,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				return;
 		}
 		if (Index < GameState.MAXWEAPONTYPE) {
-			BuyItem(ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon,
+			BuyItem(gameState.Ship.getType().weaponSlots, gameState.Ship.weapon,
 				gameState.BASEWEAPONPRICE(Index), Weapons.mWeapons[Index].name, Index);
 		} else if (Index >= GameState.MAXWEAPONTYPE && Index < (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)) {
-			BuyItem(ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield,
+			BuyItem(gameState.Ship.getType().shieldSlots, gameState.Ship.shield,
 				gameState.BASESHIELDPRICE(Index - GameState.MAXWEAPONTYPE),
 				Shields.mShields[Index - GameState.MAXWEAPONTYPE].name, Index - GameState.MAXWEAPONTYPE);
 		} else if (Index >= GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE && Index < GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE + GameState.MAXGADGETTYPE) {
@@ -1600,7 +1599,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				showNextPopup();
 				return;
 			}
-			BuyItem(ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget,
+			BuyItem(gameState.Ship.getType().gadgetSlots, gameState.Ship.gadget,
 				gameState.BASEGADGETPRICE(Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)),
 				Gadgets.mGadgets[Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)].name,
 				Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE));
@@ -2836,8 +2835,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		gameState.Inspected = false;
 		gameState.LitterWarning = false;
 		gameState.MonsterHull = (gameState.MonsterHull * 105) / 100;
-		if (gameState.MonsterHull > ShipTypes.ShipTypes[gameState.SpaceMonster.type].hullStrength) {
-			gameState.MonsterHull = ShipTypes.ShipTypes[gameState.SpaceMonster.type].hullStrength;
+		if (gameState.MonsterHull > gameState.SpaceMonster.getType().hullStrength) {
+			gameState.MonsterHull = gameState.SpaceMonster.getType().hullStrength;
 		}
 		if (gameState.Days % 3 == 0) {
 			if (gameState.PoliceRecordScore > GameState.CLEANSCORE) {
@@ -2903,7 +2902,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					SeekBar seekBar = (SeekBar) view;
 					Amount = seekBar.getProgress();
 					Amount = Math.max(0, Math.min(gameState.Ship.cargo[i], Amount));
-					Amount = Math.min(Amount, ShipTypes.ShipTypes[gameState.Opponent.type].cargoBays);
+					Amount = Math.min(Amount, gameState.Opponent.getType().cargoBays);
 					if (Amount > 0) {
 						gameState.BuyingPrice[i] =
 							gameState.BuyingPrice[i] * (gameState.Ship.cargo[i] - Amount) / gameState.Ship.cargo[i];
@@ -3455,7 +3454,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				popupQueue.push(popup);
 				showNextPopup();
 
-				Bays = ShipTypes.ShipTypes[gameState.Opponent.type].cargoBays;
+				Bays = gameState.Opponent.getType().cargoBays;
 				for (i = 0; i < GameState.MAXGADGET; ++i) {
 					if (gameState.Opponent.gadget[i] == GameState.EXTRABAYS) {
 						Bays += 5;
@@ -3484,7 +3483,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					}
 				}
 			}
-			if ((gameState.WildStatus == 1) && (ShipTypes.ShipTypes[gameState.Opponent.type].crewQuarters > 1)) {
+			if ((gameState.WildStatus == 1) && (gameState.Opponent.getType().crewQuarters > 1)) {
 				// Wild hops onto Pirate Ship
 				gameState.WildStatus = 0;
 				popup = new Popup(this, "Wild Goes with Pirates",
@@ -4265,7 +4264,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 								gameState.Opponent.cargo[i] = 0;
 							}
 							gameState.Opponent.cargo[GameState.NARCOTICS] = Math.min(
-								ShipTypes.ShipTypes[gameState.Opponent.type].cargoBays, 5);
+								gameState.Opponent.getType().cargoBays, 5);
 							changeFragment(FRAGMENTS.ENCOUNTER);
 							return;
 						}
@@ -4549,8 +4548,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				++i;
 			}
 			if (i >= GameState.MAXTRADEITEM) {
-				FirstEmptySlot = gameState.GetFirstEmptySlot(ShipTypes.ShipTypes[Ship.type].shieldSlots,
-					Ship.shield);
+				FirstEmptySlot = gameState.GetFirstEmptySlot(Ship.getType().shieldSlots, Ship.shield);
 			} else {
 				FirstEmptySlot = -1;
 			}
@@ -5086,8 +5084,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 		// Fighterskill attacker is pitted against pilotskill defender; if defender
 		// is fleeing the attacker has a free shot, but the chance to hit is smaller
-		if (gameState.GetRandom(Attacker.FighterSkill() + ShipTypes.ShipTypes[Defender.type].size) < (
-			Flees ? 2 : 1) * gameState.GetRandom(5 + (Defender.PilotSkill() >> 1)))
+		if (gameState.GetRandom(Attacker.FighterSkill() + Defender.getType().size) < (Flees ? 2 : 1) * gameState.GetRandom(5 + (Defender.PilotSkill() >> 1)))
 		// Misses
 		{
 			return false;
@@ -5156,7 +5153,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2)));
 			} else {
 				Damage = Math.min(Damage,
-					(ShipTypes.ShipTypes[Defender.type].hullStrength / (CommanderUnderAttack ? Math.max(1,
+					(Defender.getType().hullStrength / (CommanderUnderAttack ? Math.max(1,
 						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2)));
 			}
 			Defender.hull -= Damage;
@@ -5199,7 +5196,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		int i;
 		int CurPrice;
 
-		CurPrice = ShipTypes.ShipTypes[Sh.type].price;
+		CurPrice = Sh.getType().price;
 		for (i = 0; i < GameState.MAXWEAPON; ++i) {
 			if (Sh.weapon[i] >= 0) {
 				CurPrice += Weapons.mWeapons[Sh.weapon[i]].price;
