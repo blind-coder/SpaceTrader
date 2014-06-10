@@ -26,24 +26,24 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.GameState;
+import de.anderdonau.spacetrader.Main;
 import de.anderdonau.spacetrader.R;
-import de.anderdonau.spacetrader.WelcomeScreen;
 
 public class ShortcutArrayAdapter extends ArrayAdapter<String> {
-	private       WelcomeScreen welcomeScreen;
-	private final String[]      values;
-	private final GameState     gameState;
+	private       Main      main;
+	private final String[]  values;
+	private final GameState gameState;
 
-	public ShortcutArrayAdapter(WelcomeScreen welcomeScreen, String[] values, GameState gameState) {
-		super(welcomeScreen, R.layout.listview_shortcut_entry, values);
-		this.welcomeScreen = welcomeScreen;
+	public ShortcutArrayAdapter(Main main, String[] values, GameState gameState) {
+		super(main, R.layout.listview_shortcut_entry, values);
+		this.main = main;
 		this.values = values;
 		this.gameState = gameState;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) welcomeScreen.getSystemService(
+		LayoutInflater inflater = (LayoutInflater) main.getSystemService(
 			Context.LAYOUT_INFLATER_SERVICE);
 
 		View rowView = inflater.inflate(R.layout.listview_shortcut_entry, parent, false);
@@ -54,7 +54,7 @@ public class ShortcutArrayAdapter extends ArrayAdapter<String> {
 
 		int i = position == 0 ? gameState.Shortcut1 : position == 1 ? gameState.Shortcut2 :
 			position == 2 ? gameState.Shortcut3 : gameState.Shortcut4;
-		String s = welcomeScreen.Shortcuts[i][1];
+		String s = main.Shortcuts[i][1];
 		textView1.setText(s);
 
 		return rowView;

@@ -32,22 +32,22 @@ import android.widget.TextView;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentStartNewGame extends Fragment {
-	private WelcomeScreen welcomeScreen;
-	private GameState     gameState;
+	private Main      main;
+	private GameState gameState;
 	private View rootView = null;
 
-	public FragmentStartNewGame(WelcomeScreen welcomeScreen) {
-		this.welcomeScreen = welcomeScreen;
-		gameState = new GameState(welcomeScreen, "Jameson");
+	public FragmentStartNewGame(Main main) {
+		this.main = main;
+		gameState = new GameState(main, "Jameson");
 	}
 
 	public GameState getGameState() {
-		SharedPreferences sp = welcomeScreen.getSharedPreferences("options", Context.MODE_PRIVATE);
+		SharedPreferences sp = main.getSharedPreferences("options", Context.MODE_PRIVATE);
 		SharedPreferences.Editor ed = sp.edit();
 
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
-		gameState = new GameState(welcomeScreen, t.getText().toString());
+		gameState = new GameState(main, t.getText().toString());
 		gameState.DeterminePrices(gameState.Mercenary[0].curSystem);
 
 		ed.putString("Name", t.getText().toString());
@@ -83,7 +83,7 @@ public class FragmentStartNewGame extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		SharedPreferences sp = welcomeScreen.getSharedPreferences("options", Context.MODE_PRIVATE);
+		SharedPreferences sp = main.getSharedPreferences("options", Context.MODE_PRIVATE);
 
 		rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);
 		TextView textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
@@ -136,7 +136,7 @@ public class FragmentStartNewGame extends Fragment {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 				TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
-				textview.setText(welcomeScreen.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar))
+				textview.setText(main.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar))
 					.getProgress()]);
 			}
 

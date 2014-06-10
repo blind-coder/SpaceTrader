@@ -31,11 +31,11 @@ import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentWarpSystemInformation extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentWarpSystemInformation(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentWarpSystemInformation(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -49,24 +49,22 @@ public class FragmentWarpSystemInformation extends Fragment {
 		TextView tv;
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
-		tv.setText(welcomeScreen.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
+		tv.setText(main.SolarSystemName[main.WarpSystem.nameIndex]);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoTechLevel);
-		tv.setText(welcomeScreen.techLevel[welcomeScreen.WarpSystem.techLevel]);
+		tv.setText(main.techLevel[main.WarpSystem.techLevel]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoGovernment);
-		tv.setText(Politics.mPolitics[welcomeScreen.WarpSystem.politics].name);
+		tv.setText(Politics.mPolitics[main.WarpSystem.politics].name);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
-		tv.setText(welcomeScreen.SystemSize[welcomeScreen.WarpSystem.size]);
+		tv.setText(main.SystemSize[main.WarpSystem.size]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
-		tv.setText(
-			welcomeScreen.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]);
+		tv.setText(main.Activity[Politics.mPolitics[main.WarpSystem.politics].strengthPolice]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
-		tv.setText(
-			welcomeScreen.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]);
+		tv.setText(main.Activity[Politics.mPolitics[main.WarpSystem.politics].strengthPirates]);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
-		int Distance = gameState.RealDistance(CURSYSTEM, welcomeScreen.WarpSystem);
-		if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem)) {
+		int Distance = gameState.RealDistance(CURSYSTEM, main.WarpSystem);
+		if (gameState.WormholeExists(COMMANDER.curSystem, main.WarpSystem)) {
 			tv.setText("Wormhole");
 		} else {
 			tv.setText(String.format("%d parsecs", Distance));
@@ -76,11 +74,11 @@ public class FragmentWarpSystemInformation extends Fragment {
 		tv.setText(String.format("%d cr.",
 			gameState.InsuranceMoney() + gameState.MercenaryMoney() + (gameState.Debt > 0 ? Math.max(
 				gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(COMMANDER.curSystem,
-				welcomeScreen.WarpSystem)));
+				main.WarpSystem)));
 
 		if (Distance > 0) {
-			if (gameState.WormholeExists(COMMANDER.curSystem,
-				welcomeScreen.WarpSystem) || Distance <= gameState.Ship.GetFuel()) {
+			if (gameState.WormholeExists(COMMANDER.curSystem, main.WarpSystem) || Distance <= gameState
+				.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 				btn.setVisibility(View.VISIBLE);
 				btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);

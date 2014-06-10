@@ -31,11 +31,11 @@ import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentAveragePrices extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentAveragePrices(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentAveragePrices(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -48,16 +48,16 @@ public class FragmentAveragePrices extends Fragment {
 		TextView tv, tvprice;
 		Button btn;
 
-		if (welcomeScreen.WarpSystem == null) {
-			welcomeScreen.WarpSystem = CURSYSTEM;
+		if (main.WarpSystem == null) {
+			main.WarpSystem = CURSYSTEM;
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListSystemName);
-		tv.setText(welcomeScreen.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
+		tv.setText(main.SolarSystemName[main.WarpSystem.nameIndex]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListSpecialResources);
-		if (welcomeScreen.WarpSystem.visited) {
-			tv.setText(welcomeScreen.SpecialResources[welcomeScreen.WarpSystem.specialResources]);
+		if (main.WarpSystem.visited) {
+			tv.setText(main.SpecialResources[main.WarpSystem.specialResources]);
 		} else {
 			tv.setText("Special resources unknown");
 		}
@@ -85,7 +85,7 @@ public class FragmentAveragePrices extends Fragment {
 					i == 3 ? R.id.btnPriceListBuy4 : i == 4 ? R.id.btnPriceListBuy5 :
 						i == 5 ? R.id.btnPriceListBuy6 : i == 6 ? R.id.btnPriceListBuy7 :
 							i == 7 ? R.id.btnPriceListBuy8 : i == 8 ? R.id.btnPriceListBuy9 :
-						                                  /*i == 9 ?*/ R.id.btnPriceListBuy10);
+							                                /*i == 9 ?*/ R.id.btnPriceListBuy10);
 			btn.setVisibility(gameState.BuyPrice[i] <= 0 ? View.INVISIBLE : View.VISIBLE);
 			btn.setText(String.format("%d", CURSYSTEM.qty[i]));
 			tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListName1 :
@@ -93,7 +93,7 @@ public class FragmentAveragePrices extends Fragment {
 					i == 3 ? R.id.txtPriceListName4 : i == 4 ? R.id.txtPriceListName5 :
 						i == 5 ? R.id.txtPriceListName6 : i == 6 ? R.id.txtPriceListName7 :
 							i == 7 ? R.id.txtPriceListName8 : i == 8 ? R.id.txtPriceListName9 :
-					                                     /*i == 9 ?*/ R.id.txtPriceListName10);
+						                                   /*i == 9 ?*/ R.id.txtPriceListName10);
 			tvprice = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListPrice1 :
 				i == 1 ? R.id.txtPriceListPrice2 : i == 2 ? R.id.txtPriceListPrice3 :
 					i == 3 ? R.id.txtPriceListPrice4 : i == 4 ? R.id.txtPriceListPrice5 :
@@ -101,9 +101,9 @@ public class FragmentAveragePrices extends Fragment {
 							i == 7 ? R.id.txtPriceListPrice8 : i == 8 ? R.id.txtPriceListPrice9 :
 					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10);
 
-			int Price = gameState.StandardPrice(i, welcomeScreen.WarpSystem.size,
-				welcomeScreen.WarpSystem.techLevel, welcomeScreen.WarpSystem.politics,
-				(welcomeScreen.WarpSystem.visited ? welcomeScreen.WarpSystem.specialResources : -1));
+			int Price = gameState.StandardPrice(i, main.WarpSystem.size, main.WarpSystem.techLevel,
+				main.WarpSystem.politics,
+				(main.WarpSystem.visited ? main.WarpSystem.specialResources : -1));
 
 			if (Price > gameState.BuyPrice[i] && gameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0) {
 				tv.setTypeface(null, Typeface.BOLD);

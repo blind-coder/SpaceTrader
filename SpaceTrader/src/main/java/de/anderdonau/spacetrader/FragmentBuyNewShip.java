@@ -29,11 +29,11 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 
 public class FragmentBuyNewShip extends Fragment {
-	GameState     gameState;
-	WelcomeScreen welcomeScreen;
+	GameState gameState;
+	Main      main;
 
-	public FragmentBuyNewShip(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentBuyNewShip(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -144,11 +144,11 @@ public class FragmentBuyNewShip extends Fragment {
 
 		if (gameState.Ship.tribbles > 0 && !gameState.TribbleMessage) {
 			Popup popup;
-			popup = new Popup(welcomeScreen, "You've Got Tribbles",
+			popup = new Popup(main, "You've Got Tribbles",
 				"Hm. I see you got a tribble infestation on your current ship. I'm sorry, but that severely reduces the trade-in price.",
 				"Normally you would receive about 75% of the worth of a new ship as trade-in value, but a tribble infested ship will give you only 25%. It is a way to get rid of your tribbles, though.",
-				"OK", welcomeScreen.cbShowNextPopup);
-			welcomeScreen.addPopup(popup);
+				"OK", main.cbShowNextPopup);
+			main.addPopup(popup);
 			gameState.TribbleMessage = true;
 		}
 

@@ -33,12 +33,12 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentPersonnelRoster extends Fragment {
-	View          rootView;
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	View      rootView;
+	Main      main;
+	GameState gameState;
 
-	public FragmentPersonnelRoster(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentPersonnelRoster(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -160,6 +160,6 @@ public class FragmentPersonnelRoster extends Fragment {
 		txtFighter.setText(String.format("%d", c.fighter));
 		txtEngineer.setText(String.format("%d", c.engineer));
 		txtTrader.setText(String.format("%d", c.trader));
-		txtName.setText(welcomeScreen.MercenaryName[c.nameIndex]);
+		txtName.setText(main.MercenaryName[c.nameIndex]);
 	}
 }

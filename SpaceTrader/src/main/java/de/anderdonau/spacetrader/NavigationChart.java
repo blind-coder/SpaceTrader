@@ -30,13 +30,13 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 @SuppressWarnings("UnusedDeclaration")
 public class NavigationChart extends View {
-	protected final Paint         paint           = new Paint();
-	public          int           Multiplicator   = 20;
-	public          int           WormholeOffset  = 4;
-	protected       WelcomeScreen welcomeScreen   = null;
-	protected       GameState     mGameState      = null;
-	protected       int           mDrawWormhole   = -1;
-	protected       int           mSelectedSystem = -1;
+	protected final Paint     paint           = new Paint();
+	public          int       Multiplicator   = 20;
+	public          int       WormholeOffset  = 4;
+	protected       Main      main            = null;
+	protected       GameState mGameState      = null;
+	protected       int       mDrawWormhole   = -1;
+	protected       int       mSelectedSystem = -1;
 	protected int radius;
 	protected float   mOffsetX        = 0;
 	protected float   mOffsetY        = 0;
@@ -61,8 +61,8 @@ public class NavigationChart extends View {
 		this.mGameState = mGameState;
 	}
 
-	public void setWelcomeScreen(WelcomeScreen welcomeScreen) {
-		this.welcomeScreen = welcomeScreen;
+	public void setMain(Main main) {
+		this.main = main;
 	}
 
 	public void setShortRange(boolean isShortRange) {
@@ -225,7 +225,7 @@ public class NavigationChart extends View {
 			canvas.drawCircle(x, y, radius, paint);
 
 			paint.setColor(Color.BLACK);
-			canvas.drawText(welcomeScreen.SolarSystemName[s.nameIndex], x, y - radius, paint);
+			canvas.drawText(main.SolarSystemName[s.nameIndex], x, y - radius, paint);
 		}
 
 		for (int i = 0; i < GameState.MAXWORMHOLE; i++) {

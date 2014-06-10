@@ -32,11 +32,11 @@ import android.widget.ListView;
 import de.anderdonau.spacetrader.DataTypes.ShortcutArrayAdapter;
 
 public class FragmentShortcuts extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentShortcuts(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentShortcuts(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -47,18 +47,18 @@ public class FragmentShortcuts extends Fragment {
 		final ListView listView = (ListView) rootView.findViewById(R.id.listView);
 
 		String[] values = {"Shortcut 1", "Shortcut 2", "Shortcut 3", "Shortcut 4"};
-		listView.setAdapter(new ShortcutArrayAdapter(welcomeScreen, values, gameState));
+		listView.setAdapter(new ShortcutArrayAdapter(main, values, gameState));
 
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 				final int position = i;
-				LinearLayout linearLayout = new LinearLayout(welcomeScreen);
+				LinearLayout linearLayout = new LinearLayout(main);
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(welcomeScreen);
+				AlertDialog.Builder builder = new AlertDialog.Builder(main);
 				builder.setTitle("Select new Shortcut");
-				builder.setView(welcomeScreen.getLayoutInflater().inflate(
-					R.layout.dialog_select_new_shortcut, linearLayout));
+				builder.setView(main.getLayoutInflater().inflate(R.layout.dialog_select_new_shortcut,
+					linearLayout));
 				builder.setCancelable(false);
 				final AlertDialog alertDialog = builder.create();
 				View.OnClickListener listener = new View.OnClickListener() {
@@ -104,11 +104,11 @@ public class FragmentShortcuts extends Fragment {
 								break;
 						}
 						alertDialog.dismiss();
-						welcomeScreen.invalidateOptionsMenu();
-						welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.SHORTCUTS);
+						main.invalidateOptionsMenu();
+						main.changeFragment(Main.FRAGMENTS.SHORTCUTS);
 					}
 				};
-				i = welcomeScreen.Shortcuts.length;
+				i = main.Shortcuts.length;
 				for (int j : new int[]{R.id.dialogSelectNewShortcut10, R.id.dialogSelectNewShortcut9,
 					R.id.dialogSelectNewShortcut8, R.id.dialogSelectNewShortcut7,
 					R.id.dialogSelectNewShortcut6, R.id.dialogSelectNewShortcut5,
@@ -119,7 +119,7 @@ public class FragmentShortcuts extends Fragment {
 				}) {
 					Button button = (Button) linearLayout.findViewById(j);
 					button.setOnClickListener(listener);
-					button.setText(welcomeScreen.Shortcuts[--i][1]);
+					button.setText(main.Shortcuts[--i][1]);
 				}
 				alertDialog.show();
 			}

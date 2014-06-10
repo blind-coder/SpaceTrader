@@ -525,13 +525,17 @@ public class GameState implements Serializable {
 		int i;
 
 		for (i = 0; i < NewsSpecialEventCount; i++) {
-			if (NewsEvents[i] == eventFlag) { return true; }
+			if (NewsEvents[i] == eventFlag) {
+				return true;
+			}
 		}
 		return false;
 	}
 
 	public int latestNewsEvent() {
-		if (NewsSpecialEventCount == 0) { return -1; } else {
+		if (NewsSpecialEventCount == 0) {
+			return -1;
+		} else {
 			return NewsEvents[NewsSpecialEventCount - 1];
 		}
 	}
@@ -547,7 +551,9 @@ public class GameState implements Serializable {
 			addNewsEvent(replacementEventFlag);
 		} else {
 			for (i = 0; i < NewsSpecialEventCount; i++) {
-				if (NewsEvents[i] == originalEventFlag) { NewsEvents[i] = replacementEventFlag; }
+				if (NewsEvents[i] == originalEventFlag) {
+					NewsEvents[i] = replacementEventFlag;
+				}
 			}
 		}
 	}
@@ -589,10 +595,10 @@ public class GameState implements Serializable {
 		while (i < GameState.MAXSOLARSYSTEM) {
 			if (i < GameState.MAXWORMHOLE) {
 				// Place the first system somewhere in the centre
-				SolarSystem[i].x = (((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE
-				)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
-				SolarSystem[i].y = (((GameState.CLOSEDISTANCE / 2) - GetRandom(GameState.CLOSEDISTANCE
-				)) + ((GameState.GALAXYHEIGHT * (i < 3 ? 1 : 3)) / 4));
+				SolarSystem[i].x = (((GameState.CLOSEDISTANCE / 2) - GetRandom(
+					GameState.CLOSEDISTANCE)) + ((GameState.GALAXYWIDTH * (1 + 2 * (i % 3))) / 6));
+				SolarSystem[i].y = (((GameState.CLOSEDISTANCE / 2) - GetRandom(
+					GameState.CLOSEDISTANCE)) + ((GameState.GALAXYHEIGHT * (i < 3 ? 1 : 3)) / 4));
 				Wormhole[i] = i;
 			} else {
 				SolarSystem[i].x = (1 + GetRandom(GameState.GALAXYWIDTH - 2));
@@ -615,8 +621,12 @@ public class GameState implements Serializable {
 					}
 				}
 			}
-			if (Redo) { continue; }
-			if ((i >= GameState.MAXWORMHOLE) && !CloseFound) { continue; }
+			if (Redo) {
+				continue;
+			}
+			if ((i >= GameState.MAXWORMHOLE) && !CloseFound) {
+				continue;
+			}
 
 			SolarSystem[i].techLevel = (char) (GetRandom(GameState.MAXTECHLEVEL));
 			SolarSystem[i].politics = (char) (GetRandom(GameState.MAXPOLITICS));
@@ -629,14 +639,17 @@ public class GameState implements Serializable {
 
 			if (GetRandom(5) >= 3) {
 				SolarSystem[i].specialResources = (char) (1 + GetRandom(GameState.MAXRESOURCES - 1));
-			} else { SolarSystem[i].specialResources = 0; }
+			} else {
+				SolarSystem[i].specialResources = 0;
+			}
 
 			SolarSystem[i].size = (char) (GetRandom(GameState.MAXSIZE));
 
 			if (GetRandom(100) < 15) {
-				SolarSystem[i].status = 1 + GetRandom(GameState.MAXSTATUS - 1
-				);
-			} else { SolarSystem[i].status = GameState.UNEVENTFUL; }
+				SolarSystem[i].status = 1 + GetRandom(GameState.MAXSTATUS - 1);
+			} else {
+				SolarSystem[i].status = GameState.UNEVENTFUL;
+			}
 
 			SolarSystem[i].nameIndex = i;
 			SolarSystem[i].special = -1;
@@ -653,18 +666,24 @@ public class GameState implements Serializable {
 		for (i = 0; i < GameState.MAXSOLARSYSTEM; ++i) {
 			d = 0;
 			while (d < GameState.MAXWORMHOLE) {
-				if (Wormhole[d] == i) { break; }
+				if (Wormhole[d] == i) {
+					break;
+				}
 				++d;
 			}
 			j = GetRandom(GameState.MAXSOLARSYSTEM);
-			if (WormholeExists(j, -1)) { continue; }
+			if (WormholeExists(j, -1)) {
+				continue;
+			}
 			x = SolarSystem[i].x;
 			y = SolarSystem[i].y;
 			SolarSystem[i].x = SolarSystem[j].x;
 			SolarSystem[i].y = SolarSystem[j].y;
 			SolarSystem[j].x = x;
 			SolarSystem[j].y = y;
-			if (d < GameState.MAXWORMHOLE) { Wormhole[d] = j; }
+			if (d < GameState.MAXWORMHOLE) {
+				Wormhole[d] = j;
+			}
 		}
 
 		// Randomize wormhole order
@@ -695,8 +714,12 @@ public class GameState implements Serializable {
 				}
 			}
 			// can't have another mercenary on Kravat, since Zeethibal could be there
-			if (Mercenary[i].curSystem == GameState.KRAVATSYSTEM) { Redo = true; }
-			if (Redo) { continue; }
+			if (Mercenary[i].curSystem == GameState.KRAVATSYSTEM) {
+				Redo = true;
+			}
+			if (Redo) {
+				continue;
+			}
 
 			Mercenary[i].nameIndex = i;
 			Mercenary[i].pilot = RandomSkill();
@@ -804,7 +827,9 @@ public class GameState implements Serializable {
 				while (Redo) {
 					d = 1 + GetRandom(GameState.MAXSOLARSYSTEM - 1);
 					if (SolarSystem[d].special < 0) {
-						if (FreeWormhole || i != GameState.SCARAB) { SolarSystem[d].special = i; }
+						if (FreeWormhole || i != GameState.SCARAB) {
+							SolarSystem[d].special = i;
+						}
 						Redo = false;
 					}
 				}
@@ -814,7 +839,9 @@ public class GameState implements Serializable {
 		// Initialize Commander
 		for (i = 0; i < 200; ++i) {
 			Mercenary[0]/*COMMANDER*/.curSystem = GetRandom(GameState.MAXSOLARSYSTEM);
-			if (SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/.special >= 0) { continue; }
+			if (SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/.special >= 0) {
+				continue;
+			}
 
 			// Seek at least an agricultural planet as startplanet (but not too hi-tech)
 			if ((i < 100) && ((SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/.techLevel <= 0) || (SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/.techLevel >= 6))) {
@@ -824,15 +851,20 @@ public class GameState implements Serializable {
 			// Make sure at least three other systems can be reached
 			d = 0;
 			for (j = 0; j < GameState.MAXSOLARSYSTEM; ++j) {
-				if (j == Mercenary[0]/*COMMANDER*/.curSystem) { continue; }
+				if (j == Mercenary[0]/*COMMANDER*/.curSystem) {
+					continue;
+				}
 				if (SqrDistance(SolarSystem[j], SolarSystem[Mercenary[0].curSystem]/*CURSYSTEM*/) <= SQR(
-					ShipTypes.ShipTypes[1].fuelTanks
-				)) {
+					ShipTypes.ShipTypes[1].fuelTanks)) {
 					++d;
-					if (d >= 3) { break; }
+					if (d >= 3) {
+						break;
+					}
 				}
 			}
-			if (d < 3) { continue; }
+			if (d < 3) {
+				continue;
+			}
 
 			break;
 		}
@@ -857,7 +889,9 @@ public class GameState implements Serializable {
 		RemindLoans = true;
 		NoClaim = 0;
 		ArtifactOnBoard = false;
-		for (i = 0; i < GameState.MAXTRADEITEM; ++i) { BuyingPrice[i] = 0; }
+		for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+			BuyingPrice[i] = 0;
+		}
 		TribbleMessage = false;
 		JarekStatus = 0;
 		InvasionStatus = 0;
@@ -879,14 +913,20 @@ public class GameState implements Serializable {
 
 		// Initialize Ship
 		Ship.type = 1;
-		for (i = 0; i < GameState.MAXTRADEITEM; ++i) { Ship.cargo[i] = 0; }
+		for (i = 0; i < GameState.MAXTRADEITEM; ++i) {
+			Ship.cargo[i] = 0;
+		}
 		Ship.weapon[0] = 0;
-		for (i = 1; i < GameState.MAXWEAPON; ++i) { Ship.weapon[i] = -1; }
+		for (i = 1; i < GameState.MAXWEAPON; ++i) {
+			Ship.weapon[i] = -1;
+		}
 		for (i = 0; i < GameState.MAXSHIELD; ++i) {
 			Ship.shield[i] = -1;
 			Ship.shieldStrength[i] = 0;
 		}
-		for (i = 0; i < GameState.MAXGADGET; ++i) { Ship.gadget[i] = -1; }
+		for (i = 0; i < GameState.MAXGADGET; ++i) {
+			Ship.gadget[i] = -1;
+		}
 		Ship.crew[0] = 0;
 		for (i = 1; i < GameState.MAXCREW; ++i) {
 			Ship.crew[i] = -1;
@@ -1020,50 +1060,46 @@ public class GameState implements Serializable {
 		final int[] crew = {0, -1, -1};
 
 		Ship = new Ship(1, // Gnat
-		                cargo, // No cargo
-		                armament, // One pulse laser
-		                shielding, shieldstrength, // No shields
-		                gadgets, // No gadgets
-		                crew, // Commander on board
-		                14, // Full tank
-		                100, // Full hull strength
-		                0, this
-		); // No tribbles on board
+			cargo, // No cargo
+			armament, // One pulse laser
+			shielding, shieldstrength, // No shields
+			gadgets, // No gadgets
+			crew, // Commander on board
+			14, // Full tank
+			100, // Full hull strength
+			0, this); // No tribbles on board
 		crew[0] = 1;
 		Opponent = new Ship(1, // Gnat
-		                    cargo, // No cargo
-		                    armament, // One pulse laser
-		                    shielding, shieldstrength, // No shields
-		                    gadgets, // No gadgets
-		                    crew, // Alyssa on board
-		                    14, // Full tank
-		                    100, // Full hull strength
-		                    0, this
-		); // No tribbles on board
+			cargo, // No cargo
+			armament, // One pulse laser
+			shielding, shieldstrength, // No shields
+			gadgets, // No gadgets
+			crew, // Alyssa on board
+			14, // Full tank
+			100, // Full hull strength
+			0, this); // No tribbles on board
 		armament[0] = armament[1] = armament[2] = 2;
 		crew[0] = MAXCREWMEMBER;
 		SpaceMonster = new Ship(MAXSHIPTYPE, // Space monster
-		                        cargo, // No cargo
-		                        armament, // Three military lasers
-		                        shielding, shieldstrength, // No shields
-		                        gadgets, // No gadgets
-		                        crew, // super stats
-		                        1, // Full tank
-		                        500, // Full hull strength
-		                        0, this
-		); // No tribbles on board
+			cargo, // No cargo
+			armament, // Three military lasers
+			shielding, shieldstrength, // No shields
+			gadgets, // No gadgets
+			crew, // super stats
+			1, // Full tank
+			500, // Full hull strength
+			0, this); // No tribbles on board
 		armament[0] = armament[1] = 2;
 		armament[2] = -1;
 		Scarab = new Ship(MAXSHIPTYPE + 3, // Scarab
-		                  cargo, // No cargo
-		                  armament, // Two military lasers
-		                  shielding, shieldstrength, // No shields
-		                  gadgets, // No gadgets
-		                  crew, // super stats
-		                  1, // Full tank
-		                  400, // Full hull strength
-		                  0, this
-		); // No tribbles on board
+			cargo, // No cargo
+			armament, // Two military lasers
+			shielding, shieldstrength, // No shields
+			gadgets, // No gadgets
+			crew, // super stats
+			1, // Full tank
+			400, // Full hull strength
+			0, this); // No tribbles on board
 		armament[0] = 2;
 		armament[1] = 0;
 		armament[2] = -1;
@@ -1073,15 +1109,14 @@ public class GameState implements Serializable {
 		gadgets[1] = TARGETINGSYSTEM;
 		gadgets[2] = -1;
 		Dragonfly = new Ship(MAXSHIPTYPE + 1, // Dragonfly
-		                     cargo, // No cargo
-		                     armament, // One military laser and one pulselaser
-		                     shielding, shieldstrength, // Three lightning shields
-		                     gadgets, // Gadgets
-		                     crew, // super stats
-		                     1, // Full tank
-		                     10, // Full hull strength (though this isn't much)
-		                     0, this
-		); // No tribbles on board
+			cargo, // No cargo
+			armament, // One military laser and one pulselaser
+			shielding, shieldstrength, // Three lightning shields
+			gadgets, // Gadgets
+			crew, // super stats
+			1, // Full tank
+			10, // Full hull strength (though this isn't much)
+			0, this); // No tribbles on board
 	}
 
 	public int GetRandom(int a) {
@@ -1099,7 +1134,8 @@ public class GameState implements Serializable {
 	public boolean WormholeExists(int a, SolarSystem s) {
 		int i;
 		//noinspection StatementWithEmptyBody
-		for (i = 0; SolarSystem[i] != s; i++) { }
+		for (i = 0; SolarSystem[i] != s; i++) {
+		}
 		return WormholeExists(a, i);
 	}
 
@@ -1129,7 +1165,9 @@ public class GameState implements Serializable {
 	}
 
 	public int WormholeTax(int a, SolarSystem b) {
-		if (WormholeExists(a, b)) { return (ShipTypes.ShipTypes[Ship.type].costOfFuel * 25); }
+		if (WormholeExists(a, b)) {
+			return (ShipTypes.ShipTypes[Ship.type].costOfFuel * 25);
+		}
 
 		return 0;
 	}
@@ -1147,7 +1185,9 @@ public class GameState implements Serializable {
 		int i;
 
 		for (i = 1; i < MAXCREWMEMBER; ++i) {
-			if (i == Ship.crew[1] || i == Ship.crew[2]) { continue; }
+			if (i == Ship.crew[1] || i == Ship.crew[2]) {
+				continue;
+			}
 			if (Mercenary[i].curSystem == Mercenary[0].curSystem) {
 				ForHire = i;
 				break;
@@ -1175,35 +1215,61 @@ public class GameState implements Serializable {
 	public int OpenQuests() {
 		int r = 0;
 
-		if (MonsterStatus == 1) { ++r; }
+		if (MonsterStatus == 1) {
+			++r;
+		}
 
 		if (DragonflyStatus >= 1 && DragonflyStatus <= 4) {
 			++r;
-		} else if (SolarSystem[ZALKONSYSTEM].special == INSTALLLIGHTNINGSHIELD) { ++r; }
+		} else if (SolarSystem[ZALKONSYSTEM].special == INSTALLLIGHTNINGSHIELD) {
+			++r;
+		}
 
-		if (JaporiDiseaseStatus == 1) { ++r; }
+		if (JaporiDiseaseStatus == 1) {
+			++r;
+		}
 
-		if (ArtifactOnBoard) { ++r; }
+		if (ArtifactOnBoard) {
+			++r;
+		}
 
-		if (WildStatus == 1) { ++r; }
+		if (WildStatus == 1) {
+			++r;
+		}
 
-		if (JarekStatus == 1) { ++r; }
+		if (JarekStatus == 1) {
+			++r;
+		}
 
 		if (InvasionStatus >= 1 && InvasionStatus < 7) {
 			++r;
-		} else if (SolarSystem[GEMULONSYSTEM].special == GETFUELCOMPACTOR) { ++r; }
+		} else if (SolarSystem[GEMULONSYSTEM].special == GETFUELCOMPACTOR) {
+			++r;
+		}
 
-		if (ExperimentStatus >= 1 && ExperimentStatus < 11) { ++r; }
+		if (ExperimentStatus >= 1 && ExperimentStatus < 11) {
+			++r;
+		}
 
-		if (ReactorStatus >= 1 && ReactorStatus < 21) { ++r; }
+		if (ReactorStatus >= 1 && ReactorStatus < 21) {
+			++r;
+		}
 
-		if (SolarSystem[NIXSYSTEM].special == GETSPECIALLASER) { ++r; }
+		if (SolarSystem[NIXSYSTEM].special == GETSPECIALLASER) {
+			++r;
+		}
 
-		if (ScarabStatus == 1) { ++r; }
+		if (ScarabStatus == 1) {
+			++r;
+		}
 
-		if (Ship.tribbles > 0) { ++r; }
+		if (Ship.tribbles > 0) {
+			++r;
+		}
 
-		if (MoonBought) { ++r; }
+		if (MoonBought) {
+			++r;
+		}
 
 		return r;
 	}
@@ -1236,9 +1302,21 @@ public class GameState implements Serializable {
 				- (ShipTypes.ShipTypes[Ship.type].fuelTanks - Ship
 				.GetFuel()) * ShipTypes.ShipTypes[Ship.type].costOfFuel;
 		// Add 2/3 of the price of each item of equipment
-		for (i = 0; i < MAXWEAPON; ++i) { if (Ship.weapon[i] >= 0) { CurPrice += WEAPONSELLPRICE(i); } }
-		for (i = 0; i < MAXSHIELD; ++i) { if (Ship.shield[i] >= 0) { CurPrice += SHIELDSELLPRICE(i); } }
-		for (i = 0; i < MAXGADGET; ++i) { if (Ship.gadget[i] >= 0) { CurPrice += GADGETSELLPRICE(i); } }
+		for (i = 0; i < MAXWEAPON; ++i) {
+			if (Ship.weapon[i] >= 0) {
+				CurPrice += WEAPONSELLPRICE(i);
+			}
+		}
+		for (i = 0; i < MAXSHIELD; ++i) {
+			if (Ship.shield[i] >= 0) {
+				CurPrice += SHIELDSELLPRICE(i);
+			}
+		}
+		for (i = 0; i < MAXGADGET; ++i) {
+			if (Ship.gadget[i] >= 0) {
+				CurPrice += GADGETSELLPRICE(i);
+			}
+		}
 
 		return CurPrice;
 	}
@@ -1261,7 +1339,7 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		SolarSystem CURSYSTEM = SolarSystem[Mercenary[0].curSystem];
 		return ((ItemTechLevel > CURSYSTEM.techLevel) ? 0 :
-		        ((Price * (100 - Ship.TraderSkill())) / 100));
+			((Price * (100 - Ship.TraderSkill())) / 100));
 	}
 
 	int BaseSellPrice(int Index, int Price) {
@@ -1290,7 +1368,9 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		int i;
 
-		for (i = 0; i < MAXTRADEITEM; ++i) { SellPrice[i] = (SellPrice[i] * 100) / 90; }
+		for (i = 0; i < MAXTRADEITEM; ++i) {
+			SellPrice[i] = (SellPrice[i] * 100) / 90;
+		}
 	}
 
 	public int MercenaryMoney() {
@@ -1307,11 +1387,11 @@ public class GameState implements Serializable {
 	}
 
 	public int InsuranceMoney() {
-		if (!Insurance) { return 0; } else {
+		if (!Insurance) {
+			return 0;
+		} else {
 			return (Math.max(1, (((CurrentShipPriceWithoutCargo(true) * 5) / 2000) * (100 - Math.min(
-				NoClaim, 90
-			)) / 100)
-			));
+				NoClaim, 90)) / 100)));
 		}
 	}
 
@@ -1319,7 +1399,9 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		// Money available to spend
 		// *************************************************************************
-		if (!ReserveMoney) { return Credits; }
+		if (!ReserveMoney) {
+			return Credits;
+		}
 		return Math.max(0, Credits - MercenaryMoney() - InsuranceMoney());
 	}
 
@@ -1338,9 +1420,7 @@ public class GameState implements Serializable {
 
 	public int MaxLoan() {
 		return (int) (PoliceRecordScore >= CLEANSCORE ? Math.min(25000L, Math.max(1000L,
-		                                                                          ((CurrentWorth() / 10L) / 500L) * 500L
-		)
-		) : 500L);
+			((CurrentWorth() / 10L) / 500L) * 500L)) : 500L);
 	}
 
 	public int BASESHIPPRICE(int a) {
@@ -1368,7 +1448,9 @@ public class GameState implements Serializable {
 		for (i = 0; i < MAXSHIPTYPE; ++i) {
 			if (ShipTypes.ShipTypes[i].minTechLevel <= CURSYSTEM.techLevel) {
 				ShipPrice[i] = BASESHIPPRICE(i) - CurrentShipPrice(false);
-				if (ShipPrice[i] == 0) { ShipPrice[i] = 1; }
+				if (ShipPrice[i] == 0) {
+					ShipPrice[i] = 1;
+				}
 			} else {
 				ShipPrice[i] = 0;
 			}
@@ -1406,7 +1488,9 @@ public class GameState implements Serializable {
 		CreateShip(Index);
 		Credits -= ShipPrice[Index];
 		if (ScarabStatus == 3) // Scarab hull hardening is not transferrable.
-		{ ScarabStatus = 0; }
+		{
+			ScarabStatus = 0;
+		}
 	}
 
 	public void CreateFlea() {
@@ -1415,7 +1499,9 @@ public class GameState implements Serializable {
 		// *************************************************************************
 		int i;
 		CreateShip(0);
-		for (i = 1; i < MAXCREW; ++i) { Ship.crew[i] = -1; }
+		for (i = 1; i < MAXCREW; ++i) {
+			Ship.crew[i] = -1;
+		}
 		EscapePod = false;
 		Insurance = false;
 		NoClaim = 0;
@@ -1436,7 +1522,9 @@ public class GameState implements Serializable {
 			Tradeitems.mTradeitems[Good].priceLowTech + (Tech * Tradeitems.mTradeitems[Good].priceInc);
 
 		// If a good is highly requested, increase the price
-		if (Politics.mPolitics[Government].wanted == Good) { Price = (Price * 4) / 3; }
+		if (Politics.mPolitics[Government].wanted == Good) {
+			Price = (Price * 4) / 3;
+		}
 
 		// High trader activity decreases prices
 		Price = (Price * (100 - (2 * Politics.mPolitics[Government].strengthTraders))) / 100;
@@ -1447,7 +1535,9 @@ public class GameState implements Serializable {
 		// Special resources price adaptation
 		if (Resources > 0) {
 			if (Tradeitems.mTradeitems[Good].cheapResource >= 0) {
-				if (Resources == Tradeitems.mTradeitems[Good].cheapResource) { Price = (Price * 3) / 4; }
+				if (Resources == Tradeitems.mTradeitems[Good].cheapResource) {
+					Price = (Price * 3) / 4;
+				}
 			}
 			if (Tradeitems.mTradeitems[Good].expensiveResource >= 0) {
 				if (Resources == Tradeitems.mTradeitems[Good].expensiveResource) {
@@ -1457,9 +1547,13 @@ public class GameState implements Serializable {
 		}
 
 		// If a system can't use something, its selling price is zero.
-		if (Tech < Tradeitems.mTradeitems[Good].techUsage) { return 0; }
+		if (Tech < Tradeitems.mTradeitems[Good].techUsage) {
+			return 0;
+		}
 
-		if (Price < 0) { return 0; }
+		if (Price < 0) {
+			return 0;
+		}
 
 		return Price;
 	}
@@ -1472,9 +1566,7 @@ public class GameState implements Serializable {
 
 		for (i = 0; i < MAXTRADEITEM; ++i) {
 			BuyPrice[i] = StandardPrice(i, SolarSystem[SystemID].size, SolarSystem[SystemID].techLevel,
-			                            SolarSystem[SystemID].politics,
-			                            SolarSystem[SystemID].specialResources
-			);
+				SolarSystem[SystemID].politics, SolarSystem[SystemID].specialResources);
 
 			if (BuyPrice[i] <= 0) {
 				BuyPrice[i] = 0;
@@ -1491,8 +1583,7 @@ public class GameState implements Serializable {
 
 			// Randomize price a bit
 			BuyPrice[i] = BuyPrice[i] + GetRandom(Tradeitems.mTradeitems[i].variance) - GetRandom(
-				Tradeitems.mTradeitems[i].variance
-			);
+				Tradeitems.mTradeitems[i].variance);
 
 			// Should never happen
 			if (BuyPrice[i] <= 0) {
@@ -1557,8 +1648,8 @@ public class GameState implements Serializable {
 
 	public int STRENGTHPOLICE(SolarSystem a) {
 		return PoliceRecordScore < PSYCHOPATHSCORE ? 3 * Politics.mPolitics[a.politics].strengthPolice :
-		       PoliceRecordScore < VILLAINSCORE ? 2 * Politics.mPolitics[a.politics].strengthPolice :
-		       Politics.mPolitics[a.politics].strengthPolice;
+			PoliceRecordScore < VILLAINSCORE ? 2 * Politics.mPolitics[a.politics].strengthPolice :
+				Politics.mPolitics[a.politics].strengthPolice;
 	}
 
 	public void GenerateOpponent(int Opp) {
@@ -1595,7 +1686,9 @@ public class GameState implements Serializable {
 			return;
 		}
 
-		if (Opp == MANTIS) { Tries = 1 + Difficulty; }
+		if (Opp == MANTIS) {
+			Tries = 1 + Difficulty;
+		}
 
 		// The police will try to hunt you down with better ships if you are
 		// a villain, and they will try even harder when you are considered to
@@ -1604,7 +1697,9 @@ public class GameState implements Serializable {
 		if (Opp == POLICE) {
 			if (PoliceRecordScore < VILLAINSCORE && WildStatus != 1) {
 				Tries = 3;
-			} else if (PoliceRecordScore < PSYCHOPATHSCORE || WildStatus == 1) { Tries = 5; }
+			} else if (PoliceRecordScore < PSYCHOPATHSCORE || WildStatus == 1) {
+				Tries = 5;
+			}
 			Tries = Math.max(1, Tries + Difficulty - NORMAL);
 		}
 
@@ -1615,7 +1710,11 @@ public class GameState implements Serializable {
 		}
 
 		j = 0;
-		if (Opp == TRADER) { Opponent.type = 0; } else { Opponent.type = 1; }
+		if (Opp == TRADER) {
+			Opponent.type = 0;
+		} else {
+			Opponent.type = 1;
+		}
 
 		k = (Difficulty >= NORMAL ? Difficulty - NORMAL : 0);
 
@@ -1628,7 +1727,9 @@ public class GameState implements Serializable {
 				sum = ShipTypes.ShipTypes[0].occurrence;
 
 				while (sum < d) {
-					if (i >= MAXSHIPTYPE - 1) { break; }
+					if (i >= MAXSHIPTYPE - 1) {
+						break;
+					}
 					++i;
 					sum += ShipTypes.ShipTypes[i].occurrence;
 				}
@@ -1648,11 +1749,15 @@ public class GameState implements Serializable {
 				Redo = false;
 			}
 
-			if (i > Opponent.type) { Opponent.type = i; }
+			if (i > Opponent.type) {
+				Opponent.type = i;
+			}
 			++j;
 		}
 
-		if (Opp == MANTIS) { Opponent.type = MANTISTYPE; } else {
+		if (Opp == MANTIS) {
+			Opponent.type = MANTISTYPE;
+		} else {
 			Tries = Math.max(1, (CurrentWorth() / 150000) + Difficulty - NORMAL);
 		}
 
@@ -1662,9 +1767,15 @@ public class GameState implements Serializable {
 		} else if (Difficulty <= HARD) {
 			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].gadgetSlots + 1);
 			if (d < ShipTypes.ShipTypes[Opponent.type].gadgetSlots) {
-				if (Tries > 4) { ++d; } else if (Tries > 2) { d += GetRandom(2); }
+				if (Tries > 4) {
+					++d;
+				} else if (Tries > 2) {
+					d += GetRandom(2);
+				}
 			}
-		} else { d = ShipTypes.ShipTypes[Opponent.type].gadgetSlots; }
+		} else {
+			d = ShipTypes.ShipTypes[Opponent.type].gadgetSlots;
+		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
 			f = 0;
@@ -1673,40 +1784,66 @@ public class GameState implements Serializable {
 				j = 0;
 				sum = Gadgets.mGadgets[0].chance;
 				while (k < sum) {
-					if (j >= MAXGADGETTYPE - 1) { break; }
+					if (j >= MAXGADGETTYPE - 1) {
+						break;
+					}
 					++j;
 					sum += Gadgets.mGadgets[j].chance;
 				}
-				if (!Opponent.HasGadget(j)) { if (j > f) { f = j; } }
+				if (!Opponent.HasGadget(j)) {
+					if (j > f) {
+						f = j;
+					}
+				}
 				++e;
 			}
 			Opponent.gadget[i] = f;
 		}
-		for (i = d; i < MAXGADGET; ++i) { Opponent.gadget[i] = -1; }
+		for (i = d; i < MAXGADGET; ++i) {
+			Opponent.gadget[i] = -1;
+		}
 
 		// Determine the number of cargo bays
 		Bays = ShipTypes.ShipTypes[Opponent.type].cargoBays;
-		for (i = 0; i < MAXGADGET; ++i) { if (Opponent.gadget[i] == EXTRABAYS) { Bays += 5; } }
+		for (i = 0; i < MAXGADGET; ++i) {
+			if (Opponent.gadget[i] == EXTRABAYS) {
+				Bays += 5;
+			}
+		}
 
 		// Fill the cargo bays
-		for (i = 0; i < MAXTRADEITEM; ++i) { Opponent.cargo[i] = 0; }
+		for (i = 0; i < MAXTRADEITEM; ++i) {
+			Opponent.cargo[i] = 0;
+		}
 
 		if (Bays > 5) {
 			if (Difficulty >= NORMAL) {
 				m = 3 + GetRandom(Bays - 5);
 				sum = Math.min(m, 15);
-			} else { sum = Bays; }
-			if (Opp == POLICE) { sum = 0; }
-			if (Opp == PIRATE) {
-				if (Difficulty < NORMAL) { sum = (sum * 4) / 5; } else { sum = sum / Difficulty; }
+			} else {
+				sum = Bays;
 			}
-			if (sum < 1) { sum = 1; }
+			if (Opp == POLICE) {
+				sum = 0;
+			}
+			if (Opp == PIRATE) {
+				if (Difficulty < NORMAL) {
+					sum = (sum * 4) / 5;
+				} else {
+					sum = sum / Difficulty;
+				}
+			}
+			if (sum < 1) {
+				sum = 1;
+			}
 
 			i = 0;
 			while (i < sum) {
 				j = GetRandom(MAXTRADEITEM);
 				k = 1 + GetRandom(10 - j);
-				if (i + k > sum) { k = sum - i; }
+				if (i + k > sum) {
+					k = sum - i;
+				}
 				Opponent.cargo[j] += k;
 				i += k;
 			}
@@ -1726,11 +1863,15 @@ public class GameState implements Serializable {
 		} else if (Difficulty <= HARD) {
 			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].weaponSlots);
 			if (d < ShipTypes.ShipTypes[Opponent.type].weaponSlots) {
-				if (Tries > 4 && Difficulty >= HARD) { ++d; } else if (Tries > 3 || Difficulty >= HARD) {
+				if (Tries > 4 && Difficulty >= HARD) {
+					++d;
+				} else if (Tries > 3 || Difficulty >= HARD) {
 					d += GetRandom(2);
 				}
 			}
-		} else { d = ShipTypes.ShipTypes[Opponent.type].weaponSlots; }
+		} else {
+			d = ShipTypes.ShipTypes[Opponent.type].weaponSlots;
+		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
 			f = 0;
@@ -1739,16 +1880,22 @@ public class GameState implements Serializable {
 				j = 0;
 				sum = Weapons.mWeapons[0].chance;
 				while (k < sum) {
-					if (j >= MAXWEAPONTYPE - 1) { break; }
+					if (j >= MAXWEAPONTYPE - 1) {
+						break;
+					}
 					++j;
 					sum += Weapons.mWeapons[j].chance;
 				}
-				if (j > f) { f = j; }
+				if (j > f) {
+					f = j;
+				}
 				++e;
 			}
 			Opponent.weapon[i] = f;
 		}
-		for (i = d; i < MAXWEAPON; ++i) { Opponent.weapon[i] = -1; }
+		for (i = d; i < MAXWEAPON; ++i) {
+			Opponent.weapon[i] = -1;
+		}
 
 		// Fill the shield slots
 		if (ShipTypes.ShipTypes[Opponent.type].shieldSlots <= 0) {
@@ -1756,9 +1903,15 @@ public class GameState implements Serializable {
 		} else if (Difficulty <= HARD) {
 			d = GetRandom(ShipTypes.ShipTypes[Opponent.type].shieldSlots + 1);
 			if (d < ShipTypes.ShipTypes[Opponent.type].shieldSlots) {
-				if (Tries > 3) { ++d; } else if (Tries > 1) { d += GetRandom(2); }
+				if (Tries > 3) {
+					++d;
+				} else if (Tries > 1) {
+					d += GetRandom(2);
+				}
 			}
-		} else { d = ShipTypes.ShipTypes[Opponent.type].shieldSlots; }
+		} else {
+			d = ShipTypes.ShipTypes[Opponent.type].shieldSlots;
+		}
 		for (i = 0; i < d; ++i) {
 			e = 0;
 			f = 0;
@@ -1768,11 +1921,15 @@ public class GameState implements Serializable {
 				j = 0;
 				sum = Shields.mShields[0].chance;
 				while (k < sum) {
-					if (j >= MAXSHIELDTYPE - 1) { break; }
+					if (j >= MAXSHIELDTYPE - 1) {
+						break;
+					}
 					++j;
 					sum += Shields.mShields[j].chance;
 				}
-				if (j > f) { f = j; }
+				if (j > f) {
+					f = j;
+				}
 				++e;
 			}
 			Opponent.shield[i] = f;
@@ -1781,7 +1938,9 @@ public class GameState implements Serializable {
 			k = 0;
 			while (j < 5) {
 				e = 1 + GetRandom(Shields.mShields[Opponent.shield[i]].power);
-				if (e > k) { k = e; }
+				if (e > k) {
+					k = e;
+				}
 				++j;
 			}
 			Opponent.shieldStrength[i] = k;
@@ -1800,7 +1959,9 @@ public class GameState implements Serializable {
 		} else {
 			while (i < 5) {
 				d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].hullStrength);
-				if (d > k) { k = d; }
+				if (d > k) {
+					k = d;
+				}
 				++i;
 			}
 			Opponent.hull = k;
@@ -1823,10 +1984,18 @@ public class GameState implements Serializable {
 		}
 		if (Difficulty <= HARD) {
 			d = 1 + GetRandom(ShipTypes.ShipTypes[Opponent.type].crewQuarters);
-			if (Difficulty >= HARD && d < ShipTypes.ShipTypes[Opponent.type].crewQuarters) { ++d; }
-		} else { d = ShipTypes.ShipTypes[Opponent.type].crewQuarters; }
-		for (i = 1; i < d; ++i) { Opponent.crew[i] = GetRandom(MAXCREWMEMBER); }
-		for (i = d; i < MAXCREW; ++i) { Opponent.crew[i] = -1; }
+			if (Difficulty >= HARD && d < ShipTypes.ShipTypes[Opponent.type].crewQuarters) {
+				++d;
+			}
+		} else {
+			d = ShipTypes.ShipTypes[Opponent.type].crewQuarters;
+		}
+		for (i = 1; i < d; ++i) {
+			Opponent.crew[i] = GetRandom(MAXCREWMEMBER);
+		}
+		for (i = d; i < MAXCREW; ++i) {
+			Opponent.crew[i] = -1;
+		}
 	}
 
 	public boolean ENCOUNTERFAMOUS(int a) {
@@ -1866,7 +2035,9 @@ public class GameState implements Serializable {
 		CrewMember COMMANDER = Mercenary[0];
 
 		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
-			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) { return; }
+			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) {
+			return;
+		}
 
 		oldtraderskill = Ship.TraderSkill();
 
@@ -1876,14 +2047,22 @@ public class GameState implements Serializable {
 			if ((d == 0 && COMMANDER.pilot < MAXSKILL) ||
 				(d == 1 && COMMANDER.fighter < MAXSKILL) ||
 				(d == 2 && COMMANDER.trader < MAXSKILL) ||
-				(d == 3 && COMMANDER.engineer < MAXSKILL)) { Redo = false; }
+				(d == 3 && COMMANDER.engineer < MAXSKILL)) {
+				Redo = false;
+			}
 		}
-		if (d == 0) { COMMANDER.pilot += 1; } else if (d == 1) {
+		if (d == 0) {
+			COMMANDER.pilot += 1;
+		} else if (d == 1) {
 			COMMANDER.fighter += 1;
 		} else if (d == 2) {
 			COMMANDER.trader += 1;
-			if (oldtraderskill != Ship.TraderSkill()) { RecalculateBuyPrices(COMMANDER.curSystem); }
-		} else { COMMANDER.engineer += 1; }
+			if (oldtraderskill != Ship.TraderSkill()) {
+				RecalculateBuyPrices(COMMANDER.curSystem);
+			}
+		} else {
+			COMMANDER.engineer += 1;
+		}
 	}
 
 	void DecreaseRandomSkill(int amount) {
@@ -1895,7 +2074,9 @@ public class GameState implements Serializable {
 		CrewMember COMMANDER = Mercenary[0];
 
 		if (COMMANDER.pilot >= MAXSKILL && COMMANDER.trader >= MAXSKILL &&
-			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) { return; }
+			COMMANDER.fighter >= MAXSKILL && COMMANDER.engineer >= MAXSKILL) {
+			return;
+		}
 
 		oldtraderskill = Ship.TraderSkill();
 
@@ -1905,14 +2086,22 @@ public class GameState implements Serializable {
 			if ((d == 0 && COMMANDER.pilot > amount) ||
 				(d == 1 && COMMANDER.fighter > amount) ||
 				(d == 2 && COMMANDER.trader > amount) ||
-				(d == 3 && COMMANDER.engineer > amount)) { Redo = false; }
+				(d == 3 && COMMANDER.engineer > amount)) {
+				Redo = false;
+			}
 		}
-		if (d == 0) { COMMANDER.pilot -= amount; } else if (d == 1) {
+		if (d == 0) {
+			COMMANDER.pilot -= amount;
+		} else if (d == 1) {
 			COMMANDER.fighter -= amount;
 		} else if (d == 2) {
 			COMMANDER.trader -= amount;
-			if (oldtraderskill != Ship.TraderSkill()) { RecalculateBuyPrices(COMMANDER.curSystem); }
-		} else { COMMANDER.engineer -= amount; }
+			if (oldtraderskill != Ship.TraderSkill()) {
+				RecalculateBuyPrices(COMMANDER.curSystem);
+			}
+		} else {
+			COMMANDER.engineer -= amount;
+		}
 	}
 
 	void TonicTweakRandomSkill() {

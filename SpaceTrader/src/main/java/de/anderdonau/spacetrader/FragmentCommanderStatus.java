@@ -31,11 +31,11 @@ import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 
 public class FragmentCommanderStatus extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentCommanderStatus(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentCommanderStatus(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -87,7 +87,7 @@ public class FragmentCommanderStatus extends Fragment {
 		tv.setText(Reputation.name[i]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
-		tv.setText(welcomeScreen.levelDesc[GameState.getDifficulty()]);
+		tv.setText(main.levelDesc[GameState.getDifficulty()]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDays);
 		tv.setText(String.format("%d", gameState.Days));

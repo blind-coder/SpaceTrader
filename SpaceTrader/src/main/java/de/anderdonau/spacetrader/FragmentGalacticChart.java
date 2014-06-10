@@ -32,11 +32,11 @@ import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentGalacticChart extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentGalacticChart(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentGalacticChart(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -48,7 +48,7 @@ public class FragmentGalacticChart extends Fragment {
 		Button button = (Button) rootView.findViewById(R.id.btnJump);
 		button.setVisibility(gameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 		navigationChart.setGameState(gameState);
-		navigationChart.setWelcomeScreen(welcomeScreen);
+		navigationChart.setMain(main);
 		navigationChart.setShortRange(false);
 
 		TextView tv;
@@ -63,15 +63,15 @@ public class FragmentGalacticChart extends Fragment {
 			SolarSystem s = gameState.SolarSystem[gameState.WarpSystem];
 			tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 			tv.setVisibility(View.VISIBLE);
-			tv.setText(String.format("%s %s %s", welcomeScreen.SystemSize[s.size],
-				welcomeScreen.techLevel[s.techLevel], Politics.mPolitics[s.politics].name));
+			tv.setText(String.format("%s %s %s", main.SystemSize[s.size], main.techLevel[s.techLevel],
+				Politics.mPolitics[s.politics].name));
 			tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(String.format("%d parsecs", gameState.RealDistance(
 				gameState.SolarSystem[gameState.Mercenary[0].curSystem], s)));
 			tv = (TextView) rootView.findViewById(R.id.galChartName);
 			tv.setVisibility(View.VISIBLE);
-			tv.setText(welcomeScreen.SolarSystemName[s.nameIndex]);
+			tv.setText(main.SolarSystemName[s.nameIndex]);
 			navigationChart.mSelectedSystem = gameState.WarpSystem;
 		}
 		navigationChart.setOnTouchListener(new View.OnTouchListener() {
@@ -87,7 +87,7 @@ public class FragmentGalacticChart extends Fragment {
 						tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 						tv.setVisibility(View.VISIBLE);
 						tv.setText(String.format("Wormhole to %s",
-							welcomeScreen.SolarSystemName[gameState.SolarSystem[gameState.Wormhole[wormhole]].nameIndex]));
+							main.SolarSystemName[gameState.SolarSystem[gameState.Wormhole[wormhole]].nameIndex]));
 						tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 						tv.setVisibility(View.INVISIBLE);
 						tv = (TextView) rootView.findViewById(R.id.galChartName);
@@ -95,12 +95,12 @@ public class FragmentGalacticChart extends Fragment {
 					} else if (system >= 0) {
 						TextView tv;
 						gameState.WarpSystem = system;
-						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
+						main.WarpSystem = gameState.SolarSystem[system];
 						SolarSystem s = gameState.SolarSystem[gameState.WarpSystem];
 						tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 						tv.setVisibility(View.VISIBLE);
-						tv.setText(String.format("%s %s %s", welcomeScreen.SystemSize[s.size],
-							welcomeScreen.techLevel[s.techLevel], Politics.mPolitics[s.politics].name));
+						tv.setText(String.format("%s %s %s", main.SystemSize[s.size],
+							main.techLevel[s.techLevel], Politics.mPolitics[s.politics].name));
 						tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 						tv.setVisibility(View.VISIBLE);
 						tv.setText(String.format("%d parsecs", gameState.RealDistance(
@@ -108,19 +108,19 @@ public class FragmentGalacticChart extends Fragment {
 
 						tv = (TextView) rootView.findViewById(R.id.galChartName);
 						tv.setVisibility(View.VISIBLE);
-						tv.setText(welcomeScreen.SolarSystemName[s.nameIndex]);
+						tv.setText(main.SolarSystemName[s.nameIndex]);
 						if (system == navigationChart.mSelectedSystem) {
 							Popup popup;
-							popup = new Popup(welcomeScreen, "Track system",
-								"Do you want to track the distance to " + welcomeScreen.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
+							popup = new Popup(main, "Track system",
+								"Do you want to track the distance to " + main.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
 								"", "Yes", "No", new Popup.buttonCallback() {
 								@Override
 								public void execute(Popup popup, View view) {
 									gameState.TrackedSystem = system;
 									navigationChart.invalidate();
 								}
-							}, welcomeScreen.cbShowNextPopup);
-							welcomeScreen.addPopup(popup);
+							}, main.cbShowNextPopup);
+							main.addPopup(popup);
 						} else {
 							navigationChart.mSelectedSystem = system;
 							navigationChart.invalidate();

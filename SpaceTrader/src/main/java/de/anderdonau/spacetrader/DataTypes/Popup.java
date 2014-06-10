@@ -29,8 +29,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.anderdonau.spacetrader.Main;
 import de.anderdonau.spacetrader.R;
-import de.anderdonau.spacetrader.WelcomeScreen;
 
 public class Popup {
 	public AlertDialog dialog   = null;
@@ -46,7 +46,7 @@ public class Popup {
 	buttonCallback cbNegative = null;
 	buttonCallback cbMax      = null;
 	LayoutInflater inflater   = null;
-	public WelcomeScreen context = null;
+	public Main context = null;
 	DialogInterface.OnClickListener doNothing = new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialogInterface, int i) {}
@@ -59,7 +59,7 @@ public class Popup {
 		}
 	};
 
-	public Popup(WelcomeScreen context, String title, String content, String help, String positive, buttonCallback cbPositive) {
+	public Popup(Main context, String title, String content, String help, String positive, buttonCallback cbPositive) {
 		this.context = context;
 		this.title = title;
 		this.content = content;
@@ -68,7 +68,7 @@ public class Popup {
 		this.cbPositive = cbPositive;
 	}
 
-	public Popup(WelcomeScreen context, String title, String content, String hint, String help, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative) {
+	public Popup(Main context, String title, String content, String hint, String help, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative) {
 		this.context = context;
 		this.title = title;
 		this.content = content;
@@ -80,7 +80,7 @@ public class Popup {
 		this.cbNegative = cbNegative;
 	}
 
-	public Popup(WelcomeScreen context, String title, String content, String help, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative) {
+	public Popup(Main context, String title, String content, String help, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative) {
 		this.title = title;
 		this.content = content;
 		this.help = help;
@@ -91,7 +91,7 @@ public class Popup {
 		this.context = context;
 	}
 
-	public Popup(WelcomeScreen context, String title, String content, String hint, String help, int max, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative, buttonCallback cbMax) {
+	public Popup(Main context, String title, String content, String hint, String help, int max, String positive, String negative, buttonCallback cbPositive, buttonCallback cbNegative, buttonCallback cbMax) {
 		this.context = context;
 		this.title = title;
 		this.content = content;

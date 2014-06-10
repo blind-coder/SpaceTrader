@@ -27,11 +27,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class FragmentShortRangeChart extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 
-	public FragmentShortRangeChart(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentShortRangeChart(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -42,7 +42,7 @@ public class FragmentShortRangeChart extends Fragment {
 		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(
 			R.id.ShortRangeChart);
 		navigationChart.setGameState(gameState);
-		navigationChart.setWelcomeScreen(welcomeScreen);
+		navigationChart.setMain(main);
 		navigationChart.setShortRange(true);
 
 		navigationChart.setOnTouchListener(new View.OnTouchListener() {
@@ -56,30 +56,30 @@ public class FragmentShortRangeChart extends Fragment {
 					if (wormhole >= 0) {
 						system = gameState.Wormhole[wormhole];
 						gameState.WarpSystem = system;
-						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
+						main.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
 							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
 								gameState.SolarSystem[system]) <= gameState.Ship.GetFuel() || gameState
 								.WormholeExists(gameState.Mercenary[0].curSystem, system)) &&
 							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
 								gameState.SolarSystem[system]) > 0) {
-							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
+							main.changeFragment(Main.FRAGMENTS.AVERAGE_PRICES);
 						} else {
-							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.WARP_SYSTEM_INFORMATION);
+							main.changeFragment(Main.FRAGMENTS.WARP_SYSTEM_INFORMATION);
 						}
 					} else if (system >= 0) {
 						gameState.WarpSystem = system;
-						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
+						main.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
 							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
 								gameState.SolarSystem[system]) <= gameState.Ship.GetFuel() || gameState
 								.WormholeExists(gameState.Mercenary[0].curSystem, system)) &&
 							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
 								gameState.SolarSystem[system]) > 0) {
-							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
+							main.changeFragment(Main.FRAGMENTS.AVERAGE_PRICES);
 
 						} else {
-							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.WARP_SYSTEM_INFORMATION);
+							main.changeFragment(Main.FRAGMENTS.WARP_SYSTEM_INFORMATION);
 						}
 					} else {
 						navigationChart.onTouchEvent(motionEvent);
@@ -94,7 +94,7 @@ public class FragmentShortRangeChart extends Fragment {
 		} else {
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(String.format("Distance to %s: %d parsec",
-				welcomeScreen.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
+				main.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
 				gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
 					gameState.SolarSystem[gameState.TrackedSystem])));
 		}

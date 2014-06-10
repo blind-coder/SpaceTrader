@@ -35,8 +35,8 @@ import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentEncounter extends Fragment {
-	WelcomeScreen welcomeScreen;
-	GameState     gameState;
+	Main      main;
+	GameState gameState;
 	public Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder,
 		btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
 	public ProgressBar pBarEncounter;
@@ -44,8 +44,8 @@ public class FragmentEncounter extends Fragment {
 	public TextView EncounterText;
 	public boolean  playerShipNeedsUpdate, opponentShipNeedsUpdate;
 
-	public FragmentEncounter(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentEncounter(Main main, GameState gameState) {
+		this.main = main;
 		this.gameState = gameState;
 	}
 
@@ -95,8 +95,7 @@ public class FragmentEncounter extends Fragment {
 		} else {
 			String buf;
 			buf = String.format("At %d click%s from %s you encounter ", gameState.Clicks,
-				gameState.Clicks == 1 ? "" : "s",
-				welcomeScreen.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
+				gameState.Clicks == 1 ? "" : "s", main.SolarSystemName[main.WarpSystem.nameIndex]);
 			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
 				buf += "a police ";
 			} else if (gameState.ENCOUNTERPIRATE(gameState.EncounterType)) {
@@ -133,12 +132,12 @@ public class FragmentEncounter extends Fragment {
 			EncounterText.setText(buf);
 		}
 
-		Bitmap tribble = BitmapFactory.decodeResource(welcomeScreen.getResources(), R.drawable.tribble);
+		Bitmap tribble = BitmapFactory.decodeResource(main.getResources(), R.drawable.tribble);
 		d = (int) Math.ceil(Math.sqrt(Ship.tribbles / 250));
 		d = Math.min(d, GameState.TRIBBLESONSCREEN);
 		for (i = 0; i <= d; ++i) {
-			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i),
-				"id", welcomeScreen.getPackageName());
+			int resID = main.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
+				main.getPackageName());
 			ImageView imageView = (ImageView) rootView.findViewById(resID);
 			if (imageView == null) {
 				continue;
@@ -153,8 +152,8 @@ public class FragmentEncounter extends Fragment {
 			imageView.setVisibility(View.VISIBLE);
 		}
 		for (; i <= GameState.TRIBBLESONSCREEN; ++i) {
-			int resID = welcomeScreen.getResources().getIdentifier("tribbleButton" + String.valueOf(i),
-				"id", welcomeScreen.getPackageName());
+			int resID = main.getResources().getIdentifier("tribbleButton" + String.valueOf(i), "id",
+				main.getPackageName());
 			ImageView imageView = (ImageView) rootView.findViewById(resID);
 			if (imageView == null) {
 				continue;

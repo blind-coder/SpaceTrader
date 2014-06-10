@@ -29,11 +29,11 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentShipInfo extends Fragment {
-	private WelcomeScreen      welcomeScreen;
+	private Main               main;
 	private ShipTypes.ShipType mType;
 
-	public FragmentShipInfo(WelcomeScreen welcomeScreen, GameState gameState) {
-		this.welcomeScreen = welcomeScreen;
+	public FragmentShipInfo(Main main, GameState gameState) {
+		this.main = main;
 		mType = ShipTypes.ShipTypes[gameState.ShipInfoId];
 	}
 
@@ -48,7 +48,7 @@ public class FragmentShipInfo extends Fragment {
 		tv.setText(mType.name);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipInfoSize);
-		tv.setText(welcomeScreen.SystemSize[mType.size]);
+		tv.setText(main.SystemSize[mType.size]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipInfoCargoBays);
 		tv.setText(String.format("%d", mType.cargoBays));

@@ -71,44 +71,75 @@ import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
-public class WelcomeScreen extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-	public final String[]             levelDesc        = new String[]{getString(
-		R.string.DifficultyLevelBeginner), getString(R.string.DifficultyLevelEasy), getString(
-		R.string.DIfficultyLevelNormal), getString(R.string.DifficultyLevelHard), getString(
-		R.string.DifficultyLevelImpossible)};
-	final        String[]             Status           = {getString(
-		R.string.StatusUnderNoParticularPressure),// Uneventful
-		getString(R.string.StatusAtWar), // Ore and Weapons in demand,
-		getString(R.string.StatusRavagerByAPlague), // Medicine in demand
-		getString(R.string.StatusSufferingFromDrought), // Water in demand
-		getString(R.string.StatusSufferingFromExtremeBoredom), // Games and Narcotics in demand
-		getString(R.string.StatusSufferingFromAColdSpell), // Furs in demand
-		getString(R.string.StatusSufferingFromACropFailure), // Food in demand
-		getString(R.string.StatusLackingEnoughtWorkers) // Machinery and Robots in demand
+public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+	public enum FRAGMENTS {
+		AVERAGE_PRICES,
+		BANK,
+		BUY_CARGO,
+		BUY_EQUIPMENT,
+		BUY_NEW_SHIP,
+		COMMANDER_STATUS,
+		DUMP,
+		ENCOUNTER,
+		GALACTIC_CHART,
+		NEW_GAME,
+		OPTIONS,
+		PERSONNEL_ROSTER,
+		PLUNDER,
+		SELL_CARGO,
+		SELL_EQUIPMENT,
+		SHIPYARD,
+		SHIP_INFO,
+		SHORTCUTS,
+		SHORT_RANGE_CHART,
+		SYSTEM_INFORMATION,
+		VERY_RARE_CHEAT,
+		WARP_SYSTEM_INFORMATION
+	}
+
+	private AdView adView = null;
+	private Context mContext;
+	private Fragment  currentFragment = null;
+	private FRAGMENTS currentState    = FRAGMENTS.NEW_GAME;
+	private NavigationDrawerFragment mNavigationDrawerFragment;
+	public  SolarSystem              WarpSystem;
+	private GameState                gameState;
+	InterstitialAd interstitial;
+
+	private PopupQueue           popupQueue      = new PopupQueue();
+	final   Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
+		@Override
+		public void execute(Popup popup, View view) {
+			Main.this.showNextPopup();
+		}
 	};
-	final        String[]             SpecialResources = {getString(R.string.NothingSpecial),
-		getString(R.string.MineralRich), getString(R.string.MineralPoor), getString(R.string.Desert),
-		getString(R.string.SweetwaterOceans), getString(R.string.RichSoil), getString(
-		R.string.PoorSoil), getString(R.string.RichFauna), getString(R.string.Lifeless), getString(
-		R.string.WeirdMushrooms), getString(R.string.SpecialHerbs), getString(
-		R.string.ArtisticPopulace), getString(R.string.WarlikePopulace)};
-	final        String[]             Activity         = {getString(R.string.Absent), getString(
-		R.string.Minimal), getString(R.string.Few), getString(R.string.Some), getString(
-		R.string.Moderate), getString(R.string.Many), getString(R.string.Abundant), getString(
-		R.string.Swarms)};
-	final        String[]             MercenaryName    =
-		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre",
-			"Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
+
+	public final String[]   levelDesc        =
+		new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
+	final        String[]   Status           = {"under no particular pressure",  // Uneventful
+		"at war",        // Ore and Weapons in demand
+		"ravaged by a plague",   // Medicine in demand
+		"suffering from a drought",    // Water in demand
+		"suffering from extreme boredom",  // Games and Narcotics in demand
+		"suffering from a cold spell", // Furs in demand
+		"suffering from a crop failure", // Food in demand
+		"lacking enough workers"   // Machinery and Robots in demand
+	};
+	final        String[]   SpecialResources =
+		{"Nothing special", "Mineral rich", "Mineral poor", "Desert", "Sweetwater oceans", "Rich soil",
+			"Poor soil", "Rich fauna", "Lifeless", "Weird mushrooms", "Special herbs",
+			"Artistic populace", "Warlike populace"};
+	final        String[]   Activity         =
+		{"Absent", "Minimal", "Few", "Some", "Moderate", "Many", "Abundant", "Swarms"};
+	final        String[]   MercenaryName    =
+		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre", "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
 			"Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley",
 			"Wonton", "Yorvick", "Zeethibal"};
-	final        String[]             SystemSize       = {getString(R.string.Tiny), getString(
-		R.string.Small), getString(R.string.Medium), getString(R.string.Large), getString(
-		R.string.Huge)};
-	final        String[]             techLevel        = {getString(R.string.PreAgricultural),
-		getString(R.string.Agricultural), getString(R.string.Medieval), getString(R.string.Renaissance),
-		getString(R.string.EarlyIndustrial), getString(R.string.Industrial), getString(
-		R.string.PostIndustrial), getString(R.string.HiTech)};
-	final        String[]             SolarSystemName  =
+	final        String[]   SystemSize       = {"Tiny", "Small", "Medium", "Large", "Huge"};
+	final        String[]   techLevel        =
+		{"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial",
+			"Industrial", "Post-industrial", "Hi-tech"};
+	final        String[]   SolarSystemName  =
 		{"Acamar", "Adahn", // The alternate personality for The Nameless One in "Planescape: Torment"
 			"Aldea", "Andevian", "Antedi", "Balosnee", "Baratas", "Brax",
 			// One of the heroes in Master of Magic
@@ -166,23 +197,11 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			"Yojimbo", // A film by Akira Kurosawa
 			"Zalkon", "Zuul" // From the first Ghostbusters movie
 		};
-	final        Popup.buttonCallback cbShowNextPopup  = new Popup.buttonCallback() {
-		@Override
-		public void execute(Popup popup, View view) {
-			WelcomeScreen.this.showNextPopup();
-		}
-	};
-	public SolarSystem WarpSystem;
-	public String[][] Shortcuts = {{getString(R.string.BuyCargoShort), getString(R.string.BuyCargo)},
-		{getString(R.string.SellCargoShort), getString(R.string.SellCargo)}, {getString(
-		R.string.ShipYardShort), getString(R.string.ShipYard)}, {getString(R.string.BuyEquipmentShort),
-		getString(R.string.BuyEquipment)}, {getString(R.string.SellEquipmentShort), getString(
-		R.string.SellEquipment)}, {getString(R.string.PersonnelShort), getString(R.string.Personnel)},
-		{getString(R.string.BankShort), getString(R.string.Bank)}, {getString(R.string.SystemInfoShort),
-		getString(R.string.SystemInfo)}, {getString(R.string.CommanderStatusShort), getString(
-		R.string.CommanderStatus)}, {getString(R.string.GalacticChartShort), getString(
-		R.string.GalacticChart)}, {getString(R.string.WarpChartShort), getString(R.string.WarpChart)}};
-	InterstitialAd interstitial;
+	public       String[][] Shortcuts        =
+		{{"B", "Buy Cargo"}, {"S", "Sell Cargo"}, {"Y", "Ship Yard"}, {"E", "Buy Equipment"},
+			{"Q", "Sell Equipment"}, {"P", "Personnel"}, {"K", "Bank"}, {"I", "System Info"},
+			{"C", "Commander Status"}, {"G", "Galactic Chart"}, {"W", "Warp Chart"}};
+
 	Handler  delayHandler  = new Handler();
 	Runnable delayRunnable = new Runnable() {
 		@Override
@@ -196,13 +215,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 		}
 	};
-	private AdView adView = null;
-	private Context mContext;
-	private Fragment  currentFragment = null;
-	private FRAGMENTS currentState    = FRAGMENTS.NEW_GAME;
-	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private GameState                gameState;
-	private PopupQueue popupQueue = new PopupQueue();
 
 	/*
 	 * Overrides and Android UI support functions
@@ -273,9 +285,9 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				break;
 			case ENCOUNTER:
 				Popup popup;
-				popup = new Popup(this, getString(R.string.CantSaveNow), getString(
-					R.string.CantSaveInEncounter), "", getString(android.R.string.yes), getString(
-					android.R.string.no), new Popup.buttonCallback() {
+				popup = new Popup(this, "Can't save now",
+					"You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!\nAre you sure you want to quit?",
+					"", "Yes", "No", new Popup.buttonCallback() {
 					@Override
 					public void execute(Popup popup, View view) {
 						finish();
@@ -292,268 +304,6 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				break;
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (mNavigationDrawerFragment != null) {
-			if (!mNavigationDrawerFragment.isDrawerOpen()) {
-				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER) {
-					MenuInflater inflater = getMenuInflater();
-					inflater.inflate(R.menu.in_game, menu);
-				}
-				restoreActionBar();
-				return true;
-			}
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@SuppressWarnings("ConstantConditions")
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		try {
-			menu.findItem(R.id.hotkey1).setTitle(Shortcuts[gameState.Shortcut1][0]);
-			menu.findItem(R.id.hotkey2).setTitle(Shortcuts[gameState.Shortcut2][0]);
-			menu.findItem(R.id.hotkey3).setTitle(Shortcuts[gameState.Shortcut3][0]);
-			menu.findItem(R.id.hotkey4).setTitle(Shortcuts[gameState.Shortcut4][0]);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME) {
-			return true;
-		}
-		int id = item.getItemId();
-		String call = "";
-		Popup popup;
-		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		if (id != R.id.submenuGame && id != R.id.submenuHelp) {
-			drawer_layout.closeDrawers();
-		}
-		switch (id) {
-			case R.id.hotkey1:
-				call = Shortcuts[gameState.Shortcut1][0];
-				break;
-			case R.id.hotkey2:
-				call = Shortcuts[gameState.Shortcut2][0];
-				break;
-			case R.id.hotkey3:
-				call = Shortcuts[gameState.Shortcut3][0];
-				break;
-			case R.id.hotkey4:
-				call = Shortcuts[gameState.Shortcut4][0];
-				break;
-			case R.id.menuOptions:
-				changeFragment(FRAGMENTS.OPTIONS);
-				return true;
-			case R.id.menuNewGame:
-				popup = new Popup(this, getString(R.string.ReallyStartNewGame), getString(
-					R.string.IfYouStartNewAllWillBeLost), "", getString(android.R.string.yes), getString(
-					android.R.string.no), new Popup.buttonCallback() {
-					@Override
-					public void execute(Popup popup, View view) {
-						mContext.deleteFile("savegame.txt");
-						changeFragment(FRAGMENTS.NEW_GAME);
-						popupQueue.clear();
-					}
-				}, cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuRetire:
-				popup = new Popup(this, getString(R.string.Retira), getString(R.string.ReallyRetire), "",
-					getString(android.R.string.yes), getString(android.R.string.no),
-					new Popup.buttonCallback() {
-						@Override
-						public void execute(Popup popup, View view) {
-							popupQueue.clear();
-							EndOfGame(GameState.RETIRED);
-						}
-					}, cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuShortcuts:
-				changeFragment(FRAGMENTS.SHORTCUTS);
-				return true;
-			case R.id.menuHighscores:
-				ViewHighScores();
-				return true;
-			case R.id.menuClearHighscore:
-				return true;
-			case R.id.menuHelpCurrentScreen:
-				return true;
-			case R.id.menuHelpMenu:
-				popup = new Popup(this, "Tips",
-					"The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n" +
-						"\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n" +
-						"\"\"Game\" gives access to game functions:\n" +
-						"- \"New Game\" starts a new game.\n" +
-						"- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n" +
-						"- \"Options\" gives access to the game preferences.\n" +
-						"- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n" +
-						"- \"High Scores\" shows the high-score list.\n" +
-						"- \"Clear High Scores\" wipes the current high-score list.", "", getString(
-					android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpHowToPlay:
-				popup = new Popup(this, "How to play",
-					"Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
-						"The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
-						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
-						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
-						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpTrading:
-				popup = new Popup(this, "Trading",
-					"Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
-						"The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
-						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
-						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
-						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpTravelling:
-				popup = new Popup(this, "Travelling",
-					"To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
-						"When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
-						"During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
-						"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
-						"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
-						"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpShipEquipment:
-				popup = new Popup(this, "Ship Equipment",
-					"There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
-						"Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
-						"The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n" +
-						"As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
-						"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
-						"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
-						"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpSkills:
-				popup = new Popup(this, "Skills",
-					"As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
-						"The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
-						"The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
-						"The Trader skill influences the price you have to pay for goods and equipment. A good trader pays considerably less than a bad trader.\n\n" +
-						"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
-						"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
-						"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpFirstSteps:
-				popup = new Popup(this, "First Steps",
-					"Here I will describe the steps you will undertake the first days as a trader:\n" +
-						"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n" +
-						"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
-						"If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
-						"After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
-						"Then switch to the Short Range Chart to select your next target. Tap any system within the maximum range circle to get information on that system. Try to select a system which hasn't got too many pirates (unless to aspire a career as a bounty hunter), and which has a tech level which is opposite the tech level of your current system. That is, from an agricultural system you best travel to an industrial system to sell natural goods, while from an industrial system you best sell technologies to more backward systems. Use the Average Price List button to get an indication on the prices you might expect to sell your goods for. Goods that are displayed bold have an average selling price that is higher than the price you have to pay for those goods in the current system. Note that this isn't a guarantee, but it's better than nothing.\n\n" +
-						"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
-						"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
-						"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpAcknowledgements:
-				popup = new Popup(this, "Acknowledgements",
-					"Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
-						"This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
-						"I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
-						"A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
-						"I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
-						"A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
-						"Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n" +
-						"Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
-						"DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
-						"Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
-						"Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
-						"Thank you all. You were a tremendous help, and I am very grateful for that.\n" +
-						"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
-						"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpCredits:
-				popup = new Popup(this, "Credits", "Android port Copyright 2014 by Benjamin Schieder\n" +
-					"Linux port Copyright 2010 by Benjamin Schieder\n" +
-					"Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
-					"New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
-					"Original Copyright 2000-2002 by Pieter Spronck\n" +
-					"Design and programming: Pieter Spronck\"\n" +
-					"Additional design and programming: Samuel Goldstein, Sam Anderson\n" +
-					"Graphics: Alexander Lawrence\n" +
-					"Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
-					"Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
-					"David J. Webb for \"Solar Wars\"\n" +
-					"Matt Lee for \"Dope Wars\"\n" +
-					"DrWowe for solving the \"Special\" bug\n" +
-					"All the beta testers\nAnd all the players that sent me their ideas\n" +
-					"Space Trader is released under a GNU General Public License", "", getString(
-					android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-			case R.id.menuHelpLicense:
-				popup = new Popup(this, "License", "The game code is licensed under the GPLv2", "",
-					getString(android.R.string.ok), cbShowNextPopup);
-				popupQueue.push(popup);
-				showNextPopup();
-				return true;
-		}
-		if (call.equals(getString(R.string.BuyCargoShort))) {
-			changeFragment(FRAGMENTS.BUY_CARGO);
-		} else if (call.equals(getString(R.string.SellCargoShort))) {
-			changeFragment(FRAGMENTS.SELL_CARGO);
-		} else if (call.equals(getString(R.string.ShipYardShort))) {
-			changeFragment(FRAGMENTS.SHIPYARD);
-		} else if (call.equals(getString(R.string.BuyEquipmentShort))) {
-			changeFragment(FRAGMENTS.BUY_EQUIPMENT);
-		} else if (call.equals(getString(R.string.SellEquipmentShort))) {
-			changeFragment(FRAGMENTS.SELL_EQUIPMENT);
-		} else if (call.equals(getString(R.string.PersonnelShort))) {
-			changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
-		} else if (call.equals(getString(R.string.BankShort))) {
-			changeFragment(FRAGMENTS.BANK);
-		} else if (call.equals(getString(R.string.SystemInfoShort))) {
-			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-		} else if (call.equals(getString(R.string.CommanderStatusShort))) {
-			changeFragment(FRAGMENTS.COMMANDER_STATUS);
-		} else if (call.equals(getString(R.string.GalacticChartShort))) {
-			changeFragment(FRAGMENTS.GALACTIC_CHART);
-		} else if (call.equals(getString(R.string.WarpChartShort))) {
-			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
 	}
 
 	@Override
@@ -603,7 +353,266 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		assert actionBar != null;
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle(getString(R.string.Commands));
+		actionBar.setTitle("Commands");
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		try {
+			menu.findItem(R.id.hotkey1).setTitle(Shortcuts[gameState.Shortcut1][0]);
+			menu.findItem(R.id.hotkey2).setTitle(Shortcuts[gameState.Shortcut2][0]);
+			menu.findItem(R.id.hotkey3).setTitle(Shortcuts[gameState.Shortcut3][0]);
+			menu.findItem(R.id.hotkey4).setTitle(Shortcuts[gameState.Shortcut4][0]);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (mNavigationDrawerFragment != null) {
+			if (!mNavigationDrawerFragment.isDrawerOpen()) {
+				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER) {
+					MenuInflater inflater = getMenuInflater();
+					inflater.inflate(R.menu.in_game, menu);
+				}
+				restoreActionBar();
+				return true;
+			}
+		}
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME) {
+			return true;
+		}
+		int id = item.getItemId();
+		String call = "";
+		Popup popup;
+		DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (id != R.id.submenuGame && id != R.id.submenuHelp) {
+			drawer_layout.closeDrawers();
+		}
+		switch (id) {
+			case R.id.hotkey1:
+				call = Shortcuts[gameState.Shortcut1][0];
+				break;
+			case R.id.hotkey2:
+				call = Shortcuts[gameState.Shortcut2][0];
+				break;
+			case R.id.hotkey3:
+				call = Shortcuts[gameState.Shortcut3][0];
+				break;
+			case R.id.hotkey4:
+				call = Shortcuts[gameState.Shortcut4][0];
+				break;
+			case R.id.menuOptions:
+				changeFragment(FRAGMENTS.OPTIONS);
+				return true;
+			case R.id.menuNewGame:
+				popup = new Popup(this, "Really start new game?",
+					"If you start a new game your current game will be deleted!\nYou will not be added to the high score table!",
+					"", "Yes", "No", new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						mContext.deleteFile("savegame.txt");
+						changeFragment(FRAGMENTS.NEW_GAME);
+						popupQueue.clear();
+					}
+				}, cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuRetire:
+				popup = new Popup(this, "Retire", "Do you really want to retire?", "", "Yes", "No", new Popup.buttonCallback() {
+						@Override
+						public void execute(Popup popup, View view) {
+							popupQueue.clear();
+							EndOfGame(GameState.RETIRED);
+						}
+					}, cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuShortcuts:
+				changeFragment(FRAGMENTS.SHORTCUTS);
+				return true;
+			case R.id.menuHighscores:
+				ViewHighScores();
+				return true;
+			case R.id.menuClearHighscore:
+				return true;
+			case R.id.menuHelpCurrentScreen:
+				return true;
+			case R.id.menuHelpMenu:
+				popup = new Popup(this, "Tips",
+					"The menu consists of three main menu choices:\n\"Commands\", \"Game\", and \"Help\".\n\n" +
+						"\"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.\n\n" +
+						"\"\"Game\" gives access to game functions:\n" +
+						"- \"New Game\" starts a new game.\n" +
+						"- \"Retire\" ends the game by retiring the commander. Your score is calculated and you can enter the high-score table if you qualify. However, the preferred way to end a game is by claiming a moon, which is something you have to work for.\n" +
+						"- \"Options\" gives access to the game preferences.\n" +
+						"- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n" +
+						"- \"High Scores\" shows the high-score list.\n" +
+						"- \"Clear High Scores\" wipes the current high-score list.", "", "OK",
+					cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpHowToPlay:
+				popup = new Popup(this, "How to play",
+					"Space Trader is a strategy game in which the ultimate goal is to make enough cash to buy your own moon, to which you can retire. The most straightforward way to make cash is to trade goods between solar systems, hopefully making a profit. However, you can also decide to become a pirate and rob innocent traders of their wares. You can also earn an income by bounty hunting.\n\n" +
+						"The Help menu in the game offers basic information, enough to play the game. The menu choice \"Current Screen\" always gives information on the screen which is currently shown. The rest of the menu choices give a basic overview of the game, of which this particular text is the first. The First Steps choice is especially interesting for a first-time player, since it describes all the steps you need to perform your first days as a trader.\n\n" +
+						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
+						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
+						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpTrading:
+				popup = new Popup(this, "Trading",
+					"Trading is the safest way to make money. You trade by buying goods at one solar system, and sell them at another solar system. Of course, you should try to make a profit. There are several ways to ensure you can indeed sell your goods for a higher price than you bought them.\n\n" +
+						"The prices a system pays for goods are determined by several factors. First and foremost, there is the tech level of a system. Low-tech systems have relatively cheap natural resources (water, furs, food and ore), while high-tech systems have relatively cheap non-natural goods. In general, prices for natural goods increase with the level of technological development, while the other prices decrease. Note that the tech level also influences which goods are useful to the inhabitants of a system, and which they won't buy at all.\n\n" +
+						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
+						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
+						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpTravelling:
+				popup = new Popup(this, "Travelling",
+					"To travel to another system, go to the Short Range Chart. The system where you currently are is in the centre of the screen. The wide circle shows how far you can travel on your current fuel tanks. If the circle is absent, you probably have no fuel and you should go to the Ship Yard to buy some.\n\n" +
+						"When you tap a system that is within reach, you get shown some information on that system, and a big Warp button, with which you can activate a warp. When you tap the Warp button, you get warped to the target system. You do not materialize on the system itself, but nearby. You have to travel the last few clicks on your impulse engines (which costs no fuel - fuel is only used to warp)\n\n." +
+						"During that time, you may meet police, pirates or other traders. The chance to meet any of them is determined by the government type of the system you are flying to. If you have a weak ship, you should probably stay away from systems which have lots of pirates.\n\n" +
+						"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
+						"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
+						"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpShipEquipment:
+				popup = new Popup(this, "Ship Equipment",
+					"There are several types of ships available to you. You start out in a Gnat, which is the cheapest ship but one (the cheapest is the Flea, which is mainly used if you need to jump over a large distance, since it can travel up to 20 parsecs on one tank). At the Ship Yard, you can buy a new ship if you like and one is available. The availability of ships depends on the tech level of the system.\n\n" +
+						"Ship equipment falls into three groups. Each ship can equip zero or more of each group. The ship type determines exactly how many. For instance, your Gnat can equip one weapon, zero shields and one gadget.\n\n" +
+						"The first group consists of weapons. Three kinds of lasers are available, and the more lasers, or the more expensive lasers you equip, the more damage you do. The second group consists of shields. Two kinds of shields are available, and the more shields, or the more expensive shields you equip, the better you are defended against attacks. The last group consists of gadgets.\n\n" +
+						"As gadgets, you can buy 5 extra cargo bays, a targeting system, a navigating system, an auto-repair system, or a cloaking device. Of the extra cargo bays you can equip more than one: of the others you don't have use for more than one. The cloaking device helps you fly undetected through space; the other three systems increase one of your skills (see Skills).\n\n" +
+						"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
+						"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
+						"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpSkills:
+				popup = new Popup(this, "Skills",
+					"As a trader, you have need of several skills. You can set your skills on the New Commander screen at the start of the game.\n\n" +
+						"The Pilot skill determines how well you fly your ship. Good pilots have an easier time escaping from a fight and dodging laser shots.\n\n" +
+						"The Fighter skill determines how well you handle your weapons. While the actual damage you do with a weapon is solely determined by the weapon's power, the fighter skill determines whether you hit or not.\n\n" +
+						"The Trader skill influences the price you have to pay for goods and equipment. A good trader pays considerably less than a bad trader.\n\n" +
+						"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
+						"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
+						"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpFirstSteps:
+				popup = new Popup(this, "First Steps",
+					"Here I will describe the steps you will undertake the first days as a trader:\n" +
+						"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n" +
+						"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
+						"If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
+						"After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
+						"Then switch to the Short Range Chart to select your next target. Tap any system within the maximum range circle to get information on that system. Try to select a system which hasn't got too many pirates (unless to aspire a career as a bounty hunter), and which has a tech level which is opposite the tech level of your current system. That is, from an agricultural system you best travel to an industrial system to sell natural goods, while from an industrial system you best sell technologies to more backward systems. Use the Average Price List button to get an indication on the prices you might expect to sell your goods for. Goods that are displayed bold have an average selling price that is higher than the price you have to pay for those goods in the current system. Note that this isn't a guarantee, but it's better than nothing.\n\n" +
+						"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
+						"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
+						"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpAcknowledgements:
+				popup = new Popup(this, "Acknowledgements",
+					"Following is the ORIGINAL Acknowledgments text of Space Trader by Pieter Spronck. Much of it still applies, obviously, but not everything. I'm keeping it to acknowledge all of the work that has gone into Space Trader before the Android port.\n\n" +
+						"This first version of \"Space Trader\" has been designed and programmed by me, Pieter Spronck, between July and September 2000. The game has been enhanced several times since then. It has been released as freeware under a GNU General Public License (GPL).\n" +
+						"I used CodeWarrior for PalmPilot, release 6. Since it was my first project with this environment, I often consulted the example code delivered with it. I also made some use of Matt Lee's code for his DopeWars program.\n" +
+						"A derivative work of DopeWars was SolarWars, a program by David J. Webb. This program is very similar to DopeWars, except that it has a space trading theme instead of a drug theme. Playing SolarWars, I was reminded of the eighties game Elite. While Elite was more like a 3D space combat program, the trading between solar systems was central to it, especially because that was the best way to make money and buy better equipment for your ship.\n" +
+						"I thought it would be fun to have a program for the PalmPilot which was a trading game like SolarWars, but which would resemble the trading, development and even the combat of Elite more. Thus Space Trader was born. I haven't tried to hide my source of inspiration, and you'll find some ideas in the game which are directly derived from Elite. Consider it a tribute.\n" +
+						"A great many thanks and a lot of admiration goes out to Alexander Lawrence (al_virtual@yahoo.com), who created the beautiful pictures which illustrate the game, including the ship designs. It's almost worth ditching your black&white Palm for to get a color one!\n" +
+						"Sam Anderson (rulez2@home.com) converted Space Trader to a multi-segmented application (version 1.1.2). Sam also made a few small changes to the code, fixing bugs and correcting grammatical errors.  I wish to extend my thanks to him for that. Without Sam, players using Palm OS versions 2.x and 4.x would have had a lot more problems with this game.\n" +
+						"Samuel Goldstein (palm@fogbound.net) added most of the new functionalities for version 1.2.0. Among these great additions are four new quests, special encounters, the \"news\", trading with fellow traders in space, better black&white pictures, and many handy new features. Samuel brought new life to this game, and even I found it to be a lot of fun again. Many heartfelt thanks go out to Samuel, from me, and I expect from many players too.\n" +
+						"DrWowe solved the irritating \"Special\" bug which plagued Space Trader for over two years.\n" +
+						"Many thanks also go out to the Space Trader beta testers, who pointed out several bugs and who suggested many ideas to better the game, a lot of which have been implemented:\n" +
+						"Michael Andersson, John Austin, Ben Belatrix, Lee W. Benjamin, Russell K Bulmer (mtg101), Chris Casperson (Neo987), Danny Chan, Christophe \"The Frenchy\" Chidoyan, Lysander Destellirer, Charles Dill, Zion A. Dutro, Kevin and Daniel Eaton, Jen Edwards, Roni Eskola, Sean M. Goodman, Ken Gray, Tom Heisey, Peter Hendzlik, Anders Hustvedt, Jonathan Jensen, Peter Kirk, Lackyboy, Alexander Lawrence, Eric Lundquist, Eric Munsing, ossido, Brandon Philips, Dylan Sauce, Neil Shapiro, Ted Timmons, Subway of Trammel, Sascha Warnem, Aitor Zabala\n" +
+						"Thank you all. You were a tremendous help, and I am very grateful for that.\n" +
+						"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
+						"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
+					"", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpCredits:
+				popup = new Popup(this, "Credits", "Android port Copyright 2014 by Benjamin Schieder\n" +
+					"Linux port Copyright 2010 by Benjamin Schieder\n" +
+					"Tribble Sprite Art by Kiriki-chan (http://kiriki-chan.deviantart.com/)\n" +
+					"New Spaceship parts by Skorpio (http://opengameart.org/users/skorpio)\n" +
+					"Original Copyright 2000-2002 by Pieter Spronck\n" +
+					"Design and programming: Pieter Spronck\"\n" +
+					"Additional design and programming: Samuel Goldstein, Sam Anderson\n" +
+					"Graphics: Alexander Lawrence\n" +
+					"Additional graphics: Samuel Goldstein, Pieter Spronck\n" +
+					"Special thanks to: David Braben and Ian Bell for \"Elite\"\n" +
+					"David J. Webb for \"Solar Wars\"\n" +
+					"Matt Lee for \"Dope Wars\"\n" +
+					"DrWowe for solving the \"Special\" bug\n" +
+					"All the beta testers\nAnd all the players that sent me their ideas\n" +
+					"Space Trader is released under a GNU General Public License", "", "OK", cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+			case R.id.menuHelpLicense:
+				popup = new Popup(this, "License", "The game code is licensed under the GPLv2", "", "OK",
+					cbShowNextPopup);
+				popupQueue.push(popup);
+				showNextPopup();
+				return true;
+		}
+		if (call.equals("B")) {
+			changeFragment(FRAGMENTS.BUY_CARGO);
+		} else if (call.equals("S")) {
+			changeFragment(FRAGMENTS.SELL_CARGO);
+		} else if (call.equals("Y")) {
+			changeFragment(FRAGMENTS.SHIPYARD);
+		} else if (call.equals("E")) {
+			changeFragment(FRAGMENTS.BUY_EQUIPMENT);
+		} else if (call.equals("Q")) {
+			changeFragment(FRAGMENTS.SELL_EQUIPMENT);
+		} else if (call.equals("P")) {
+			changeFragment(FRAGMENTS.PERSONNEL_ROSTER);
+		} else if (call.equals("K")) {
+			changeFragment(FRAGMENTS.BANK);
+		} else if (call.equals("I")) {
+			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+		} else if (call.equals("C")) {
+			changeFragment(FRAGMENTS.COMMANDER_STATUS);
+		} else if (call.equals("G")) {
+			changeFragment(FRAGMENTS.GALACTIC_CHART);
+		} else if (call.equals("W")) {
+			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 
 	/*
@@ -754,91 +763,96 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void CommanderStatusQuestsCallback(View view) {
 		String quests = "";
 		if (gameState.MonsterStatus == 1) {
-			quests += getString(R.string.KillTheSpaceMonsterAtAcamar);
+			quests += "Kill the space monster at Acamar.\n";
 		}
 
 		if (gameState.DragonflyStatus >= 1 && gameState.DragonflyStatus <= 4) {
-			quests += String.format(getString(R.string.FollowTheDragonfly),
-				gameState.DragonflyStatus == 1 ? SolarSystemName[GameState.BARATASSYSTEM] :
-					gameState.DragonflyStatus == 2 ? SolarSystemName[GameState.MELINASYSTEM] :
-						gameState.DragonflyStatus == 3 ? SolarSystemName[GameState.REGULASSYSTEM] :
-							gameState.DragonflyStatus == 4 ? SolarSystemName[GameState.ZALKONSYSTEM] : "");
+			quests += "Follow the Dragonfly to ";
+			if (gameState.DragonflyStatus == 1) {
+				quests += "Baratas.\n";
+			} else if (gameState.DragonflyStatus == 2) {
+				quests += "Melina.\n";
+			} else if (gameState.DragonflyStatus == 3) {
+				quests += "Regulas.\n";
+			} else if (gameState.DragonflyStatus == 4) {
+				quests += "Zalkon.\n";
+			}
 		} else if (gameState.SolarSystem[GameState.ZALKONSYSTEM].special == GameState.INSTALLLIGHTNINGSHIELD) {
-			quests += getString(R.string.GetYourLightningShieldAtZalkon);
+			quests += "Get your lightning shield at Zalkon.\n";
 		}
 
 		if (gameState.JaporiDiseaseStatus == 1) {
-			quests += getString(R.string.DeliverTheAntidoteToJapori);
+			quests += "Deliver antidote to Japori.\n";
 		}
 
 		if (gameState.ArtifactOnBoard) {
-			quests += getString(R.string.DeliverTheAlienArtifact);
+			quests += "Deliver the alien artifact to professor Berger at some hi-tech system.\n";
 		}
 
 		if (gameState.WildStatus == 1) {
-			quests += getString(R.string.SmuggleJonathanWild);
+			quests += "Smuggle Jonathan Wild to Kravat.\n";
 		}
 
 		if (gameState.JarekStatus == 1) {
-			quests += getString(R.string.BringJarekToDevidia);
+			quests += "Bring ambassador Jarek to Devidia.\n";
 		}
 
 		// I changed this, and the reused the code in the Experiment quest.
 		// I think it makes more sense to display the time remaining in
 		// this fashion. SjG 10 July 2002
 		if (gameState.InvasionStatus >= 1 && gameState.InvasionStatus < 7) {
+			quests += "Inform Gemulon about alien invasion";
 			if (gameState.InvasionStatus == 6) {
-				quests += getString(R.string.InformGemulonByTomorrow);
+				quests += " by tomorrow";
 			} else {
-				quests += String.format(getString(R.string.InformGemulonWithinDays),
-					gameState.InvasionStatus);
+				quests += String.format(" within %d days", gameState.InvasionStatus);
 			}
 			quests += ".\n";
 		} else if (gameState.SolarSystem[GameState.GEMULONSYSTEM].special == GameState.GETFUELCOMPACTOR) {
-			quests += getString(R.string.GetFuelCompactorAtGemulon);
+			quests += "Get your fuel compactor at Gemulon.\n";
 		}
 
 		if (gameState.ExperimentStatus >= 1 && gameState.ExperimentStatus < 11) {
+			quests += "Stop Dr. Fehler's experiment at Daled ";
 
 			if (gameState.ExperimentStatus == 10) {
-				quests += getString(R.string.StopDrFehlersExperimentTomorrow);
+				quests += "by tomorrow";
 			} else {
-				quests += String.format(getString(R.string.StopDrFehlersExperimentInDays),
-					11 - gameState.ExperimentStatus);
+				quests += String.format("within %d days", 11 - gameState.ExperimentStatus);
 			}
 			quests += ".\n";
 		}
 
 		if (gameState.ReactorStatus >= 1 && gameState.ReactorStatus < 21) {
+			quests += "Deliver the unstable reactor to Nix ";
 			if (gameState.ReactorStatus < 2) {
-				quests += getString(R.string.DeliverReactorForHenryMorgan);
+				quests += "for Henry Morgan.\n";
 			} else {
-				quests += getString(R.string.DeliverReactorBeforeFuelRunsOut);
+				quests += "before it consumes all its fuel.\n";
 			}
 		}
 
 		if (gameState.SolarSystem[GameState.NIXSYSTEM].special == GameState.GETSPECIALLASER) {
-			quests += getString(R.string.GetLaserAtNix);
+			quests += "Get your special laser at Nix.\n";
 		}
 
 		if (gameState.ScarabStatus == 1) {
-			quests += getString(R.string.FindAndDestroyTheScarab);
+			quests += "Find and destroy the Scarab (which is hiding at the exit to a wormhole).\n";
 		}
 
 		if (gameState.Ship.tribbles > 0) {
-			quests += getString(R.string.GetRidOfTheTribbles);
+			quests += "Get rid of those pesky tribbles.\n";
 		}
 
 		if (gameState.MoonBought) {
-			quests += getString(R.string.ClaimYourMoonAtUtopia);
+			quests += "Claim your moon at Utopia.\n";
 		}
 
 		if (quests.length() == 0) {
-			quests = getString(R.string.ThereAreNoOpenQuests);
+			quests = "There are no open quests.\n";
 		}
 
-		Popup popup = new Popup(this, getString(R.string.OpenQuests), quests, "", getString(
-			android.R.string.ok), cbShowNextPopup);
+		Popup popup = new Popup(this, "Open Quests", quests, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -848,41 +862,37 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		String buf = "";
 		if (gameState.Ship.tribbles > 0) {
 			if (gameState.Ship.tribbles >= GameState.MAXTRIBBLES) {
-				buf += getString(R.string.CargoAnInfestationOfTribbles);
+				buf += "An infestation of tribbles.\n";
 			} else {
-				buf += String.format(getString(R.string.CargoNumberOfTribbles), gameState.Ship.tribbles,
-					gameState.Ship.tribbles == 1 ? getString(R.string.TribbleSingular) : getString(
-						R.string.TribblePlural));
+				buf += String.format("%d cute furry tribble%s.\n", gameState.Ship.tribbles,
+					gameState.Ship.tribbles == 1 ? "" : "s");
 			}
 		}
 
 		if (gameState.JaporiDiseaseStatus == 1) {
-			buf += getString(R.string.Cargo10BaysOfAntidote);
+			buf += "10 bays of antidote.\n";
 		}
 		if (gameState.ArtifactOnBoard) {
-			buf += getString(R.string.CargoAnAlienArtifact);
+			buf += "An alien artifact.\n";
 		}
 		if (gameState.JarekStatus == 2) {
-			buf += getString(R.string.CargoAHagglingComputer);
+			buf += "A haggling computer.\n";
 		}
 		if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
-			buf += getString(R.string.CargoAnUnstableReactor);
-			buf += String.format(getString(R.string.CargoNumberBaysOfFuel),
-				10 - ((gameState.ReactorStatus - 1) / 2),
-				(10 - ((gameState.ReactorStatus - 1) / 2)) > 1 ? getString(R.string.BaysPlural) : getString(
-					R.string.BaySingular));
+			buf += "An unstable reactor taking up 5 bays.\n";
+			buf += String.format("%d bay%s of enriched fuel.\n", 10 - ((gameState.ReactorStatus - 1) / 2),
+				(10 - ((gameState.ReactorStatus - 1) / 2)) > 1 ? "s" : "");
 
 		}
 		if (gameState.CanSuperWarp) {
-			buf += getString(R.string.CargoAPortableSingularity);
+			buf += "A Portable Singularity.\n";
 		}
 
 		if (buf.length() == 0) {
-			buf = getString(R.string.CargoNoSpecialCargo);
+			buf = "No special cargo.";
 		}
 
-		Popup popup = new Popup(this, getString(R.string.SpecialCargo), buf, "", getString(
-			android.R.string.ok), cbShowNextPopup);
+		Popup popup = new Popup(this, "Special Cargo", buf, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -892,10 +902,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		int i, j, k, FirstEmptySlot;
 		String buf;
 
-		buf = String.format(getString(R.string.ShipInfoType), gameState.Ship.getType().name,
-			gameState.ScarabStatus == 3 ? getString(R.string.ShipInfoWithHardenedHull) : "");
+		buf = String.format("Type: %s%s\n", ShipTypes.ShipTypes[gameState.Ship.type].name,
+			gameState.ScarabStatus == 3 ? "/hardened hull" : "");
 
-		buf += getString(R.string.ShipInfoEquipment);
+		buf += "Equipment:\n";
 
 		for (i = 0; i < GameState.MAXWEAPONTYPE + GameState.EXTRAWEAPONS; ++i) {
 			j = 0;
@@ -929,7 +939,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			if (j > 0) {
 				if (i == GameState.EXTRABAYS) {
-					buf += String.format(getString(R.string.ShipInfoExtraCargoBays), j * 5);
+					buf += String.format("%d extra cargo bays\n", j * 5);
 				} else {
 					buf += String.format("%s\n", Gadgets.mGadgets[i].name);
 				}
@@ -937,16 +947,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		if (gameState.EscapePod) {
-			buf += getString(R.string.ShipInfoAnEscapePod);
+			buf += "An escape pod\n";
 		}
 
 		if (gameState.Ship.AnyEmptySlots()) {
-			buf += getString(R.string.ShipInfoUnfilledSlots);
+			buf += "Unfilled:\n";
 
 			FirstEmptySlot = gameState.GetFirstEmptySlot(
 				ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon);
 			if (FirstEmptySlot >= 0) {
-				buf += String.format(getString(R.string.ShipInfoNumWeaponSlots),
+				buf += String.format("%d weapon slot%s\n",
 					ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots - FirstEmptySlot,
 					(ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
@@ -954,7 +964,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			FirstEmptySlot = gameState.GetFirstEmptySlot(
 				ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield);
 			if (FirstEmptySlot >= 0) {
-				buf += String.format(getString(R.string.ShipInfoNumShieldSlots),
+				buf += String.format("%d shield slot%s\n",
 					ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots - FirstEmptySlot,
 					(ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
@@ -962,13 +972,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			FirstEmptySlot = gameState.GetFirstEmptySlot(
 				ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget);
 			if (FirstEmptySlot >= 0) {
-				buf += String.format(getString(R.string.ShipInfoNumGadgetSlots),
+				buf += String.format("%d gadget slot%s\n",
 					ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots - FirstEmptySlot,
 					(ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots - FirstEmptySlot) == 1 ? "" : "s");
 			}
 		}
-		Popup popup = new Popup(this, getString(R.string.ShipInfoTitle), buf, "", getString(
-			android.R.string.ok), cbShowNextPopup);
+		Popup popup = new Popup(this, "Ship Status", buf, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -978,29 +987,27 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnBankGetLoan(View view) {
 		Popup popup;
 		if (gameState.Debt >= gameState.MaxLoan()) {
-			popup = new Popup(this, getString(R.string.DebtTooHigh), getString(
-				R.string.YourDebtIsTooHighToGetAnotherLoan), "", getString(android.R.string.ok),
-				cbShowNextPopup);
+			popup = new Popup(this, "Debt too high!", "Your debt is too high to get another loan.", "",
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
-		popup = new Popup(this, getString(R.string.GetLoan), String.format(getString(
-			R.string.HowMuchNewLoanDoYouWant), gameState.MaxLoan()), getString(R.string.Credits), "",
-			gameState.MaxLoan(), getString(R.string.GetLoan), getString(R.string.DontGetLoan),
-			new Popup.buttonCallback() {
-				@Override
-				public void execute(Popup popup, View view) {
-					SeekBar seekBar = (SeekBar) view;
-					int amount = seekBar.getProgress();
-					if (amount > 0) {
-						amount = Math.min(gameState.MaxLoan(), amount);
-						gameState.Credits += amount;
-						gameState.Debt += amount;
-						changeFragment(FRAGMENTS.BANK);
-					}
+		popup = new Popup(this, "Get Loan", String.format(
+			"How much do you want?\nYou can borrow up to %d credits.", gameState.MaxLoan()), "Credits",
+			"", gameState.MaxLoan(), "Get loan", "Don't get loan", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				SeekBar seekBar = (SeekBar) view;
+				int amount = seekBar.getProgress();
+				if (amount > 0) {
+					amount = Math.min(gameState.MaxLoan(), amount);
+					gameState.Credits += amount;
+					gameState.Debt += amount;
+					changeFragment(FRAGMENTS.BANK);
 				}
-			}, cbShowNextPopup, new Popup.buttonCallback() {
+			}
+		}, cbShowNextPopup, new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
 				gameState.Credits += gameState.MaxLoan();
@@ -1018,8 +1025,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 	public void btnBankPaybackLoan(View view) {
 		Popup popup;
 		if (gameState.Debt <= 0) {
-			popup = new Popup(this, "No debt.", "You don't have a loan to pay back.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+			popup = new Popup(this, "No debt.", "You don't have a loan to pay back.", "", "OK",
+				cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1036,7 +1043,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					if (amount > gameState.Credits) {
 						Popup popup1 = new Popup(popup.context, "Not enough credits!", String.format(
 							"You only have %d credits. You can't pay back more than that!", gameState.Credits),
-							"", getString(android.R.string.ok), cbShowNextPopup);
+							"", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						return;
 					}
@@ -1078,8 +1085,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} else {
 			if (!gameState.EscapePod) {
 				popup = new Popup(this, "No Escape Pod",
-					"Insurance isn't useful for you, since you don't have an escape pod.", "", getString(
-					android.R.string.ok), cbShowNextPopup);
+					"Insurance isn't useful for you, since you don't have an escape pod.", "", "OK",
+					cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1120,8 +1127,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					int amount = seekBar.getProgress();
 					btnShipyardBuyFuel(amount);
 				} catch (NumberFormatException e) {
-					Popup popup1 = new Popup(popup.context, "Error", e.getLocalizedMessage(), "", getString(
-						android.R.string.ok), cbShowNextPopup);
+					Popup popup1 = new Popup(popup.context, "Error", e.getLocalizedMessage(), "", "OK",
+						cbShowNextPopup);
 					popupQueue.push(popup1);
 				}
 			}
@@ -1286,7 +1293,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (j > ShipTypes.ShipTypes[Index].crewQuarters) {
 			Popup popup = new Popup(this, "Too Many Crewmembers",
 				"The new ship you picked doesn't have enough quarters for all of your crewmembers. First you will have to fire one or more of them.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1294,8 +1301,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.ShipPrice[Index] == 0) {
 			Popup popup = new Popup(this, "Ship Not Available",
-				"That type of ship is not available in the current system.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"That type of ship is not available in the current system.", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1303,21 +1309,20 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Popup popup;
 			popup = new Popup(this, "You Are In Debt", "You can't buy that as long as you have debts.",
 				"Before you can buy a new ship or new equipment, you must settle your debts at the bank.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		} else if (gameState.ShipPrice[Index] > gameState.ToSpend()) {
 			Popup popup = new Popup(this, "Not Enough Money",
-				"You don't have enough money to buy this ship.", "", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"You don't have enough money to buy this ship.", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		} else if ((gameState.JarekStatus == 1) && (gameState.WildStatus == 1) && (ShipTypes.ShipTypes[Index].crewQuarters < 3)) {
 			Popup popup = new Popup(this, "Passengers Needs Quarters",
 				"You must get a ship with enough crew quarters so that Ambassador Jarek and Jonathan Wild can stay on board.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1325,7 +1330,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Popup popup;
 			popup = new Popup(this, "Passenger Needs Quarters",
 				"You must get a ship with enough crew quarters so that Ambassador Jarek can stay on board.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1333,7 +1338,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Popup popup;
 			popup = new Popup(this, "Passenger Needs Quarters",
 				"You must get a ship with enough crew quarters so that Jonathan Wild can stay on board.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1342,7 +1347,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Shipyard Engineer",
 				"Sorry! We can't take your ship as a trade-in. That Ion Reactor looks dangerous, and we have no way of removing it. Come back when you've gotten rid of it.",
 				"You can't sell your ship as long as you have an Ion Reactor on board. Deliver the Reactor to Nix, and then you'll be able to get a new ship.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1354,7 +1359,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				// can't transfer the Lightning Shields. How often would this happen?
 				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer your Lightning Shield because the new ship has insufficient shield slots!",
-					ShipTypes.ShipTypes[Index].name), "", getString(android.R.string.ok), cbShowNextPopup);
+					ShipTypes.ShipTypes[Index].name), "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
@@ -1367,7 +1372,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				// can't transfer the Fuel Compactor
 				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer your Fuel Compactor because the new ship has insufficient gadget slots!",
-					ShipTypes.ShipTypes[Index].name), "", getString(android.R.string.ok), cbShowNextPopup);
+					ShipTypes.ShipTypes[Index].name), "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
@@ -1381,7 +1386,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				// can't transfer the Laser
 				Popup popup = new Popup(this, "Can't Transfer Item", String.format(
 					"If you trade your ship in for a %s, you won't be able to transfer Morgans Laser because the new ship has insufficient weapon slots!",
-					ShipTypes.ShipTypes[Index].name), "", getString(android.R.string.ok), cbShowNextPopup);
+					ShipTypes.ShipTypes[Index].name), "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
@@ -1393,7 +1398,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.ShipPrice[Index] + extra > gameState.ToSpend()) {
 			Popup popup = new Popup(this, "Not Enough Money",
 				"You won't have enough money to buy this ship and pay the cost to transfer all of your unique equipment. You should choose carefully which items you wish to transfer!",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -1432,7 +1437,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			} else {
 				Popup popup = new Popup(this, "Can't Transfer Item",
 					"Unfortunately, if you make this trade, you won't be able to afford to transfer your Lightning Shield to the new ship!",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 				btnBuyNewShipStep1CheckLightningShields(Index, extra[0], cntLightning + 1, numLightning,
 					hasCompactor, hasMorganLaser);
 				popupQueue.push(popup);
@@ -1474,7 +1479,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Popup popup;
 				popup = new Popup(this, "Can't Transfer Item",
 					"Unfortunately, if you make this trade, you won't be able to afford to transfer your Fuel Compactor to the new ship!",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				btnBuyNewShipStep1CheckMorgansLaser(Index, extra[0], addLightning, false, hasMorganLaser);
@@ -1511,7 +1516,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Popup popup;
 				popup = new Popup(this, "Can't Transfer Item",
 					"Unfortunately, if you make this trade, you won't be able to afford to transfer Morgan's Laser to the new ship!",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				btnBuyNewShipStep2(Index, extra[0], addLightning, addCompactor, false);
@@ -1590,8 +1595,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE)) && GameState.EXTRABAYS != (Index - (GameState.MAXWEAPONTYPE + GameState.MAXSHIELDTYPE))) {
 				Popup popup;
 				popup = new Popup(this, "You Already Have One",
-					"It's not useful to buy more than one of this item.", "", getString(android.R.string.ok),
-					cbShowNextPopup);
+					"It's not useful to buy more than one of this item.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1618,24 +1622,24 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Price <= 0) {
 			popup = new Popup(this, "Not Available", "That item is not available in this system.",
 				"Each item is only available in a system which has the technological development needed to produce it.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.Debt > 0) {
 			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (Price > gameState.ToSpend()) {
 			popup = new Popup(this, "Not enough money", "You do not have enough money to buy this item.",
 				"If you can't pay the price mentioned to the right of an item, you can't get it. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (FirstEmptySlot < 0) {
 			popup = new Popup(this, "Not Enough Slots",
-				"You have already filled all of your available slots for this type of item.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"You have already filled all of your available slots for this type of item.", "", "OK",
+				cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -1710,7 +1714,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							popup1 = new Popup(popup.context, "Cargo Bays Full",
 								"The extra cargo bays are still filled with goods. You can only sell them when they're empty.",
 								"First you need to sell some trade goods. When you have at least 5 empty bays, you can sell the extra cargo bays.",
-								getString(android.R.string.ok), cbShowNextPopup);
+								"OK", cbShowNextPopup);
 							popupQueue.push(popup1);
 							showNextPopup();
 							return;
@@ -1773,8 +1777,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				idx++;
 				break;
 			default:
-				popup = new Popup(this, "Error", "No cargo selected.", "", getString(android.R.string.ok),
-					cbShowNextPopup);
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1783,15 +1786,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		final int Index = idx;
 		if (gameState.Debt > GameState.DEBTTOOLARGE) {
 			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
 		if (CURSYSTEM.qty[Index] <= 0 || gameState.BuyPrice[Index] <= 0) {
-			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "",
-				getString(android.R.string.ok), cbShowNextPopup);
+			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "", "OK",
+				cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1800,8 +1803,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.TotalCargoBays() - gameState.Ship
 			.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
 			popup = new Popup(this, "No Empty Bays",
-				"You don't have any empty cargo holds available at the moment", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"You don't have any empty cargo holds available at the moment", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1811,7 +1813,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Not Enough Money",
 				"You don't have enough money to spend on any of these goods.",
 				"At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1883,8 +1885,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				idx++;
 				break;
 			default:
-				popup = new Popup(this, "Error", "No cargo selected.", "", getString(android.R.string.ok),
-					cbShowNextPopup);
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1893,15 +1894,15 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		final int Index = idx;
 		if (gameState.Debt > GameState.DEBTTOOLARGE) {
 			popup = new Popup(this, "You Have A Debt", "You can't buy that as long as you have debts.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
 		}
 
 		if (CURSYSTEM.qty[Index] <= 0 || gameState.BuyPrice[Index] <= 0) {
-			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "",
-				getString(android.R.string.ok), cbShowNextPopup);
+			popup = new Popup(this, "Nothing Available", "None of these goods are available.", "", "OK",
+				cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1910,8 +1911,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.TotalCargoBays() - gameState.Ship
 			.FilledCargoBays() - gameState.LeaveEmpty <= 0) {
 			popup = new Popup(this, "No Empty Bays",
-				"You don't have any empty cargo holds available at the moment", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"You don't have any empty cargo holds available at the moment", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1921,7 +1921,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Not Enough Money",
 				"You don't have enough money to spend on any of these goods.",
 				"At the bottom of the Buy Cargo screen, you see the credits you have available. You don't seem to have enough to buy at least one of the selected items. If you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1960,8 +1960,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 			default:
-				popup = new Popup(this, "Error", "No cargo selected.", "", getString(android.R.string.ok),
-					cbShowNextPopup);
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -1971,7 +1970,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.cargo[Index] <= 0) {
 			popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
 				"On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -1980,7 +1979,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Not Interested",
 				"Nobody in this system is interested in buying these goods.",
 				"Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2049,8 +2048,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Index++;
 				break;
 			default:
-				popup = new Popup(this, "Error", "No cargo selected.", "", getString(android.R.string.ok),
-					cbShowNextPopup);
+				popup = new Popup(this, "Error", "No cargo selected.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -2059,7 +2057,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.cargo[Index] <= 0) {
 			popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
 				"On the Sell Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't sell anything.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2068,7 +2066,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Not Interested",
 				"Nobody in this system is interested in buying these goods.",
 				"Notice that on the Sell Cargo screen, it says \"no trade\" next to these goods. This means that people aren't interested in buying them, either because of their political system, or because their tech level isn't high enough to make use of them.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2205,8 +2203,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.Opponent.cargo[Index] <= 0) {
 			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-				"You can only steal what your victim actually has.", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"You can only steal what your victim actually has.", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2215,7 +2212,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.TotalCargoBays() - gameState.Ship.FilledCargoBays() <= 0) {
 			popup = new Popup(this, "Cargo Bays Full",
 				"You have no empty cargo bays. Dump some cargo or leave the victims cargo in his bays.", "",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2263,8 +2260,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Opponent.cargo[Index] <= 0) {
 			Popup popup;
 			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-				"You can only steal what your victim actually has.", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"You can only steal what your victim actually has.", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -2301,8 +2297,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Opponent.cargo[Index] <= 0) {
 			Popup popup;
 			popup = new Popup(this, "Victim hasn't got any", "Your victim hasn't got any of these goods.",
-				"You can only steal what your victim actually has.", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"You can only steal what your victim actually has.", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -2373,7 +2368,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Popup popup;
 			popup = new Popup(this, "None to dump", "You have none of these goods.",
 				"On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -2411,7 +2406,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.cargo[Index] <= 0) {
 			popup = new Popup(this, "None to dump", "You have none of these goods.",
 				"On the Dump Cargo screen, the leftmost button shows the number of cargo bays you have which contain these goods. If that amount is zero, you can't dump any.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -2463,7 +2458,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (buf.equals("Cheetah")) {
 					if (++gameState.CheatCounter < 3) {
 						Popup popup1 = new Popup(popup.context, "Cheetah!", String.format("Strike %d!",
-							gameState.CheatCounter), "", getString(android.R.string.ok), cbShowNextPopup);
+							gameState.CheatCounter), "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -2471,8 +2466,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					if (gameState.CheatCounter == 3) {
 						Popup popup1 = new Popup(popup.context, "Cheat mode enabled",
 							"Cheat mode has been enabled. You will NOT be added to the highscore list!",
-							"Winners never cheat. Cheaters never win.", getString(android.R.string.ok),
-							cbShowNextPopup);
+							"Winners never cheat. Cheaters never win.", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -2548,8 +2542,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 									break;
 							}
 						}
-						Popup popup1 = new Popup(popup.context, "Quests", questbuf, "", getString(
-							android.R.string.ok), cbShowNextPopup);
+						Popup popup1 = new Popup(popup.context, "Quests", questbuf, "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					} else if (buf.equals("Very rare")) {
@@ -2582,14 +2575,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.TrackedSystem < 0) {
 			popup = new Popup(this, "No System Selected",
 				"To use the Portable Singularity, track a system before clicking on this button. (You can't use the Singularity to enter a Wormhole).",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.TrackedSystem == gameState.Mercenary[0].curSystem) {
 			popup = new Popup(this, "Cannot Jump",
 				"You are tracking the system where you are currently located. It's useless to jump to your current location.",
 				"Track another system than the one where you are currently are located, then tap the Singularity button to jump.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -2678,7 +2671,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "No Free Quarters",
 				"There are currently no free crew quarters on your ship.",
 				"If you hire someone, you must give him or her quarters on your ship. Depending on the type of ship, you can hire zero, one or two mercenaries.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2747,7 +2740,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						Popup popup1;
 						popup1 = new Popup(popup.context, "Say Goodbye to Wild",
 							"Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
-							"", getString(android.R.string.ok), cbShowNextPopup);
+							"", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -2762,7 +2755,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Debt > GameState.DEBTTOOLARGE) {
 			popup = new Popup(this, "Large Debt",
 				"Your debt is too large.  You are not allowed to leave this system until your debt is lowered.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2773,7 +2766,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Pay Mercenaries",
 				"You don't have enough cash to pay your mercenaries to come with you on this trip. Fire them or make sure you have enough cash.",
 				"You must pay your mercenaries daily, that is, before you warp to another system. If you don't have the cash, you must either sell something so you have enough cash, or fire the mercenaries you can't pay. Until then, warping is out of the question.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2785,7 +2778,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Not Enough Money",
 					"You don't have enough cash to pay for your insurance.",
 					"You can't leave if you haven't paid your insurance. If you have no way to pay, you should stop your insurance at the bank.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -2798,7 +2791,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Wormhole Tax",
 				"You don't have enough money to pay for the wormhole tax.",
 				"Wormhole tax must be paid when you want to warp through a wormhole. It depends on the type of your ship.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -2920,7 +2913,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						Popup popup1;
 						popup1 = new Popup(popup.context, "Trade Completed", String.format(
 							"%s %s. It's been a pleasure doing business with you.", "Thanks for selling us the",
-							Tradeitems.mTradeitems[i].name), "", getString(android.R.string.ok), cbShowNextPopup);
+							Tradeitems.mTradeitems[i].name), "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -2938,7 +2931,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					Popup popup1;
 					popup1 = new Popup(popup.context, "Trade Completed", String.format(
 						"%s %s. It's been a pleasure doing business with you.", "Thanks for selling us the",
-						Tradeitems.mTradeitems[i].name), "", getString(android.R.string.ok), cbShowNextPopup);
+						Tradeitems.mTradeitems[i].name), "", "OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 				}
@@ -2995,7 +2988,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						Popup popup1;
 						popup1 = new Popup(popup.context, "Trade Completed", String.format(
 							"%s %s. It's been a pleasure doing business with you.", "Thanks for buying the",
-							Tradeitems.mTradeitems[i].name), "", getString(android.R.string.ok), cbShowNextPopup);
+							Tradeitems.mTradeitems[i].name), "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -3014,7 +3007,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						Popup popup1;
 						popup1 = new Popup(popup.context, "Trade Completed", String.format(
 							"%s %s. It's been a pleasure doing business with you.", "Thanks for buying the",
-							Tradeitems.mTradeitems[i].name), "", getString(android.R.string.ok), cbShowNextPopup);
+							Tradeitems.mTradeitems[i].name), "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
@@ -3063,7 +3056,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Contraband Removed",
 				"The Customs Police confiscated all of your illegal cargo, but since you were cooperative, you avoided stronger fines or penalties.",
 				"The Customs Police took all the illegal goods from your ship, and sent you on your way.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			Travel();
@@ -3144,7 +3137,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Training completed",
 						"After a few hours of training with a top expert, you feel your abilities have improved significantly.",
 						"Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 					Travel();
@@ -3188,7 +3181,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Training completed",
 						"After a few hours of training with a top expert, you feel your abilities have improved significantly.",
 						"Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 					Travel();
@@ -3233,7 +3226,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Training completed",
 						"After a few hours of training with a top expert, you feel your abilities have improved significantly.",
 						"Under the watchful eye of the Captain, you demonstrate your abilities. The Captain provides some helpful pointers and tips, and teaches you a few new techniques. The few hours pass quickly, but you feel you've gained a lot from the experience.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 					Travel();
@@ -3263,7 +3256,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Tonic consumed",
 						"Mmmmm. Captain Marmoset's Amazing Skill Tonic not only fills you with energy, but tastes like a fine single-malt.",
 						"Captain Marmoset's Amazing Skill Tonic goes down very smoothly. You feel a slight tingling in your fingertips.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 				} else if (gameState.EncounterType == GameState.BOTTLEOLDENCOUNTER) {
@@ -3273,7 +3266,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup1 = new Popup(popup.context, "Tonic consumed",
 						"While you don't know what it was supposed to taste like, you get the feeling that this dose of tonic was a bit off.",
 						"Captain Marmoset's Amazing Skill Tonic tasted very strange, like slightly salty red wine. You feel a bit dizzy, and your teeth itch for a while.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 				}
@@ -3304,7 +3297,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				"Certain governments have such an incorruptible police force that you can't bribe them. Other times, the police are corruptible, but their supervisors know what's going on, so they won't risk it.";
 		}
 		if (!title.equals("")) {
-			popup = new Popup(this, title, text, hint, getString(android.R.string.ok), cbShowNextPopup);
+			popup = new Popup(this, title, text, hint, "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -3353,8 +3346,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				if (gameState.Credits < b) {
 					Popup popup1;
 					popup1 = new Popup(popup.context, "Not enough cash",
-						"You don't have enough cash for a bribe.", "", getString(android.R.string.ok),
-						cbShowNextPopup);
+						"You don't have enough cash for a bribe.", "", "OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
 				} else {
@@ -3385,7 +3377,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						popup1 = new Popup(popup.context, "Artifact Relinquished",
 							"The aliens take the artifact from you.",
 							"The aliens have taken the artifact from you. Well, it's rightfully theirs, so you probably shouldn't complain. You won't receive any reward from professor Berger, though.",
-							getString(android.R.string.ok), cbShowNextPopup);
+							"OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						gameState.ArtifactOnBoard = false;
 					}
@@ -3393,16 +3385,16 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "",
-					getString(android.R.string.ok), cbShowNextPopup);
+				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+					cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
 			}
 		} else if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
 			if (gameState.PoliceRecordScore <= GameState.PSYCHOPATHSCORE) {
-				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "",
-					getString(android.R.string.ok), cbShowNextPopup);
+				popup = new Popup(this, "To the death!", "Surrender? Hah! We want your HEAD!", "", "OK",
+					cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -3446,7 +3438,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Pirates Find No Cargo",
 					"The pirates are very angry that they find no cargo on your ship. To stop them from destroying you, you have no choice but to pay them an amount equal to 5% of your current worth.",
 					"If you have nothing in your cargo holds, the pirates will blow up your ship unless you pay them some money, equal to 5% of your current worth, which will be subtracted from your cash, unless you don't have enough of that, in which case it will be added to your debt. At least it's better than dying.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				if (gameState.Credits >= Blackmail) {
@@ -3459,7 +3451,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Looting",
 					"The pirates board your ship and transfer as much of your cargo to their own ship as their cargo bays can hold.",
 					"The pirates steal from you what they can carry, but at least you get out of it alive.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 
@@ -3498,7 +3490,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Wild Goes with Pirates",
 					"The Pirate Captain turns out to be an old associate of Jonathan Wild's, and invites him to go to Kravat aboard the Pirate ship. Wild accepts the offer and thanks you for the ride.",
 					"Jonathan Wild figures that it's probably safer to get a ride home with his old associate than stay on your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police?",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else if (gameState.WildStatus == 1) {
@@ -3506,7 +3498,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Wild Chats with Pirates",
 					"The Pirate Captain turns out to be an old associate of Jonathan Wild's. They talk about old times, and you get the feeling that Wild would switch ships if the Pirates had any quarters available.",
 					"Jonathan Wild would have preferred to get a ride home with his old associate than stay in your ship. After all, if you surrender to pirates, what's to stop you from surrendering to the police? But the Pirates have no quarters available, so he grudgingly stays aboard your ship.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
@@ -3515,7 +3507,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "Pirates Examine Reactor",
 					"The Pirates poke around the Ion Reactor while trying to figure out if it's valuable. They finally conclude that the Reactor is worthless, not to mention dangerous, and leave it on your ship.",
 					"The good news is that you still have the Ion Reactor. The bad news is that you still have to worry about managing its depleting fuel store.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
@@ -3532,7 +3524,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Ship.TotalWeapons(-1, -1) <= 0) {
 			popup = new Popup(this, "No Weapons", "You can't attack without weapons!",
 				"You either are flying a ship without any weapon slots, so your only option is to flee from fights, or you haven't bought any weapons yet. Sorry, no weapons, no attacking.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -3834,7 +3826,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 							"The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
 							Fine),
 							"Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt.",
-							getString(android.R.string.ok), cbShowNextPopup);
+							"OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 						gameState.PoliceRecordScore += GameState.TRAFFICKING;
@@ -3853,7 +3845,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 						popup1 = new Popup(popup.context, "Police Confiscate Reactor",
 							"The Police confiscate the Ion Reactor as evidence of your dealings with unsavory characters.",
 							"The bad news is that you've lost the Ion Reactor. The good news is that you no longer have to worry about managing its depleting fuel store.",
-							getString(android.R.string.ok), cbShowNextPopup);
+							"OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
 						gameState.ReactorStatus = 0;
@@ -3867,7 +3859,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		} else {
 			popup = new Popup(this, "Nothing Found",
 				"The police find nothing illegal in your cargo holds, and apologize for the inconvenience.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.PoliceRecordScore -= GameState.TRAFFICKING;
@@ -3917,7 +3909,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.ExperimentStatus = 12;
 				Popup popup = new Popup(this, "Experiment Performed",
 					"The galaxy is abuzz with news of a terrible malfunction in Dr. Fehler's laboratory. Evidently, he was not warned in time and he performed his experiment... with disastrous results!",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				gameState.addNewsEvent(GameState.EXPERIMENTPERFORMED);
@@ -3948,7 +3940,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				100) < gameState.FabricRipProbability || gameState.FabricRipProbability == 25)) {
 			popup = new Popup(this, "Timespace Fabric Rip",
 				"You have flown through a tear in the timespace continuum caused by Dr. Fehler's failed experiment. You may not have reached your planned destination!",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.WarpSystem = gameState.GetRandom(GameState.MAXSOLARSYSTEM);
@@ -4355,11 +4347,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (StartClicks > 20) {
 			popup = new Popup(this, "Uneventful trip",
 				"After an uneventful trip, you arrive at your destination.",
-				"Be glad you didn't encounter any pirates.", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"Be glad you didn't encounter any pirates.", "OK", cbShowNextPopup);
 		} else {
 			popup = new Popup(this, "Arrival", "You arrive at your destination.",
-				"Another trip you have survived.", getString(android.R.string.ok), cbShowNextPopup);
+				"Another trip you have survived.", "OK", cbShowNextPopup);
 		}
 		popupQueue.push(popup);
 		showNextPopup();
@@ -4368,7 +4359,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Debt >= 75000) {
 			popup = new Popup(this, "Warning: Large Debt",
 				"Your debt is getting too large. Reduce it quickly or your ship will be put on a chain!",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -4378,7 +4369,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				"The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
 				gameState.Debt),
 				"The Bank Officer will contact you every five days to remind you of your debt. You can turn off these warnings on the second page of Game Options.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -4389,7 +4380,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.ReactorStatus == 2) {
 			popup = new Popup(this, "Reactor Warning",
 				"You notice the Ion Reactor has begun to consume fuel rapidly. In a single day, it has burned up nearly half a bay of fuel!",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -4397,7 +4388,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		else if (gameState.ReactorStatus == 16) {
 			popup = new Popup(this, "Reactor Warning",
 				"The Ion Reactor is emitting a shrill whine, and it's shaking. The display indicates that it is suffering from fuel starvation.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -4405,14 +4396,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		else if (gameState.ReactorStatus == 18) {
 			popup = new Popup(this, "Reactor Warning",
 				"The Ion Reactor is smoking and making loud noises. The display warns that the core is close to the melting temperature.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
 		if (gameState.ReactorStatus == 20) {
 			popup = new Popup(this, "Reactor Meltdown!",
 				"Just as you approach the docking ay, the reactor explodes into a huge radioactive fireball!",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.ReactorStatus = 0;
@@ -4420,8 +4411,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				EscapeWithPod();
 				return;
 			} else {
-				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", getString(
-					android.R.string.ok), cbShowNextPopup);
+				popup = new Popup(this, "You lose", "Your ship has been destroyed.", "", "OK",
+					cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				btnDestroyed();
@@ -4442,14 +4433,14 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Ship.tribbles = 0;
 				popup = new Popup(this, "All the Tribbles Died",
 					"The radiation from the Ion Reactor is deadly to Tribbles. All of the Tribbles on board your ship have died.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
 				popup = new Popup(this, "Half the Tribbles Died",
 					"The radiation from the Ion Reactor seems to be deadly to Tribbles. Half the Tribbles on board died.",
 					"Radiation poisoning seems particularly effective in killing Tribbles. Unfortunately, their fur falls out when they're irradiated, so you can't salvage anything to sell.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
@@ -4463,7 +4454,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			Ship.cargo[GameState.FURS] += i;
 			popup = new Popup(this, "Tribbles ate Narcotics",
 				"Tribbles ate your narcotics, and it killed most of them. At least the furs remained.", "",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (Ship.tribbles > 0 && Ship.cargo[GameState.FOOD] > 0) {
@@ -4475,7 +4466,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Tribbles Ate Food",
 				"You find that, instead of food, some of your cargo bays contain only tribbles!",
 				"Alas, tribbles are hungry and fast-multiplying animals. You shouldn't expect to be able to hold them out of your cargo bays. You should find a way to get rid of them.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			FoodOnBoard = true;
@@ -4502,8 +4493,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			}
 			popup = new Popup(this, "Space Port Inspector",
 				"Excuse me, but do you realize you have " + buf + " tribbles on board your ship?",
-				"You might want to do something about those Tribbles...", getString(android.R.string.ok),
-				cbShowNextPopup);
+				"You might want to do something about those Tribbles...", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -4523,13 +4513,13 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 					popup = new Popup(this, "Not Enough Money",
 						"You don't have enough money to get a full tank or full hull repairs.",
 						"In the Options menu you have indicated that you wish to buy full tanks and full hull repairs automatically when you arrive in  new system, but you don't have the money for that. At least make sure that you buy full tanks after you have made some money.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					TryAutoRepair = false;
 				} else {
 					popup = new Popup(this, "No Full Tanks",
 						"You do not have enough money to buy full tanks.",
 						"You have checked the automatic buying of full fuel tanks in the Options menu, but you don't have enough money to buy those tanks. Don't forget to buy them as soon as you have made some money.",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 				}
 				popupQueue.push(popup);
 				showNextPopup();
@@ -4542,7 +4532,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				popup = new Popup(this, "No Full Repairs",
 					"You don't have enough money to get your hull fully repaired.",
 					"You have automatic full hull repairs checked in the Options menu, but you don't have the money for that. If you still want the repairs, don't forget to make them before you leave the system.",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
@@ -4568,7 +4558,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (FirstEmptySlot >= 0) {
 				popup = new Popup(this, "Easter",
 					"Congratulations! An eccentric Easter Bunny decides to exchange your trade goods for a special present!",
-					"Look up your ship's equipment.", getString(android.R.string.ok), cbShowNextPopup);
+					"Look up your ship's equipment.", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
@@ -4707,7 +4697,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		}
 
 		Popup popup;
-		popup = new Popup(this, "Arrested", buf, "", getString(android.R.string.ok), cbShowNextPopup);
+		popup = new Popup(this, "Arrested", buf, "", "OK", cbShowNextPopup);
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		popupQueue.push(popup);
 		showNextPopup();
@@ -4824,8 +4814,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				EscapeWithPod();
 			} else {
 				popup = new Popup(this, "Both Destroyed",
-					"You and your opponent have managed to destroy each other.", "", getString(
-					android.R.string.ok), cbShowNextPopup);
+					"You and your opponent have managed to destroy each other.", "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				btnDestroyed();
@@ -4838,12 +4827,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			if (gameState.ENCOUNTERPIRATE(
 				gameState.EncounterType) && Opponent.type != GameState.MANTISTYPE && gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) {
 				popup = new Popup(this, "Bounty received", String.format("You earned a bounty of %d cr.",
-					GetBounty(Opponent)), "", getString(android.R.string.ok), cbShowNextPopup);
+					GetBounty(Opponent)), "", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
-				popup = new Popup(this, "You win", "You have destroyed your opponent.", "", getString(
-					android.R.string.ok), cbShowNextPopup);
+				popup = new Popup(this, "You win", "You have destroyed your opponent.", "", "OK",
+					cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 			}
@@ -4892,7 +4881,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				EscapeWithPod();
 			} else {
 				popup = new Popup(this, "You Lose", "Your ship has been destroyed by your opponent.", "",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				btnDestroyed();
@@ -4907,7 +4896,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.AutoFlee = false;
 
 				popup = new Popup(this, "Escaped", "You have managed to escape your opponent.",
-					"Just because this is Beginner level.", getString(android.R.string.ok), cbShowNextPopup);
+					"Just because this is Beginner level.", "OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				if (gameState.ENCOUNTERMONSTER(gameState.EncounterType)) {
@@ -4921,12 +4910,12 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.AutoFlee = false;
 				if (CommanderGotHit) {
 					popup = new Popup(this, "You Escaped", "You got hit, but still managed to escape.", "",
-						getString(android.R.string.ok), cbShowNextPopup);
+						"OK", cbShowNextPopup);
 					popupQueue.push(popup);
 					showNextPopup();
 				} else {
-					popup = new Popup(this, "Escaped", "You have managed to escape your opponent.", "",
-						getString(android.R.string.ok), cbShowNextPopup);
+					popup = new Popup(this, "Escaped", "You have managed to escape your opponent.", "", "OK",
+						cbShowNextPopup);
 					popupQueue.push(popup);
 					showNextPopup();
 				}
@@ -4944,7 +4933,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				gameState.AutoAttack = false;
 				gameState.AutoFlee = false;
 				popup = new Popup(this, "Opponent Escaped", "Your opponent has managed to escape.", "",
-					getString(android.R.string.ok), cbShowNextPopup);
+					"OK", cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return (false);
@@ -5238,7 +5227,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		popup = new Popup(this, "Escape Pod activated",
 			"Just before the final demise of your ship, your escape pod gets activated and ejects you. After a few days, the Space Corps picks you up and drops you off at a nearby space port.",
-			"", getString(android.R.string.ok), cbShowNextPopup);
+			"", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 
@@ -5251,7 +5240,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 			popup = new Popup(this, "Reactor Destroyed",
 				"The destruction of your ship was made much more spectacular by the added explosion of the Ion Reactor.",
-				"", getString(android.R.string.ok), cbShowNextPopup);
+				"", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.ReactorStatus = 0;
@@ -5261,7 +5250,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Antidote destroyed",
 				"The antidote for the Japori system has been destroyed with your ship. You should get some more.",
 				"The antidote for the Japori system was destroyed with your ship. But they probably have some new antidote in the system where you originally got it.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.JaporiDiseaseStatus = 0;
@@ -5271,7 +5260,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			popup = new Popup(this, "Artifact Lost",
 				"The alien artifact has been lost in the wreckage of your ship.",
 				"You couldn't take the artifact with you in the escape pod, so now it's lost in the wreckage. The aliens will probably pick it up there.",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.ArtifactOnBoard = false;
@@ -5279,8 +5268,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.JarekStatus == 1) {
 			popup = new Popup(this, "Jarek Taken Home",
-				"The Space Corps decides to give ambassador Jarek a lift home to Devidia.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"The Space Corps decides to give ambassador Jarek a lift home to Devidia.", "", "OK",
+				cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.JarekStatus = 0;
@@ -5288,8 +5277,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.WildStatus == 1) {
 			popup = new Popup(this, "Wild Arrested",
-				"Jonathan Wild is arrested, and taken away to stand trial.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"Jonathan Wild is arrested, and taken away to stand trial.", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.PoliceRecordScore += GameState.CAUGHTWITHWILDSCORE;
@@ -5299,8 +5287,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.Ship.tribbles > 0) {
 			popup = new Popup(this, "Tribbles killed", "Your tribbles all died in the explosion.",
-				"Don't be too sad. They were incredibly annoying, weren't they?", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"Don't be too sad. They were incredibly annoying, weren't they?", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.Ship.tribbles = 0;
@@ -5309,7 +5296,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (gameState.Insurance) {
 			popup = new Popup(this, "Insurance",
 				"Since your ship was insured, the bank pays you the total worth of the destroyed ship.", "",
-				getString(android.R.string.ok), cbShowNextPopup);
+				"OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			gameState.Credits += gameState.CurrentShipPriceWithoutCargo(true);
@@ -5318,7 +5305,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		popup = new Popup(this, "Flea built",
 			"In 3 days and with 500 credits, you manage to convert your pod into a Flea.",
 			"Your ship has been destroyed, but luckily, you are clever enough to convert your pod into a Flea type of ship, so you can continue your journey, or trade it in for a better ship.",
-			getString(android.R.string.ok), cbShowNextPopup);
+			"OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 
@@ -5481,10 +5468,10 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 		if (Ship.cargo[Index] <= 0) {
 			if (Operation == GameState.SELLCARGO) {
 				popup = new Popup(this, "None To Sell", "You have none of these goods in your cargo bays.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 			} else {
 				popup = new Popup(this, "None To Dump", "You have none of these goods in your cargo bays.",
-					"", getString(android.R.string.ok), cbShowNextPopup);
+					"", "OK", cbShowNextPopup);
 			}
 			popupQueue.push(popup);
 			showNextPopup();
@@ -5493,8 +5480,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 
 		if (gameState.SellPrice[Index] <= 0 && Operation == GameState.SELLCARGO) {
 			popup = new Popup(this, "Not Interested",
-				"Nobody in this system is interested in buying these goods.", "", getString(
-				android.R.string.ok), cbShowNextPopup);
+				"Nobody in this system is interested in buying these goods.", "", "OK", cbShowNextPopup);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -5684,7 +5670,7 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (a / 50), ((a % 50) / 5),
 			gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
 			(EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon")),
-			buf, buf2), "", getString(android.R.string.ok), cbShowNextPopup);
+			buf, buf2), "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
 
@@ -5728,33 +5714,8 @@ public class WelcomeScreen extends Activity implements NavigationDrawerFragment.
 				Hscores[i].getDays() == 1 ? "" : "s", Hscores[i].getWorth(),
 				levelDesc[Hscores[i].getDifficulty()]);
 		}
-		popup = new Popup(this, "Highscores", msg, "", getString(android.R.string.ok), cbShowNextPopup);
+		popup = new Popup(this, "Highscores", msg, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
-	}
-
-	public enum FRAGMENTS {
-		AVERAGE_PRICES,
-		BANK,
-		BUY_CARGO,
-		BUY_EQUIPMENT,
-		BUY_NEW_SHIP,
-		COMMANDER_STATUS,
-		DUMP,
-		ENCOUNTER,
-		GALACTIC_CHART,
-		NEW_GAME,
-		OPTIONS,
-		PERSONNEL_ROSTER,
-		PLUNDER,
-		SELL_CARGO,
-		SELL_EQUIPMENT,
-		SHIPYARD,
-		SHIP_INFO,
-		SHORTCUTS,
-		SHORT_RANGE_CHART,
-		SYSTEM_INFORMATION,
-		VERY_RARE_CHEAT,
-		WARP_SYSTEM_INFORMATION
 	}
 }
