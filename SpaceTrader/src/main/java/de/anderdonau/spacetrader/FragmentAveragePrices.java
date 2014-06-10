@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -22,7 +32,7 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentAveragePrices extends Fragment {
 	WelcomeScreen welcomeScreen;
-	GameState gameState;
+	GameState     gameState;
 
 	public FragmentAveragePrices(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -43,13 +53,14 @@ public class FragmentAveragePrices extends Fragment {
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListSystemName);
-		tv.setText(gameState.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
+		tv.setText(welcomeScreen.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListSpecialResources);
-		if (welcomeScreen.WarpSystem.visited)
-			tv.setText(gameState.SpecialResources[welcomeScreen.WarpSystem.specialResources]);
-		else
+		if (welcomeScreen.WarpSystem.visited) {
+			tv.setText(welcomeScreen.SpecialResources[welcomeScreen.WarpSystem.specialResources]);
+		} else {
 			tv.setText("Special resources unknown");
+		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListTitle);
 		btn = (Button) rootView.findViewById(R.id.btnPriceListDiffAvg);
@@ -63,54 +74,36 @@ public class FragmentAveragePrices extends Fragment {
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListBays);
 		tv.setText(String.format("Bays: %d/%d", gameState.Ship.FilledCargoBays(),
-		                         gameState.Ship.TotalCargoBays()
-		)
-		);
+			gameState.Ship.TotalCargoBays()));
 
 		tv = (TextView) rootView.findViewById(R.id.txtPriceListCash);
 		tv.setText(String.format("Cash: %d cr.", gameState.Credits));
 
 		for (int i = 0; i < GameState.MAXTRADEITEM; ++i) {
 			btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPriceListBuy1 :
-			                                     i == 1 ? R.id.btnPriceListBuy2 :
-			                                     i == 2 ? R.id.btnPriceListBuy3 :
-			                                     i == 3 ? R.id.btnPriceListBuy4 :
-			                                     i == 4 ? R.id.btnPriceListBuy5 :
-			                                     i == 5 ? R.id.btnPriceListBuy6 :
-			                                     i == 6 ? R.id.btnPriceListBuy7 :
-			                                     i == 7 ? R.id.btnPriceListBuy8 :
-			                                     i == 8 ? R.id.btnPriceListBuy9 :
-					                                    /*i == 9 ?*/ R.id.btnPriceListBuy10
-			);
+				i == 1 ? R.id.btnPriceListBuy2 : i == 2 ? R.id.btnPriceListBuy3 :
+					i == 3 ? R.id.btnPriceListBuy4 : i == 4 ? R.id.btnPriceListBuy5 :
+						i == 5 ? R.id.btnPriceListBuy6 : i == 6 ? R.id.btnPriceListBuy7 :
+							i == 7 ? R.id.btnPriceListBuy8 : i == 8 ? R.id.btnPriceListBuy9 :
+						                                  /*i == 9 ?*/ R.id.btnPriceListBuy10);
 			btn.setVisibility(gameState.BuyPrice[i] <= 0 ? View.INVISIBLE : View.VISIBLE);
 			btn.setText(String.format("%d", CURSYSTEM.qty[i]));
 			tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListName1 :
-			                                      i == 1 ? R.id.txtPriceListName2 :
-			                                      i == 2 ? R.id.txtPriceListName3 :
-			                                      i == 3 ? R.id.txtPriceListName4 :
-			                                      i == 4 ? R.id.txtPriceListName5 :
-			                                      i == 5 ? R.id.txtPriceListName6 :
-			                                      i == 6 ? R.id.txtPriceListName7 :
-			                                      i == 7 ? R.id.txtPriceListName8 :
-			                                      i == 8 ? R.id.txtPriceListName9 :
-					                                     /*i == 9 ?*/ R.id.txtPriceListName10
-			);
+				i == 1 ? R.id.txtPriceListName2 : i == 2 ? R.id.txtPriceListName3 :
+					i == 3 ? R.id.txtPriceListName4 : i == 4 ? R.id.txtPriceListName5 :
+						i == 5 ? R.id.txtPriceListName6 : i == 6 ? R.id.txtPriceListName7 :
+							i == 7 ? R.id.txtPriceListName8 : i == 8 ? R.id.txtPriceListName9 :
+					                                     /*i == 9 ?*/ R.id.txtPriceListName10);
 			tvprice = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListPrice1 :
-			                                           i == 1 ? R.id.txtPriceListPrice2 :
-			                                           i == 2 ? R.id.txtPriceListPrice3 :
-			                                           i == 3 ? R.id.txtPriceListPrice4 :
-			                                           i == 4 ? R.id.txtPriceListPrice5 :
-			                                           i == 5 ? R.id.txtPriceListPrice6 :
-			                                           i == 6 ? R.id.txtPriceListPrice7 :
-			                                           i == 7 ? R.id.txtPriceListPrice8 :
-			                                           i == 8 ? R.id.txtPriceListPrice9 :
-					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10
-			);
+				i == 1 ? R.id.txtPriceListPrice2 : i == 2 ? R.id.txtPriceListPrice3 :
+					i == 3 ? R.id.txtPriceListPrice4 : i == 4 ? R.id.txtPriceListPrice5 :
+						i == 5 ? R.id.txtPriceListPrice6 : i == 6 ? R.id.txtPriceListPrice7 :
+							i == 7 ? R.id.txtPriceListPrice8 : i == 8 ? R.id.txtPriceListPrice9 :
+					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10);
 
-			int Price = gameState.StandardPrice(i, welcomeScreen.WarpSystem.size, welcomeScreen.WarpSystem.techLevel,
-			                                    welcomeScreen.WarpSystem.politics,
-			                                    (welcomeScreen.WarpSystem.visited ? welcomeScreen.WarpSystem.specialResources : -1)
-			);
+			int Price = gameState.StandardPrice(i, welcomeScreen.WarpSystem.size,
+				welcomeScreen.WarpSystem.techLevel, welcomeScreen.WarpSystem.politics,
+				(welcomeScreen.WarpSystem.visited ? welcomeScreen.WarpSystem.specialResources : -1));
 
 			if (Price > gameState.BuyPrice[i] && gameState.BuyPrice[i] > 0 && CURSYSTEM.qty[i] > 0) {
 				tv.setTypeface(null, Typeface.BOLD);
@@ -123,10 +116,11 @@ public class FragmentAveragePrices extends Fragment {
 			if (Price <= 0 || (gameState.PriceDifferences && gameState.BuyPrice[i] <= 0)) {
 				tvprice.setText("---");
 			} else {
-				if (gameState.PriceDifferences)
+				if (gameState.PriceDifferences) {
 					tvprice.setText(String.format("%+d cr.", Price - gameState.BuyPrice[i]));
-				else
+				} else {
 					tvprice.setText(String.format("%d cr.", Price));
+				}
 			}
 		}
 		return rootView;

@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader.DataTypes;
@@ -17,24 +27,24 @@ import android.widget.TextView;
 
 import de.anderdonau.spacetrader.GameState;
 import de.anderdonau.spacetrader.R;
+import de.anderdonau.spacetrader.WelcomeScreen;
 
 public class ShortcutArrayAdapter extends ArrayAdapter<String> {
-	private final Context   context;
-	private final String[]  values;
-	private final GameState gameState;
+	private       WelcomeScreen welcomeScreen;
+	private final String[]      values;
+	private final GameState     gameState;
 
-	public ShortcutArrayAdapter(Context context, String[] values, GameState gameState) {
-		super(context, R.layout.listview_shortcut_entry, values);
-		this.context = context;
+	public ShortcutArrayAdapter(WelcomeScreen welcomeScreen, String[] values, GameState gameState) {
+		super(welcomeScreen, R.layout.listview_shortcut_entry, values);
+		this.welcomeScreen = welcomeScreen;
 		this.values = values;
 		this.gameState = gameState;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-			Context.LAYOUT_INFLATER_SERVICE
-		);
+		LayoutInflater inflater = (LayoutInflater) welcomeScreen.getSystemService(
+			Context.LAYOUT_INFLATER_SERVICE);
 
 		View rowView = inflater.inflate(R.layout.listview_shortcut_entry, parent, false);
 		//noinspection ConstantConditions
@@ -43,9 +53,8 @@ public class ShortcutArrayAdapter extends ArrayAdapter<String> {
 		textView.setText(values[position]);
 
 		int i = position == 0 ? gameState.Shortcut1 : position == 1 ? gameState.Shortcut2 :
-		                                              position == 2 ? gameState.Shortcut3 :
-		                                              gameState.Shortcut4;
-		String s = gameState.Shortcuts[i][1];
+			position == 2 ? gameState.Shortcut3 : gameState.Shortcut4;
+		String s = welcomeScreen.Shortcuts[i][1];
 		textView1.setText(s);
 
 		return rowView;

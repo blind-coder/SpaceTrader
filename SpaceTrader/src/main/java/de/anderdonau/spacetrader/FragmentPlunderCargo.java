@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -33,24 +43,17 @@ public class FragmentPlunderCargo extends Fragment {
 
 		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
 			btn = (Button) rootView.findViewById(i == 0 ? R.id.btnPlunderCargo1 :
-			                                     i == 1 ? R.id.btnPlunderCargo2 :
-			                                     i == 2 ? R.id.btnPlunderCargo3 :
-			                                     i == 3 ? R.id.btnPlunderCargo4 :
-			                                     i == 4 ? R.id.btnPlunderCargo5 :
-			                                     i == 5 ? R.id.btnPlunderCargo6 :
-			                                     i == 6 ? R.id.btnPlunderCargo7 :
-			                                     i == 7 ? R.id.btnPlunderCargo8 :
-			                                     i == 8 ? R.id.btnPlunderCargo9 :
-					                           /*i == 9 ?*/ R.id.btnPlunderCargo10
-			);
+				i == 1 ? R.id.btnPlunderCargo2 : i == 2 ? R.id.btnPlunderCargo3 :
+					i == 3 ? R.id.btnPlunderCargo4 : i == 4 ? R.id.btnPlunderCargo5 :
+						i == 5 ? R.id.btnPlunderCargo6 : i == 6 ? R.id.btnPlunderCargo7 :
+							i == 7 ? R.id.btnPlunderCargo8 : i == 8 ? R.id.btnPlunderCargo9 :
+							                       /*i == 9 ?*/ R.id.btnPlunderCargo10);
 			btn.setText(String.format("%2d", gameState.Opponent.cargo[i]));
 		}
 
 		tv = (TextView) rootView.findViewById(R.id.txtPlunderCargoBays);
 		tv.setText(String.format("%d/%d", gameState.Ship.FilledCargoBays(),
-		                         gameState.Ship.TotalCargoBays()
-		)
-		);
+			gameState.Ship.TotalCargoBays()));
 
 		return rootView;
 	}

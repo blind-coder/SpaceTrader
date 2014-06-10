@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -357,92 +367,6 @@ public class GameState implements Serializable {
 	// Countdown for reset of tradeitems.
 	// Distance from target system,= 0;= arrived
 	static              int           Difficulty                  = NORMAL;     // Difficulty level
-	public final        String[]      levelDesc                   =
-		new String[]{"Beginner", "Easy", "Normal", "Hard", "Impossible"};
-	final               String[]      Status                      =
-		{"under no particular pressure",  // Uneventful
-		 "at war",        // Ore and Weapons in demand
-		 "ravaged by a plague",   // Medicine in demand
-		 "suffering from a drought",    // Water in demand
-		 "suffering from extreme boredom",  // Games and Narcotics in demand
-		 "suffering from a cold spell", // Furs in demand
-		 "suffering from a crop failure", // Food in demand
-		 "lacking enough workers"   // Machinery and Robots in demand
-		};
-	final               String[]      SpecialResources            =
-		{"Nothing special", "Mineral rich", "Mineral poor", "Desert", "Sweetwater oceans", "Rich soil",
-		 "Poor soil", "Rich fauna", "Lifeless", "Weird mushrooms", "Special herbs", "Artistic populace",
-		 "Warlike populace"};
-	final               String[]      Activity                    =
-		{"Absent", "Minimal", "Few", "Some", "Moderate", "Many", "Abundant", "Swarms"};
-	final               String[]      MercenaryName               =
-		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre",
-		 "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
-		 "Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley",
-		 "Wonton", "Yorvick", "Zeethibal"};
-	final               String[]      SystemSize                  =
-		{"Tiny", "Small", "Medium", "Large", "Huge"};
-	final               String[]      techLevel                   =
-		{"Pre-agricultural", "Agricultural", "Medieval", "Renaissance", "Early Industrial",
-		 "Industrial", "Post-industrial", "Hi-tech"};
-	final               String[]      SolarSystemName             =
-		{"Acamar", "Adahn", // The alternate personality for The Nameless One in "Planescape: Torment"
-		 "Aldea", "Andevian", "Antedi", "Balosnee", "Baratas", "Brax",
-		 // One of the heroes in Master of Magic
-		 "Bretel", // This is a Dutch device for keeping your pants up.
-		 "Calondia", "Campor", "Capelle", // The city I lived in while programming this game
-		 "Carzon", "Castor", // A Greek demi-god
-		 "Cestus", "Cheron", "Courteney", // After Courteney Cox...
-		 "Daled", "Damast", "Davlos", "Deneb", "Deneva", "Devidia", "Draylon", "Drema", "Endor",
-		 "Esmee", // One of the witches in Pratchett's Discworld
-		 "Exo", "Ferris",   // Iron
-		 "Festen", // A great Scandinavian movie
-		 "Fourmi", // An ant, in French
-		 "Frolix", // A solar system in one of Philip K. Dick's novels
-		 "Gemulon", "Guinifer", // One way of writing the name of king Arthur's wife
-		 "Hades", // The underworld
-		 "Hamlet", // From Shakespeare
-		 "Helena", // Of Troy
-		 "Hulst", // A Dutch plant
-		 "Iodine", // An element
-		 "Iralius", "Janus", // A seldom encountered Dutch boy's name
-		 "Japori", "Jarada", "Jason", // A Greek hero
-		 "Kaylon", "Khefka", "Kira", // My dog's name
-		 "Klaatu", // From a classic SF movie
-		 "Klaestron", "Korma", // An Indian sauce
-		 "Kravat", // Interesting spelling of the French word for "tie"
-		 "Krios", "Laertes", // A king in a Greek tragedy
-		 "Largo", "Lave", // The starting system in Elite
-		 "Ligon", "Lowry", // The name of the "hero" in Terry Gilliam's "Brazil"
-		 "Magrat", // The second of the witches in Pratchett's Discworld
-		 "Malcoria", "Melina", "Mentar", // The Psilon home system in Master of Orion
-		 "Merik", "Mintaka", "Montor", // A city in Ultima III and Ultima VII part 2
-		 "Mordan", "Myrthe", // The name of my daughter (comment: Pieter Sproncks daughter)
-		 "Nelvana", "Nix", // An interesting spelling of a word meaning "nothing" in Dutch
-		 "Nyle", // An interesting spelling of the great river
-		 "Odet", "Og", // The last of the witches in Pratchett's Discworld
-		 "Omega", // The end of it all
-		 "Omphalos", // Greek for navel
-		 "Orias", "Othello", // From Shakespeare
-		 "Parade", // This word means the same in Dutch and in English
-		 "Penthara", "Picard", // The enigmatic captain from ST:TNG
-		 "Pollux", // Brother of Castor
-		 "Quator", "Rakhar", "Ran", // A film by Akira Kurosawa
-		 "Regulas", "Relva", "Rhymus", "Rochani", "Rubicum",
-		 // The river Ceasar crossed to get into Rome
-		 "Rutia", "Sarpeidon", "Sefalla", "Seltrice", "Sigma", "Sol", // That's our own solar system
-		 "Somari", "Stakoron", "Styris", "Talani", "Tamus", "Tantalos", // A king from a Greek tragedy
-		 "Tanuga", "Tarchannen", "Terosa", "Thera", // A seldom encountered Dutch girl's name
-		 "Titan", // The largest moon of Jupiter
-		 "Torin", // A hero from Master of Magic
-		 "Triacus", "Turkana", "Tyrus", "Umberlee",
-		 // A god from AD&D, which has a prominent role in Baldur's Gate
-		 "Utopia", // The ultimate goal
-		 "Vadera", "Vagra", "Vandor", "Ventax", "Xenon", "Xerxes", // A Greek hero
-		 "Yew", // A city which is in almost all of the Ultima games
-		 "Yojimbo", // A film by Akira Kurosawa
-		 "Zalkon", "Zuul" // From the first Ghostbusters movie
-		};
 	public              SolarSystem[] SolarSystem                 = new SolarSystem[MAXSOLARSYSTEM];
 	public              int           Credits                     = 1000;// Current credits owned
 	public              int           Debt                        = 0;               // Current Debt
@@ -484,10 +408,6 @@ public class GameState implements Serializable {
 	// default shortcut= 3;= Shipyard
 	public              int           Shortcut4                   = 10;
 	// default shortcut= 4;= Short Range Warp
-	public              String[][]    Shortcuts                   =
-		{{"B", "Buy Cargo"}, {"S", "Sell Cargo"}, {"Y", "Ship Yard"}, {"E", "Buy Equipment"},
-		 {"Q", "Sell Equipment"}, {"P", "Personnel"}, {"K", "Bank"}, {"I", "System Info"},
-		 {"C", "Commander Status"}, {"G", "Galactic Chart"}, {"W", "Warp Chart"}};
 	// the next two values are NOT saved between sessions -- they can only be changed via cheats.
 	public              int           ChanceOfVeryRareEncounter   = CHANCEOFVERYRAREENCOUNTER;
 	public              int           ChanceOfTradeInOrbit        = CHANCEOFTRADEINORBIT;

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <resources>
@@ -18,5 +28,131 @@
 	<string name="action_example">Example action</string>
 	<string name="action_settings">Settings</string>
 	<string name="wScrStartNewGame">Start new game</string>
+	<string name="DifficultyLevelBeginner">Beginner</string>
+	<string name="DifficultyLevelEasy">Easy</string>
+	<string name="DIfficultyLevelNormal">Normal</string>
+	<string name="DifficultyLevelHard">Hard</string>
+	<string name="DifficultyLevelImpossible">Impossible</string>
+	<string name="StatusUnderNoParticularPressure">under no particular pressure</string>
+	<string name="StatusAtWar">at war</string>
+	<string name="StatusRavagerByAPlague">ravaged by a plague</string>
+	<string name="StatusSufferingFromDrought">suffering from a drought</string>
+	<string name="StatusSufferingFromExtremeBoredom">suffering from extreme boredom</string>
+	<string name="StatusSufferingFromAColdSpell">suffering from a cold spell</string>
+	<string name="StatusSufferingFromACropFailure">suffering from a crop failure</string>
+	<string name="StatusLackingEnoughtWorkers">lacking enough workers</string>
+	<string name="NothingSpecial">Nothing special</string>
+	<string name="MineralRich">Mineral rich</string>
+	<string name="MineralPoor">Mineral poor</string>
+	<string name="Desert">Desert</string>
+	<string name="SweetwaterOceans">Sweetwater oceans</string>
+	<string name="RichSoil">Rich soil</string>
+	<string name="PoorSoil">Poor soil</string>
+	<string name="RichFauna">Rich fauna</string>
+	<string name="Lifeless">Lifeless</string>
+	<string name="WeirdMushrooms">Weird mushrooms</string>
+	<string name="SpecialHerbs">Special herbs</string>
+	<string name="ArtisticPopulace">Artistic populace</string>
+	<string name="WarlikePopulace">Warlike populace</string>
+	<string name="Absent">Absent</string>
+	<string name="Minimal">Minimal</string>
+	<string name="Few">Few</string>
+	<string name="Some">Some</string>
+	<string name="Moderate">Moderate</string>
+	<string name="Many">Many</string>
+	<string name="Abundant">Abundant</string>
+	<string name="Swarms">Swarms</string>
+	<string name="Tiny">Tiny</string>
+	<string name="Small">Small</string>
+	<string name="Medium">Medium</string>
+	<string name="Large">Large</string>
+	<string name="Huge">Huge</string>
+	<string name="PreAgricultural">Pre-agricultural</string>
+	<string name="Agricultural">Agricultural</string>
+	<string name="Medieval">Medieval</string>
+	<string name="Renaissance">Renaissance</string>
+	<string name="EarlyIndustrial">Early Industrial</string>
+	<string name="Industrial">Industrial</string>
+	<string name="PostIndustrial">Post-industrial</string>
+	<string name="HiTech">Hi-tech</string>
+	<string name="BuyCargo">Buy Cargo</string>
+	<string name="SellCargo">Sell Cargo</string>
+	<string name="ShipYard">Ship Yard</string>
+	<string name="BuyEquipment">Buy Equipment</string>
+	<string name="BuyCargoShort">B</string>
+	<string name="SellCargoShort">S</string>
+	<string name="ShipYardShort">Y</string>
+	<string name="BuyEquipmentShort">E</string>
+	<string name="SellEquipmentShort">Q</string>
+	<string name="SellEquipment">Sell Equipment</string>
+	<string name="PersonnelShort">P</string>
+	<string name="Personnel">Personnel</string>
+	<string name="BankShort">K</string>
+	<string name="Bank">Bank</string>
+	<string name="SystemInfoShort">I</string>
+	<string name="SystemInfo">System Info</string>
+	<string name="CommanderStatusShort">C</string>
+	<string name="CommanderStatus">Commander Status</string>
+	<string name="GalacticChartShort">G</string>
+	<string name="GalacticChart">Galactic Chart</string>
+	<string name="WarpChartShort">W</string>
+	<string name="WarpChart">Warp Chart</string>
+	<string name="CantSaveNow">Can\'t save now</string><string name="CantSaveInEncounter">You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!
+Are you sure you want to quit?</string>
+	<string name="ReallyStartNewGame">Really start new game?</string><string name="IfYouStartNewAllWillBeLost">If you start a new game your current game will be deleted!
+You will not be added to the high score table!</string>
+	<string name="Retira">Retire</string>
+	<string name="ReallyRetire">Do you really want to retire?</string>
+	<string name="Commands">Commands</string><string name="FollowTheDragonfly">Follow the Dragonfly to %s.
+</string><string name="KillTheSpaceMonsterAtAcamar">Kill the space monster at Acamar.
+</string><string name="GetYourLightningShieldAtZalkon">Get your lightning shield at Zalkon.
+</string><string name="DeliverTheAntidoteToJapori">Deliver antidote to Japori.
+</string><string name="DeliverTheAlienArtifact">Deliver the alien artifact to professor Berger at some hi-tech system.
+</string><string name="SmuggleJonathanWild">Smuggle Jonathan Wild to Kravat.
+</string><string name="BringJarekToDevidia">Bring ambassador Jarek to Devidia.
+</string>
+	<string name="InformGemulonByTomorrow">Inform Gemulon about alien invasion by tomorrow.</string>
+	<string name="InformGemulonWithinDays">Inform Gemulon about about the alien invasion within %d days</string><string name="GetFuelCompactorAtGemulon">Get your fuel compactor at Gemulon.
+</string>
+	<string name="StopDrFehlersExperimentTomorrow">Stop Dr. Fehler\'s experiment at Daled by tomorrow</string>
+	<string name="StopDrFehlersExperimentInDays">Stop Dr. Fehler\'s experiment at Daled within %d days</string><string name="DeliverReactorForHenryMorgan">Deliver the unstable reactor to Nix for Henry Morgan.
+</string><string name="DeliverReactorBeforeFuelRunsOut">Deliver the unstable reactor to Nix before it consumes all its fuel.
+</string><string name="GetLaserAtNix">Get your special laser at Nix.
+</string><string name="FindAndDestroyTheScarab">Find and destroy the Scarab (which is hiding at the exit to a wormhole).
+</string><string name="GetRidOfTheTribbles">Get rid of those pesky tribbles.
+</string><string name="ClaimYourMoonAtUtopia">Claim your moon at Utopia.
+</string><string name="ThereAreNoOpenQuests">There are no open quests.
+</string>
+	<string name="OpenQuests">Open Quests</string><string name="CargoAnInfestationOfTribbles">An infestation of tribbles.
+</string><string name="CargoNumberOfTribbles">%d cute furry %s.
+</string>
+	<string name="TribbleSingular">tribble</string>
+	<string name="TribblePlural">tribbles</string><string name="Cargo10BaysOfAntidote">10 bays of antidote.
+</string><string name="CargoAnAlienArtifact">An alien artifact.
+</string><string name="CargoAHagglingComputer">A haggling computer.
+</string><string name="CargoAnUnstableReactor">An unstable reactor taking up 5 bays.
+</string><string name="CargoNumberBaysOfFuel">%d %s of enriched fuel.
+</string>
+	<string name="BaysPlural">bays</string>
+	<string name="BaySingular">bay</string><string name="CargoAPortableSingularity">A Portable Singularity.
+</string>
+	<string name="CargoNoSpecialCargo">No special cargo.</string>
+	<string name="SpecialCargo">Special Cargo</string><string name="ShipInfoType">Type: %s%s
+</string>
+	<string name="ShipInfoWithHardenedHull">/hardened hull</string><string name="ShipInfoEquipment">Equipment:
+</string><string name="ShipInfoExtraCargoBays">%d extra cargo bays
+</string><string name="ShipInfoAnEscapePod">An escape pod
+</string><string name="ShipInfoUnfilledSlots">Unfilled:
+</string><string name="ShipInfoNumWeaponSlots">%d weapon slot%s
+</string><string name="ShipInfoNumShieldSlots">%d shield slot%s
+</string><string name="ShipInfoNumGadgetSlots">%d gadget slot%s
+</string>
+	<string name="ShipInfoTitle">Ship Status</string>
+	<string name="DebtTooHigh">Debt too high!</string>
+	<string name="YourDebtIsTooHighToGetAnotherLoan">Your debt is too high to get another loan.</string>
+	<string name="GetLoan">Get Loan</string><string name="HowMuchNewLoanDoYouWant">How much do you want?
+You can borrow up to %d credits.</string>
+	<string name="Credits">Credits</string>
+	<string name="DontGetLoan">Don\'t get loan</string>
 
 </resources>

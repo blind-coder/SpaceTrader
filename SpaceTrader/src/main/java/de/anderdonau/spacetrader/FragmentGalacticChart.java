@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -23,7 +33,7 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentGalacticChart extends Fragment {
 	WelcomeScreen welcomeScreen;
-	GameState gameState;
+	GameState     gameState;
 
 	public FragmentGalacticChart(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -38,6 +48,7 @@ public class FragmentGalacticChart extends Fragment {
 		Button button = (Button) rootView.findViewById(R.id.btnJump);
 		button.setVisibility(gameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 		navigationChart.setGameState(gameState);
+		navigationChart.setWelcomeScreen(welcomeScreen);
 		navigationChart.setShortRange(false);
 
 		TextView tv;
@@ -52,22 +63,15 @@ public class FragmentGalacticChart extends Fragment {
 			SolarSystem s = gameState.SolarSystem[gameState.WarpSystem];
 			tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 			tv.setVisibility(View.VISIBLE);
-			tv.setText(String.format("%s %s %s", gameState.SystemSize[s.size],
-			                         gameState.techLevel[s.techLevel],
-			                         Politics.mPolitics[s.politics].name
-			)
-			);
+			tv.setText(String.format("%s %s %s", welcomeScreen.SystemSize[s.size],
+				welcomeScreen.techLevel[s.techLevel], Politics.mPolitics[s.politics].name));
 			tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 			tv.setVisibility(View.VISIBLE);
-			tv.setText(String.format("%d parsecs", gameState
-				.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-				              s
-				)
-			)
-			);
+			tv.setText(String.format("%d parsecs", gameState.RealDistance(
+				gameState.SolarSystem[gameState.Mercenary[0].curSystem], s)));
 			tv = (TextView) rootView.findViewById(R.id.galChartName);
 			tv.setVisibility(View.VISIBLE);
-			tv.setText(gameState.SolarSystemName[s.nameIndex]);
+			tv.setText(welcomeScreen.SolarSystemName[s.nameIndex]);
 			navigationChart.mSelectedSystem = gameState.WarpSystem;
 		}
 		navigationChart.setOnTouchListener(new View.OnTouchListener() {
@@ -83,9 +87,7 @@ public class FragmentGalacticChart extends Fragment {
 						tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 						tv.setVisibility(View.VISIBLE);
 						tv.setText(String.format("Wormhole to %s",
-						                         gameState.SolarSystemName[gameState.SolarSystem[gameState.Wormhole[wormhole]].nameIndex]
-						)
-						);
+							welcomeScreen.SolarSystemName[gameState.SolarSystem[gameState.Wormhole[wormhole]].nameIndex]));
 						tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 						tv.setVisibility(View.INVISIBLE);
 						tv = (TextView) rootView.findViewById(R.id.galChartName);
@@ -97,35 +99,27 @@ public class FragmentGalacticChart extends Fragment {
 						SolarSystem s = gameState.SolarSystem[gameState.WarpSystem];
 						tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 						tv.setVisibility(View.VISIBLE);
-						tv.setText(String.format("%s %s %s", gameState.SystemSize[s.size],
-						                         gameState.techLevel[s.techLevel],
-						                         Politics.mPolitics[s.politics].name
-						)
-						);
+						tv.setText(String.format("%s %s %s", welcomeScreen.SystemSize[s.size],
+							welcomeScreen.techLevel[s.techLevel], Politics.mPolitics[s.politics].name));
 						tv = (TextView) rootView.findViewById(R.id.galChartDistance);
 						tv.setVisibility(View.VISIBLE);
-						tv.setText(String.format("%d parsecs", gameState
-							.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-							              s
-							)
-						)
-						);
+						tv.setText(String.format("%d parsecs", gameState.RealDistance(
+							gameState.SolarSystem[gameState.Mercenary[0].curSystem], s)));
 
 						tv = (TextView) rootView.findViewById(R.id.galChartName);
 						tv.setVisibility(View.VISIBLE);
-						tv.setText(gameState.SolarSystemName[s.nameIndex]);
+						tv.setText(welcomeScreen.SolarSystemName[s.nameIndex]);
 						if (system == navigationChart.mSelectedSystem) {
 							Popup popup;
 							popup = new Popup(welcomeScreen, "Track system",
-							                  "Do you want to track the distance to " + gameState.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
-							                  "", "Yes", "No", new Popup.buttonCallback() {
+								"Do you want to track the distance to " + welcomeScreen.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
+								"", "Yes", "No", new Popup.buttonCallback() {
 								@Override
 								public void execute(Popup popup, View view) {
 									gameState.TrackedSystem = system;
 									navigationChart.invalidate();
 								}
-							}, welcomeScreen.cbShowNextPopup
-							);
+							}, welcomeScreen.cbShowNextPopup);
 							welcomeScreen.addPopup(popup);
 						} else {
 							navigationChart.mSelectedSystem = system;
@@ -137,8 +131,7 @@ public class FragmentGalacticChart extends Fragment {
 				}
 				return false;
 			}
-		}
-		);
+		});
 		return rootView;
 	}
 }

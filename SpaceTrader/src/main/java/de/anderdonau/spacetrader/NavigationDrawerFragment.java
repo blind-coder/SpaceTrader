@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -88,29 +98,19 @@ public class NavigationDrawerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container,
-		                                              false
-		);
+			false);
 		mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				selectItem(position);
 			}
-		}
-		);
+		});
 		//noinspection ConstantConditions
 		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(),
-		                                                    android.R.layout.simple_list_item_activated_1,
-		                                                    android.R.id.text1,
-		                                                    new String[]{"Buy Cargo", "Sell Cargo",
-		                                                                 "Shipyard", "Buy Equipment",
-		                                                                 "Sell Equipment",
-		                                                                 "Personnel Roster", "Bank",
-		                                                                 "System Information",
-		                                                                 "Commander Status",
-		                                                                 "Galactic Chart",
-		                                                                 "Short Range Chart"}
-		)
-		);
+			android.R.layout.simple_list_item_activated_1, android.R.id.text1,
+			new String[]{"Buy Cargo", "Sell Cargo", "Shipyard", "Buy Equipment", "Sell Equipment",
+				"Personnel Roster", "Bank", "System Information", "Commander Status", "Galactic Chart",
+				"Short Range Chart"}));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
@@ -141,11 +141,10 @@ public class NavigationDrawerFragment extends Fragment {
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
 		mDrawerToggle = new ActionBarDrawerToggle(getActivity(),                    /* host Activity */
-		                                          mDrawerLayout,                    /* DrawerLayout object */
-		                                          R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
-		                                          R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-		                                          R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-		) {
+			mDrawerLayout,                    /* DrawerLayout object */
+			R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+			R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+			R.string.navigation_drawer_close  /* "close drawer" description for accessibility */) {
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
@@ -184,8 +183,7 @@ public class NavigationDrawerFragment extends Fragment {
 			public void run() {
 				mDrawerToggle.syncState();
 			}
-		}
-		);
+		});
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}

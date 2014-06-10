@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -22,22 +32,22 @@ import android.widget.TextView;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentStartNewGame extends Fragment {
-	private Context context;
-	private GameState gameState;
+	private WelcomeScreen welcomeScreen;
+	private GameState     gameState;
 	private View rootView = null;
 
-	public FragmentStartNewGame(Context context) {
-		this.context = context;
-		gameState = new GameState(context, "Jameson");
+	public FragmentStartNewGame(WelcomeScreen welcomeScreen) {
+		this.welcomeScreen = welcomeScreen;
+		gameState = new GameState(welcomeScreen, "Jameson");
 	}
 
 	public GameState getGameState() {
-		SharedPreferences sp = context.getSharedPreferences("options", Context.MODE_PRIVATE);
+		SharedPreferences sp = welcomeScreen.getSharedPreferences("options", Context.MODE_PRIVATE);
 		SharedPreferences.Editor ed = sp.edit();
 
 		EditText t = (EditText) findViewById(R.id.strNameCommander);
 		SeekBar s = (SeekBar) findViewById(R.id.levelBar);
-		gameState = new GameState(context, t.getText().toString());
+		gameState = new GameState(welcomeScreen, t.getText().toString());
 		gameState.DeterminePrices(gameState.Mercenary[0].curSystem);
 
 		ed.putString("Name", t.getText().toString());
@@ -73,7 +83,7 @@ public class FragmentStartNewGame extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		SharedPreferences sp = context.getSharedPreferences("options", Context.MODE_PRIVATE);
+		SharedPreferences sp = welcomeScreen.getSharedPreferences("options", Context.MODE_PRIVATE);
 
 		rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);
 		TextView textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
@@ -99,9 +109,7 @@ public class FragmentStartNewGame extends Fragment {
 				textView.setText(String.format("%d", 1 + skillTrader));
 				textView = (TextView) rootView.findViewById(R.id.skillPointsLeft);
 				textView.setText(String.format("%d",
-				                               gameState.SkillPointsLeft - (skillPilot + skillFighter + skillTrader + skillEngineer)
-				)
-				);
+					gameState.SkillPointsLeft - (skillPilot + skillFighter + skillTrader + skillEngineer)));
 			}
 
 			@Override
@@ -128,9 +136,8 @@ public class FragmentStartNewGame extends Fragment {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 				TextView textview = (TextView) rootView.findViewById(R.id.levelDescription);
-				textview.setText(gameState.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar))
-					.getProgress()]
-				);
+				textview.setText(welcomeScreen.levelDesc[((SeekBar) rootView.findViewById(R.id.levelBar))
+					.getProgress()]);
 			}
 
 			@Override
@@ -145,23 +152,19 @@ public class FragmentStartNewGame extends Fragment {
 		};
 
 		seekBar = (SeekBar) rootView.findViewById(R.id.skillEngineer);
-		seekBar.setOnSeekBarChangeListener(skillChangeListener
-		);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener);
 		seekBar.setProgress(sp.getInt("Engineer", 0));
 
 		seekBar = (SeekBar) rootView.findViewById(R.id.skillPilot);
-		seekBar.setOnSeekBarChangeListener(skillChangeListener
-		);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener);
 		seekBar.setProgress(sp.getInt("Pilot", 0));
 
 		seekBar = (SeekBar) rootView.findViewById(R.id.skillFighter);
-		seekBar.setOnSeekBarChangeListener(skillChangeListener
-		);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener);
 		seekBar.setProgress(sp.getInt("Fighter", 0));
 
 		seekBar = (SeekBar) rootView.findViewById(R.id.skillTrader);
-		seekBar.setOnSeekBarChangeListener(skillChangeListener
-		);
+		seekBar.setOnSeekBarChangeListener(skillChangeListener);
 		seekBar.setProgress(sp.getInt("Trader", 0));
 
 		skillChangeListener.onStopTrackingTouch(seekBar);

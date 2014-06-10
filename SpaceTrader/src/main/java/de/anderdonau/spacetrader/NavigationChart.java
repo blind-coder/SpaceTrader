@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -20,12 +30,13 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 @SuppressWarnings("UnusedDeclaration")
 public class NavigationChart extends View {
-	protected final Paint     paint           = new Paint();
-	public          int       Multiplicator   = 20;
-	public          int       WormholeOffset  = 4;
-	protected       GameState mGameState      = null;
-	protected       int       mDrawWormhole   = -1;
-	protected       int       mSelectedSystem = -1;
+	protected final Paint         paint           = new Paint();
+	public          int           Multiplicator   = 20;
+	public          int           WormholeOffset  = 4;
+	protected       WelcomeScreen welcomeScreen   = null;
+	protected       GameState     mGameState      = null;
+	protected       int           mDrawWormhole   = -1;
+	protected       int           mSelectedSystem = -1;
 	protected int radius;
 	protected float   mOffsetX        = 0;
 	protected float   mOffsetY        = 0;
@@ -50,6 +61,10 @@ public class NavigationChart extends View {
 		this.mGameState = mGameState;
 	}
 
+	public void setWelcomeScreen(WelcomeScreen welcomeScreen) {
+		this.welcomeScreen = welcomeScreen;
+	}
+
 	public void setShortRange(boolean isShortRange) {
 		this.isShortRange = isShortRange;
 	}
@@ -66,7 +81,9 @@ public class NavigationChart extends View {
 				}
 			}
 		}
-		if (isShortRange) { return -1; }
+		if (isShortRange) {
+			return -1;
+		}
 		return getSystemCloseTo(posX, posY);
 	}
 
@@ -79,8 +96,7 @@ public class NavigationChart extends View {
 		for (int i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			s = mGameState.SolarSystem[i];
 			int nDist = (int) (Math.pow(posX - s.x * Multiplicator, 2) + Math.pow(
-				posY - s.y * Multiplicator, 2
-			));
+				posY - s.y * Multiplicator, 2));
 			if (dist > nDist) {
 				dist = nDist;
 				retVal = i;
@@ -139,7 +155,9 @@ public class NavigationChart extends View {
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		if (mGameState == null) { return; }
+		if (mGameState == null) {
+			return;
+		}
 
 		SolarSystem CURSYSTEM = mGameState.SolarSystem[mGameState.Mercenary[0].curSystem];
 		SolarSystem s;
@@ -150,8 +168,7 @@ public class NavigationChart extends View {
 			Multiplicator = 20;
 		} else {
 			Multiplicator = Math.max(getWidth() / GameState.GALAXYWIDTH,
-			                         getHeight() / GameState.GALAXYHEIGHT
-			);
+				getHeight() / GameState.GALAXYHEIGHT);
 			radius = Math.min(getWidth(), getHeight()) / 100;
 		}
 
@@ -208,7 +225,7 @@ public class NavigationChart extends View {
 			canvas.drawCircle(x, y, radius, paint);
 
 			paint.setColor(Color.BLACK);
-			canvas.drawText(mGameState.SolarSystemName[s.nameIndex], x, y - radius, paint);
+			canvas.drawText(welcomeScreen.SolarSystemName[s.nameIndex], x, y - radius, paint);
 		}
 
 		for (int i = 0; i < GameState.MAXWORMHOLE; i++) {
@@ -240,8 +257,7 @@ public class NavigationChart extends View {
 			int distToTracked = mGameState.RealDistance(CURSYSTEM, s);
 			if (distToTracked > 0) {
 				canvas.drawLine(CURSYSTEM.x * Multiplicator, CURSYSTEM.y * Multiplicator,
-				                s.x * Multiplicator, s.y * Multiplicator, paint
-				);
+					s.x * Multiplicator, s.y * Multiplicator, paint);
 			}
 		}
 
@@ -255,8 +271,7 @@ public class NavigationChart extends View {
 			paint.setColor(Color.BLACK);
 			paint.setStrokeWidth(5);
 			canvas.drawLine(from.x * Multiplicator + radius * 2 + WormholeOffset, from.y * Multiplicator,
-			                to.x * Multiplicator, to.y * Multiplicator, paint
-			);
+				to.x * Multiplicator, to.y * Multiplicator, paint);
 			paint.setStrokeWidth(0);
 		}
 	}

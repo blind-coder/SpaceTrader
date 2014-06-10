@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -30,9 +40,9 @@ public class FragmentShortRangeChart extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
 		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(
-			R.id.ShortRangeChart
-		);
+			R.id.ShortRangeChart);
 		navigationChart.setGameState(gameState);
+		navigationChart.setWelcomeScreen(welcomeScreen);
 		navigationChart.setShortRange(true);
 
 		navigationChart.setOnTouchListener(new View.OnTouchListener() {
@@ -49,13 +59,10 @@ public class FragmentShortRangeChart extends Fragment {
 						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
 							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-							                        gameState.SolarSystem[system]
-							) <= gameState.Ship.GetFuel() || gameState.WormholeExists(
-								gameState.Mercenary[0].curSystem, system
-							)) &&
+								gameState.SolarSystem[system]) <= gameState.Ship.GetFuel() || gameState
+								.WormholeExists(gameState.Mercenary[0].curSystem, system)) &&
 							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-							                       gameState.SolarSystem[system]
-							) > 0) {
+								gameState.SolarSystem[system]) > 0) {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
 						} else {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.WARP_SYSTEM_INFORMATION);
@@ -65,13 +72,10 @@ public class FragmentShortRangeChart extends Fragment {
 						welcomeScreen.WarpSystem = gameState.SolarSystem[system];
 						if (!gameState.AlwaysInfo &&
 							(gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-							                        gameState.SolarSystem[system]
-							) <= gameState.Ship.GetFuel() || gameState.WormholeExists(
-								gameState.Mercenary[0].curSystem, system
-							)) &&
+								gameState.SolarSystem[system]) <= gameState.Ship.GetFuel() || gameState
+								.WormholeExists(gameState.Mercenary[0].curSystem, system)) &&
 							gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-							                       gameState.SolarSystem[system]
-							) > 0) {
+								gameState.SolarSystem[system]) > 0) {
 							welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.AVERAGE_PRICES);
 
 						} else {
@@ -83,21 +87,16 @@ public class FragmentShortRangeChart extends Fragment {
 				}
 				return false;
 			}
-		}
-		);
+		});
 		TextView tv = (TextView) rootView.findViewById(R.id.txtShortRangeChartDistToTarget);
 		if (gameState.TrackedSystem < 0) {
 			tv.setVisibility(View.INVISIBLE);
 		} else {
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(String.format("Distance to %s: %d parsec",
-			                         gameState.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
-			                         gameState.RealDistance(
-				                         gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-				                         gameState.SolarSystem[gameState.TrackedSystem]
-			                         )
-			)
-			);
+				welcomeScreen.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
+				gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
+					gameState.SolarSystem[gameState.TrackedSystem])));
 		}
 		return rootView;
 	}

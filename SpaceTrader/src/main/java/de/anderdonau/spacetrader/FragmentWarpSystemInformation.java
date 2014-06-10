@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -33,47 +43,44 @@ public class FragmentWarpSystemInformation extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container,
-		                                       false
-		);
+			false);
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		TextView tv;
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
-		tv.setText(gameState.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
+		tv.setText(welcomeScreen.SolarSystemName[welcomeScreen.WarpSystem.nameIndex]);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoTechLevel);
-		tv.setText(gameState.techLevel[welcomeScreen.WarpSystem.techLevel]);
+		tv.setText(welcomeScreen.techLevel[welcomeScreen.WarpSystem.techLevel]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoGovernment);
 		tv.setText(Politics.mPolitics[welcomeScreen.WarpSystem.politics].name);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoSize);
-		tv.setText(gameState.SystemSize[welcomeScreen.WarpSystem.size]);
+		tv.setText(welcomeScreen.SystemSize[welcomeScreen.WarpSystem.size]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPolice);
 		tv.setText(
-			gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]
-		);
+			welcomeScreen.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPolice]);
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
 		tv.setText(
-			gameState.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]
-		);
+			welcomeScreen.Activity[Politics.mPolitics[welcomeScreen.WarpSystem.politics].strengthPirates]);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
 		int Distance = gameState.RealDistance(CURSYSTEM, welcomeScreen.WarpSystem);
 		if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem)) {
 			tv.setText("Wormhole");
-		} else { tv.setText(String.format("%d parsecs", Distance)); }
+		} else {
+			tv.setText(String.format("%d parsecs", Distance));
+		}
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
-		tv.setText(String.format("%d cr.", gameState.InsuranceMoney() + gameState.MercenaryMoney() + (
-			gameState.Debt > 0 ? Math.max(gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(
-			COMMANDER.curSystem, welcomeScreen.WarpSystem
-		)
-		)
-		);
+		tv.setText(String.format("%d cr.",
+			gameState.InsuranceMoney() + gameState.MercenaryMoney() + (gameState.Debt > 0 ? Math.max(
+				gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(COMMANDER.curSystem,
+				welcomeScreen.WarpSystem)));
 
 		if (Distance > 0) {
-			if (gameState.WormholeExists(COMMANDER.curSystem, welcomeScreen.WarpSystem
-			) || Distance <= gameState.Ship.GetFuel()) {
+			if (gameState.WormholeExists(COMMANDER.curSystem,
+				welcomeScreen.WarpSystem) || Distance <= gameState.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 				btn.setVisibility(View.VISIBLE);
 				btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);

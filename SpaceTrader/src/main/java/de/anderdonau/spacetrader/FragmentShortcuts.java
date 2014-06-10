@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -48,9 +58,7 @@ public class FragmentShortcuts extends Fragment {
 				AlertDialog.Builder builder = new AlertDialog.Builder(welcomeScreen);
 				builder.setTitle("Select new Shortcut");
 				builder.setView(welcomeScreen.getLayoutInflater().inflate(
-					R.layout.dialog_select_new_shortcut, linearLayout
-				)
-				);
+					R.layout.dialog_select_new_shortcut, linearLayout));
 				builder.setCancelable(false);
 				final AlertDialog alertDialog = builder.create();
 				View.OnClickListener listener = new View.OnClickListener() {
@@ -100,22 +108,22 @@ public class FragmentShortcuts extends Fragment {
 						welcomeScreen.changeFragment(WelcomeScreen.FRAGMENTS.SHORTCUTS);
 					}
 				};
-				i = gameState.Shortcuts.length;
+				i = welcomeScreen.Shortcuts.length;
 				for (int j : new int[]{R.id.dialogSelectNewShortcut10, R.id.dialogSelectNewShortcut9,
-				                       R.id.dialogSelectNewShortcut8, R.id.dialogSelectNewShortcut7, R.id.dialogSelectNewShortcut6,
-				                       R.id.dialogSelectNewShortcut5, R.id.dialogSelectNewShortcut4,
-				                       R.id.dialogSelectNewShortcut3, R.id.dialogSelectNewShortcut2,
-				                       R.id.dialogSelectNewShortcut1, R.id.dialogSelectNewShortcut0
+					R.id.dialogSelectNewShortcut8, R.id.dialogSelectNewShortcut7,
+					R.id.dialogSelectNewShortcut6, R.id.dialogSelectNewShortcut5,
+					R.id.dialogSelectNewShortcut4, R.id.dialogSelectNewShortcut3,
+					R.id.dialogSelectNewShortcut2, R.id.dialogSelectNewShortcut1,
+					R.id.dialogSelectNewShortcut0
 
 				}) {
 					Button button = (Button) linearLayout.findViewById(j);
 					button.setOnClickListener(listener);
-					button.setText(gameState.Shortcuts[--i][1]);
+					button.setText(welcomeScreen.Shortcuts[--i][1]);
 				}
 				alertDialog.show();
 			}
-		}
-		);
+		});
 		return rootView;
 	}
 }

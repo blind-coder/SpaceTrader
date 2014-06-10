@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -19,11 +29,11 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentShipInfo extends Fragment {
+	private WelcomeScreen      welcomeScreen;
 	private ShipTypes.ShipType mType;
-	private GameState          gameState;
 
-	public FragmentShipInfo(GameState gameState) {
-		this.gameState = gameState;
+	public FragmentShipInfo(WelcomeScreen welcomeScreen, GameState gameState) {
+		this.welcomeScreen = welcomeScreen;
 		mType = ShipTypes.ShipTypes[gameState.ShipInfoId];
 	}
 
@@ -38,7 +48,7 @@ public class FragmentShipInfo extends Fragment {
 		tv.setText(mType.name);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipInfoSize);
-		tv.setText(gameState.SystemSize[mType.size]);
+		tv.setText(welcomeScreen.SystemSize[mType.size]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtShipInfoCargoBays);
 		tv.setText(String.format("%d", mType.cargoBays));

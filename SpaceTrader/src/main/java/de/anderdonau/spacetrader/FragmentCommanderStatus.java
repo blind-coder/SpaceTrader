@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -21,9 +31,11 @@ import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 
 public class FragmentCommanderStatus extends Fragment {
-	GameState gameState;
+	WelcomeScreen welcomeScreen;
+	GameState     gameState;
 
-	public FragmentCommanderStatus(GameState gameState) {
+	public FragmentCommanderStatus(WelcomeScreen welcomeScreen, GameState gameState) {
+		this.welcomeScreen = welcomeScreen;
 		this.gameState = gameState;
 	}
 
@@ -50,16 +62,16 @@ public class FragmentCommanderStatus extends Fragment {
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusKills);
 		tv.setText(String.format("%d",
-		                         gameState.PirateKills + gameState.PoliceKills + gameState.TraderKills
-		)
-		);
+			gameState.PirateKills + gameState.PoliceKills + gameState.TraderKills));
 
 		i = 0;
 		while (i < GameState.MAXPOLICERECORD && gameState.PoliceRecordScore >= PoliceRecord.minScore[i]) {
 			++i;
 		}
 		--i;
-		if (i < 0) { ++i; }
+		if (i < 0) {
+			++i;
+		}
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusPoliceRecord);
 		tv.setText(PoliceRecord.name[i]);
 
@@ -68,12 +80,14 @@ public class FragmentCommanderStatus extends Fragment {
 			++i;
 		}
 		--i;
-		if (i < 0) { i = 0; }
+		if (i < 0) {
+			i = 0;
+		}
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusReputation);
 		tv.setText(Reputation.name[i]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDifficulty);
-		tv.setText(gameState.levelDesc[GameState.getDifficulty()]);
+		tv.setText(welcomeScreen.levelDesc[GameState.getDifficulty()]);
 
 		tv = (TextView) rootView.findViewById(R.id.txtCommanderStatusDays);
 		tv.setText(String.format("%d", gameState.Days));

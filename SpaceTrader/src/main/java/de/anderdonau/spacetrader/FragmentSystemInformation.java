@@ -1,9 +1,19 @@
 /*
- * Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. 
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. 
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus. 
- * Vestibulum commodo. Ut rhoncus gravida arcu.
+ * Copyright (c) 2014 Benjamin Schieder
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package de.anderdonau.spacetrader;
@@ -30,60 +40,60 @@ public class FragmentSystemInformation extends Fragment {
 	WelcomeScreen welcomeScreen;
 	private GameState gameState;
 	String[][] NewsPaperNames = {{"* Arsenal", "The Grassroot", "Kick It!"},    /* Anarchy */
-	                             {"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
-	                             {"Planet News", "* Times", "Interstate Update"},      /* Communist */
-	                             {"The Objectivist", "* Market", "The Invisible Hand"},      /* Confederacy */
-	                             {"+ Memo", "News From The Board", "Status Report"},     /* Corporate */
-	                             {"Pulses", "Binary Stream", "The System Clock"},      /* Cybernetic */
-	                             {"The Daily Planet", "* Majority", "Unanimity"},      /* Democracy */
-	                             {"The Command", "Leader's Voice", "* Mandate"},       /* Dictatorship */
-	                             {"State Tribune", "Motherland News", "Homeland Report"},    /* Fascist */
-	                             {"News from the Keep", "The Town Crier", "* Herald"},     /* Feudal */
-	                             {"General Report", "+ Dispatch", "* Sentry"},       /* Military */
-	                             {"Royal Times", "The Loyal Subject", "The Fanfare"},      /* Monarchy */
-	                             {"Pax Humani", "Principle", "* Chorus"},        /* Pacifist */
-	                             {"All for One", "Brotherhood", "The People's Syndicate"},   /* Socialist */
-	                             {"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
-	                             {"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
-	                             {"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
+		{"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
+		{"Planet News", "* Times", "Interstate Update"},      /* Communist */
+		{"The Objectivist", "* Market", "The Invisible Hand"},      /* Confederacy */
+		{"+ Memo", "News From The Board", "Status Report"},     /* Corporate */
+		{"Pulses", "Binary Stream", "The System Clock"},      /* Cybernetic */
+		{"The Daily Planet", "* Majority", "Unanimity"},      /* Democracy */
+		{"The Command", "Leader's Voice", "* Mandate"},       /* Dictatorship */
+		{"State Tribune", "Motherland News", "Homeland Report"},    /* Fascist */
+		{"News from the Keep", "The Town Crier", "* Herald"},     /* Feudal */
+		{"General Report", "+ Dispatch", "* Sentry"},       /* Military */
+		{"Royal Times", "The Loyal Subject", "The Fanfare"},      /* Monarchy */
+		{"Pax Humani", "Principle", "* Chorus"},        /* Pacifist */
+		{"All for One", "Brotherhood", "The People's Syndicate"},   /* Socialist */
+		{"The Daily Koan", "Haiku", "One Hand Clapping"},     /* Satori */
+		{"The Future", "Hardware Dispatch", "TechNews"},      /* Technocracy */
+		{"The Spiritual Advisor", "Church Tidings", "The Temple Tribune"},  /* Theocracy */};
 	String[][] CannedNews     =
 		{{"Riots, Looting Mar Factional Negotiations.", "Communities Seek Consensus.",
-		  "Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"},
-		 {"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!",
-		  "Restrictions on Corporate Freedom Abolished by Courts!"},
-		 {"Party Reports Productivity Increase.",
-		  "Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!",
-		  "Politburo Approves New 5-Year Plan!"},
-		 {"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!",
-		  "Southern States Resist Federal Taxation for Capital Projects!",
-		  "States Request Federal Intervention in Citrus Conflict!"},
-		 {"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.",
-		  "CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."},
-		 {"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.",
-		  "Storage Banks to be Upgraded!", "System Backup Rescheduled."},
-		 {"Local Elections on Schedule!", "Polls: Voter Satisfaction High!",
-		  "Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."},
-		 {"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!",
-		  "Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"},
-		 {"Drug Smugglers Sentenced to Death!",
-		  "Aliens Required to Carry Visible Identification at All Times!",
-		  "Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."},
-		 {"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!",
-		  "Baron Ignores Ultimatum!", "War of Succession Threatens!"},
-		 {"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?",
-		  "HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"},
-		 {"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!",
-		  "King Commissions New Artworks.", "Prince Exiled for Palace Plot!"},
-		 {"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?",
-		  "Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "},
-		 {"Government Promises Increased Welfare Benefits!",
-		  "State Denies Food Rationing Required to Prevent Famine.",
-		  "'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"},
-		 {"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."},
-		 {"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.",
-		  "Last Human Judge Retires.", "Software Bug Causes Mass Confusion."},
-		 {"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.",
-		  "Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
+			"Successful Bakunin Day Rally!", "Major Faction Conflict Expected for the Weekend!"},
+			{"Editorial: Taxes Too High!", "Market Indices Read Record Levels!", "Corporate Profits Up!",
+				"Restrictions on Corporate Freedom Abolished by Courts!"},
+			{"Party Reports Productivity Increase.",
+				"Counter-Revolutionary Bureaucrats Purged from Party!", "Party: Bold New Future Predicted!",
+				"Politburo Approves New 5-Year Plan!"},
+			{"States Dispute Natural Resource Rights!", "States Denied Federal Funds over Local Laws!",
+				"Southern States Resist Federal Taxation for Capital Projects!",
+				"States Request Federal Intervention in Citrus Conflict!"},
+			{"Robot Shortages Predicted for Q4.", "Profitable Quarter Predicted.",
+				"CEO: Corporate Rebranding Progressing.", "Advertising Budgets to Increase."},
+			{"Olympics: Software Beats Wetware in All Events!", "New Network Protocols To Be Deployed.",
+				"Storage Banks to be Upgraded!", "System Backup Rescheduled."},
+			{"Local Elections on Schedule!", "Polls: Voter Satisfaction High!",
+				"Campaign Spending Aids Economy!", "Police, Politicians Vow Improvements."},
+			{"New Palace Planned; Taxes Increase.", "Future Presents More Opportunities for Sacrifice!",
+				"Insurrection Crushed: Rebels Executed!", "Police Powers to Increase!"},
+			{"Drug Smugglers Sentenced to Death!",
+				"Aliens Required to Carry Visible Identification at All Times!",
+				"Foreign Sabotage Suspected.", "Stricter Immigration Laws Installed."},
+			{"Farmers Drafted to Defend Lord's Castle!", "Report: Kingdoms Near Flashpoint!",
+				"Baron Ignores Ultimatum!", "War of Succession Threatens!"},
+			{"Court-Martials Up 2% This Year.", "Editorial: Why Wait to Invade?",
+				"HQ: Invasion Plans Reviewed.", "Weapons Research Increases Kill-Ratio!"},
+			{"King to Attend Celebrations.", "Queen's Birthday Celebration Ends in Riots!",
+				"King Commissions New Artworks.", "Prince Exiled for Palace Plot!"},
+			{"Dialog Averts Eastern Conflict! ", "Universal Peace: Is it Possible?",
+				"Editorial: Life in Harmony.", "Polls: Happiness Quotient High! "},
+			{"Government Promises Increased Welfare Benefits!",
+				"State Denies Food Rationing Required to Prevent Famine.",
+				"'Welfare Actually Boosts Economy,' Minister Says.", "Hoarder Lynched by Angry Mob!"},
+			{"Millions at Peace.", "Sun Rises.", "Countless Hearts Awaken.", "Serenity Reigns."},
+			{"New Processor Hits 10 ZettaHerz!", "Nanobot Output Exceeds Expectation.",
+				"Last Human Judge Retires.", "Software Bug Causes Mass Confusion."},
+			{"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.",
+				"Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
 
 	public FragmentSystemInformation(WelcomeScreen welcomeScreen, GameState gameState) {
 		this.welcomeScreen = welcomeScreen;
@@ -97,21 +107,22 @@ public class FragmentSystemInformation extends Fragment {
 		CURSYSTEM.visited = true;
 
 		TextView textView = (TextView) rootView.findViewById(R.id.strSysInfoName);
-		textView.setText(gameState.SolarSystemName[CURSYSTEM.nameIndex]);
+		textView.setText(welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex]);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoSize);
-		textView.setText(gameState.SystemSize[CURSYSTEM.size]);
+		textView.setText(welcomeScreen.SystemSize[CURSYSTEM.size]);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoTechLevel);
-		textView.setText(gameState.techLevel[CURSYSTEM.techLevel]);
+		textView.setText(welcomeScreen.techLevel[CURSYSTEM.techLevel]);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoGovernment);
 		textView.setText(Politics.mPolitics[CURSYSTEM.politics].name);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoResources);
-		textView.setText(gameState.SpecialResources[CURSYSTEM.specialResources]);
+		textView.setText(welcomeScreen.SpecialResources[CURSYSTEM.specialResources]);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoPolice);
-		textView.setText(gameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
+		textView.setText(welcomeScreen.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPolice]);
 		textView = (TextView) rootView.findViewById(R.id.strSysInfoPirates);
-		textView.setText(gameState.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
+		textView.setText(
+			welcomeScreen.Activity[Politics.mPolitics[CURSYSTEM.politics].strengthPirates]);
 		textView = (TextView) rootView.findViewById(R.id.strCurrentPressure);
-		textView.setText(gameState.Status[CURSYSTEM.status]);
+		textView.setText(welcomeScreen.Status[CURSYSTEM.status]);
 
 		Button btn = (Button) rootView.findViewById(R.id.btnSpecialEvent);
 		if (CURSYSTEM.special > 0 && gameState.OpenQuests() < 3) {
@@ -219,24 +230,20 @@ public class FragmentSystemInformation extends Fragment {
 			.getDifficulty() + 1)) {
 			popup = new Popup(welcomeScreen, "Not enough money!", String.format(
 				"A newspaper costs %d credits in this system. You don't have enough money!",
-				GameState.getDifficulty() + 1
-			), "", "OK", welcomeScreen.cbShowNextPopup
-			);
+				GameState.getDifficulty() + 1), "", "OK", welcomeScreen.cbShowNextPopup);
 			welcomeScreen.addPopup(popup);
 		} else if (!gameState.AlreadyPaidForNewspaper) {
 			if (!gameState.NewsAutoPay && !gameState.AlreadyPaidForNewspaper) {
 				popup = new Popup(welcomeScreen, "Buy newspaper", String.format(
 					"The local newspaper costs %d credits. Do you wish to buy a copy?",
-					GameState.getDifficulty() + 1
-				),
-				                  "If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
-				                  "Yes", "No", new Popup.buttonCallback() {
+					GameState.getDifficulty() + 1),
+					"If you can't pay the price of a newspaper, you can't get it.\nIf you have \"Reserve Money\" checked in the Options menu, the game will reserve at least enough money to pay for insurance and mercenaries.",
+					"Yes", "No", new Popup.buttonCallback() {
 					@Override
 					public void execute(Popup popup, View view) {
 						showNewspaperPopup();
 					}
-				}, welcomeScreen.cbShowNextPopup
-				);
+				}, welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 			} else {
 				showNewspaperPopup();
@@ -262,25 +269,18 @@ public class FragmentSystemInformation extends Fragment {
 		}
 		seed = gameState.GetRandom((int) Math.pow(2, 31));
 		gameState.rand = new Random(
-			(gameState.Mercenary[0].curSystem & GameState.DEFSEEDX) | (gameState.Days & GameState.DEFSEEDY)
-		);
+			(gameState.Mercenary[0].curSystem & GameState.DEFSEEDX) | (gameState.Days & GameState.DEFSEEDY));
 
 		if (NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS].startsWith("*")) {
-			masthead = String.format("The %s %s", gameState.SolarSystemName[CURSYSTEM.nameIndex],
-			                         NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS]
-				                         .substring(2)
-			);
+			masthead = String.format("The %s %s", welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex],
+				NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS].substring(2));
 		} else if (NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS].startsWith(
-			"+"
-		)) {
-			masthead = String.format("%s %s", gameState.SolarSystemName[CURSYSTEM.nameIndex],
-			                         NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS]
-				                         .substring(2)
-			);
+			"+")) {
+			masthead = String.format("%s %s", welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex],
+				NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS].substring(2));
 		} else {
 			masthead = String.format("%s",
-			                         NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS]
-			);
+				NewsPaperNames[CURSYSTEM.politics][WarpSystem % GameState.MAXMASTHEADS]);
 		}
 
 		// Special Events get to go first, crowding out other news
@@ -367,8 +367,9 @@ public class FragmentSystemInformation extends Fragment {
 			news += "\nInvasion Imminent! Plans in Place to Repel Hostile Invaders.";
 		}
 		if (CURSYSTEM.special == GameState.GEMULONRESCUED && !gameState.isNewsEvent(
-			GameState.GEMULONRESCUED
-		) && gameState.InvasionStatus > 0) { news += "\nAlien Invasion Devastates Planet!"; }
+			GameState.GEMULONRESCUED) && gameState.InvasionStatus > 0) {
+			news += "\nAlien Invasion Devastates Planet!";
+		}
 		if (gameState.isNewsEvent(GameState.ALIENINVASION)) {
 			news += "\nEditorial: Who Will Warn Gemulon?";
 		}
@@ -408,11 +409,11 @@ public class FragmentSystemInformation extends Fragment {
 			switch (j) {
 				case 0:
 					news +=
-						"\nPolice Warning: " + gameState.NameCommander + " Will Dock At " + gameState.SolarSystemName[CURSYSTEM.nameIndex] + "!";
+						"\nPolice Warning: " + gameState.NameCommander + " Will Dock At " + welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex] + "!";
 					break;
 				case 1:
 					news +=
-						"\nNotorious Criminal " + gameState.NameCommander + " Sighted In " + gameState.SolarSystemName[CURSYSTEM.nameIndex] + "!";
+						"\nNotorious Criminal " + gameState.NameCommander + " Sighted In " + welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex] + "!";
 					break;
 				case 2:
 					news += "\nLocals Rally to Deny Spaceport Access to " + gameState.NameCommander + "!";
@@ -448,24 +449,23 @@ public class FragmentSystemInformation extends Fragment {
 
 		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			if (i != COMMANDER.curSystem &&
-				((gameState.RealDistance(CURSYSTEM, gameState.SolarSystem[i]
-				) <= ShipTypes.ShipTypes[gameState.Ship.type].fuelTanks) || (gameState.WormholeExists(
-					COMMANDER.curSystem, i
-				))) &&
+				((gameState.RealDistance(CURSYSTEM,
+					gameState.SolarSystem[i]) <= ShipTypes.ShipTypes[gameState.Ship.type].fuelTanks) || (gameState
+					.WormholeExists(COMMANDER.curSystem, i))) &&
 				gameState.SolarSystem[i].status > 0) {
 				// Special stories that always get shown: moon, millionaire
 				if (gameState.SolarSystem[i].special == GameState.MOONFORSALE) {
 					news +=
-						"\nSeller in " + gameState.SolarSystemName[i] + " System has Utopian Moon available.";
+						"\nSeller in " + welcomeScreen.SolarSystemName[i] + " System has Utopian Moon available.";
 				}
 				if (gameState.SolarSystem[i].special == GameState.BUYTRIBBLE) {
 					news +=
-						"\nCollector in " + gameState.SolarSystemName[i] + " System seeks to purchase Tribbles.";
+						"\nCollector in " + welcomeScreen.SolarSystemName[i] + " System seeks to purchase Tribbles.";
 				}
 
 				// And not-always-shown stories
-				if (gameState.GetRandom(100
-				) <= GameState.STORYPROBABILITY * CURSYSTEM.techLevel + 10 * (5 - GameState
+				if (gameState.GetRandom(
+					100) <= GameState.STORYPROBABILITY * CURSYSTEM.techLevel + 10 * (5 - GameState
 					.getDifficulty())) {
 					j = gameState.GetRandom(6);
 					switch (j) {
@@ -511,7 +511,7 @@ public class FragmentSystemInformation extends Fragment {
 							news += "Labor Shortages";
 							break;
 					}
-					news += " in the " + gameState.SolarSystemName[i] + " System.";
+					news += " in the " + welcomeScreen.SolarSystemName[i] + " System.";
 					realNews = true;
 				}
 			}
@@ -521,7 +521,9 @@ public class FragmentSystemInformation extends Fragment {
 		// headline from our canned news list.
 		if (!realNews) {
 			boolean[] shown = new boolean[GameState.MAXSTORIES];
-			for (i = 0; i < GameState.MAXSTORIES; i++) { shown[i] = false; }
+			for (i = 0; i < GameState.MAXSTORIES; i++) {
+				shown[i] = false;
+			}
 			for (i = 0; i <= gameState.GetRandom(GameState.MAXSTORIES); i++) {
 				j = gameState.GetRandom(GameState.MAXSTORIES);
 				if (!shown[j] && news.length() <= 150) {
@@ -531,14 +533,15 @@ public class FragmentSystemInformation extends Fragment {
 			}
 		}
 
-		while (news.startsWith("\n")) { news = news.substring(1); }
+		while (news.startsWith("\n")) {
+			news = news.substring(1);
+		}
 
 		gameState.rand = new Random(seed);
 		Popup popup;
 		popup = new Popup(welcomeScreen, masthead, news,
-		                  "The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"",
-		                  "OK", welcomeScreen.cbShowNextPopup
-		);
+			"The local newspaper is a great way to find out what's going on in the area.\nYou may find out about shortages, wars, or other situations at nearby systems.\nThen again, some will tell you that \"no news is good news.\"",
+			"OK", welcomeScreen.cbShowNextPopup);
 		welcomeScreen.addPopup(popup);
 	}
 
@@ -550,19 +553,17 @@ public class FragmentSystemInformation extends Fragment {
 
 		if (Event.justAMessage) {
 			popup = new Popup(welcomeScreen, Event.title, Event.questStringID, "", "OK",
-			                  welcomeScreen.cbShowNextPopup
-			);
+				welcomeScreen.cbShowNextPopup);
 			welcomeScreen.addPopup(popup);
 			specialStep2();
 		} else {
 			popup = new Popup(welcomeScreen, Event.title, Event.questStringID, "", "Yes", "No",
-			                  new Popup.buttonCallback() {
-				                  @Override
-				                  public void execute(Popup popup, View view) {
-					                  specialStep2();
-				                  }
-			                  }, welcomeScreen.cbShowNextPopup
-			);
+				new Popup.buttonCallback() {
+					@Override
+					public void execute(Popup popup, View view) {
+						specialStep2();
+					}
+				}, welcomeScreen.cbShowNextPopup);
 			welcomeScreen.addPopup(popup);
 		}
 	}
@@ -576,9 +577,8 @@ public class FragmentSystemInformation extends Fragment {
 
 		if (gameState.ToSpend() < Event.price) {
 			popup = new Popup(welcomeScreen, "Not Enough Money",
-			                  "You don't have enough cash to spend to accept this offer.", "", "OK",
-			                  welcomeScreen.cbShowNextPopup
-			);
+				"You don't have enough cash to spend to accept this offer.", "", "OK",
+				welcomeScreen.cbShowNextPopup);
 			welcomeScreen.addPopup(popup);
 			return;
 		}
@@ -587,28 +587,25 @@ public class FragmentSystemInformation extends Fragment {
 			case GameState.GETREACTOR:
 				if (gameState.Ship.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 15) {
 					popup = new Popup(welcomeScreen, "Not Enough Bays",
-					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
-					                  welcomeScreen.cbShowNextPopup
-					);
+						"You don't have enough empty cargo bays at the moment.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				} else if (gameState.WildStatus == 1) {
 					popup = new Popup(welcomeScreen, "Wild Won't Stay Aboard", String.format(
 						"Jonathan Wild isn't willing to go with you if you bring that Reactor on board. He'd rather take his chances hiding out here on %s.",
-						gameState.SolarSystemName[CURSYSTEM.nameIndex]
-					), "", "Goodbye Wild", "Leave Reactor", new Popup.buttonCallback() {
+						welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex]), "", "Goodbye Wild",
+						"Leave Reactor", new Popup.buttonCallback() {
 						@Override
 						public void execute(Popup popup, View view) {
 							gameState.WildStatus = 0;
 							Popup popup1 = new Popup(popup.context, "Say Goodbye to Wild",
-							                         "Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
-							                         "", "OK", welcomeScreen.cbShowNextPopup
-							);
+								"Since Jonathan Wild is not willing to travel under these conditions, and you're not willing to change the situation, he leaves you and goes into hiding on this system.",
+								"", "OK", welcomeScreen.cbShowNextPopup);
 							gameState.ReactorStatus = 1;
 							welcomeScreen.addPopup(popup1);
 						}
-					}, welcomeScreen.cbShowNextPopup
-					);
+					}, welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				}
@@ -631,10 +628,9 @@ public class FragmentSystemInformation extends Fragment {
 				return;
 			case GameState.GETHULLUPGRADED:
 				popup = new Popup(welcomeScreen, "Hull Upgraded",
-				                  "Technicians spend the day retrofitting the hull of your ship.",
-				                  "Technicians spent the day replacing welds and bolts, and adding materials to your ship. When they're done, they tell you your ship should be significantly sturdier.",
-				                  "OK", welcomeScreen.cbShowNextPopup
-				);
+					"Technicians spend the day retrofitting the hull of your ship.",
+					"Technicians spent the day replacing welds and bolts, and adding materials to your ship. When they're done, they tell you your ship should be significantly sturdier.",
+					"OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.Ship.hull += GameState.UPGRADEDHULL;
 				gameState.ScarabStatus = 3;
@@ -686,9 +682,8 @@ public class FragmentSystemInformation extends Fragment {
 			case GameState.MOONFORSALE:
 				gameState.MoonBought = true;
 				popup = new Popup(welcomeScreen, "Moon Bought",
-				                  "You bought a moon in the Utopia system. Go there to claim it.", "", "OK",
-				                  welcomeScreen.cbShowNextPopup
-				);
+					"You bought a moon in the Utopia system. Go there to claim it.", "", "OK",
+					welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				break;
 
@@ -698,28 +693,24 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.SKILLINCREASE:
 				popup = new Popup(welcomeScreen, "Skill Increase",
-				                  "The alien increases one of your skills.", "", "OK",
-				                  welcomeScreen.cbShowNextPopup
-				);
+					"The alien increases one of your skills.", "", "OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.IncreaseRandomSkill();
 				break;
 
 			case GameState.TRIBBLE:
 				popup = new Popup(welcomeScreen, "A Tribble",
-				                  "You are now the proud owner of a little, cute, furry tribble.",
-				                  "The merchant prince sold you a cute, furry tribble. You can see your new acquisition on the Commander Status screen.",
-				                  "OK", welcomeScreen.cbShowNextPopup
-				);
+					"You are now the proud owner of a little, cute, furry tribble.",
+					"The merchant prince sold you a cute, furry tribble. You can see your new acquisition on the Commander Status screen.",
+					"OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.Ship.tribbles = 1;
 				break;
 
 			case GameState.BUYTRIBBLE:
 				popup = new Popup(welcomeScreen, "No More Tribbles",
-				                  "The alien uses his alien technology to beam over your whole collection of tribbles to his ship.",
-				                  "No more tribbles!", "OK", welcomeScreen.cbShowNextPopup
-				);
+					"The alien uses his alien technology to beam over your whole collection of tribbles to his ship.",
+					"No more tribbles!", "OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.Credits += (gameState.Ship.tribbles >> 1);
 				gameState.Ship.tribbles = 0;
@@ -727,9 +718,8 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.ERASERECORD:
 				popup = new Popup(welcomeScreen, "Clean Record",
-				                  "The hacker resets your police record to Clean.", "", "OK",
-				                  welcomeScreen.cbShowNextPopup
-				);
+					"The hacker resets your police record to Clean.", "", "OK",
+					welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.PoliceRecordScore = GameState.CLEANSCORE;
 				gameState.RecalculateSellPrices();
@@ -746,16 +736,13 @@ public class FragmentSystemInformation extends Fragment {
 			case GameState.AMBASSADORJAREK:
 				if (gameState.Ship.crew[ShipTypes.ShipTypes[gameState.Ship.type].crewQuarters - 1] >= 0) {
 					popup = new Popup(welcomeScreen, "No Quarters Available",
-					                  "You do not have any crew quarters available for Ambassador Jarek.", "",
-					                  "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You do not have any crew quarters available for Ambassador Jarek.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				}
 				popup = new Popup(welcomeScreen, "Passenger On Board",
-				                  "You have taken Ambassador Jarek on board.", "", "OK",
-				                  welcomeScreen.cbShowNextPopup
-				);
+					"You have taken Ambassador Jarek on board.", "", "OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.JarekStatus = 1;
 				break;
@@ -763,34 +750,29 @@ public class FragmentSystemInformation extends Fragment {
 			case GameState.TRANSPORTWILD:
 				if (gameState.Ship.crew[ShipTypes.ShipTypes[gameState.Ship.type].crewQuarters - 1] >= 0) {
 					popup = new Popup(welcomeScreen, "No Quarters Available",
-					                  "You do not have any crew quarters available for Jonathan Wild.", "",
-					                  "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You do not have any crew quarters available for Jonathan Wild.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				}
 				if (!gameState.Ship.HasWeapon(GameState.BEAMLASERWEAPON, false)) {
 					popup = new Popup(welcomeScreen, "Wild Won't Stay Aboard", String.format(
 						"Jonathan Wild isn't about to go with you if you're not armed with at least a Beam Laser. He'd rather take his chances hiding out here on %s.",
-						gameState.SolarSystemName[CURSYSTEM.nameIndex]
-					), "", "OK", welcomeScreen.cbShowNextPopup
-					);
+						welcomeScreen.SolarSystemName[CURSYSTEM.nameIndex]), "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				}
 				if (gameState.ReactorStatus > 0 && gameState.ReactorStatus < 21) {
 					popup = new Popup(welcomeScreen, "Wild Won't Board Ship",
-					                  "Jonathan Wild doesn't like the looks of that Ion Reactor. He thinks it's too dangerous, and won't get on board.",
-					                  "The Ion Reactor is known to be unstable, and Jonathan Wild is trying to get to safety. He's not willing to get on the ship le the Reactor's on board.",
-					                  "OK", welcomeScreen.cbShowNextPopup
-					);
+						"Jonathan Wild doesn't like the looks of that Ion Reactor. He thinks it's too dangerous, and won't get on board.",
+						"The Ion Reactor is known to be unstable, and Jonathan Wild is trying to get to safety. He's not willing to get on the ship le the Reactor's on board.",
+						"OK", welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				}
 				popup = new Popup(welcomeScreen, "Passenger On Board",
-				                  "You have taken Jonathan Wild on board.", "", "OK",
-				                  welcomeScreen.cbShowNextPopup
-				);
+					"You have taken Jonathan Wild on board.", "", "OK", welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				gameState.WildStatus = 1;
 				break;
@@ -849,9 +831,8 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.CARGOFORSALE:
 				popup = new Popup(welcomeScreen, "Sealed Canisters",
-				                  "You bought the sealed canisters and put them in your cargo bays.", "",
-				                  "OK", welcomeScreen.cbShowNextPopup
-				);
+					"You bought the sealed canisters and put them in your cargo bays.", "", "OK",
+					welcomeScreen.cbShowNextPopup);
 				welcomeScreen.addPopup(popup);
 				i = gameState.GetRandom(GameState.MAXTRADEITEM);
 				gameState.Ship.cargo[i] += 3;
@@ -860,20 +841,17 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.INSTALLLIGHTNINGSHIELD:
 				FirstEmptySlot = gameState.GetFirstEmptySlot(
-					ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield
-				);
+					ShipTypes.ShipTypes[gameState.Ship.type].shieldSlots, gameState.Ship.shield);
 				if (FirstEmptySlot < 0) {
 					popup = new Popup(welcomeScreen, "Not Enough Slots",
-					                  "You have already filled all of your available slots for this type of item.",
-					                  "", "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You have already filled all of your available slots for this type of item.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				} else {
 					popup = new Popup(welcomeScreen, "Lightning Shield",
-					                  "You now have one lightning shield installed on your ship.", "", "OK",
-					                  welcomeScreen.cbShowNextPopup
-					);
+						"You now have one lightning shield installed on your ship.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					gameState.Ship.shield[FirstEmptySlot] = GameState.LIGHTNINGSHIELD;
 					gameState.Ship.shieldStrength[FirstEmptySlot] =
@@ -883,20 +861,17 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.GETSPECIALLASER:
 				FirstEmptySlot = gameState.GetFirstEmptySlot(
-					ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon
-				);
+					ShipTypes.ShipTypes[gameState.Ship.type].weaponSlots, gameState.Ship.weapon);
 				if (FirstEmptySlot < 0) {
 					popup = new Popup(welcomeScreen, "Not Enough Slots",
-					                  "You have already filled all of your available slots for this type of item.",
-					                  "", "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You have already filled all of your available slots for this type of item.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				} else {
 					popup = new Popup(welcomeScreen, "Morgan's Laser",
-					                  "You now have Henry Morgan's special laser installed on your ship.", "",
-					                  "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You now have Henry Morgan's special laser installed on your ship.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					gameState.Ship.weapon[FirstEmptySlot] = GameState.MORGANLASERWEAPON;
 				}
@@ -904,20 +879,17 @@ public class FragmentSystemInformation extends Fragment {
 
 			case GameState.GETFUELCOMPACTOR:
 				FirstEmptySlot = gameState.GetFirstEmptySlot(
-					ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget
-				);
+					ShipTypes.ShipTypes[gameState.Ship.type].gadgetSlots, gameState.Ship.gadget);
 				if (FirstEmptySlot < 0) {
 					popup = new Popup(welcomeScreen, "Not Enough Slots",
-					                  "You have already filled all of your available slots for this type of item.",
-					                  "", "OK", welcomeScreen.cbShowNextPopup
-					);
+						"You have already filled all of your available slots for this type of item.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				} else {
 					popup = new Popup(welcomeScreen, "Fuel Compactor",
-					                  "You now have a fuel compactor installed on your ship.", "", "OK",
-					                  welcomeScreen.cbShowNextPopup
-					);
+						"You now have a fuel compactor installed on your ship.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					gameState.Ship.gadget[FirstEmptySlot] = GameState.FUELCOMPACTOR;
 					gameState.Ship.fuel = gameState.Ship.GetFuelTanks();
@@ -927,16 +899,14 @@ public class FragmentSystemInformation extends Fragment {
 			case GameState.JAPORIDISEASE:
 				if (gameState.Ship.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 10) {
 					popup = new Popup(welcomeScreen, "Not Enough Bays",
-					                  "You don't have enough empty cargo bays at the moment.", "", "OK",
-					                  welcomeScreen.cbShowNextPopup
-					);
+						"You don't have enough empty cargo bays at the moment.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					return;
 				} else {
 					popup = new Popup(welcomeScreen, "Antidote",
-					                  "Ten of your cargo bays now contain antidote for the Japori system.",
-					                  "", "OK", welcomeScreen.cbShowNextPopup
-					);
+						"Ten of your cargo bays now contain antidote for the Japori system.", "", "OK",
+						welcomeScreen.cbShowNextPopup);
 					welcomeScreen.addPopup(popup);
 					gameState.JaporiDiseaseStatus = 1;
 				}
