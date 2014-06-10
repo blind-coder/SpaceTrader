@@ -43,6 +43,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -3875,10 +3876,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	@SuppressWarnings("UnusedParameters")
 	public void EncounterButtonTribbleCallback(View view) {
-		Popup popup;
-		popup = new Popup(this, "Squeek!", "Squeek!", "Squeek! Squeek!", "Squeek!", cbShowNextPopup);
-		popupQueue.push(popup);
-		showNextPopup();
+		Toast.makeText(this, "Squeek! Squeek!", Toast.LENGTH_SHORT).show();
 	}
 
 	public void IncDays(int Amount) {
