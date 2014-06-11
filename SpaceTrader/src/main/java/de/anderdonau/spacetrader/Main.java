@@ -20,7 +20,6 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -28,8 +27,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -47,7 +44,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.FileInputStream;
@@ -105,7 +101,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	public  SolarSystem              WarpSystem;
 	private GameState                gameState;
-	InterstitialAd interstitial;
+	// InterstitialAd interstitial;
 
 	private PopupQueue           popupQueue      = new PopupQueue();
 	final   Popup.buttonCallback cbShowNextPopup = new Popup.buttonCallback() {
@@ -5472,6 +5468,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			saveGame();
 		}
 
+		/*
 		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
 		final boolean hideAds = settings.getBoolean("hideAds", false);
 
@@ -5516,6 +5513,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				waiter.postDelayed(runnable, 100);
 			}
 		}
+		*/
 	}
 
 	public void BuyCargo(int Index, int Amount) {
