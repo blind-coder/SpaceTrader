@@ -121,7 +121,8 @@
 			android:id="@+id/btnShipyardBuyFullRepairs"
 
 			android:layout_alignTop="@+id/btnShipyardBuyRepairs"
-			android:onClick="btnShipyardBuyFullRepairs"/>
+			android:onClick="btnShipyardBuyFullRepairs"
+			android:layout_alignParentRight="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"
