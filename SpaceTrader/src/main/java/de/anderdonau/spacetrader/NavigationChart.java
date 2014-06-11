@@ -169,7 +169,7 @@ public class NavigationChart extends View {
 		} else {
 			Multiplicator = Math.max(getWidth() / GameState.GALAXYWIDTH,
 				getHeight() / GameState.GALAXYHEIGHT);
-			radius = Math.min(getWidth(), getHeight()) / 100;
+			radius = Math.min(getWidth(), getHeight()) / 40;
 		}
 
 		if (mSelectedSystem < 0) {
