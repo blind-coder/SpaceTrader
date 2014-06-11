@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +43,7 @@
 				android:text="Events already happened"
 				android:id="@+id/textView2"
 				android:layout_below="@+id/textView"
-				android:layout_alignParentStart="true"/>
+				/>
 
 		<CheckBox
 				android:layout_width="wrap_content"
@@ -42,7 +52,7 @@
 				android:id="@+id/chkBoxCheatAhab"
 				android:layout_alignParentBottom="false"
 				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
+
 				android:layout_below="@+id/textView2"
 				android:checked="false"
 				android:onClick="btnVeryRareCheckboxCallback"/>
@@ -54,7 +64,7 @@
 				android:id="@+id/chkBoxCheatHuie"
 				android:layout_below="@+id/chkBoxCheatAhab"
 				android:checked="false"
-				android:layout_alignParentStart="true"
+
 				android:onClick="btnVeryRareCheckboxCallback"/>
 
 		<CheckBox
@@ -63,7 +73,7 @@
 				android:text="Captain Conrad"
 				android:id="@+id/chkBoxCheatConrad"
 				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
+
 				android:layout_below="@+id/chkBoxCheatHuie"
 				android:checked="false"
 				android:onClick="btnVeryRareCheckboxCallback"/>
@@ -75,7 +85,7 @@
 				android:id="@+id/chkBoxCheatGoodTonic"
 				android:layout_below="@+id/chkBoxCheatConrad"
 				android:checked="false"
-				android:layout_alignParentStart="true"
+
 				android:onClick="btnVeryRareCheckboxCallback"/>
 
 		<CheckBox
@@ -85,7 +95,7 @@
 				android:id="@+id/chkBoxCheatBadTonic"
 				android:layout_below="@+id/chkBoxCheatGoodTonic"
 				android:checked="false"
-				android:layout_alignParentStart="true"
+
 				android:onClick="btnVeryRareCheckboxCallback"/>
 
 		<CheckBox
@@ -95,7 +105,7 @@
 				android:id="@+id/chkBoxCheatMarieCeleste"
 				android:layout_below="@+id/chkBoxCheatBadTonic"
 				android:checked="false"
-				android:layout_alignParentStart="true"
+
 				android:onClick="btnVeryRareCheckboxCallback"/>
 
 		<TextView
@@ -106,9 +116,9 @@
 				android:id="@+id/textView3"
 				android:layout_alignParentBottom="false"
 				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
+
 				android:layout_below="@+id/chkBoxCheatMarieCeleste"
-				android:layout_alignParentEnd="false"/>
+				/>
 
 		<TextView
 				android:layout_width="wrap_content"
@@ -116,8 +126,8 @@
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:text="a rare encounter:"
 				android:id="@+id/textView4"
-				android:layout_alignParentStart="true"
-				android:layout_alignParentEnd="false"
+
+
 				android:layout_below="@+id/textView3"
 				android:layout_alignBottom="@+id/numCheatRareEncounter"
 				android:gravity="center_vertical"/>
@@ -131,7 +141,7 @@
 				android:layout_toRightOf="@+id/textView4"
 				android:hint="x/1000"
 				android:layout_below="@+id/textView3"
-				android:layout_alignParentEnd="true"
+
 				android:onClick="numVeryRareChanceCallback"/>
 
 		<TextView
@@ -142,7 +152,7 @@
 				android:id="@+id/textView5"
 				android:layout_below="@+id/textView4"
 				android:layout_toLeftOf="@+id/numCheatOrbitTrade"
-				android:layout_alignParentStart="true"
+
 				android:layout_alignBottom="@+id/numCheatOrbitTrade"
 				android:gravity="center_vertical|right"/>
 
@@ -154,7 +164,7 @@
 				android:id="@+id/numCheatOrbitTrade"
 				android:layout_below="@+id/numCheatRareEncounter"
 				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"
+
 				android:layout_alignLeft="@+id/numCheatRareEncounter"
 				android:hint="x/1000"
 				android:onClick="numVeryRareChanceCallback"/>

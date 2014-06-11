@@ -16,6 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -31,11 +33,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 14
     buildToolsVersion '19.0.3'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 19
     }
     buildTypes {
@@ -54,6 +56,7 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.android.support:support-v4:+'
     compile 'com.google.android.gms:play-services:4.0.30'
 }

@@ -1,9 +1,19 @@
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,7 +44,7 @@
 			android:id="@+id/textView2"
 			android:layout_below="@+id/textView"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="30dp"/>
 
 	<TextView
@@ -45,7 +55,7 @@
 			android:id="@+id/textView3"
 			android:layout_below="@+id/textView2"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -54,7 +64,7 @@
 			android:text="0 cr."
 			android:id="@+id/txtBankDebt"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/textView2"/>
 
 	<TextView
@@ -64,7 +74,7 @@
 			android:text="500 cr."
 			android:id="@+id/txtBankMaxDebt"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/textView3"/>
 
 	<Button
@@ -75,7 +85,7 @@
 			android:onClick="btnBankGetLoan"
 			android:layout_below="@+id/textView3"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -85,7 +95,7 @@
 			android:id="@+id/textView4"
 			android:layout_below="@+id/btnBankGetLoan"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="30dp"/>
 
 	<TextView
@@ -96,7 +106,7 @@
 			android:id="@+id/textView5"
 			android:layout_below="@+id/textView4"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -106,7 +116,7 @@
 			android:id="@+id/textView6"
 			android:layout_below="@+id/textView5"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -116,7 +126,7 @@
 			android:id="@+id/txtBankShipValue"
 			android:layout_alignTop="@+id/textView4"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -125,7 +135,7 @@
 			android:text="1%"
 			android:id="@+id/txtBankNoClaim"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/textView5"/>
 
 	<TextView
@@ -135,7 +145,7 @@
 			android:text="75 cr. daily"
 			android:id="@+id/txtBankCost"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/textView6"/>
 
 	<Button
@@ -155,7 +165,7 @@
 			android:id="@+id/textView7"
 			android:layout_below="@+id/btnBankBuyInsurance"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="30dp"/>
 
 	<TextView
@@ -166,7 +176,7 @@
 			android:id="@+id/txtBankCash"
 			android:layout_alignTop="@+id/textView7"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -174,7 +184,7 @@
 			android:text="Payback Loan"
 			android:id="@+id/btnBankPaybackLoan"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:onClick="btnBankPaybackLoan"
 			android:layout_alignTop="@+id/btnBankGetLoan"/>
 

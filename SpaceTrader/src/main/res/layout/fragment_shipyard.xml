@@ -1,9 +1,19 @@
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,7 +40,7 @@
 			android:id="@+id/txtShipyardCash"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -40,7 +50,7 @@
 			android:id="@+id/txtShipyardFuelReserve"
 			android:layout_below="@+id/textView"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="30dp"/>
 
 	<TextView
@@ -51,7 +61,7 @@
 			android:id="@+id/txtShipyardFuelCost"
 			android:layout_below="@+id/txtShipyardFuelReserve"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -60,7 +70,7 @@
 			android:id="@+id/btnShipyardBuyFuel"
 			android:layout_below="@+id/txtShipyardFuelCost"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:onClick="btnShipyardBuyFuel"/>
 
 	<Button
@@ -70,7 +80,7 @@
 			android:id="@+id/btnShipyardBuyMaxFuel"
 			android:layout_below="@+id/txtShipyardFuelCost"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:onClick="btnShipyardBuyMaxFuel"/>
 
 	<TextView
@@ -81,7 +91,7 @@
 			android:id="@+id/txtShipyardHullStrength"
 			android:layout_below="@+id/btnShipyardBuyFuel"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="25dp"/>
 
 	<TextView
@@ -92,7 +102,7 @@
 			android:id="@+id/txtShipyardRepairsNeeded"
 			android:layout_below="@+id/txtShipyardHullStrength"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -101,7 +111,7 @@
 			android:id="@+id/btnShipyardBuyRepairs"
 			android:layout_below="@+id/txtShipyardRepairsNeeded"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:onClick="btnShipyardBuyRepairs"/>
 
 	<Button
@@ -109,7 +119,7 @@
 			android:layout_height="wrap_content"
 			android:text="Buy Full Repairs"
 			android:id="@+id/btnShipyardBuyFullRepairs"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/btnShipyardBuyRepairs"
 			android:onClick="btnShipyardBuyFullRepairs"/>
 
@@ -121,7 +131,7 @@
 			android:id="@+id/txtShipyardNewShipsForSale"
 			android:layout_below="@+id/btnShipyardBuyRepairs"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="20dp"/>
 
 	<Button
@@ -131,7 +141,7 @@
 			android:id="@+id/btnShipyardBuyNewShip"
 			android:layout_below="@+id/txtShipyardNewShipsForSale"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:onClick="btnBuyNewShip"/>
 
 	<TextView
@@ -142,7 +152,7 @@
 			android:id="@+id/txtShipyardBuyEscapePod"
 			android:layout_below="@+id/btnShipyardBuyNewShip"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -151,7 +161,7 @@
 			android:id="@+id/btnShipyardBuyEscapePod"
 			android:layout_below="@+id/txtShipyardBuyEscapePod"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:onClick="btnShipyardBuyEscapePod"/>
 
 </RelativeLayout>

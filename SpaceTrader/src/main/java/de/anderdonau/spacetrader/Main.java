@@ -133,7 +133,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	final        String[]   Activity         =
 		{"Absent", "Minimal", "Few", "Some", "Moderate", "Many", "Abundant", "Swarms"};
 	final        String[]   MercenaryName    =
-		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre", "Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
+		{"Jameson", "Alyssa", "Armatur", "Bentos", "C2U2", "Chi'Ti", "Crystal", "Dane", "Deirdre",
+			"Doc", "Draco", "Iranda", "Jeremiah", "Jujubal", "Krydon", "Luis", "Mercedez", "Milete",
 			"Muri-L", "Mystyc", "Nandi", "Orestes", "Pancho", "PS37", "Quarck", "Sosumi", "Uma", "Wesley",
 			"Wonton", "Yorvick", "Zeethibal"};
 	final        String[]   SystemSize       = {"Tiny", "Small", "Medium", "Large", "Huge"};
@@ -432,7 +433,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				showNextPopup();
 				return true;
 			case R.id.menuRetire:
-				popup = new Popup(this, "Retire", "Do you really want to retire?", "", "Yes", "No", new Popup.buttonCallback() {
+				popup = new Popup(this, "Retire", "Do you really want to retire?", "", "Yes", "No",
+					new Popup.buttonCallback() {
 						@Override
 						public void execute(Popup popup, View view) {
 							popupQueue.clear();
@@ -489,6 +491,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					case NEW_GAME:
 						break;
 					case OPTIONS:
+						helpText =
+							"\"Always ignore when it is safe\" will fly past encounters where you can safely ignore your opponent. This means you won't encounter any peaceful ships along the way. You also won't see ships which immediately start to flee from you, and neither will you see any ships which ignore you because you have a cloaking device. You can set this option separately for police, pirates,  traders, and traders wanting to make deals in orbit. As long as you play as a peaceful trader, you can check the first three, but you might want to make sure the fourth is unchecked. When you become a bounty hunter, you should uncheck the \"pirates\" one. When you become a pirate, you should uncheck the \"traders\" one. If you want to attack everybody and anybody (in other words, when you are a real evil psychopath), you should uncheck all four.\n\"Get full tank on arrival\", if checked, will automatically get a full tank of fuel when docking at a new system, if, of course, you have enough credits.\n\"Get full hull repair on arrival\" will automatically get your hull repaired to 100% when docking at a new system, if, of course, you have enough credits.\n\"Reserve money for warp costs\" will not spend all your money when buying cargo, equipment or a new ship, but will reserve at least enough to pay your mercenaries and insurance. It won't take into account interest, because your debt will simply increase if you can't pay interest, and it won't take into account wormhole tax, because it's not known whether or not you will fly through a wormhole. It also won't protect you when buying fuel or repairs.\n\"Always go from Chart to Info\", if checked, will always present the target system Info screen when you tap that system on the Short Range Chart. If not checked, the game will remember whether you were last on the Info screen or on the Average Price List, and will go to the screen you last accessed (if you are allowed to go to that screen).\n\"Continuous attack and flight\" automatically executes, once started, an attack or an attempt to flee every second, until either the player chooses a new action, or one of the ships gets destroyed, or one of the ships manages to escape, or the opponent changes his attitude (for instance, switches from attacking to fleeing or surrendering). You can also interrupt the repetition by tapping the \"Int.\" button or by simply selecting another action.\n\"Continue attacking fleeing ship\", if checked, will automatically continue the automatic attack, if it is activated, on a ship that stops attacking you and starts fleeing.\n\"Cargo bays to leave empty\" is the number of cargo bays you want to leave empty when buying trade goods. This is useful if you like to use the \"Max\" button but still would like to leave some bays empty in case you can pick up cargo while flying to another system.\n\"Always pay for newspaper\" will allow you to automatically pay when you click on the \"News\" button when viewing system information. If you leave this unchecked, you will be asked whether you want to spend the money on the paper.\n\"Stop tracking systems on arrival\" allows you to automatically stop tracking a system when you arrive at that system. If you uncheck this, you will continue to track the system until you turn off system tracking or select a different system to track in the Galactic Chart.\n";
 						break;
 					case PERSONNEL_ROSTER:
 						helpText =
@@ -1610,7 +1614,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		Popup popup = new Popup(this, "Buy New Ship", String.format(
 			"Are you sure you wish to trade in your %s for a new %s%s?", gameState.Ship.getType().name,
 			ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning > 0 || addMorganLaser) ?
-				", and transfer your unique equipment to the new ship" : ""), "", "Buy ship",
+			", and transfer your unique equipment to the new ship" : ""), "", "Buy ship",
 			"Don't buy ship", new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
@@ -5162,7 +5166,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 		// Fighterskill attacker is pitted against pilotskill defender; if defender
 		// is fleeing the attacker has a free shot, but the chance to hit is smaller
-		if (gameState.GetRandom(Attacker.FighterSkill() + Defender.getType().size) < (Flees ? 2 : 1) * gameState.GetRandom(5 + (Defender.PilotSkill() >> 1)))
+		if (gameState.GetRandom(Attacker.FighterSkill() + Defender.getType().size) < (Flees ? 2 :
+			1) * gameState.GetRandom(5 + (Defender.PilotSkill() >> 1)))
 		// Misses
 		{
 			return false;

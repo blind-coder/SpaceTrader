@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,8 +39,7 @@
 			android:text="Antedi"
 			android:id="@+id/txtPriceListSystemName"
 			android:layout_below="@+id/txtPriceListTitle"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			android:layout_alignParentLeft="true"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -39,8 +48,7 @@
 			android:id="@+id/btnPriceListNext"
 			android:layout_below="@+id/txtPriceListTitle"
 			android:onClick="btnNextSystem"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentRight="true"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -58,15 +66,13 @@
 			android:text="Special resources unknown."
 			android:id="@+id/txtPriceListSpecialResources"
 			android:layout_below="@+id/txtPriceListSystemName"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			android:layout_alignParentLeft="true"/>
 
 	<TableLayout
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/btnPriceListNext"
 			android:layout_alignRight="@+id/btnPriceListNext"
-			android:layout_alignEnd="@+id/btnPriceListNext"
 			android:stretchColumns="3,4,7"
 			android:id="@+id/tableLayout">
 
@@ -373,8 +379,7 @@
 			android:text="Cash: 11445 cr."
 			android:id="@+id/txtPriceListCash"
 			android:layout_above="@+id/btnPriceListWarp"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentRight="true"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -383,10 +388,8 @@
 			android:id="@+id/btnPriceListDiffAvg"
 			android:onClick="btnToggleAverageDiffPrices"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
 			android:layout_above="@+id/btnPriceListSysInfo"
-			android:layout_alignRight="@+id/btnPriceListSysInfo"
-			android:layout_alignEnd="@+id/btnPriceListSysInfo"/>
+			android:layout_alignRight="@+id/btnPriceListSysInfo"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -395,7 +398,6 @@
 			android:id="@+id/btnPriceListSysInfo"
 			android:layout_above="@+id/btnPriceListShortRangeChart"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
 			android:layout_toLeftOf="@+id/btnPriceListWarp"
 			android:onClick="btnWarpSystemInformation"/>
 
@@ -407,7 +409,6 @@
 			android:onClick="btnShortRangeChart"
 			android:layout_alignBottom="@+id/btnPriceListWarp"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
 			android:layout_toLeftOf="@+id/btnPriceListWarp"/>
 
 	<TextView
@@ -417,8 +418,7 @@
 			android:text="Bays: 0/15"
 			android:id="@+id/txtPriceListBays"
 			android:layout_above="@+id/txtPriceListCash"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"/>
+			android:layout_alignParentRight="true"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -428,7 +428,6 @@
 			android:textSize="50dp"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
 			android:onClick="btnDoWarp"/>
 
 </RelativeLayout>

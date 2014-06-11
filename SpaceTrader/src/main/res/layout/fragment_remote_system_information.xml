@@ -1,9 +1,19 @@
 <!--
-  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +41,7 @@
 			android:id="@+id/strDescName"
 			android:layout_below="@+id/textView"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_marginTop="28dp"
 			/>
 
@@ -43,7 +53,7 @@
 			android:id="@+id/strDescSize"
 			android:layout_below="@+id/strDescName"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -54,7 +64,7 @@
 			android:id="@+id/strDescTechLevel"
 			android:layout_below="@+id/strDescSize"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -65,7 +75,7 @@
 			android:id="@+id/strDescGovernment"
 			android:layout_below="@+id/strDescTechLevel"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -76,7 +86,7 @@
 			android:id="@+id/strDescDistance"
 			android:layout_below="@+id/strDescGovernment"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -87,7 +97,7 @@
 			android:id="@+id/strDescPolice"
 			android:layout_below="@+id/strDescDistance"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -98,7 +108,7 @@
 			android:id="@+id/strDescPirates"
 			android:layout_below="@+id/strDescPolice"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -109,8 +119,8 @@
 			android:id="@+id/strRemoteSysInfoName"
 			android:layout_alignTop="@+id/strDescName"
 			android:layout_toRightOf="@+id/strDescName"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentStart="false"
+
+
 			android:singleLine="false"
 			android:gravity="right"
 			/>
@@ -123,7 +133,7 @@
 			android:id="@+id/strRemoteSysInfoSize"
 			android:layout_alignTop="@+id/strDescSize"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_toRightOf="@+id/strDescSize"
 			android:gravity="right"
 			/>
@@ -135,7 +145,7 @@
 			android:text="Hi-Tech"
 			android:id="@+id/strRemoteSysInfoTechLevel"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/strDescTechLevel"
 			android:layout_toRightOf="@+id/strDescTechLevel"
 			android:gravity="right"
@@ -149,7 +159,7 @@
 			android:id="@+id/strRemoteSysInfoGovernment"
 			android:layout_alignTop="@+id/strDescGovernment"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_toRightOf="@+id/strDescGovernment"
 			android:gravity="right"
 			/>
@@ -161,7 +171,7 @@
 			android:text="12 parsecs"
 			android:id="@+id/strRemoteSysInfoDistance"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/strDescDistance"
 			android:layout_toRightOf="@+id/strDescGovernment"
 			android:gravity="right"
@@ -174,7 +184,7 @@
 			android:text="Minimal"
 			android:id="@+id/strRemoteSysInfoPolice"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignTop="@+id/strDescPolice"
 			android:layout_toRightOf="@+id/strDescPolice"
 			android:gravity="right"
@@ -188,7 +198,7 @@
 			android:id="@+id/strRemoteSysInfoPirates"
 			android:layout_alignTop="@+id/strDescPirates"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_toRightOf="@+id/strDescPirates"
 			android:gravity="right"
 			/>
@@ -201,7 +211,7 @@
 			android:id="@+id/textView2"
 			android:layout_below="@+id/strDescPirates"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			/>
 
 	<TextView
@@ -212,9 +222,9 @@
 			android:id="@+id/strRemoteSysInfoCosts"
 			android:layout_below="@+id/strRemoteSysInfoPirates"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignLeft="@+id/strRemoteSysInfoResources"
-			android:layout_alignStart="@+id/strRemoteSysInfoResources"
+
 			android:gravity="right"
 			/>
 
@@ -225,7 +235,7 @@
 			android:id="@+id/button"
 			android:onClick="btnShortRangeChart"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_alignParentBottom="true"
 			android:layout_toLeftOf="@+id/btnRemoteSyWarp"/>
 
@@ -236,7 +246,7 @@
 			android:id="@+id/btnRemoteSysPriceList"
 			android:layout_above="@+id/button"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
 			android:onClick="btnAveragePricesForm"/>
 
@@ -248,7 +258,7 @@
 			android:textSize="50dp"
 			android:visibility="invisible"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
+
 			android:layout_alignParentBottom="true"
 			android:onClick="btnDoWarp"/>
 
@@ -260,7 +270,7 @@
 			android:id="@+id/strRemoteSysOutOfRange"
 			android:layout_below="@+id/textView2"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
+
 			android:textStyle="bold"/>
 
 </RelativeLayout>
