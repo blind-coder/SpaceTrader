@@ -33,5 +33,6 @@
 			android:editable="true"
 			android:enabled="true"
 			android:hint="System"
-			android:inputType="text"/>
+			android:inputType="text"
+			android:layout_alignParentRight="true"/>
 </RelativeLayout>
