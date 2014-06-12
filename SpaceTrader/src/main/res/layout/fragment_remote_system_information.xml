@@ -123,7 +123,7 @@
 
 			android:singleLine="false"
 			android:gravity="right"
-			/>
+			android:layout_alignParentRight="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"
