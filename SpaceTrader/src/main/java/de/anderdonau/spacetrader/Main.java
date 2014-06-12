@@ -240,17 +240,17 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			adView = (AdView) findViewById(R.id.adView);
 		}
 		if (adView != null) {
+			adView.setVisibility(View.GONE);
 			int check = isGooglePlayServicesAvailable(this);
 			if (check != 0) {
-				GooglePlayServicesUtil.getErrorDialog(check, this, 0);
+				GooglePlayServicesUtil.getErrorDialog(check, this, 0).show();
 			} else {
 			  /* additional check for cheatcode */
 				SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
 				final boolean hideAds = settings.getBoolean("hideAds", false);
 
-				if (hideAds) {
-					adView.setVisibility(View.GONE);
-				} else {
+				if (!hideAds) {
+					adView.setVisibility(View.VISIBLE);
 					// Initiate a generic request.
 					AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
 						.addTestDevice("FE95DA7F3FE40606FA7F49DCE9E93A84").build();
@@ -2454,6 +2454,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		} else {
 			SellCargo(Index, 999, GameState.JETTISONCARGO);
 		}
+		changeFragment(currentState);
 	}
 
 	public void btnDumpCargoQty(View view) {
@@ -2502,12 +2503,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					int Amount = seekBar.getProgress();
 					if (Amount > 0) {
 						SellCargo(idx, Amount, GameState.JETTISONCARGO);
+						changeFragment(currentState);
 					}
 				}
 			}, cbShowNextPopup, new Popup.buttonCallback() {
 				@Override
 				public void execute(Popup popup, View view) {
 					SellCargo(idx, popup.max, GameState.JETTISONCARGO);
+					changeFragment(currentState);
 				}
 			}
 			);
