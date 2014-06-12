@@ -2070,11 +2070,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			"How many do you want to sell?\nYou can sell up to %d at %d cr. each.\nYour %s per unit is %d cr.\nYou paid about %d cr. each.",
 			gameState.Ship.cargo[Index], gameState.SellPrice[Index],
 			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ?
-				"loss" : "profit", Math.abs(
-			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index]),
+				"loss" : "profit",
 			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ?
-				(gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]) - gameState.SellPrice[Index] :
-				gameState.SellPrice[Index] - (gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index])),
+				gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index] :
+				gameState.SellPrice[Index] - gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index],
+			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]),
 			"Amount",
 			"If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
 			gameState.Ship.cargo[Index], "Sell cargo", "Don't sell cargo", new Popup.buttonCallback() {
