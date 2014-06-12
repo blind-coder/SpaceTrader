@@ -945,7 +945,9 @@ public class GameState implements Serializable {
 			this.Mercenary[i] = g.Mercenary[i];
 		}
 		this.Opponent = g.Opponent;
-		this.Ship = g.Ship;
+		//this.Ship = g.Ship;
+		// TODO: make a real save and load game function
+		this.Ship = new Ship(g.Ship.type, g.Ship.cargo, g.Ship.weapon, g.Ship.shield, g.Ship.shieldStrength, g.Ship.gadget, g.Ship.crew, g.Ship.fuel, g.Ship.hull, g.Ship.tribbles, this);
 		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			this.SolarSystem[i] = g.SolarSystem[i];
 		}
