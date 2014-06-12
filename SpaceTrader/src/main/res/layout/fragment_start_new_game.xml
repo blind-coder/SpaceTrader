@@ -16,11 +16,13 @@
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".WelcomeScreen">
+		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		            xmlns:tools="http://schemas.android.com/tools"
+		            tools:context=".WelcomeScreen"
+		            android:layout_width="match_parent"
+		            android:layout_height="match_parent">
+<RelativeLayout android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -235,3 +237,4 @@
 			android:onClick="StartNewGameStartGameCallback"/>
 
 </RelativeLayout>
+			</ScrollView>
