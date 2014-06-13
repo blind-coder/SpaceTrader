@@ -59,6 +59,7 @@ import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame;
+import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -262,16 +263,28 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 
 		try {
-			FileInputStream fis = mContext.openFileInput("savegame.txt");
+			FileInputStream fis = mContext.openFileInput("savegame_v101.txt");
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			SaveGame s = (SaveGame) ois.readObject();
+			SaveGame_v110 s = (SaveGame_v110) ois.readObject();
 			gameState = new GameState(s);
 			ois.close();
 			fis.close();
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+			Toast.makeText(this, "Loaded savegame v101", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
-			gameState = new GameState(this, "Jameson");
-			changeFragment(FRAGMENTS.NEW_GAME);
+			try {
+				FileInputStream fis = mContext.openFileInput("savegame.txt");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				SaveGame s = (SaveGame) ois.readObject();
+				gameState = new GameState(s);
+				ois.close();
+				fis.close();
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+				Toast.makeText(this, "Loaded savegame v100", Toast.LENGTH_SHORT).show();
+			} catch (Exception ee) {
+				gameState = new GameState(this, "Jameson");
+				changeFragment(FRAGMENTS.NEW_GAME);
+			}
 		}
 	}
 
@@ -5636,6 +5649,26 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			try {
 				oos = new ObjectOutputStream(fos);
 				oos.writeObject(s);
+				oos.close();
+				fos.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		SaveGame_v110 sv101 = new SaveGame_v110(gameState);
+
+		fos = null;
+		try {
+			fos = mContext.openFileOutput("savegame_v101.txt", Context.MODE_PRIVATE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (fos != null) {
+			ObjectOutputStream oos;
+			try {
+				oos = new ObjectOutputStream(fos);
+				oos.writeObject(sv101);
 				oos.close();
 				fos.close();
 			} catch (Exception e) {

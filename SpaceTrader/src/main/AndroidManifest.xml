@@ -19,10 +19,10 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.anderdonau.spacetrader"
-          android:versionCode="1"
-          android:versionName="1.0">
+          android:versionCode="110"
+          android:versionName="1.1.0">
 
-	<uses-sdk
+<uses-sdk
 			android:minSdkVersion="14"
 			android:targetSdkVersion="19"/>
 
