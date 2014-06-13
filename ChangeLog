@@ -1,0 +1,9 @@
+Fri Jun 13 09:03:50 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.1.0
+ * Fix: in SellCargo dialog, show correct values for profit/loss margin and
+ buying price
+ * Fix: In Search dialog, make textView fill the whole width
+ * Fix: In WarpSystemInfo dialog, right-align target system name
+ * Change: Change format of savegame. This breaks savegame compatibility now
+ but preserves it in the long run.
