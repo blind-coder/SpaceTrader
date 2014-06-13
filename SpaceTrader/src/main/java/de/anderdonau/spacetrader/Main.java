@@ -263,7 +263,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 
 		try {
-			FileInputStream fis = mContext.openFileInput("savegame_v101.txt");
+			FileInputStream fis = mContext.openFileInput("savegame.txt");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			SaveGame_v110 s = (SaveGame_v110) ois.readObject();
 			gameState = new GameState(s);
@@ -5636,31 +5636,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	}
 
 	public void saveGame() {
-		SaveGame s = new SaveGame(gameState);
+		SaveGame_v110 sv101 = new SaveGame_v110(gameState);
 
 		FileOutputStream fos = null;
 		try {
 			fos = mContext.openFileOutput("savegame.txt", Context.MODE_PRIVATE);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		if (fos != null) {
-			ObjectOutputStream oos;
-			try {
-				oos = new ObjectOutputStream(fos);
-				oos.writeObject(s);
-				oos.close();
-				fos.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		SaveGame_v110 sv101 = new SaveGame_v110(gameState);
-
-		fos = null;
-		try {
-			fos = mContext.openFileOutput("savegame_v101.txt", Context.MODE_PRIVATE);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
