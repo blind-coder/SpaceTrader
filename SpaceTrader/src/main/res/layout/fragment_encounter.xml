@@ -59,11 +59,9 @@
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="Encounter Text."
 			android:id="@+id/txtEncounterText"
-			android:layout_below="@+id/EncounterPlayerShip"
-			android:layout_alignParentLeft="true"
 
-			android:layout_alignRight="@+id/EncounterPlayerOpponent"
-			/>
+			android:layout_below="@+id/pBarEncounter"
+			android:layout_alignParentLeft="true"/>
 
 	<TableLayout
 			android:layout_width="fill_parent"
@@ -222,16 +220,14 @@
 	</TableLayout>
 
 	<ProgressBar
-			style="?android:attr/progressBarStyleLarge"
+			style="?android:attr/progressBarStyleHorizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/pBarEncounter"
 			android:indeterminate="true"
-
-
-			android:layout_alignParentRight="true"
-			android:layout_alignParentBottom="true"
-			android:indeterminateDuration="1"/>
+			android:layout_below="@+id/EncounterPlayerShip"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"/>
 
 	<ImageView
 			android:layout_width="wrap_content"
@@ -511,4 +507,5 @@
 			android:visibility="gone"
 			android:onClick="EncounterButtonTribbleCallback"
 			android:clickable="true"/>
+
 </RelativeLayout>
