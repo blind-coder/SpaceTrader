@@ -2188,6 +2188,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 
+	public void btnShortRangeChart(View view) {
+		changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+	}
+
 	@SuppressWarnings("UnusedParameters")
 	public void btnWarpSystemInformation(View view) {
 		changeFragment(FRAGMENTS.WARP_SYSTEM_INFORMATION);

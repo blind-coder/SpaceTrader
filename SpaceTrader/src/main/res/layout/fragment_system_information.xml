@@ -32,212 +32,242 @@
 			android:layout_centerHorizontal="true"
 			android:textStyle="bold"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Name:"
-			android:id="@+id/strDescName"
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"
 			android:layout_below="@+id/textView"
-			android:layout_alignParentLeft="true"
+			android:layout_above="@+id/buttonBarSystemInformation">
 
-			android:layout_marginTop="28dp"/>
+		<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
 
-	<TextView
-			android:layout_width="wrap_content"
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Name:"
+					android:id="@+id/strDescName"
+					android:layout_alignParentLeft="true"
+
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Size:"
+					android:id="@+id/strDescSize"
+					android:layout_below="@+id/strDescName"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Tech Level:"
+					android:id="@+id/strDescTechLevel"
+					android:layout_below="@+id/strDescSize"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Government:"
+					android:id="@+id/strDescGovernment"
+					android:layout_below="@+id/strDescTechLevel"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Resources:"
+					android:id="@+id/strDescResources"
+					android:layout_below="@+id/strDescGovernment"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Police:"
+					android:id="@+id/strDescPolice"
+					android:layout_below="@+id/strDescResources"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Pirates:"
+					android:id="@+id/strDescPirates"
+					android:layout_below="@+id/strDescPolice"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="The system is currently"
+					android:id="@+id/textView9"
+					android:layout_below="@+id/strDescPirates"
+					android:layout_alignParentLeft="true"
+
+					android:layout_marginTop="30dp"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="under no particular pressure."
+					android:id="@+id/strCurrentPressure"
+					android:layout_below="@+id/textView9"
+					android:layout_alignParentLeft="true"
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Acamar"
+					android:id="@+id/strSysInfoName"
+					android:layout_alignTop="@+id/strDescName"
+					android:layout_toRightOf="@+id/strDescName"
+
+
+					android:singleLine="false"
+					android:gravity="right"
+					android:layout_alignParentRight="true"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Large"
+					android:id="@+id/strSysInfoSize"
+					android:layout_alignTop="@+id/strDescSize"
+					android:layout_alignParentRight="true"
+
+					android:layout_toRightOf="@+id/strDescSize"
+					android:gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Hi-Tech"
+					android:id="@+id/strSysInfoTechLevel"
+					android:layout_alignParentRight="true"
+
+					android:layout_alignTop="@+id/strDescTechLevel"
+					android:layout_toRightOf="@+id/strDescTechLevel"
+					android:gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Fascist"
+					android:id="@+id/strSysInfoGovernment"
+					android:layout_alignTop="@+id/strDescGovernment"
+					android:layout_alignParentRight="true"
+
+					android:layout_toRightOf="@+id/strDescGovernment"
+					android:gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Sweetwater oceans"
+					android:id="@+id/strSysInfoResources"
+					android:layout_alignParentRight="true"
+
+					android:layout_alignTop="@+id/strDescResources"
+					android:layout_toRightOf="@+id/strDescGovernment"
+					android:gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Minimal"
+					android:id="@+id/strSysInfoPolice"
+					android:layout_alignParentRight="true"
+
+					android:layout_alignTop="@+id/strDescPolice"
+					android:layout_toRightOf="@+id/strDescPolice"
+					android:gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Abundant"
+					android:id="@+id/strSysInfoPirates"
+					android:layout_alignTop="@+id/strDescPirates"
+					android:layout_alignParentRight="true"
+
+					android:layout_toRightOf="@+id/strDescPirates"
+					android:gravity="right"/>
+		</RelativeLayout>
+	</ScrollView>
+
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Size:"
-			android:id="@+id/strDescSize"
-			android:layout_below="@+id/strDescName"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Tech Level:"
-			android:id="@+id/strDescTechLevel"
-			android:layout_below="@+id/strDescSize"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Government:"
-			android:id="@+id/strDescGovernment"
-			android:layout_below="@+id/strDescTechLevel"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Resources:"
-			android:id="@+id/strDescResources"
-			android:layout_below="@+id/strDescGovernment"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Police:"
-			android:id="@+id/strDescPolice"
-			android:layout_below="@+id/strDescResources"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Pirates:"
-			android:id="@+id/strDescPirates"
-			android:layout_below="@+id/strDescPolice"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="The system is currently"
-			android:id="@+id/textView9"
-			android:layout_below="@+id/strDescPirates"
-			android:layout_alignParentLeft="true"
-
-			android:layout_marginTop="30dp"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="under no particular pressure."
-			android:id="@+id/strCurrentPressure"
-			android:layout_below="@+id/textView9"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Newspaper"
-			android:id="@+id/btnNewspaper"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
-
-			android:onClick="SystemInformationNewspaperCallback"/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Special"
-			android:id="@+id/btnSpecialEvent"
-			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
+			android:focusableInTouchMode="false"
+			android:id="@+id/buttonBarSystemInformation">
 
-			android:onClick="SystemInformationSpecialCallback"/>
+		<Button
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="Newspaper"
+				android:id="@+id/btnNewspaper"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentLeft="true"
 
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Mercenary for hire"
-			android:id="@+id/btnMercenaryForHire"
-			android:layout_toRightOf="@+id/btnNewspaper"
-			android:layout_alignParentBottom="true"
-			android:layout_toLeftOf="@+id/btnSpecialEvent"
-			android:onClick="SystemInformationPersonnelRosterCallback"/>
+				android:onClick="SystemInformationNewspaperCallback"
+				android:layout_weight="1"
+				android:singleLine="true"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Acamar"
-			android:id="@+id/strSysInfoName"
-			android:layout_alignTop="@+id/strDescName"
-			android:layout_alignRight="@+id/btnSpecialEvent"
-			android:layout_toRightOf="@+id/strDescName"
+		<Button
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="Mercenary for hire"
+				android:id="@+id/btnMercenaryForHire"
+				android:layout_toRightOf="@+id/btnNewspaper"
+				android:layout_alignParentBottom="true"
+				android:layout_toLeftOf="@+id/btnSpecialEvent"
+				android:onClick="SystemInformationPersonnelRosterCallback"
+				android:layout_weight="1"
+				android:singleLine="false"/>
 
+		<Button
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="Special"
+				android:id="@+id/btnSpecialEvent"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
 
-			android:singleLine="false"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Large"
-			android:id="@+id/strSysInfoSize"
-			android:layout_alignTop="@+id/strDescSize"
-			android:layout_alignParentRight="true"
-
-			android:layout_toRightOf="@+id/strDescSize"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Hi-Tech"
-			android:id="@+id/strSysInfoTechLevel"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescTechLevel"
-			android:layout_toRightOf="@+id/strDescTechLevel"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Fascist"
-			android:id="@+id/strSysInfoGovernment"
-			android:layout_alignTop="@+id/strDescGovernment"
-			android:layout_alignParentRight="true"
-
-			android:layout_toRightOf="@+id/strDescGovernment"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Sweetwater oceans"
-			android:id="@+id/strSysInfoResources"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescResources"
-			android:layout_toRightOf="@+id/strDescGovernment"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Minimal"
-			android:id="@+id/strSysInfoPolice"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescPolice"
-			android:layout_toRightOf="@+id/strDescPolice"
-			android:gravity="right"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Abundant"
-			android:id="@+id/strSysInfoPirates"
-			android:layout_alignTop="@+id/strDescPirates"
-			android:layout_alignParentRight="true"
-
-			android:layout_toRightOf="@+id/strDescPirates"
-			android:gravity="right"/>
+				android:onClick="SystemInformationSpecialCallback"
+				android:layout_weight="1"
+				android:singleLine="true"/>
+	</LinearLayout>
 
 </RelativeLayout>

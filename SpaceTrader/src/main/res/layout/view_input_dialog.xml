@@ -18,37 +18,38 @@
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
 	<TextView
-			android:layout_width="30dp"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="123"
 			android:id="@+id/view_input_dialog_amount"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
 
-			android:layout_alignBottom="@+id/view_input_dialog_seekbar"
-			android:gravity="center_vertical|right"/>
+			android:gravity="center_horizontal"
+			android:textAppearance="@android:style/TextAppearance.Large"/>
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/view_input_dialog_seekbar"
-			android:layout_alignParentTop="true"
-			android:layout_toRightOf="@+id/view_input_dialog_amount"
-			android:layout_toLeftOf="@+id/view_input_dialog_max"
-			android:indeterminate="false"/>
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
 
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Max"
-			android:id="@+id/view_input_dialog_max"
-			style="@style/BuySellButtons"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentRight="true"
-			/>
-</RelativeLayout>
+		<SeekBar
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/view_input_dialog_seekbar"
+				android:indeterminate="false"
+				android:layout_weight="8"/>
+
+		<Button
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="Max"
+				android:id="@+id/view_input_dialog_max"
+				style="@style/BuySellButtons"
+				android:layout_weight="2"/>
+	</LinearLayout>
+</LinearLayout>

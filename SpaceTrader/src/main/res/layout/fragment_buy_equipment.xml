@@ -32,335 +32,342 @@
 			android:layout_centerHorizontal="true"
 			android:textStyle="bold"/>
 
-	<TableLayout
-			android:layout_width="fill_parent"
+	<ScrollView
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@+id/txtBuyEquipment"
+			android:id="@+id/scrollView"
 			android:layout_alignParentLeft="true"
-
 			android:layout_alignParentRight="true"
-			android:stretchColumns="2">
+			android:layout_below="@+id/txtBuyEquipment"
+			android:layout_above="@+id/txtBuyEquipmentCash">
 
-		<TableRow
+		<TableLayout
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="wrap_content"
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyPulseLaser"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				android:stretchColumns="2">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Pulse Laser"
-					android:id="@+id/textView"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="got one"
-					android:id="@+id/txtBuyPulseLaser"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyPulseLaser"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Pulse Laser"
+						android:id="@+id/textView"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyBeamLaser"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="got one"
+						android:id="@+id/txtBuyPulseLaser"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Beam Laser"
-					android:id="@+id/textView2"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="1000 cr."
-					android:id="@+id/txtBuyBeamLaser"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyBeamLaser"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Beam Laser"
+						android:id="@+id/textView2"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyMilitaryLaser"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="1000 cr."
+						android:id="@+id/txtBuyBeamLaser"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Military Laser"
-					android:id="@+id/textView3"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="2000 cr."
-					android:id="@+id/txtBuyMilitaryLaser"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyMilitaryLaser"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Military Laser"
+						android:id="@+id/textView3"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyEnergyShield"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="2000 cr."
+						android:id="@+id/txtBuyMilitaryLaser"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Energy Shield"
-					android:id="@+id/textView4"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="3000 cr."
-					android:id="@+id/txtBuyEnergyShield"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyEnergyShield"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Energy Shield"
+						android:id="@+id/textView4"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyReflectiveShield"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="3000 cr."
+						android:id="@+id/txtBuyEnergyShield"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Reflective Shield"
-					android:id="@+id/textView5"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="4000 cr."
-					android:id="@+id/txtBuyReflectiveShield"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyReflectiveShield"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Reflective Shield"
+						android:id="@+id/textView5"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuy5CargoBays"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="4000 cr."
+						android:id="@+id/txtBuyReflectiveShield"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="5 cargo bays"
-					android:id="@+id/textView6"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="5000 cr."
-					android:id="@+id/txtBuy5CargoBays"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuy5CargoBays"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="5 cargo bays"
+						android:id="@+id/textView6"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyAutoRepairSystem"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="5000 cr."
+						android:id="@+id/txtBuy5CargoBays"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Auto-repair system"
-					android:id="@+id/textView7"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="6000 cr."
-					android:id="@+id/txtBuyAutoRepairSystem"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyAutoRepairSystem"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Auto-repair system"
+						android:id="@+id/textView7"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyNavigationSystem"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="6000 cr."
+						android:id="@+id/txtBuyAutoRepairSystem"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Navigation system"
-					android:id="@+id/textView8"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="7000 cr."
-					android:id="@+id/txtBuyNavigationSystem"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyNavigationSystem"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Navigation system"
+						android:id="@+id/textView8"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyTargetingSystem"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="7000 cr."
+						android:id="@+id/txtBuyNavigationSystem"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Targeting system"
-					android:id="@+id/textView9"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="9000 cr."
-					android:id="@+id/txtBuyTargetingSystem"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyTargetingSystem"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Targeting system"
+						android:id="@+id/textView9"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Buy"
-					android:id="@+id/btnBuyCloakingSystem"
-					android:layout_column="0"
-					android:onClick="BuyEquipmentButtonCallback"
-					style="@style/BuySellButtons"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="9000 cr."
+						android:id="@+id/txtBuyTargetingSystem"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Cloaking system"
-					android:id="@+id/textView10"
-					android:layout_column="1"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="10000 cr."
-					android:id="@+id/txtBuyCloakingSystem"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
-	</TableLayout>
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Buy"
+						android:id="@+id/btnBuyCloakingSystem"
+						android:layout_column="0"
+						android:onClick="BuyEquipmentButtonCallback"
+						style="@style/BuySellButtons"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Cloaking system"
+						android:id="@+id/textView10"
+						android:layout_column="1"
+						android:layout_gravity="center_vertical"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="10000 cr."
+						android:id="@+id/txtBuyCloakingSystem"
+						android:layout_column="3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
+		</TableLayout>
+	</ScrollView>
 
 	<TextView
 			android:layout_width="wrap_content"

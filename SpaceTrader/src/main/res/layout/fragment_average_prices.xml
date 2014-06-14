@@ -48,7 +48,8 @@
 			android:id="@+id/btnPriceListNext"
 			android:layout_below="@+id/txtPriceListTitle"
 			android:onClick="btnNextSystem"
-			android:layout_alignParentRight="true"/>
+			android:layout_alignParentRight="true"
+			style="@style/BuySellButtons"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -57,7 +58,8 @@
 			android:id="@+id/btnPriceListPrev"
 			android:onClick="btnNextSystem"
 			android:layout_toLeftOf="@+id/btnPriceListNext"
-			android:layout_alignTop="@+id/btnPriceListNext"/>
+			android:layout_alignTop="@+id/btnPriceListNext"
+			style="@style/BuySellButtons"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -68,309 +70,313 @@
 			android:layout_below="@+id/txtPriceListSystemName"
 			android:layout_alignParentLeft="true"/>
 
-	<TableLayout
-			android:layout_width="fill_parent"
+	<ScrollView
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@+id/btnPriceListNext"
-			android:layout_alignRight="@+id/btnPriceListNext"
-			android:stretchColumns="3,4,7"
-			android:id="@+id/tableLayout">
+			android:id="@+id/scrollView"
+			android:layout_below="@+id/txtPriceListSpecialResources"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"
+			android:layout_above="@+id/btnPriceListDiffAvg">
 
-		<TableRow
+		<TableLayout
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				android:layout_height="wrap_content"
+				android:id="@+id/tableLayout"
+				android:stretchColumns="1">
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="01"
-					android:id="@+id/btnPriceListBuy1"
-					android:layout_column="1"
-					android:onClick="btnBuyCargoCallback"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Water"
-					android:id="@+id/txtPriceListName1"
-					android:layout_column="2"
-					android:layout_gravity="center_vertical"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="01"
+						android:id="@+id/btnPriceListBuy1"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="10 cr."
-					android:id="@+id/txtPriceListPrice1"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Water"
+						android:id="@+id/txtPriceListName1"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="56"
-					android:id="@+id/btnPriceListBuy6"
-					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="10 cr."
+						android:id="@+id/txtPriceListPrice1"
+						android:layout_gravity="center_vertical|right"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Firearms"
-					android:id="@+id/txtPriceListName6"
-					android:layout_column="6"
-					android:layout_gravity="center_vertical"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="60 cr."
-					android:id="@+id/txtPriceListPrice6"
-					android:layout_column="7"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="12"
+						android:id="@+id/btnPriceListBuy2"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="12"
-					android:id="@+id/btnPriceListBuy2"
-					android:layout_column="1"
-					android:onClick="btnBuyCargoCallback"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Furs"
+						android:id="@+id/txtPriceListName2"
+						android:layout_gravity="center_vertical"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Furs"
-					android:id="@+id/txtPriceListName2"
-					android:layout_column="2"
-					android:layout_gravity="center_vertical"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="20 cr."
+						android:id="@+id/txtPriceListPrice2"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="20 cr."
-					android:id="@+id/txtPriceListPrice2"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="67"
-					android:id="@+id/btnPriceListBuy7"
-					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="23"
+						android:id="@+id/btnPriceListBuy3"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Medicine"
-					android:id="@+id/txtPriceListName7"
-					android:layout_column="6"
-					android:layout_gravity="center_vertical"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Food"
+						android:id="@+id/txtPriceListName3"
+						android:layout_gravity="center_vertical"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="70 cr."
-					android:id="@+id/txtPriceListPrice7"
-					android:layout_column="7"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="30 cr."
+						android:id="@+id/txtPriceListPrice3"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="23"
-					android:id="@+id/btnPriceListBuy3"
-					android:layout_column="1"
-					android:onClick="btnBuyCargoCallback"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="34"
+						android:id="@+id/btnPriceListBuy4"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Food"
-					android:id="@+id/txtPriceListName3"
-					android:layout_column="2"
-					android:layout_gravity="center_vertical"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Ore"
+						android:id="@+id/txtPriceListName4"
+						android:layout_gravity="center_vertical"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="30 cr."
-					android:id="@+id/txtPriceListPrice3"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="40 cr."
+						android:id="@+id/txtPriceListPrice4"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="78"
-					android:id="@+id/btnPriceListBuy8"
-					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Machines"
-					android:id="@+id/txtPriceListName8"
-					android:layout_column="6"
-					android:layout_gravity="center_vertical"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="45"
+						android:id="@+id/btnPriceListBuy5"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="80 cr."
-					android:id="@+id/txtPriceListPrice8"
-					android:layout_column="7"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Games"
+						android:id="@+id/txtPriceListName5"
+						android:layout_gravity="center_vertical"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="50 cr."
+						android:id="@+id/txtPriceListPrice5"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="34"
-					android:id="@+id/btnPriceListBuy4"
-					android:layout_column="1"
-					android:onClick="btnBuyCargoCallback"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Ore"
-					android:id="@+id/txtPriceListName4"
-					android:layout_column="2"
-					android:layout_gravity="center_vertical"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="56"
+						android:id="@+id/btnPriceListBuy6"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="40 cr."
-					android:id="@+id/txtPriceListPrice4"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Firearms"
+						android:id="@+id/txtPriceListName6"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="89"
-					android:id="@+id/btnPriceListBuy9"
-					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="60 cr."
+						android:id="@+id/txtPriceListPrice6"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Narcotics"
-					android:id="@+id/txtPriceListName9"
-					android:layout_column="6"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="90 cr."
-					android:id="@+id/txtPriceListPrice9"
-					android:layout_column="7"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="67"
+						android:id="@+id/btnPriceListBuy7"
+						android:onClick="btnBuyCargoCallback"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Medicine"
+						android:id="@+id/txtPriceListName7"
+						android:layout_gravity="center_vertical"/>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="45"
-					android:id="@+id/btnPriceListBuy5"
-					android:layout_column="1"
-					android:onClick="btnBuyCargoCallback"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="70 cr."
+						android:id="@+id/txtPriceListPrice7"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Games"
-					android:id="@+id/txtPriceListName5"
-					android:layout_column="2"
-					android:layout_gravity="center_vertical"/>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="50 cr."
-					android:id="@+id/txtPriceListPrice5"
-					android:layout_column="3"
-					android:layout_gravity="center_vertical|right"/>
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="78"
+						android:id="@+id/btnPriceListBuy8"
+						android:onClick="btnBuyCargoCallback"/>
 
-			<Button
-					style="@style/BuySellButtons"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="01"
-					android:id="@+id/btnPriceListBuy10"
-					android:layout_column="5"
-					android:onClick="btnBuyCargoCallback"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Machines"
+						android:id="@+id/txtPriceListName8"
+						android:layout_gravity="center_vertical"/>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="Robots"
-					android:id="@+id/txtPriceListName10"
-					android:layout_column="6"
-					android:layout_gravity="center_vertical"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="80 cr."
+						android:id="@+id/txtPriceListPrice8"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:text="100 cr."
-					android:id="@+id/txtPriceListPrice10"
-					android:layout_column="7"
-					android:layout_gravity="center_vertical|right"/>
-		</TableRow>
-	</TableLayout>
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="89"
+						android:id="@+id/btnPriceListBuy9"
+						android:onClick="btnBuyCargoCallback"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Narcotics"
+						android:id="@+id/txtPriceListName9"
+						android:layout_gravity="center_vertical"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="90 cr."
+						android:id="@+id/txtPriceListPrice9"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
+
+			<TableRow
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<Button
+						style="@style/BuySellButtons"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="01"
+						android:id="@+id/btnPriceListBuy10"
+						android:onClick="btnBuyCargoCallback"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Robots"
+						android:id="@+id/txtPriceListName10"
+						android:layout_gravity="center_vertical"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="100 cr."
+						android:id="@+id/txtPriceListPrice10"
+						android:layout_gravity="center_vertical|right"/>
+			</TableRow>
+		</TableLayout>
+	</ScrollView>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -387,19 +393,19 @@
 			android:text="Price Differences"
 			android:id="@+id/btnPriceListDiffAvg"
 			android:onClick="btnToggleAverageDiffPrices"
-			android:layout_alignParentLeft="true"
 			android:layout_above="@+id/btnPriceListSysInfo"
-			android:layout_alignRight="@+id/btnPriceListSysInfo"/>
+			android:layout_alignRight="@+id/btnPriceListSysInfo"
+			android:layout_alignLeft="@+id/btnPriceListSysInfo"/>
 
 	<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="System Information"
 			android:id="@+id/btnPriceListSysInfo"
+			android:onClick="btnWarpSystemInformation"
 			android:layout_above="@+id/btnPriceListShortRangeChart"
-			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@+id/btnPriceListWarp"
-			android:onClick="btnWarpSystemInformation"/>
+			android:layout_alignRight="@+id/btnPriceListShortRangeChart"
+			android:layout_alignLeft="@+id/btnPriceListShortRangeChart"/>
 
 	<Button
 			android:layout_width="wrap_content"
@@ -407,9 +413,9 @@
 			android:text="Short Range Chart"
 			android:id="@+id/btnPriceListShortRangeChart"
 			android:onClick="btnShortRangeChart"
-			android:layout_alignBottom="@+id/btnPriceListWarp"
 			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@+id/btnPriceListWarp"/>
+			android:layout_toLeftOf="@+id/btnPriceListWarp"
+			android:layout_alignParentBottom="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"

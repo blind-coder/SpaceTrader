@@ -32,6 +32,138 @@
 			android:layout_centerHorizontal="true"
 			android:textStyle="bold"/>
 
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/scrollView"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"
+			android:layout_below="@+id/textView"
+			android:layout_above="@+id/txtShipyardCash">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="You have fuel to fly XX parsecs."
+					android:id="@+id/txtShipyardFuelReserve"
+
+					/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="A full fueltank costs XX credits."
+					android:id="@+id/txtShipyardFuelCost"
+					/>
+
+			<LinearLayout
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:id="@+id/buttonsBuyFuel">
+
+				<Button
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:text="Buy Fuel"
+						android:id="@+id/btnShipyardBuyFuel"
+
+						android:onClick="btnShipyardBuyFuel"
+						android:layout_weight="1"/>
+
+				<Button
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:text="Buy Full Tank"
+						android:id="@+id/btnShipyardBuyMaxFuel"
+
+						android:onClick="btnShipyardBuyMaxFuel"
+						android:layout_weight="1"/>
+			</LinearLayout>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Your hull is at XX%."
+					android:id="@+id/txtShipyardHullStrength"
+					android:layout_marginTop="20dp"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="No repairs are needed."
+					android:id="@+id/txtShipyardRepairsNeeded"
+					/>
+
+			<LinearLayout
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:id="@+id/buttonsBuyRepairs">
+
+				<Button
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:text="Buy Repairs"
+						android:id="@+id/btnShipyardBuyRepairs"
+
+						android:onClick="btnShipyardBuyRepairs"
+						android:layout_weight="1"/>
+
+				<Button
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:text="Buy Full Repairs"
+						android:id="@+id/btnShipyardBuyFullRepairs"
+
+						android:onClick="btnShipyardBuyFullRepairs"
+						android:layout_weight="1"/>
+			</LinearLayout>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="There are new ships for sale."
+					android:id="@+id/txtShipyardNewShipsForSale"
+
+					android:layout_marginTop="20dp"/>
+
+			<Button
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Buy New Ship"
+					android:id="@+id/btnShipyardBuyNewShip"
+
+					android:onClick="btnBuyNewShip"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="You can buy an escape pod for 2000 credits."
+					android:id="@+id/txtShipyardBuyEscapePod"
+					android:layout_marginTop="20dp"/>
+
+			<Button
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Buy Escape Pod"
+					android:id="@+id/btnShipyardBuyEscapePod"
+
+					android:onClick="btnShipyardBuyEscapePod"/>
+		</LinearLayout>
+	</ScrollView>
+
 	<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -41,128 +173,4 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
 			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="You have fuel to fly XX parsecs."
-			android:id="@+id/txtShipyardFuelReserve"
-			android:layout_below="@+id/textView"
-			android:layout_alignParentLeft="true"
-
-			android:layout_marginTop="30dp"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="A full fueltank costs XX credits."
-			android:id="@+id/txtShipyardFuelCost"
-			android:layout_below="@+id/txtShipyardFuelReserve"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy Fuel"
-			android:id="@+id/btnShipyardBuyFuel"
-			android:layout_below="@+id/txtShipyardFuelCost"
-			android:layout_alignParentLeft="true"
-
-			android:onClick="btnShipyardBuyFuel"/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy Full Tank"
-			android:id="@+id/btnShipyardBuyMaxFuel"
-			android:layout_below="@+id/txtShipyardFuelCost"
-			android:layout_alignParentRight="true"
-
-			android:onClick="btnShipyardBuyMaxFuel"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Your hull strength is at XXX%."
-			android:id="@+id/txtShipyardHullStrength"
-			android:layout_below="@+id/btnShipyardBuyFuel"
-			android:layout_alignParentLeft="true"
-
-			android:layout_marginTop="25dp"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="No repairs are needed."
-			android:id="@+id/txtShipyardRepairsNeeded"
-			android:layout_below="@+id/txtShipyardHullStrength"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy Repairs"
-			android:id="@+id/btnShipyardBuyRepairs"
-			android:layout_below="@+id/txtShipyardRepairsNeeded"
-			android:layout_alignParentLeft="true"
-
-			android:onClick="btnShipyardBuyRepairs"/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy Full Repairs"
-			android:id="@+id/btnShipyardBuyFullRepairs"
-
-			android:layout_alignTop="@+id/btnShipyardBuyRepairs"
-			android:onClick="btnShipyardBuyFullRepairs"
-			android:layout_alignParentRight="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="There are new ships for sale."
-			android:id="@+id/txtShipyardNewShipsForSale"
-			android:layout_below="@+id/btnShipyardBuyRepairs"
-			android:layout_alignParentLeft="true"
-
-			android:layout_marginTop="20dp"/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy New Ship"
-			android:id="@+id/btnShipyardBuyNewShip"
-			android:layout_below="@+id/txtShipyardNewShipsForSale"
-			android:layout_alignParentLeft="true"
-
-			android:onClick="btnBuyNewShip"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="You can buy an escape pod for 2000 credits."
-			android:id="@+id/txtShipyardBuyEscapePod"
-			android:layout_below="@+id/btnShipyardBuyNewShip"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Buy Escape Pod"
-			android:id="@+id/btnShipyardBuyEscapePod"
-			android:layout_below="@+id/txtShipyardBuyEscapePod"
-			android:layout_alignParentLeft="true"
-
-			android:onClick="btnShipyardBuyEscapePod"/>
-
 </RelativeLayout>

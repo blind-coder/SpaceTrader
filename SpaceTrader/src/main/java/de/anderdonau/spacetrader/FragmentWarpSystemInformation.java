@@ -62,6 +62,10 @@ public class FragmentWarpSystemInformation extends Fragment {
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoPirates);
 		tv.setText(main.Activity[Politics.mPolitics[main.WarpSystem.politics].strengthPirates]);
 
+		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoResources);
+		tv.setText(main.WarpSystem.visited ? main.SpecialResources[main.WarpSystem.specialResources] :
+			"Unknown");
+
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoDistance);
 		int Distance = gameState.RealDistance(CURSYSTEM, main.WarpSystem);
 		if (gameState.WormholeExists(COMMANDER.curSystem, main.WarpSystem)) {

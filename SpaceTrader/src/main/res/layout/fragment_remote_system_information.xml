@@ -108,8 +108,15 @@
 			android:id="@+id/strDescPirates"
 			android:layout_below="@+id/strDescPolice"
 			android:layout_alignParentLeft="true"
-
 			/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Special resources:"
+			android:id="@+id/strDescResources"
+			android:layout_below="@+id/strDescPirates"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -198,7 +205,6 @@
 			android:id="@+id/strRemoteSysInfoPirates"
 			android:layout_alignTop="@+id/strDescPirates"
 			android:layout_alignParentRight="true"
-
 			android:layout_toRightOf="@+id/strDescPirates"
 			android:gravity="right"
 			/>
@@ -207,9 +213,20 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:id="@+id/strRemoteSysInfoResources"
+			android:text="No special resources"
+			android:layout_alignTop="@id/strDescResources"
+			android:layout_alignParentRight="true"
+			android:gravity="right"
+			android:layout_toRightOf="@+id/strDescResources"/>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="Travel costs:"
 			android:id="@+id/textView2"
-			android:layout_below="@+id/strDescPirates"
+			android:layout_below="@+id/strRemoteSysInfoResources"
 			android:layout_alignParentLeft="true"
 
 			/>
@@ -220,11 +237,9 @@
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="12 cr."
 			android:id="@+id/strRemoteSysInfoCosts"
-			android:layout_below="@+id/strRemoteSysInfoPirates"
+			android:layout_below="@+id/strRemoteSysInfoResources"
 			android:layout_alignParentRight="true"
-
 			android:layout_alignLeft="@+id/strRemoteSysInfoResources"
-
 			android:gravity="right"
 			/>
 

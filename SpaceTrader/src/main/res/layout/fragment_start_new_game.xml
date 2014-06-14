@@ -16,225 +16,227 @@
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
-		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-		            xmlns:tools="http://schemas.android.com/tools"
-		            tools:context=".WelcomeScreen"
-		            android:layout_width="match_parent"
-		            android:layout_height="match_parent">
-<RelativeLayout android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:context=".WelcomeScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Start new game"
-			android:id="@+id/textView"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			/>
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Level"
-			android:id="@+id/textView2"
-			android:layout_marginTop="80dp"
-			android:layout_below="@+id/textView"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="Start new game"
+				android:id="@+id/textView"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Skill Points"
-			android:id="@+id/textView3"
-			android:layout_below="@+id/levelBar"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Level"
+				android:id="@+id/textView2"
+				android:layout_marginTop="80dp"
+				android:layout_below="@+id/textView"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="16"
-			android:id="@+id/skillPointsLeft"
-			android:layout_centerHorizontal="true"
-			android:layout_alignBottom="@+id/textView3"/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Skill Points"
+				android:id="@+id/textView3"
+				android:layout_below="@+id/levelBar"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/levelBar"
-			android:layout_below="@+id/textView2"
-			android:layout_alignParentLeft="true"
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="16"
+				android:id="@+id/skillPointsLeft"
+				android:layout_centerHorizontal="true"
+				android:layout_alignBottom="@+id/textView3"/>
 
-			android:layout_alignParentRight="true"
+		<SeekBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/levelBar"
+				android:layout_below="@+id/textView2"
+				android:layout_alignParentLeft="true"
 
-			android:indeterminate="false"
-			android:max="4"
-			android:progress="2"/>
+				android:layout_alignParentRight="true"
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Normal"
-			android:id="@+id/levelDescription"
-			android:layout_centerHorizontal="true"
-			android:layout_alignBottom="@+id/textView2"/>
+				android:indeterminate="false"
+				android:max="4"
+				android:progress="2"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Pilot"
-			android:id="@+id/textView6"
-			android:layout_alignBottom="@+id/skillPilot"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Normal"
+				android:id="@+id/levelDescription"
+				android:layout_centerHorizontal="true"
+				android:layout_alignBottom="@+id/textView2"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Fighter"
-			android:id="@+id/textView7"
-			android:layout_alignBottom="@+id/skillFighter"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Pilot"
+				android:id="@+id/textView6"
+				android:layout_alignBottom="@+id/skillPilot"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Trader"
-			android:id="@+id/textView8"
-			android:layout_above="@+id/skillEngineer"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Fighter"
+				android:id="@+id/textView7"
+				android:layout_alignBottom="@+id/skillFighter"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Engineer"
-			android:id="@+id/textView9"
-			android:layout_alignBottom="@+id/skillEngineer"
-			android:layout_alignParentLeft="true"
-			/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Trader"
+				android:id="@+id/textView8"
+				android:layout_above="@+id/skillEngineer"
+				android:layout_alignParentLeft="true"
+				/>
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/skillPilot"
-			android:layout_below="@+id/skillPointsLeft"
-			android:layout_alignParentRight="true"
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Engineer"
+				android:id="@+id/textView9"
+				android:layout_alignBottom="@+id/skillEngineer"
+				android:layout_alignParentLeft="true"
+				/>
 
-			android:max="9"
-			android:indeterminate="false"
-			android:progress="0"
-			android:layout_alignLeft="@+id/skillPointsLeft"
-			/>
+		<SeekBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/skillPilot"
+				android:layout_below="@+id/skillPointsLeft"
+				android:layout_alignParentRight="true"
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/skillFighter"
-			android:layout_below="@+id/skillPilot"
-			android:layout_alignRight="@+id/levelBar"
+				android:max="9"
+				android:indeterminate="false"
+				android:progress="0"
+				android:layout_alignLeft="@+id/skillPointsLeft"
+				/>
 
-			android:layout_alignLeft="@+id/skillPilot"
+		<SeekBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/skillFighter"
+				android:layout_below="@+id/skillPilot"
+				android:layout_alignRight="@+id/levelBar"
 
-			android:max="9"
-			android:indeterminate="false"
-			android:progress="0"/>
+				android:layout_alignLeft="@+id/skillPilot"
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/skillTrader"
-			android:layout_below="@+id/skillFighter"
-			android:layout_alignParentRight="true"
+				android:max="9"
+				android:indeterminate="false"
+				android:progress="0"/>
 
-			android:max="9"
-			android:indeterminate="false"
-			android:layout_alignLeft="@+id/skillFighter"
+		<SeekBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/skillTrader"
+				android:layout_below="@+id/skillFighter"
+				android:layout_alignParentRight="true"
 
-			android:progress="0"/>
+				android:max="9"
+				android:indeterminate="false"
+				android:layout_alignLeft="@+id/skillFighter"
 
-	<SeekBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/skillEngineer"
-			android:layout_below="@+id/skillTrader"
-			android:layout_alignParentRight="true"
+				android:progress="0"/>
 
-			android:layout_alignLeft="@+id/skillTrader"
+		<SeekBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/skillEngineer"
+				android:layout_below="@+id/skillTrader"
+				android:layout_alignParentRight="true"
 
-			android:max="9"
-			android:progress="0"
-			android:indeterminate="false"/>
+				android:layout_alignLeft="@+id/skillTrader"
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="1"
-			android:id="@+id/numSkillPilot"
-			android:layout_toLeftOf="@+id/skillPilot"
-			android:layout_alignBottom="@+id/skillPilot"/>
+				android:max="9"
+				android:progress="0"
+				android:indeterminate="false"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="1"
-			android:id="@+id/numSkillFighter"
-			android:layout_alignBottom="@+id/skillFighter"
-			android:layout_toLeftOf="@+id/skillFighter"/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="1"
+				android:id="@+id/numSkillPilot"
+				android:layout_toLeftOf="@+id/skillPilot"
+				android:layout_alignBottom="@+id/skillPilot"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="1"
-			android:id="@+id/numSkillTrader"
-			android:layout_toLeftOf="@+id/skillTrader"
-			android:layout_alignBottom="@+id/skillTrader"/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="1"
+				android:id="@+id/numSkillFighter"
+				android:layout_alignBottom="@+id/skillFighter"
+				android:layout_toLeftOf="@+id/skillFighter"/>
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="1"
-			android:id="@+id/numSkillEngineer"
-			android:layout_alignBottom="@+id/skillEngineer"
-			android:layout_toLeftOf="@+id/skillEngineer"/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="1"
+				android:id="@+id/numSkillTrader"
+				android:layout_toLeftOf="@+id/skillTrader"
+				android:layout_alignBottom="@+id/skillTrader"/>
 
-	<EditText
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/strNameCommander"
-			android:layout_below="@+id/textView"
-			android:layout_alignParentLeft="true"
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="1"
+				android:id="@+id/numSkillEngineer"
+				android:layout_alignBottom="@+id/skillEngineer"
+				android:layout_toLeftOf="@+id/skillEngineer"/>
 
-			android:hint="Enter your name"
-			android:text="Jameson"
-			/>
+		<EditText
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/strNameCommander"
+				android:layout_below="@+id/textView"
+				android:layout_alignParentLeft="true"
 
-	<Button
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Start Game"
-			android:id="@+id/btnStartGame"
-			android:layout_marginTop="45dp"
-			android:layout_below="@+id/numSkillEngineer"
-			android:layout_centerHorizontal="true"
-			android:enabled="false"
-			android:onClick="StartNewGameStartGameCallback"/>
+				android:hint="Enter your name"
+				android:text="Jameson"
+				/>
 
-</RelativeLayout>
-			</ScrollView>
+		<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Start Game"
+				android:id="@+id/btnStartGame"
+				android:layout_marginTop="45dp"
+				android:layout_below="@+id/numSkillEngineer"
+				android:layout_centerHorizontal="true"
+				android:enabled="false"
+				android:onClick="StartNewGameStartGameCallback"/>
+
+	</RelativeLayout>
+</ScrollView>
