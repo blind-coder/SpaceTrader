@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +32,7 @@ import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 @SuppressWarnings("ConstantConditions")
-public class FragmentPersonnelRoster extends Fragment {
+public class FragmentPersonnelRoster extends MyFragment {
 	View      rootView;
 	Main      main;
 	GameState gameState;

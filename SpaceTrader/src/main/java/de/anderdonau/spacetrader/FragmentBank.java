@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FragmentBank extends Fragment {
+public class FragmentBank extends MyFragment {
 	GameState gameState;
+	View rootView;
 
 	public FragmentBank(GameState gameState) {
 		this.gameState = gameState;
@@ -36,7 +37,13 @@ public class FragmentBank extends Fragment {
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_bank, container, false);
+		rootView = inflater.inflate(R.layout.fragment_bank, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update(){
 		TextView tv;
 		Button btn;
 
@@ -78,8 +85,7 @@ public class FragmentBank extends Fragment {
 
 		tv = (TextView) rootView.findViewById(R.id.txtBankCash);
 		tv.setText(String.format("%d cr.", gameState.Credits));
-
-		return rootView;
+		return true;
 	}
 }
 

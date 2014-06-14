@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
-public class FragmentEncounter extends Fragment {
+public class FragmentEncounter extends MyFragment {
 	Main      main;
 	GameState gameState;
 	public Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder,

@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,7 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
-public class FragmentSystemInformation extends Fragment {
+public class FragmentSystemInformation extends MyFragment {
 	Main main;
 	private GameState gameState;
 	String[][] NewsPaperNames = {{"* Arsenal", "The Grassroot", "Kick It!"},    /* Anarchy */

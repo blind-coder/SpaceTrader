@@ -21,7 +21,7 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ import android.widget.ListView;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends MyFragment {
 
 	/**
 	 * Remember the position of the selected item.

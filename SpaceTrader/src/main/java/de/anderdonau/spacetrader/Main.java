@@ -20,7 +20,6 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -55,6 +54,7 @@ import java.io.ObjectOutputStream;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
 import de.anderdonau.spacetrader.DataTypes.HighScore;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
@@ -97,8 +97,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	private AdView adView = null;
 	private Context mContext;
-	private Fragment  currentFragment = null;
-	private FRAGMENTS currentState    = FRAGMENTS.NEW_GAME;
+	private MyFragment currentFragment = null;
+	private FRAGMENTS  currentState    = FRAGMENTS.NEW_GAME;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	public  SolarSystem              WarpSystem;
 	private GameState                gameState;
@@ -741,6 +741,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	 * Heart and Soul of UI: changer of fragments.
 	 */
 	public void changeFragment(FRAGMENTS fragment) {
+		if (fragment == currentState){
+			if (currentFragment.update()){
+				return;
+			}
+		}
 		FragmentManager fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -2188,6 +2193,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
 
+	@SuppressWarnings("UnusedParameters")
 	public void btnShortRangeChart(View view) {
 		changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
 	}

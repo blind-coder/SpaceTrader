@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,7 +29,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 @SuppressWarnings("ConstantConditions")
-public class FragmentVeryRare extends Fragment {
+public class FragmentVeryRare extends MyFragment {
 	GameState gameState;
 
 	public FragmentVeryRare(GameState gameState) {

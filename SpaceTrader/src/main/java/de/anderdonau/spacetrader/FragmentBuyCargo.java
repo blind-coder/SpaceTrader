@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +29,9 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
-public class FragmentBuyCargo extends Fragment {
+public class FragmentBuyCargo extends MyFragment {
 	GameState gameState;
+	View rootView;
 
 	public FragmentBuyCargo(GameState gameState) {
 		this.gameState = gameState;
@@ -39,7 +40,13 @@ public class FragmentBuyCargo extends Fragment {
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_buy_cargo, container, false);
+		rootView = inflater.inflate(R.layout.fragment_buy_cargo, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update(){
 		CrewMember COMMANDER;
 		SolarSystem CURSYSTEM;
 		COMMANDER = gameState.Mercenary[0];
@@ -85,7 +92,6 @@ public class FragmentBuyCargo extends Fragment {
 			gameState.Ship.TotalCargoBays()));
 		tv = (TextView) rootView.findViewById(R.id.txtBuyCargoCash);
 		tv.setText(String.format("Cash: %d cr.", gameState.Credits));
-
-		return rootView;
+		return true;
 	}
 }

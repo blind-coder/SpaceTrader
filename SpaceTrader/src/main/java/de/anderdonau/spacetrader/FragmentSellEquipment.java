@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +31,7 @@ import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.Weapons;
 
-public class FragmentSellEquipment extends Fragment {
+public class FragmentSellEquipment extends MyFragment {
 	GameState gameState;
 
 	public FragmentSellEquipment(GameState gameState) {

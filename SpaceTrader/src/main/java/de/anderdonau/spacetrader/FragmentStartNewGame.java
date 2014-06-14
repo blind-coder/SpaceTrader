@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 @SuppressWarnings("ConstantConditions")
-public class FragmentStartNewGame extends Fragment {
+public class FragmentStartNewGame extends MyFragment {
 	private Main      main;
 	private GameState gameState;
 	private View rootView = null;

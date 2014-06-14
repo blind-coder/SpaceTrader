@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,11 +27,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
-public class FragmentAveragePrices extends Fragment {
+public class FragmentAveragePrices extends MyFragment {
 	Main      main;
 	GameState gameState;
+	View rootView;
 
 	public FragmentAveragePrices(Main main, GameState gameState) {
 		this.main = main;
@@ -42,7 +43,13 @@ public class FragmentAveragePrices extends Fragment {
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_average_prices, container, false);
+		rootView = inflater.inflate(R.layout.fragment_average_prices, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update() {
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		TextView tv, tvprice;
@@ -123,6 +130,6 @@ public class FragmentAveragePrices extends Fragment {
 				}
 			}
 		}
-		return rootView;
+		return true;
 	}
 }

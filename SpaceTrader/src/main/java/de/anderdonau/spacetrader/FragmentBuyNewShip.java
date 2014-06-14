@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.Popup;
 
-public class FragmentBuyNewShip extends Fragment {
+public class FragmentBuyNewShip extends MyFragment {
 	GameState gameState;
 	Main      main;
 

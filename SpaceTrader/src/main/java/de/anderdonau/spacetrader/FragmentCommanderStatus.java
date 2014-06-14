@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
 import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 
-public class FragmentCommanderStatus extends Fragment {
+public class FragmentCommanderStatus extends MyFragment {
 	Main      main;
 	GameState gameState;
 

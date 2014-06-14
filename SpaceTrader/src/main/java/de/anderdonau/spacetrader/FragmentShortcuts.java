@@ -19,7 +19,7 @@
 package de.anderdonau.spacetrader;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +31,7 @@ import android.widget.ListView;
 
 import de.anderdonau.spacetrader.DataTypes.ShortcutArrayAdapter;
 
-public class FragmentShortcuts extends Fragment {
+public class FragmentShortcuts extends MyFragment {
 	Main      main;
 	GameState gameState;
 
