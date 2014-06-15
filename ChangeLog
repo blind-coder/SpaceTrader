@@ -1,3 +1,15 @@
+
+Sun Jun 15 11:32:06 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.1.1
+ * Fix: force-close on Short Range Chart button was fixed
+ * Fix: show special resources on Remote System Info fragment, if applicable
+ * Change: layouts were changed to look better on less-wide displays
+ * Change: Fragments now extend 'MyFragment' and can include an 'update()'
+	 function. This reduces load on redrawing and make the UI smoother.
+ * Change: input dialog for amounts was slightly modified
+ * Change: progress bar on encounter changed to a horizontal one
+
 Fri Jun 13 09:03:50 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
 
  * Tag version: 1.1.0
