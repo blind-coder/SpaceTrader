@@ -44,7 +44,7 @@ public class FragmentPersonnelRoster extends MyFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		int i;
+		int i, j;
 		TableLayout tl;
 		TextView tv;
 		Button btn;
@@ -77,9 +77,6 @@ public class FragmentPersonnelRoster extends MyFragment {
 					btn.setVisibility(View.INVISIBLE);
 					continue;
 				}
-				Log.e("PersonnelRoster", String.format(
-					"Impossible Error: Jarek is %d, Wild is %d, here anyway...", gameState.JarekStatus,
-					gameState.WildStatus));
 			}
 
 			if (i == 0) {
@@ -99,7 +96,12 @@ public class FragmentPersonnelRoster extends MyFragment {
 				continue;
 			}
 
-			if (gameState.Ship.crew[i + 1] < 0) {
+			j = i;
+			if (gameState.WildStatus == 1)
+				j--;
+			if (gameState.JarekStatus == 1)
+				j--;
+			if (gameState.Ship.crew[j + 1] < 0) {
 				tl.setVisibility(View.INVISIBLE);
 				btn.setVisibility(View.INVISIBLE);
 				tv.setText("Vacancy");
@@ -108,7 +110,7 @@ public class FragmentPersonnelRoster extends MyFragment {
 
 			tl.setVisibility(View.VISIBLE);
 			btn.setVisibility(View.VISIBLE);
-			DrawMercenary(i, gameState.Ship.crew[i + 1]); /* Crew idx 0 is the player */
+			DrawMercenary(i, gameState.Ship.crew[j + 1]); /* Crew idx 0 is the player */
 		}
 
 		int ForHire = gameState.GetForHire();

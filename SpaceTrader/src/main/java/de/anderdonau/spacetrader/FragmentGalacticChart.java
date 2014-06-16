@@ -34,6 +34,7 @@ import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 public class FragmentGalacticChart extends MyFragment {
 	Main      main;
 	GameState gameState;
+	View      rootView;
 
 	public FragmentGalacticChart(Main main, GameState gameState) {
 		this.main = main;
@@ -42,9 +43,14 @@ public class FragmentGalacticChart extends MyFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
-		@SuppressWarnings("ConstantConditions") final NavigationChart navigationChart =
-			(NavigationChart) rootView.findViewById(R.id.GalacticChart);
+		rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update(){
+		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.GalacticChart);
 		Button button = (Button) rootView.findViewById(R.id.btnJump);
 		button.setVisibility(gameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 		navigationChart.setGameState(gameState);
@@ -52,7 +58,7 @@ public class FragmentGalacticChart extends MyFragment {
 		navigationChart.setShortRange(false);
 
 		TextView tv;
-		if (gameState.WarpSystem <= 0) {
+		if (gameState.WarpSystem < 0) {
 			tv = (TextView) rootView.findViewById(R.id.galChartDetails);
 			tv.setVisibility(View.INVISIBLE);
 			tv = (TextView) rootView.findViewById(R.id.galChartDistance);
@@ -73,6 +79,8 @@ public class FragmentGalacticChart extends MyFragment {
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(main.SolarSystemName[s.nameIndex]);
 			navigationChart.mSelectedSystem = gameState.WarpSystem;
+			navigationChart.mOffsetsDefined = false;
+			navigationChart.invalidate();
 		}
 		navigationChart.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -132,6 +140,6 @@ public class FragmentGalacticChart extends MyFragment {
 				return false;
 			}
 		});
-		return rootView;
+		return true;
 	}
 }

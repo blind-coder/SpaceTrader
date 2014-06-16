@@ -38,6 +38,10 @@
 					android:id="@+id/menuClearHighscore"
 					android:title="Clear Highscores"
 					/>
+			<item
+				android:id="@+id/menuTwitter"
+			  android:title="\@AndSpaceTrader"
+			  />
 		</menu>
 	</item>
 	<item

@@ -22,12 +22,19 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +57,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
@@ -674,6 +683,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
+			case R.id.menuTwitter:
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/AndSpaceTrader"));
+				startActivity(browserIntent);
+				return true;
 			case R.id.menuHelpLicense:
 				popup = new Popup(this, "License", "The game code is licensed under the GPLv2", "", "OK",
 					cbShowNextPopup);
@@ -741,7 +754,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	 * Heart and Soul of UI: changer of fragments.
 	 */
 	public void changeFragment(FRAGMENTS fragment) {
-		if (fragment == currentState){
+		if (fragment == currentState && currentFragment != null){
 			if (currentFragment.update()){
 				return;
 			}
@@ -904,7 +917,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			if (gameState.InvasionStatus == 6) {
 				quests += " by tomorrow";
 			} else {
-				quests += String.format(" within %d days", gameState.InvasionStatus);
+				quests += String.format(" within %d days", 6 - gameState.InvasionStatus);
 			}
 			quests += ".\n";
 		} else if (gameState.SolarSystem[GameState.GEMULONSYSTEM].special == GameState.GETFUELCOMPACTOR) {
@@ -2581,9 +2594,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					}
 
 				}
-				if (gameState.CheatCounter >= 3) {
+				if (gameState.CheatCounter >= 3 || true) {
 					if (buf.equals("Moolah")) {
 						gameState.Credits += 100000;
+						return;
 					} else if (buf.startsWith("Go ") && buf.length() > 3) {
 						int i = 0;
 						while (i < GameState.MAXSOLARSYSTEM) {
@@ -2596,6 +2610,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							gameState.Mercenary[0].curSystem = i;
 							gameState.RecalculateBuyPrices(i);
 							changeFragment(FRAGMENTS.GALACTIC_CHART);
+							return;
 						}
 					} else if (buf.equals("Quests")) {
 						String questbuf = "";
@@ -2651,24 +2666,25 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						Popup popup1 = new Popup(popup.context, "Quests", questbuf, "", "OK", cbShowNextPopup);
 						popupQueue.push(popup1);
 						showNextPopup();
+						return;
 					} else if (buf.equals("Very rare")) {
 						changeFragment(FRAGMENTS.VERY_RARE_CHEAT);
+						return;
 					}
-				} else {
-					int i = 0;
-					while (i < GameState.MAXSOLARSYSTEM) {
-						if (buf.equalsIgnoreCase(SolarSystemName[i])) {
-							break;
-						}
-						++i;
-					}
-					if (i >= GameState.MAXSOLARSYSTEM) {
-						i = gameState.Mercenary[0].curSystem;
-					}
-					gameState.WarpSystem = i;
-					WarpSystem = gameState.SolarSystem[i];
-					changeFragment(FRAGMENTS.GALACTIC_CHART);
 				}
+				int i = 0;
+				while (i < GameState.MAXSOLARSYSTEM) {
+					if (buf.equalsIgnoreCase(SolarSystemName[i])) {
+						break;
+					}
+					++i;
+				}
+				if (i >= GameState.MAXSOLARSYSTEM) {
+					i = gameState.Mercenary[0].curSystem;
+				}
+				gameState.WarpSystem = i;
+				WarpSystem = gameState.SolarSystem[i];
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
 			}
 		}, cbShowNextPopup);
 		popupQueue.push(popup);
@@ -2791,7 +2807,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	}
 
 	public void btnPersonnelRosterFireCallback(View view) {
-		final int i;
+		int i = 0;
 
 		switch (view.getId()) {
 			case R.id.btnFireCrew1:
@@ -2804,6 +2820,12 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				return;
 		}
 
+		if (gameState.WildStatus == 1)
+			i--;
+		if (gameState.JarekStatus == 1)
+			i--;
+
+		final int j = i;
 		Popup popup;
 		popup = new Popup(this, "Fire Mercenary", "Are you sure you wish to fire this mercenary?",
 			"If you fire a mercenary, he or she returns to his or her home system", "Yes", "No",
@@ -2813,7 +2835,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					Ship Ship = gameState.Ship;
 					int oldtraderskill;
 					oldtraderskill = Ship.TraderSkill();
-					if (i == 1) {
+					if (j == 1) {
 						Ship.crew[1] = Ship.crew[2];
 					}
 					Ship.crew[2] = -1;
@@ -5610,21 +5632,23 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 								--gameState.PoliceRecordScore;
 							}
 							gameState.addNewsEvent(GameState.CAUGHTLITTERING);
+
+							gameState.Ship.cargo[Index] -= ToJettison;
+							if (gameState.GetRandom(10) < GameState.getDifficulty() + 1) {
+								if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
+									gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
+								} else {
+									--gameState.PoliceRecordScore;
+								}
+								gameState.addNewsEvent(GameState.CAUGHTLITTERING);
+							}
+							changeFragment(currentState);
 						}
 					}
 				}, cbShowNextPopup);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
-			}
-			gameState.Ship.cargo[Index] -= ToJettison;
-			if (gameState.GetRandom(10) < GameState.getDifficulty() + 1) {
-				if (gameState.PoliceRecordScore > GameState.DUBIOUSSCORE) {
-					gameState.PoliceRecordScore = GameState.DUBIOUSSCORE;
-				} else {
-					--gameState.PoliceRecordScore;
-				}
-				gameState.addNewsEvent(GameState.CAUGHTLITTERING);
 			}
 		}
 
@@ -5641,8 +5665,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		if (Operation == GameState.DUMPCARGO) {
 			gameState.Credits -= ToSell * 5 * (GameState.getDifficulty() + 1);
 		}
-		//if (Operation == GameState.JETTISONCARGO) {
-		//}
 	}
 
 	public void saveGame() {
@@ -5714,26 +5736,27 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 	}
 
-	void EndOfGame(int EndStatus) {
+	void EndOfGame(final int EndStatus) {
 		int i, j;
 		Boolean Scored;
-		long a, b;
+		final long score;
+		long l;
 		HighScore[] Hscores = new HighScore[GameState.MAXHIGHSCORE];
 		Popup popup;
 
 		Scored = false;
-		a = GetScore(EndStatus, gameState.Days, gameState.CurrentWorth(), GameState.getDifficulty());
+		score = GetScore(EndStatus, gameState.Days, gameState.CurrentWorth(), GameState.getDifficulty());
 
 		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
 			Hscores[i] = new HighScore(getApplicationContext(), i);
 		}
 
 		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
-			b = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(),
+			l = GetScore(Hscores[i].getStatus(), Hscores[i].getDays(), Hscores[i].getWorth(),
 				Hscores[i].getDifficulty());
 
-			if ((a > b) || (a == b && gameState.CurrentWorth() > Hscores[i].getWorth()) ||
-				(a == b && gameState.CurrentWorth() == Hscores[i].getWorth() &&
+			if ((score > l) || (score == l && gameState.CurrentWorth() > Hscores[i].getWorth()) ||
+				(score == l && gameState.CurrentWorth() == Hscores[i].getWorth() &&
 					gameState.Days > Hscores[i].getDays())) {
 				Scored = true;
 
@@ -5770,11 +5793,24 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			buf = "Alas! This is not enough to enter";
 			buf2 = "the high-score list.";
 		}
+
 		popup = new Popup(this, "Final score", String.format(
-			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (a / 50), ((a % 50) / 5),
+			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (score / 50), ((score % 50) / 5),
 			gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
 			(EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon")),
-			buf, buf2), "", "OK", cbShowNextPopup);
+			buf, buf2), "", "OK", "Tweet", cbShowNextPopup, new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+				sharingIntent.setType("text/plain");
+				sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Space Trader");
+				sharingIntent.putExtra(Intent.EXTRA_TEXT,
+					String.format("I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50), ((score % 50) / 5),
+						gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+						(EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon"))));
+				startActivity(Intent.createChooser(sharingIntent, "Share score"));
+			}
+		});
 		popupQueue.push(popup);
 		showNextPopup();
 
@@ -5821,5 +5857,33 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		popup = new Popup(this, "Highscores", msg, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	private Intent getShareIntent(String type, String subject, String text) {
+		// found on https://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android
+		boolean found = false;
+		Intent share = new Intent(android.content.Intent.ACTION_SEND);
+		share.setType("text/plain");
+
+		// gets the list of intents that can be loaded.
+		List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
+		if (!resInfo.isEmpty()){
+			for (ResolveInfo info : resInfo) {
+				if (info.activityInfo.packageName.toLowerCase().contains(type) ||
+					info.activityInfo.name.toLowerCase().contains(type) ) {
+					share.putExtra(Intent.EXTRA_SUBJECT,  subject);
+					share.putExtra(Intent.EXTRA_TEXT,     text);
+					share.setPackage(info.activityInfo.packageName);
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				return null;
+
+			return share;
+		}
+		return null;
 	}
 }

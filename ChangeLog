@@ -1,4 +1,19 @@
 
+Mon Jun 16 21:18:07 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.2.0
+ * Fix: force close when no savegame was found.
+ * Fix: GalacticChart incorrectly handles gameState.WarpSystem.
+ * Fix: incorrect display of remaining time in Gemulon quest.
+ * Fix: Systems weren't searched when cheats were enabled.
+ * Fix: jettison cargo only on explicit confirmation.
+ * Fix: update jettison cargo screen.
+ * Fix: incorrect personnel display when Jarek or Wild are on board.
+ * Fix: fired wrong Mercenary when Jarek or Wild are on board.
+ * Change: GalacticChart implements update() method.
+ * Change: Add functionality to tweet highscore.
+ * Change: Add link to @AndSpaceTrader
+
 Sun Jun 15 11:32:06 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
 
  * Tag version: 1.1.1

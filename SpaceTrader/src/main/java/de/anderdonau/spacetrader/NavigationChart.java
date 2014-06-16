@@ -40,7 +40,7 @@ public class NavigationChart extends View {
 	protected int radius;
 	protected float   mOffsetX        = 0;
 	protected float   mOffsetY        = 0;
-	protected boolean mOffsetsDefined = false;
+	public    boolean mOffsetsDefined = false;
 	protected boolean isShortRange    = true;
 	protected float   mCurrentX       = 0;
 	protected float   mCurrentY       = 0;
@@ -276,4 +276,9 @@ public class NavigationChart extends View {
 		}
 	}
 
+	@Override
+	protected void onSizeChanged (int w, int h, int oldw, int oldh){
+		super.onSizeChanged(w, h, oldw, oldh);
+		mOffsetsDefined = false;
+	}
 }
