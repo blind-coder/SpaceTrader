@@ -243,7 +243,7 @@
 			android:gravity="right"
 			/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Short Range Chart"
@@ -252,9 +252,11 @@
 			android:layout_alignParentLeft="true"
 
 			android:layout_alignParentBottom="true"
-			android:layout_toLeftOf="@+id/btnRemoteSyWarp"/>
+			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
+			android:singleLine="true"
+			android:ellipsize="marquee"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Price List"
@@ -263,19 +265,22 @@
 			android:layout_alignParentLeft="true"
 
 			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
-			android:onClick="btnAveragePricesForm"/>
+			android:onClick="btnAveragePricesForm"
+			android:singleLine="true"
+			android:ellipsize="marquee"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="WARP"
 			android:id="@+id/btnRemoteSyWarp"
 			android:textSize="50dp"
-			android:visibility="invisible"
 			android:layout_alignParentRight="true"
 
 			android:layout_alignParentBottom="true"
-			android:onClick="btnDoWarp"/>
+			android:onClick="btnDoWarp"
+			android:singleLine="true"
+			android:ellipsize="marquee"/>
 
 	<TextView
 			android:layout_width="wrap_content"

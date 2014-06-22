@@ -41,7 +41,7 @@
 			android:layout_below="@+id/txtPriceListTitle"
 			android:layout_alignParentLeft="true"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="&#x2192;"
@@ -51,7 +51,7 @@
 			android:layout_alignParentRight="true"
 			style="@style/BuySellButtons"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="&#x2190;"
@@ -89,13 +89,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="01"
 						android:id="@+id/btnPriceListBuy1"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -119,13 +121,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="12"
 						android:id="@+id/btnPriceListBuy2"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -148,13 +152,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="23"
 						android:id="@+id/btnPriceListBuy3"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -177,13 +183,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="34"
 						android:id="@+id/btnPriceListBuy4"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -206,13 +214,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="45"
 						android:id="@+id/btnPriceListBuy5"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -235,13 +245,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="56"
 						android:id="@+id/btnPriceListBuy6"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -264,13 +276,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="67"
 						android:id="@+id/btnPriceListBuy7"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -293,13 +307,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="78"
 						android:id="@+id/btnPriceListBuy8"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -322,13 +338,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="89"
 						android:id="@+id/btnPriceListBuy9"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -351,13 +369,15 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="01"
 						android:id="@+id/btnPriceListBuy10"
-						android:onClick="btnBuyCargoCallback"/>
+						android:onClick="btnBuyCargoCallback"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -387,7 +407,7 @@
 			android:layout_above="@+id/btnPriceListWarp"
 			android:layout_alignParentRight="true"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Price Differences"
@@ -395,9 +415,11 @@
 			android:onClick="btnToggleAverageDiffPrices"
 			android:layout_above="@+id/btnPriceListSysInfo"
 			android:layout_alignRight="@+id/btnPriceListSysInfo"
-			android:layout_alignLeft="@+id/btnPriceListSysInfo"/>
+			android:layout_alignLeft="@+id/btnPriceListSysInfo"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="System Information"
@@ -405,9 +427,11 @@
 			android:onClick="btnWarpSystemInformation"
 			android:layout_above="@+id/btnPriceListShortRangeChart"
 			android:layout_alignRight="@+id/btnPriceListShortRangeChart"
-			android:layout_alignLeft="@+id/btnPriceListShortRangeChart"/>
+			android:layout_alignLeft="@+id/btnPriceListShortRangeChart"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Short Range Chart"
@@ -415,7 +439,9 @@
 			android:onClick="btnShortRangeChart"
 			android:layout_alignParentLeft="true"
 			android:layout_toLeftOf="@+id/btnPriceListWarp"
-			android:layout_alignParentBottom="true"/>
+			android:layout_alignParentBottom="true"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -426,7 +452,7 @@
 			android:layout_above="@+id/txtPriceListCash"
 			android:layout_alignParentRight="true"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="WARP"
@@ -434,6 +460,8 @@
 			android:textSize="50dp"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:onClick="btnDoWarp"/>
+			android:onClick="btnDoWarp"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 </RelativeLayout>

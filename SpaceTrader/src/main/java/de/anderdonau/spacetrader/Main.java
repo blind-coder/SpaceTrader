@@ -22,19 +22,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,8 +52,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
@@ -67,7 +60,6 @@ import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
-import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
@@ -245,28 +237,31 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 		/**
 		 * Check for possibility of displaying ads
+		 * additional check for cheatcode
 		 */
+		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		final boolean hideAds = settings.getBoolean("hideAds", false);
 		if (adView == null) {
 			adView = (AdView) findViewById(R.id.adView);
 		}
 		if (adView != null) {
 			adView.setVisibility(View.GONE);
-			int check = isGooglePlayServicesAvailable(this);
-			if (check != 0) {
-				GooglePlayServicesUtil.getErrorDialog(check, this, 0).show();
-			} else {
-			  /* additional check for cheatcode */
-				SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
-				final boolean hideAds = settings.getBoolean("hideAds", false);
+			if (!hideAds) {
+				int check = isGooglePlayServicesAvailable(this);
+				if (check != 0) {
+					GooglePlayServicesUtil.getErrorDialog(check, this, 0).show();
+				} else {
 
-				if (!hideAds) {
-					adView.setVisibility(View.VISIBLE);
-					// Initiate a generic request.
-					AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-						.addTestDevice("FE95DA7F3FE40606FA7F49DCE9E93A84").build();
+					if (!hideAds) {
+						adView.setVisibility(View.VISIBLE);
+						// Initiate a generic request.
+						AdRequest adRequest = new AdRequest.Builder().addTestDevice(
+							AdRequest.DEVICE_ID_EMULATOR).addTestDevice("FE95DA7F3FE40606FA7F49DCE9E93A84")
+							.build();
 
-					// Load the adView with the ad request.
-					adView.loadAd(adRequest);
+						// Load the adView with the ad request.
+						adView.loadAd(adRequest);
+					}
 				}
 			}
 		}
@@ -279,21 +274,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			ois.close();
 			fis.close();
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-			Toast.makeText(this, "Loaded savegame v101", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
-			try {
-				FileInputStream fis = mContext.openFileInput("savegame.txt");
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				SaveGame s = (SaveGame) ois.readObject();
-				gameState = new GameState(s);
-				ois.close();
-				fis.close();
-				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-				Toast.makeText(this, "Loaded savegame v100", Toast.LENGTH_SHORT).show();
-			} catch (Exception ee) {
-				gameState = new GameState(this, "Jameson");
-				changeFragment(FRAGMENTS.NEW_GAME);
-			}
+			gameState = new GameState(this, "Jameson");
+			changeFragment(FRAGMENTS.NEW_GAME);
 		}
 	}
 
@@ -2594,8 +2577,22 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					}
 
 				}
-				if (gameState.CheatCounter >= 3 || true) {
-					if (buf.equals("Moolah")) {
+				if (gameState.CheatCounter >= 3) {
+					if (buf.equals("UUDDLRLRBA")) {
+						SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
+						boolean hideAds = !settings.getBoolean("hideAds", false);
+						SharedPreferences.Editor ed = settings.edit();
+						ed.putBoolean("hideAds", hideAds);
+						ed.commit();
+						if (hideAds) {
+							findViewById(R.id.adView).setVisibility(View.GONE);
+						}
+						Popup popup1 = new Popup(popup.context, "Ads toggled",
+							"The display of ads has been toggled. If they have been enabled, they will be visible when you start the app next time.",
+							"", "OK", cbShowNextPopup);
+						popupQueue.push(popup1);
+						showNextPopup();
+					} else if (buf.equals("Moolah")) {
 						gameState.Credits += 100000;
 						return;
 					} else if (buf.startsWith("Go ") && buf.length() > 3) {
@@ -2807,7 +2804,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	}
 
 	public void btnPersonnelRosterFireCallback(View view) {
-		int i = 0;
+		int i;
 
 		switch (view.getId()) {
 			case R.id.btnFireCrew1:
@@ -5857,33 +5854,5 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		popup = new Popup(this, "Highscores", msg, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
-	}
-
-	@SuppressWarnings("ConstantConditions")
-	private Intent getShareIntent(String type, String subject, String text) {
-		// found on https://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android
-		boolean found = false;
-		Intent share = new Intent(android.content.Intent.ACTION_SEND);
-		share.setType("text/plain");
-
-		// gets the list of intents that can be loaded.
-		List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
-		if (!resInfo.isEmpty()){
-			for (ResolveInfo info : resInfo) {
-				if (info.activityInfo.packageName.toLowerCase().contains(type) ||
-					info.activityInfo.name.toLowerCase().contains(type) ) {
-					share.putExtra(Intent.EXTRA_SUBJECT,  subject);
-					share.putExtra(Intent.EXTRA_TEXT,     text);
-					share.setPackage(info.activityInfo.packageName);
-					found = true;
-					break;
-				}
-			}
-			if (!found)
-				return null;
-
-			return share;
-		}
-		return null;
 	}
 }

@@ -51,14 +51,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyFlea"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -68,14 +70,16 @@
 						android:id="@+id/textView"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoFlea"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -91,14 +95,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyGnat"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -108,14 +114,16 @@
 						android:id="@+id/textView2"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoGnat"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -131,14 +139,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyFirefly"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -148,14 +158,16 @@
 						android:id="@+id/textView3"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoFirefly"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -171,14 +183,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyMosquito"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -188,14 +202,16 @@
 						android:id="@+id/textView4"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoMosquito"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -211,14 +227,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyBumblebee"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -228,14 +246,16 @@
 						android:id="@+id/textView5"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoBumblebee"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -251,14 +271,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyBeetle"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -268,14 +290,16 @@
 						android:id="@+id/textView6"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoBeetle"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -291,14 +315,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyHornet"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -308,14 +334,16 @@
 						android:id="@+id/textView7"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoHornet"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -331,14 +359,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyGrasshopper"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -348,14 +378,16 @@
 						android:id="@+id/textView8"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoGrasshopper"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -371,14 +403,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyTermite"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -388,14 +422,16 @@
 						android:id="@+id/textView9"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoTermite"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -411,14 +447,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyWasp"
 						android:layout_column="0"
 						android:onClick="btnBuyNewShipStep1"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -428,14 +466,16 @@
 						android:id="@+id/textView10"
 						android:layout_column="1"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Info"
 						android:id="@+id/btnInfoWasp"
 						android:layout_column="2"
 						android:onClick="btnBuyNewShipInfo"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"

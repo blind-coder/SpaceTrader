@@ -32,7 +32,7 @@
 			android:layout_centerHorizontal="true"
 			android:textStyle="bold"/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Fire"
@@ -41,7 +41,9 @@
 			android:onClick="btnPersonnelRosterFireCallback"
 			android:layout_alignParentLeft="true"
 
-			android:layout_marginTop="20dp"/>
+			android:layout_marginTop="20dp"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -175,7 +177,7 @@
 
 	</TableLayout>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Fire"
@@ -184,7 +186,8 @@
 			android:layout_below="@+id/tableLayoutCrew1"
 			android:onClick="btnPersonnelRosterFireCallback"
 			android:layout_alignParentLeft="true"
-			/>
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"
@@ -317,7 +320,7 @@
 		</TableRow>
 	</TableLayout>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Hire"
@@ -326,7 +329,8 @@
 			android:layout_below="@+id/tableLayoutCrew2"
 			android:onClick="btnPersonnelRosterHireCallback"
 			android:layout_alignParentLeft="true"
-			/>
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 	<TextView
 			android:layout_width="wrap_content"

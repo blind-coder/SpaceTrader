@@ -69,23 +69,27 @@
 					android:layout_height="fill_parent"
 					android:id="@+id/buttonsBuyFuel">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:text="Buy Fuel"
 						android:id="@+id/btnShipyardBuyFuel"
 
 						android:onClick="btnShipyardBuyFuel"
-						android:layout_weight="1"/>
+						android:layout_weight="1"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:text="Buy Full Tank"
 						android:id="@+id/btnShipyardBuyMaxFuel"
 
 						android:onClick="btnShipyardBuyMaxFuel"
-						android:layout_weight="1"/>
+						android:layout_weight="1"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 			</LinearLayout>
 
 			<TextView
@@ -110,23 +114,27 @@
 					android:layout_height="fill_parent"
 					android:id="@+id/buttonsBuyRepairs">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:text="Buy Repairs"
 						android:id="@+id/btnShipyardBuyRepairs"
 
 						android:onClick="btnShipyardBuyRepairs"
-						android:layout_weight="1"/>
+						android:layout_weight="1"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:text="Buy Full Repairs"
 						android:id="@+id/btnShipyardBuyFullRepairs"
 
 						android:onClick="btnShipyardBuyFullRepairs"
-						android:layout_weight="1"/>
+						android:layout_weight="1"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 			</LinearLayout>
 
 			<TextView
@@ -138,13 +146,15 @@
 
 					android:layout_marginTop="20dp"/>
 
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Buy New Ship"
 					android:id="@+id/btnShipyardBuyNewShip"
 
-					android:onClick="btnBuyNewShip"/>
+					android:onClick="btnBuyNewShip"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
 
 			<TextView
 					android:layout_width="wrap_content"
@@ -154,13 +164,15 @@
 					android:id="@+id/txtShipyardBuyEscapePod"
 					android:layout_marginTop="20dp"/>
 
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Buy Escape Pod"
 					android:id="@+id/btnShipyardBuyEscapePod"
 
-					android:onClick="btnShipyardBuyEscapePod"/>
+					android:onClick="btnShipyardBuyEscapePod"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
 		</LinearLayout>
 	</ScrollView>
 

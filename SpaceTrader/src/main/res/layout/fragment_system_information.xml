@@ -233,7 +233,7 @@
 			android:focusableInTouchMode="false"
 			android:id="@+id/buttonBarSystemInformation">
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Newspaper"
@@ -243,9 +243,12 @@
 
 				android:onClick="SystemInformationNewspaperCallback"
 				android:layout_weight="1"
-				android:singleLine="true"/>
+				android:singleLine="true"
+				android:focusableInTouchMode="false"
+				android:focusable="false"
+				android:ellipsize="marquee"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Mercenary for hire"
@@ -255,9 +258,10 @@
 				android:layout_toLeftOf="@+id/btnSpecialEvent"
 				android:onClick="SystemInformationPersonnelRosterCallback"
 				android:layout_weight="1"
-				android:singleLine="false"/>
+				android:singleLine="true"
+				android:ellipsize="marquee"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Special"
@@ -267,7 +271,10 @@
 
 				android:onClick="SystemInformationSpecialCallback"
 				android:layout_weight="1"
-				android:singleLine="true"/>
+				android:singleLine="true"
+				android:focusableInTouchMode="false"
+				android:focusable="false"
+				android:ellipsize="marquee"/>
 	</LinearLayout>
 
 </RelativeLayout>

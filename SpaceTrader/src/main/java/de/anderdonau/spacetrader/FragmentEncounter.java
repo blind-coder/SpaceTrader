@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -31,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
@@ -164,19 +164,19 @@ public class FragmentEncounter extends MyFragment {
 	}
 
 	public void EncounterButtons() {
-		btnInt.setVisibility(View.INVISIBLE);
-		btnAttack.setVisibility(View.INVISIBLE);
-		btnFlee.setVisibility(View.INVISIBLE);
-		btnSubmit.setVisibility(View.INVISIBLE);
-		btnBribe.setVisibility(View.INVISIBLE);
-		btnYield.setVisibility(View.INVISIBLE);
-		btnIgnore.setVisibility(View.INVISIBLE);
-		btnSurrender.setVisibility(View.INVISIBLE);
-		btnPlunder.setVisibility(View.INVISIBLE);
-		btnBoard.setVisibility(View.INVISIBLE);
-		btnMeet.setVisibility(View.INVISIBLE);
-		btnDrink.setVisibility(View.INVISIBLE);
-		btnTrade.setVisibility(View.INVISIBLE);
+		btnInt.setVisibility(View.GONE);
+		btnAttack.setVisibility(View.GONE);
+		btnFlee.setVisibility(View.GONE);
+		btnSubmit.setVisibility(View.GONE);
+		btnBribe.setVisibility(View.GONE);
+		btnYield.setVisibility(View.GONE);
+		btnIgnore.setVisibility(View.GONE);
+		btnSurrender.setVisibility(View.GONE);
+		btnPlunder.setVisibility(View.GONE);
+		btnBoard.setVisibility(View.GONE);
+		btnMeet.setVisibility(View.GONE);
+		btnDrink.setVisibility(View.GONE);
+		btnTrade.setVisibility(View.GONE);
 		pBarEncounter.setVisibility(View.INVISIBLE);
 
 		if (gameState.AutoAttack || gameState.AutoFlee) {

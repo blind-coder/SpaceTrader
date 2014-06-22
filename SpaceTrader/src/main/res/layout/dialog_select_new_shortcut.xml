@@ -27,80 +27,102 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content">
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut0"
-				android:id="@+id/dialogSelectNewShortcut0"/>
+				android:id="@+id/dialogSelectNewShortcut0"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut1"
 				android:id="@+id/dialogSelectNewShortcut1"
-				android:layout_below="@+id/dialogSelectNewShortcut0"/>
+				android:layout_below="@+id/dialogSelectNewShortcut0"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut2"
 				android:id="@+id/dialogSelectNewShortcut2"
-				android:layout_below="@+id/dialogSelectNewShortcut1"/>
+				android:layout_below="@+id/dialogSelectNewShortcut1"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut3"
 				android:id="@+id/dialogSelectNewShortcut3"
-				android:layout_below="@+id/dialogSelectNewShortcut2"/>
+				android:layout_below="@+id/dialogSelectNewShortcut2"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut4"
 				android:id="@+id/dialogSelectNewShortcut4"
-				android:layout_below="@+id/dialogSelectNewShortcut3"/>
+				android:layout_below="@+id/dialogSelectNewShortcut3"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut5"
 				android:id="@+id/dialogSelectNewShortcut5"
-				android:layout_below="@+id/dialogSelectNewShortcut4"/>
+				android:layout_below="@+id/dialogSelectNewShortcut4"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut6"
 				android:id="@+id/dialogSelectNewShortcut6"
-				android:layout_below="@+id/dialogSelectNewShortcut5"/>
+				android:layout_below="@+id/dialogSelectNewShortcut5"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut7"
 				android:id="@+id/dialogSelectNewShortcut7"
-				android:layout_below="@+id/dialogSelectNewShortcut6"/>
+				android:layout_below="@+id/dialogSelectNewShortcut6"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut8"
 				android:id="@+id/dialogSelectNewShortcut8"
-				android:layout_below="@+id/dialogSelectNewShortcut7"/>
+				android:layout_below="@+id/dialogSelectNewShortcut7"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut9"
 				android:id="@+id/dialogSelectNewShortcut9"
-				android:layout_below="@+id/dialogSelectNewShortcut8"/>
+				android:layout_below="@+id/dialogSelectNewShortcut8"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Shortcut10"
 				android:id="@+id/dialogSelectNewShortcut10"
-				android:layout_below="@+id/dialogSelectNewShortcut9"/>
+				android:layout_below="@+id/dialogSelectNewShortcut9"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 	</RelativeLayout>
 </ScrollView>

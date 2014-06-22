@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
@@ -47,6 +47,9 @@ public class FragmentWarpSystemInformation extends MyFragment {
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		TextView tv;
+
+		Button button = (Button) rootView.findViewById(R.id.btnMercenaryForHire);
+		button.setSelected(true);
 
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
 		tv.setText(main.SolarSystemName[main.WarpSystem.nameIndex]);
@@ -77,12 +80,12 @@ public class FragmentWarpSystemInformation extends MyFragment {
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoCosts);
 		tv.setText(String.format("%d cr.",
 			gameState.InsuranceMoney() + gameState.MercenaryMoney() + (gameState.Debt > 0 ? Math.max(
-				gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(COMMANDER.curSystem,
-				main.WarpSystem)));
+				gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(COMMANDER.curSystem, main.WarpSystem)
+		));
 
 		if (Distance > 0) {
-			if (gameState.WormholeExists(COMMANDER.curSystem, main.WarpSystem) || Distance <= gameState
-				.Ship.GetFuel()) {
+			if (gameState.WormholeExists(COMMANDER.curSystem,
+				main.WarpSystem) || Distance <= gameState.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSyWarp);
 				btn.setVisibility(View.VISIBLE);
 				btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);

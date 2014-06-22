@@ -63,161 +63,207 @@
 			android:layout_below="@+id/pBarEncounter"
 			android:layout_alignParentLeft="true"/>
 
-	<TableLayout
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="false"
-
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentRight="true"
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_below="@+id/txtEncounterText"
 			android:layout_alignParentBottom="true"
-			android:stretchColumns="0,1,2,3"
-			android:id="@+id/tableLayout">
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true">
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:layout_weight="1"
+				android:gravity="bottom">
 
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Attack"
 					android:id="@+id/btnAttack"
 					android:onClick="EncounterButtonAttackCallback"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
 
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Flee"
-					android:id="@+id/btnFlee"
-					android:onClick="EncounterButtonFleeCallback"
-					android:layout_column="1"/>
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Submit"
-					android:id="@+id/btnSubmit"
-					android:onClick="EncounterButtonSubmitCallback"
-					android:layout_column="2"/>
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Bribe"
-					android:id="@+id/btnBribe"
-					android:onClick="EncounterButtonBribeCallback"
-					android:layout_column="3"/>
-		</TableRow>
-
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Ignore"
-					android:id="@+id/btnIgnore"
-					android:onClick="EncounterButtonIgnoreCallback"
-					android:layout_column="1"/>
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Yield"
-					android:id="@+id/btnYield"
-					android:onClick="EncounterButtonYieldCallback"
-					android:layout_column="2"/>
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Int."
-					android:id="@+id/btnInt"
-					android:onClick="EncounterButtonIntCallback"
-					android:layout_column="3"/>
-		</TableRow>
-
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Board"
 					android:id="@+id/btnBoard"
 					android:onClick="EncounterButtonBoardCallback"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
 
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Plunder"
-					android:id="@+id/btnPlunder"
-					android:onClick="EncounterButtonPlunderCallback"
-					android:layout_column="1"/>
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:text="Surrender"
-					android:id="@+id/btnSurrender"
-					android:onClick="EncounterButtonSurrenderCallback"
-					android:layout_column="2"/>
-		</TableRow>
-
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-
-			<Button
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Drink"
 					android:id="@+id/btnDrink"
 					android:onClick="EncounterButtonDrinkCallback"
-					android:layout_column="0"/>
+					android:layout_column="0"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
 
-			<Button
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:id="@+id/linearLayout"
+				android:layout_weight="1"
+				android:gravity="bottom">
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Flee"
+					android:id="@+id/btnFlee"
+					android:onClick="EncounterButtonFleeCallback"
+					android:layout_column="1"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Ignore"
+					android:id="@+id/btnIgnore"
+					android:onClick="EncounterButtonIgnoreCallback"
+					android:layout_column="1"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Plunder"
+					android:id="@+id/btnPlunder"
+					android:onClick="EncounterButtonPlunderCallback"
+					android:layout_column="1"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
+
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:id="@+id/linearLayout2"
+				android:layout_weight="1"
+				android:gravity="bottom">
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Submit"
+					android:id="@+id/btnSubmit"
+					android:onClick="EncounterButtonSubmitCallback"
+					android:layout_column="2"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Yield"
+					android:id="@+id/btnYield"
+					android:onClick="EncounterButtonYieldCallback"
+					android:layout_column="2"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Surrender"
+					android:id="@+id/btnSurrender"
+					android:onClick="EncounterButtonSurrenderCallback"
+					android:layout_column="2"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Meet"
 					android:id="@+id/btnMeet"
 					android:onClick="EncounterButtonMeetCallback"
-					android:layout_column="2"/>
-		</TableRow>
+					android:layout_column="2"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
 
-		<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-
-			<Button
+			<de.anderdonau.spacetrader.DataTypes.STButton
 					style="?android:attr/buttonStyleSmall"
-					android:layout_width="fill_parent"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="Trade"
 					android:id="@+id/btnTrade"
 					android:onClick="EncounterButtonTradeCallback"
-					android:layout_column="2"/>
+					android:layout_column="2"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"
+					android:visibility="gone"/>
+		</LinearLayout>
 
-		</TableRow>
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:id="@+id/linearLayout3"
+				android:layout_weight="1"
+				android:gravity="bottom">
 
-	</TableLayout>
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Bribe"
+					android:id="@+id/btnBribe"
+					android:onClick="EncounterButtonBribeCallback"
+					android:layout_column="3"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Int."
+					android:id="@+id/btnInt"
+					android:onClick="EncounterButtonIntCallback"
+					android:layout_column="3"
+					android:enabled="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
+	</LinearLayout>
 
 	<ProgressBar
 			style="?android:attr/progressBarStyleHorizontal"

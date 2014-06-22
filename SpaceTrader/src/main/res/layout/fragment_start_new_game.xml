@@ -227,7 +227,7 @@
 				android:text="Jameson"
 				/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Start Game"

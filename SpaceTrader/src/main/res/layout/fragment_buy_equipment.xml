@@ -51,14 +51,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyPulseLaser"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -83,14 +85,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyBeamLaser"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -115,14 +119,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyMilitaryLaser"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -147,14 +153,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyEnergyShield"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -179,14 +187,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyReflectiveShield"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -211,14 +221,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuy5CargoBays"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -243,14 +255,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyAutoRepairSystem"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -275,14 +289,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyNavigationSystem"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -307,14 +323,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyTargetingSystem"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -339,14 +357,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Buy"
 						android:id="@+id/btnBuyCloakingSystem"
 						android:layout_column="0"
 						android:onClick="BuyEquipmentButtonCallback"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"

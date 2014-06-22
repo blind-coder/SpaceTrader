@@ -51,7 +51,7 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
@@ -59,7 +59,8 @@
 						android:layout_column="0"
 						style="@style/BuySellButtons"
 						android:onClick="btnSellEquipmentOnClick"
-						/>
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -86,14 +87,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentWeapon2"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -120,14 +123,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentWeapon3"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -154,14 +159,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentShield1"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -188,14 +195,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentShield2"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -222,14 +231,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentShield3"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -256,13 +267,15 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentGadget1"
 						android:layout_column="0"
-						style="@style/BuySellButtons"/>
+						style="@style/BuySellButtons"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -292,14 +305,16 @@
 					android:measureWithLargestChild="false"
 					>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentGadget2"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -326,14 +341,16 @@
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Sell"
 						android:id="@+id/btnSellEquipmentGadget3"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnSellEquipmentOnClick"/>
+						android:onClick="btnSellEquipmentOnClick"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"

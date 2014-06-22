@@ -44,12 +44,14 @@
 				android:indeterminate="false"
 				android:layout_weight="8"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:text="Max"
 				android:id="@+id/view_input_dialog_max"
 				style="@style/BuySellButtons"
-				android:layout_weight="2"/>
+				android:layout_weight="2"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 	</LinearLayout>
 </LinearLayout>

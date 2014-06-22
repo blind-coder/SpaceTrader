@@ -52,14 +52,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="12"
 						android:id="@+id/btnDumpCargo1"
 						android:layout_column="0"
 						style="@style/BuySellButtons"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -72,7 +74,7 @@
 						android:autoText="false"
 						/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -80,7 +82,9 @@
 						android:id="@+id/btnDumpCargoAll1"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -89,14 +93,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="23"
 						android:id="@+id/btnDumpCargo2"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -107,7 +113,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -115,7 +121,9 @@
 						android:id="@+id/btnDumpCargoAll2"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -124,14 +132,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="34"
 						android:id="@+id/btnDumpCargo3"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -142,7 +152,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -150,7 +160,9 @@
 						android:id="@+id/btnDumpCargoAll3"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -159,14 +171,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="45"
 						android:id="@+id/btnDumpCargo4"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -177,7 +191,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -185,7 +199,9 @@
 						android:id="@+id/btnDumpCargoAll4"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -194,14 +210,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="56"
 						android:id="@+id/btnDumpCargo5"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -212,7 +230,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -220,7 +238,9 @@
 						android:id="@+id/btnDumpCargoAll5"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -229,14 +249,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="67"
 						android:id="@+id/btnDumpCargo6"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -247,7 +269,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -255,7 +277,9 @@
 						android:id="@+id/btnDumpCargoAll6"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -264,14 +288,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="78"
 						android:id="@+id/btnDumpCargo7"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -282,7 +308,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -290,7 +316,9 @@
 						android:id="@+id/btnDumpCargoAll7"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -299,14 +327,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="89"
 						android:id="@+id/btnDumpCargo8"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -317,7 +347,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -325,7 +355,9 @@
 						android:id="@+id/btnDumpCargoAll8"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -334,14 +366,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="90"
 						android:id="@+id/btnDumpCargo9"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -352,7 +386,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -360,7 +394,9 @@
 						android:id="@+id/btnDumpCargoAll9"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -369,14 +405,16 @@
 					android:layout_height="fill_parent"
 					android:gravity="center_horizontal">
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="01"
 						android:id="@+id/btnDumpCargo10"
 						android:layout_column="0"
-						android:onClick="btnDumpCargoQty"/>
+						android:onClick="btnDumpCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -387,7 +425,7 @@
 						android:layout_column="1"
 						android:layout_gravity="center_vertical"/>
 
-				<Button
+				<de.anderdonau.spacetrader.DataTypes.STButton
 						style="@style/BuySellButtons"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -395,7 +433,9 @@
 						android:id="@+id/btnDumpCargoAll10"
 						android:layout_column="2"
 						android:layout_gravity="center_horizontal"
-						android:onClick="btnDumpAllCargoQty"/>
+						android:onClick="btnDumpAllCargoQty"
+						android:ellipsize="marquee"
+						android:singleLine="true"/>
 
 			</TableRow>
 
@@ -414,7 +454,7 @@
 			android:layout_alignParentLeft="true"
 			/>
 
-	<Button
+	<de.anderdonau.spacetrader.DataTypes.STButton
 			style="?android:attr/buttonStyleSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -423,6 +463,8 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
 
-			android:onClick="btnDumpDone"/>
+			android:onClick="btnDumpDone"
+			android:ellipsize="marquee"
+			android:singleLine="true"/>
 
 </RelativeLayout>

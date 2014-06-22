@@ -323,7 +323,7 @@
 			android:layout_alignParentRight="true"
 			android:id="@+id/buttonBarCommanderStatus">
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Quests"
@@ -331,9 +331,11 @@
 				android:layout_alignParentBottom="true"
 				android:layout_alignParentLeft="true"
 				android:onClick="CommanderStatusQuestsCallback"
-				android:layout_weight="1"/>
+				android:layout_weight="1"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Special Cargo"
@@ -342,9 +344,11 @@
 				android:layout_alignParentRight="true"
 
 				android:onClick="CommanderStatusSpecialCargoCallback"
-				android:layout_weight="1"/>
+				android:layout_weight="1"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 
-		<Button
+		<de.anderdonau.spacetrader.DataTypes.STButton
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:text="Ship"
@@ -354,7 +358,9 @@
 				android:layout_toLeftOf="@+id/CommanderStatusSpecialCargoCallback"
 				android:onClick="CommanderStatusShipCallback"
 				android:layout_alignParentRight="false"
-				android:layout_weight="1"/>
+				android:layout_weight="1"
+				android:ellipsize="marquee"
+				android:singleLine="true"/>
 	</LinearLayout>
 
 </RelativeLayout>
