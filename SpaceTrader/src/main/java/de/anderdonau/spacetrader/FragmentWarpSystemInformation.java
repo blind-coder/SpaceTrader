@@ -48,9 +48,6 @@ public class FragmentWarpSystemInformation extends MyFragment {
 		SolarSystem CURSYSTEM = gameState.SolarSystem[COMMANDER.curSystem];
 		TextView tv;
 
-		Button button = (Button) rootView.findViewById(R.id.btnMercenaryForHire);
-		button.setSelected(true);
-
 		tv = (TextView) rootView.findViewById(R.id.strRemoteSysInfoName);
 		tv.setText(main.SolarSystemName[main.WarpSystem.nameIndex]);
 
