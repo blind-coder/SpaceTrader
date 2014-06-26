@@ -36,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -737,6 +738,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	 * Heart and Soul of UI: changer of fragments.
 	 */
 	public void changeFragment(FRAGMENTS fragment) {
+		hide_keyboard(this);
 		if (fragment == currentState && currentFragment != null){
 			if (currentFragment.update()){
 				return;
@@ -5854,5 +5856,17 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		popup = new Popup(this, "Highscores", msg, "", "OK", cbShowNextPopup);
 		popupQueue.push(popup);
 		showNextPopup();
+	}
+
+	public static void hide_keyboard(Activity activity) {
+		// https://stackoverflow.com/a/17789187
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+		//Find the currently focused view, so we can grab the correct window token from it.
+		View view = activity.getCurrentFocus();
+		//If no view currently has focus, create a new one, just so we can grab a window token from it
+		if(view == null) {
+			view = new View(activity);
+		}
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 }
