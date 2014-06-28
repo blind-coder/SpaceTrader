@@ -296,7 +296,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					public void execute(Popup popup, View view) {
 						finish();
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				break;
@@ -430,7 +431,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						changeFragment(FRAGMENTS.NEW_GAME);
 						popupQueue.clear();
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -442,7 +444,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							popupQueue.clear();
 							EndOfGame(GameState.RETIRED);
 						}
-					}, cbShowNextPopup);
+					}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -548,8 +551,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"- \"Options\" gives access to the game preferences.\n" +
 						"- \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.\n" +
 						"- \"High Scores\" shows the high-score list.\n" +
-						"- \"Clear High Scores\" wipes the current high-score list.", "", "OK",
-					cbShowNextPopup);
+						"- \"Clear High Scores\" wipes the current high-score list.", "", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -560,7 +563,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"You have to change screens often. All main screens are accessible through the menu. The four choices you have to use the most (Buy Cargo, Sell Cargo, Ship Yard and Short Range Chart) have their own shortcut button at the top right corner of every screen. These shortcut functions can be changed from the Shortcuts menu option in the Game menu.\n\n" +
 						"At the start of the game you have a small spaceship of the Gnat type, armed with a simple pulse laser, and 1000 credits to start your ventures. While docked, you can buy or sell trade goods; buy or sell equipment for your ship; buy fuel, repairs or even a new ship at the Ship Yard; hire mercenaries; visit the bank to get a loan; get information on your status, the galaxy or nearby solar systems; and activate the warp to another system.\n\n" +
 						"When you have activated the warp, you materialise nearby the target system you selected. The last distance you have to travel on your impulse engines. During that time, you may encounter pirates, police ships, or other traders.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -571,7 +575,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"Other influences are the type of government a system has (for instance, in an anarchy there is almost always a food shortage and a military state will never buy narcotics), the size of a system (the smaller the system, the greater the demand for imported goods), and extraordinary natural resources (or the lack of them). Lastly, special events may have a tremendous influence on prices: for instance, when a system is visited by a cold spell, furs are especially in high demand.\n\n" +
 						"On the Short Range Chart, you can tap a system and ask for the Average Price List for that system. This list only takes into account the size, tech level and government of a system (and the special resources if you know about them), but may be a good indication on what price you can expect to get for your goods\n\n." +
 						"Note that if you are a criminal (or worse), you have to use an intermediary to sell your goods, and this intermediary will take 10%% of the profits.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -583,7 +588,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"Police ships will usually let a lawful trader pass by. If they suspect you may be trafficking illegal goods (that is, firearms or narcotics), they may ask you to submit to an inspection. If you don't have any illegal goods on board, just comply. If you do, and you let them inspect you, they will impound your goods and fine you. If you don't want to submit to inspection, you can try to flee from them (in which case they will attack you), attack them, or try to bribe them.\n\n" +
 						"Pirates will usually attack you on sight. You can also attack them, flee from them, or surrender to them. If you surrender, they will steal from your cargo bays. If you don't have anything in your cargo bays, they will blow up your ship unless you pay them off with cash. Destroying a pirate will earn you a bounty.\n\n" +
 						"Traders will usually ignore you. However, you can become a pirate yourself and attack them. Sometimes, a trader who finds you too strong an opponent and who can't manage to flee from you, will surrender to you and let you steal from his cargo bays.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -596,7 +602,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"Besides equipment slots, a ship has also one, two or three crew quarters. If you have more than one, you might hire mercenaries to accompany you on your trips." +
 						"Finally, at the Ship Yard you can get your ship equipped with an escape pod, and at the bank you can get your ship insured, so you get compensated when you have to use your pod." +
 						"When you buy a new ship, you trade in your old one, including all its equipment. Don't worry, the price you pay for your new ship takes this into account. You may even get money for the trade. Mercenaries will stay on your ship, unless your new ship hasn't got enough crew quarters. In that case, you have to fire them.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -609,14 +616,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"Finally, the Engineer skill determines how well you keep your ship in shape. Especially, an engineer manages to repair your hull and shield while traveling and during a fight. He may even reduce the damage done by an opponent to zero. A good engineer can also upgrade your weaponry a bit, so you do more damage.\n\n" +
 						"If you fly a ship with extra crew quarters, you can hire mercenaries. These travel with you, for a certain sum of credits per day. The net effect of having a mercenary on board is that if the mercenary is better in a certain skill than you are, he will take over the tasks for which that skill is needed. So, if you are lacking a certain skill, a mercenary can compensate for that.\n\n" +
 						"Another way to increase certain skills is to buy gadgets. Especially, a navigating system increases your pilot skill, an auto-repair system increases your engineer skill, and a targeting system increases your fighter skill.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
 			case R.id.menuHelpFirstSteps:
 				popup = new Popup(this, "First Steps",
-					"Here I will describe the steps you will undertake the first days as a trader:\n" +
-						"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n" +
+					"You start by docking on some system. The specifics of that system are shown on the System Information screen. Take special note of any special resources the system might have. These influence the price you have to pay for certain goods. For instance, a system which has rich soil, usually sells food cheap, while a relatively lifeless system has little fauna and therefore expensive furs.\n\n" +
 						"Also take note of any special events in the system. Special events usually means that certain things are expensive to buy, so you should stay clear from them in this system, but since special events last several days, it might be worth your while to return here later to sell something they especially need.\n\n" +
 						"If there is a Special button on the System Information screen, tap it to see what the special offer is. You can always refuse, but it is good to know what special thing is available here.\n\n" +
 						"After you have examined the system on the System Information screen, if you have cargo, go to the Sell Cargo screen to sell it. Then, switch to the Ship Yard to buy a full tank of fuel, and repair your hull if you think it's necessary. If you want, you can let the program take care of the Ship Yard automatically when you arrive in a new system, by checking the appropriate choices in the Options menu.\n\n" +
@@ -624,7 +631,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"When you have selected a system, you know what you want to sell there, and you can switch to the Buy Cargo screen to get some goods. Remember that Firearms and Narcotics are illegal goods, and you could get in trouble with the police if you traffick those. After having filled your cargo bays, return to the Short Range Chart, and Warp to the selected system.\n\n" +
 						"While in flight, flee from pirates, ignore traders and submit to police inspections if they ask you to (unless you are carrying illegal goods, in which case you must decide for yourself how you best handle them). Later on in the game, when you are ready for it, you might wish to become a pirate yourself and attack traders, or become a bounty hunter and attack pirates. However, with full cargo holds you best try to arrive on the target system in one piece, so you can sell your goods and make a profit.\n\n" +
 						"There are many more things to Space Trader, but you can discover these by examining the screens, reading the help screens, reading the documentation, and simply by playing the game.\nHave fun!",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -644,7 +652,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						"Thank you all. You were a tremendous help, and I am very grateful for that.\n" +
 						"Finally, I wish to thank all people who sent their comments to me since the first release of the game. Many of your suggestions have been incorporated in the game, and made it a lot better. Suggestions I haven't used, I have at least stored to inspire me when creating sequel game. Unfortunately, my life is so busy now that I have very little time to respond to emails, or even read them.\n" +
 						"An extensive FAQ for the game is available at the Space Trader home page at http://www.spronck.net/picoverse/spacetrader.",
-					"", "OK", cbShowNextPopup);
+					"", "OK", cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return true;
@@ -668,7 +677,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				showNextPopup();
 				return true;
 			case R.id.menuTwitter:
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/AndSpaceTrader"));
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+					"https://twitter.com/AndSpaceTrader"));
 				startActivity(browserIntent);
 				return true;
 			case R.id.menuHelpLicense:
@@ -739,8 +749,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	 */
 	public void changeFragment(FRAGMENTS fragment) {
 		hide_keyboard(this);
-		if (fragment == currentState && currentFragment != null){
-			if (currentFragment.update()){
+		if (fragment == currentState && currentFragment != null) {
+			if (currentFragment.update()) {
 				return;
 			}
 		}
@@ -1140,7 +1150,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					if (amount > gameState.Credits) {
 						Popup popup1 = new Popup(popup.context, "Not enough credits!", String.format(
 							"You only have %d credits. You can't pay back more than that!", gameState.Credits),
-							"", "OK", cbShowNextPopup);
+							"", "OK", cbShowNextPopup
+						);
 						popupQueue.push(popup1);
 						return;
 					}
@@ -1176,7 +1187,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						gameState.NoClaim = 0;
 						changeFragment(FRAGMENTS.BANK);
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -1302,7 +1314,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				gameState.EscapePod = true;
 				changeFragment(FRAGMENTS.SHIPYARD);
 			}
-		}, cbShowNextPopup);
+		}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -1626,8 +1639,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		Popup popup = new Popup(this, "Buy New Ship", String.format(
 			"Are you sure you wish to trade in your %s for a new %s%s?", gameState.Ship.getType().name,
 			ShipTypes.ShipTypes[Index].name, (addCompactor || addLightning > 0 || addMorganLaser) ?
-			", and transfer your unique equipment to the new ship" : ""), "", "Buy ship",
-			"Don't buy ship", new Popup.buttonCallback() {
+				", and transfer your unique equipment to the new ship" : ""
+		), "", "Buy ship", "Don't buy ship", new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
 				gameState.BuyShip(Index);
@@ -1644,7 +1657,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				gameState.Ship.tribbles = 0;
 				btnBuyNewShip(null);
 			}
-		}, cbShowNextPopup);
+		}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -1749,7 +1763,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					gameState.Credits -= Price;
 					changeFragment(FRAGMENTS.BUY_EQUIPMENT);
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -1827,7 +1842,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				}
 				changeFragment(FRAGMENTS.SELL_EQUIPMENT);
 			}
-		}, cbShowNextPopup);
+		}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -2090,8 +2106,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] > gameState.SellPrice[Index] ?
 				gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index] - gameState.SellPrice[Index] :
 				gameState.SellPrice[Index] - gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index],
-			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]),
-			"Amount",
+			gameState.BuyingPrice[Index] / gameState.Ship.cargo[Index]
+		), "Amount",
 			"If you are selling items, specify the amount to sell and tap the OK button. If you specify more than you have in your cargo bays, the maximum possible amount will be sold. If you don't want to sell anything, tap the Cancel button.",
 			gameState.Ship.cargo[Index], "Sell cargo", "Don't sell cargo", new Popup.buttonCallback() {
 			@Override
@@ -2685,7 +2701,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				WarpSystem = gameState.SolarSystem[i];
 				changeFragment(FRAGMENTS.GALACTIC_CHART);
 			}
-		}, cbShowNextPopup);
+		}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -2717,7 +2734,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					gameState.CanSuperWarp = false;
 					DoWarp(true);
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -2819,10 +2837,12 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				return;
 		}
 
-		if (gameState.WildStatus == 1)
+		if (gameState.WildStatus == 1) {
 			i--;
-		if (gameState.JarekStatus == 1)
+		}
+		if (gameState.JarekStatus == 1) {
 			i--;
+		}
 
 		final int j = i;
 		Popup popup;
@@ -2843,7 +2863,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						gameState.RecalculateBuyPrices(gameState.Mercenary[0].curSystem);
 					}
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -2871,7 +2892,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						popupQueue.push(popup1);
 						showNextPopup();
 					}
-				});
+				}
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -3203,7 +3225,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				public void execute(Popup popup, View view) {
 					changeFragment(FRAGMENTS.PLUNDER);
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -3269,7 +3292,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					showNextPopup();
 					Travel();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.EncounterType == GameState.CAPTAINCONRADENCOUNTER) {
@@ -3313,7 +3337,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					showNextPopup();
 					Travel();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else if (gameState.EncounterType == GameState.CAPTAINHUIEENCOUNTER) {
@@ -3358,7 +3383,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					showNextPopup();
 					Travel();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -3399,7 +3425,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				}
 				Travel();
 			}
-		}, cbShowNextPopup);
+		}, cbShowNextPopup
+		);
 		popupQueue.push(popup);
 		showNextPopup();
 	}
@@ -3438,7 +3465,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				public void execute(Popup popup, View view) {
 					EncounterButtonBrideCallbackStep2();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -3508,7 +3536,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						popupQueue.push(popup1);
 						gameState.ArtifactOnBoard = false;
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 			} else {
@@ -3547,7 +3576,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						public void execute(Popup popup, View view) {
 							Arrested();
 						}
-					}, cbShowNextPopup);
+					}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -3668,7 +3698,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					EncounterButtonAttackCallbackStep2();
 					showNextPopup();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -3698,7 +3729,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						}
 						EncounterButtonAttackCallbackStartAttack();
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -3741,7 +3773,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							}
 							EncounterButtonAttackCallbackStartAttack();
 						}
-					}, cbShowNextPopup);
+					}, cbShowNextPopup
+					);
 					popupQueue.push(popup);
 					showNextPopup();
 					return;
@@ -3795,7 +3828,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						gameState.EncounterType = GameState.FAMOUSCAPATTACK;
 						EncounterButtonAttackCallbackStartAttack();
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -3841,7 +3875,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				public void execute(Popup popup, View view) {
 					EncounterButtonFleeCallbackStep2();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 			return;
@@ -3873,7 +3908,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					}
 					EncounterButtonFleeCallbackStartFleeing();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -3953,7 +3989,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							"The police discovers illegal goods in your cargo holds. These goods are impounded and you are fined %d credits.",
 							Fine),
 							"Firearms and narcotics are illegal goods, and you lose these. You are fined a percentage of your total worth. This is subtracted from your credits. If you don't have enough credits, it increases your debt.",
-							"OK", cbShowNextPopup);
+							"OK", cbShowNextPopup
+						);
 						popupQueue.push(popup1);
 						showNextPopup();
 						gameState.PoliceRecordScore += GameState.TRAFFICKING;
@@ -3980,7 +4017,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					Travel();
 					showNextPopup();
 				}
-			}, cbShowNextPopup);
+			}, cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		} else {
@@ -4299,8 +4337,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				}
 
 				// If they ignore you or flee and you can't see them, the encounter doesn't take place
-				if ((gameState.EncounterType == GameState.PIRATEIGNORE || gameState.EncounterType == GameState.PIRATEFLEE) && gameState
-					.Opponent.isCloakedTo(Ship)) {
+				if ((gameState.EncounterType == GameState.PIRATEIGNORE || gameState.EncounterType == GameState.PIRATEFLEE) && gameState.Opponent
+					.isCloakedTo(Ship)) {
 					--gameState.Clicks;
 					continue;
 				}
@@ -4334,8 +4372,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				// Will there be trade in orbit?
 				if (gameState.EncounterType == GameState.TRADERIGNORE && (gameState.GetRandom(
 					1000) < gameState.ChanceOfTradeInOrbit)) {
-					if (gameState.Ship.FilledCargoBays() < gameState.Ship.TotalCargoBays() && gameState
-						.Opponent.HasTradeableItems(gameState.WarpSystem, GameState.TRADERSELL)) {
+					if (gameState.Ship.FilledCargoBays() < gameState.Ship
+						.TotalCargoBays() && gameState.Opponent.HasTradeableItems(gameState.WarpSystem,
+						GameState.TRADERSELL)) {
 						gameState.EncounterType = GameState.TRADERSELL;
 					}
 
@@ -4348,8 +4387,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 				// If they ignore you and you can't see them, the encounter doesn't take place
 				if ((gameState.EncounterType == GameState.TRADERIGNORE || gameState.EncounterType == GameState.TRADERFLEE ||
-					gameState.EncounterType == GameState.TRADERSELL || gameState.EncounterType == GameState.TRADERBUY) && gameState
-					.Opponent.isCloakedTo(Ship)) {
+					gameState.EncounterType == GameState.TRADERSELL || gameState.EncounterType == GameState.TRADERBUY) && gameState.Opponent
+					.isCloakedTo(Ship)) {
 					--gameState.Clicks;
 					continue;
 				}
@@ -4493,7 +4532,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				"The Bank's Loan Officer reminds you that your debt continues to accrue interest. You currently owe %d credits.",
 				gameState.Debt),
 				"The Bank Officer will contact you every five days to remind you of your debt. You can turn off these warnings on the second page of Game Options.",
-				"OK", cbShowNextPopup);
+				"OK", cbShowNextPopup
+			);
 			popupQueue.push(popup);
 			showNextPopup();
 		}
@@ -5276,11 +5316,13 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			if (CommanderUnderAttack && gameState.ScarabStatus == 3) {
 				Damage = Math.min(Damage,
 					(gameState.Ship.GetHullStrength() / (CommanderUnderAttack ? Math.max(1,
-						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2)));
+						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2))
+				);
 			} else {
 				Damage = Math.min(Damage,
 					(Defender.getType().hullStrength / (CommanderUnderAttack ? Math.max(1,
-						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2)));
+						(GameState.IMPOSSIBLE - GameState.getDifficulty())) : 2))
+				);
 			}
 			Defender.hull -= Damage;
 			if (Defender.hull < 0) {
@@ -5487,7 +5529,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							gameState.Opponent.cargo[item] = 1;
 							changeFragment(FRAGMENTS.PLUNDER); // Travel() is called from PlunderDoneButton
 						}
-					}, cbShowNextPopup);
+					}, cbShowNextPopup
+					);
 					popupQueue.push(popup1);
 					showNextPopup();
 					return;
@@ -5644,7 +5687,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							changeFragment(currentState);
 						}
 					}
-				}, cbShowNextPopup);
+				}, cbShowNextPopup
+				);
 				popupQueue.push(popup);
 				showNextPopup();
 				return;
@@ -5744,7 +5788,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		Popup popup;
 
 		Scored = false;
-		score = GetScore(EndStatus, gameState.Days, gameState.CurrentWorth(), GameState.getDifficulty());
+		score = GetScore(EndStatus, gameState.Days, gameState.CurrentWorth(),
+			GameState.getDifficulty());
 
 		for (i = 0; i < GameState.MAXHIGHSCORE; i++) {
 			Hscores[i] = new HighScore(getApplicationContext(), i);
@@ -5794,19 +5839,23 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 
 		popup = new Popup(this, "Final score", String.format(
-			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (score / 50), ((score % 50) / 5),
-			gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
-			(EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon")),
-			buf, buf2), "", "OK", "Tweet", cbShowNextPopup, new Popup.buttonCallback() {
+			"You achieved a score of %d.%d%%.\nAfter %d Days you %s.\n%s\n%s", (score / 50),
+			((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+				(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
+					"retired on an utopian moon")), buf, buf2
+		), "", "OK", "Tweet", cbShowNextPopup, new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
 				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 				sharingIntent.setType("text/plain");
 				sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Space Trader");
-				sharingIntent.putExtra(Intent.EXTRA_TEXT,
-					String.format("I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50), ((score % 50) / 5),
-						gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
-						(EndStatus == GameState.RETIRED ? "retired on a barren moon" : "retired on an utopian moon"))));
+				sharingIntent.putExtra(Intent.EXTRA_TEXT, String.format(
+						"I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50),
+						((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+							(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
+								"retired on an utopian moon"))
+					)
+				);
 				startActivity(Intent.createChooser(sharingIntent, "Share score"));
 			}
 		});
@@ -5860,11 +5909,12 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	public static void hide_keyboard(Activity activity) {
 		// https://stackoverflow.com/a/17789187
-		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(
+			INPUT_METHOD_SERVICE);
 		//Find the currently focused view, so we can grab the correct window token from it.
 		View view = activity.getCurrentFocus();
 		//If no view currently has focus, create a new one, just so we can grab a window token from it
-		if(view == null) {
+		if (view == null) {
 			view = new View(activity);
 		}
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
