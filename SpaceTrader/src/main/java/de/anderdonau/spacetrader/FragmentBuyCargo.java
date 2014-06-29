@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,26 +26,23 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentBuyCargo extends MyFragment {
-	GameState gameState;
 	View rootView;
-
-	public FragmentBuyCargo(GameState gameState) {
-		this.gameState = gameState;
-	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		rootView = inflater.inflate(R.layout.fragment_buy_cargo, container, false);
 		update();
 		return rootView;
 	}
 
 	@Override
-	public boolean update(){
+	public boolean update() {
 		CrewMember COMMANDER;
 		SolarSystem CURSYSTEM;
 		COMMANDER = gameState.Mercenary[0];
@@ -67,13 +63,13 @@ public class FragmentBuyCargo extends MyFragment {
 					i == 3 ? R.id.btnBuyCargoAll4 : i == 4 ? R.id.btnBuyCargoAll5 :
 						i == 5 ? R.id.btnBuyCargoAll6 : i == 6 ? R.id.btnBuyCargoAll7 :
 							i == 7 ? R.id.btnBuyCargoAll8 : i == 8 ? R.id.btnBuyCargoAll9 :
-					                                    /*i == 9 ? */R.id.btnBuyCargoAll10);
+							                                /*i == 9 ? */R.id.btnBuyCargoAll10);
 			tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtBuyCargoPrice1 :
 				i == 1 ? R.id.txtBuyCargoPrice2 : i == 2 ? R.id.txtBuyCargoPrice3 :
 					i == 3 ? R.id.txtBuyCargoPrice4 : i == 4 ? R.id.txtBuyCargoPrice5 :
 						i == 5 ? R.id.txtBuyCargoPrice6 : i == 6 ? R.id.txtBuyCargoPrice7 :
 							i == 7 ? R.id.txtBuyCargoPrice8 : i == 8 ? R.id.txtBuyCargoPrice9 :
-					                                     /*i == 9 ? */R.id.txtBuyCargoPrice10);
+						                                   /*i == 9 ? */R.id.txtBuyCargoPrice10);
 			if (gameState.BuyPrice[i] > 0) {
 				btn.setText(String.format("%d", CURSYSTEM.qty[i]));
 				tv.setText(String.format("%d cr.", gameState.BuyPrice[i]));

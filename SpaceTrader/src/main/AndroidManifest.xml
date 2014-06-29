@@ -16,18 +16,19 @@
   ~ along with this program; if not, write to the Free Software
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.anderdonau.spacetrader"
           android:versionCode="122"
           android:versionName="1.2.2">
 
-<uses-sdk
+	<uses-sdk
 			android:minSdkVersion="14"
 			android:targetSdkVersion="19"/>
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 	<application
 			android:allowBackup="true"
@@ -35,11 +36,12 @@
 			android:label="@string/app_name"
 			android:theme="@style/AppTheme">
 		<activity
-				android:name=".Main"
+				android:name="de.anderdonau.spacetrader.Main"
 				android:label="@string/app_name"
 				android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
+
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
@@ -50,7 +52,6 @@
 		<meta-data
 				android:name="com.google.android.gms.version"
 				android:value="@integer/google_play_services_version"/>
-
 	</application>
 
 </manifest>

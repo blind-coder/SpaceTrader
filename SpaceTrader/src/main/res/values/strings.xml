@@ -16,144 +16,147 @@
   ~ along with this program; if not, write to the Free Software
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
-
 <resources>
 
-	<string formatted="false" name="app_name">SpaceTrader</string>
-	<string formatted="false" name="title_section1">Section 1</string>
-	<string formatted="false" name="title_section2">Section 2</string>
-	<string formatted="false" name="title_section3">Section 3</string>
-	<string formatted="false" name="navigation_drawer_open">Open navigation drawer</string>
-	<string formatted="false" name="navigation_drawer_close">Close navigation drawer</string>
-	<string formatted="false" name="action_example">Example action</string>
-	<string formatted="false" name="action_settings">Settings</string>
-	<string formatted="false" name="wScrStartNewGame">Start new game</string>
-	<string formatted="false" name="DifficultyLevelBeginner">Beginner</string>
-	<string formatted="false" name="DifficultyLevelEasy">Easy</string>
-	<string formatted="false" name="DIfficultyLevelNormal">Normal</string>
-	<string formatted="false" name="DifficultyLevelHard">Hard</string>
-	<string formatted="false" name="DifficultyLevelImpossible">Impossible</string>
-	<string formatted="false" name="StatusUnderNoParticularPressure">under no particular pressure</string>
-	<string formatted="false" name="StatusAtWar">at war</string>
-	<string formatted="false" name="StatusRavagerByAPlague">ravaged by a plague</string>
-	<string formatted="false" name="StatusSufferingFromDrought">suffering from a drought</string>
-	<string formatted="false" name="StatusSufferingFromExtremeBoredom">suffering from extreme boredom</string>
-	<string formatted="false" name="StatusSufferingFromAColdSpell">suffering from a cold spell</string>
-	<string formatted="false" name="StatusSufferingFromACropFailure">suffering from a crop failure</string>
-	<string formatted="false" name="StatusLackingEnoughtWorkers">lacking enough workers</string>
-	<string formatted="false" name="NothingSpecial">Nothing special</string>
-	<string formatted="false" name="MineralRich">Mineral rich</string>
-	<string formatted="false" name="MineralPoor">Mineral poor</string>
-	<string formatted="false" name="Desert">Desert</string>
-	<string formatted="false" name="SweetwaterOceans">Sweetwater oceans</string>
-	<string formatted="false" name="RichSoil">Rich soil</string>
-	<string formatted="false" name="PoorSoil">Poor soil</string>
-	<string formatted="false" name="RichFauna">Rich fauna</string>
-	<string formatted="false" name="Lifeless">Lifeless</string>
-	<string formatted="false" name="WeirdMushrooms">Weird mushrooms</string>
-	<string formatted="false" name="SpecialHerbs">Special herbs</string>
-	<string formatted="false" name="ArtisticPopulace">Artistic populace</string>
-	<string formatted="false" name="WarlikePopulace">Warlike populace</string>
-	<string formatted="false" name="Absent">Absent</string>
-	<string formatted="false" name="Minimal">Minimal</string>
-	<string formatted="false" name="Few">Few</string>
-	<string formatted="false" name="Some">Some</string>
-	<string formatted="false" name="Moderate">Moderate</string>
-	<string formatted="false" name="Many">Many</string>
-	<string formatted="false" name="Abundant">Abundant</string>
-	<string formatted="false" name="Swarms">Swarms</string>
-	<string formatted="false" name="Tiny">Tiny</string>
-	<string formatted="false" name="Small">Small</string>
-	<string formatted="false" name="Medium">Medium</string>
-	<string formatted="false" name="Large">Large</string>
-	<string formatted="false" name="Huge">Huge</string>
-	<string formatted="false" name="PreAgricultural">Pre-agricultural</string>
-	<string formatted="false" name="Agricultural">Agricultural</string>
-	<string formatted="false" name="Medieval">Medieval</string>
-	<string formatted="false" name="Renaissance">Renaissance</string>
-	<string formatted="false" name="EarlyIndustrial">Early Industrial</string>
-	<string formatted="false" name="Industrial">Industrial</string>
-	<string formatted="false" name="PostIndustrial">Post-industrial</string>
-	<string formatted="false" name="HiTech">Hi-tech</string>
-	<string formatted="false" name="BuyCargo">Buy Cargo</string>
-	<string formatted="false" name="SellCargo">Sell Cargo</string>
-	<string formatted="false" name="ShipYard">Ship Yard</string>
-	<string formatted="false" name="BuyEquipment">Buy Equipment</string>
-	<string formatted="false" name="BuyCargoShort">B</string>
-	<string formatted="false" name="SellCargoShort">S</string>
-	<string formatted="false" name="ShipYardShort">Y</string>
-	<string formatted="false" name="BuyEquipmentShort">E</string>
-	<string formatted="false" name="SellEquipmentShort">Q</string>
-	<string formatted="false" name="SellEquipment">Sell Equipment</string>
-	<string formatted="false" name="PersonnelShort">P</string>
-	<string formatted="false" name="Personnel">Personnel</string>
-	<string formatted="false" name="BankShort">K</string>
-	<string formatted="false" name="Bank">Bank</string>
-	<string formatted="false" name="SystemInfoShort">I</string>
-	<string formatted="false" name="SystemInfo">System Info</string>
-	<string formatted="false" name="CommanderStatusShort">C</string>
-	<string formatted="false" name="CommanderStatus">Commander Status</string>
-	<string formatted="false" name="GalacticChartShort">G</string>
-	<string formatted="false" name="GalacticChart">Galactic Chart</string>
-	<string formatted="false" name="WarpChartShort">W</string>
-	<string formatted="false" name="WarpChart">Warp Chart</string>
-	<string formatted="false" name="CantSaveNow">Can\'t save now</string><string formatted="false" name="CantSaveInEncounter">You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!
+	<string name="app_name" formatted="false">SpaceTrader</string>
+	<string name="title_section1" formatted="false">Section 1</string>
+	<string name="title_section2" formatted="false">Section 2</string>
+	<string name="title_section3" formatted="false">Section 3</string>
+	<string name="navigation_drawer_open" formatted="false">Open navigation drawer</string>
+	<string name="navigation_drawer_close" formatted="false">Close navigation drawer</string>
+	<string name="action_example" formatted="false">Example action</string>
+	<string name="action_settings" formatted="false">Settings</string>
+	<string name="wScrStartNewGame" formatted="false">Start new game</string>
+	<string name="DifficultyLevelBeginner" formatted="false">Beginner</string>
+	<string name="DifficultyLevelEasy" formatted="false">Easy</string>
+	<string name="DIfficultyLevelNormal" formatted="false">Normal</string>
+	<string name="DifficultyLevelHard" formatted="false">Hard</string>
+	<string name="DifficultyLevelImpossible" formatted="false">Impossible</string>
+	<string name="StatusUnderNoParticularPressure" formatted="false">under no particular pressure</string>
+	<string name="StatusAtWar" formatted="false">at war</string>
+	<string name="StatusRavagerByAPlague" formatted="false">ravaged by a plague</string>
+	<string name="StatusSufferingFromDrought" formatted="false">suffering from a drought</string>
+	<string name="StatusSufferingFromExtremeBoredom" formatted="false">suffering from extreme boredom</string>
+	<string name="StatusSufferingFromAColdSpell" formatted="false">suffering from a cold spell</string>
+	<string name="StatusSufferingFromACropFailure" formatted="false">suffering from a crop failure</string>
+	<string name="StatusLackingEnoughtWorkers" formatted="false">lacking enough workers</string>
+	<string name="NothingSpecial" formatted="false">Nothing special</string>
+	<string name="MineralRich" formatted="false">Mineral rich</string>
+	<string name="MineralPoor" formatted="false">Mineral poor</string>
+	<string name="Desert" formatted="false">Desert</string>
+	<string name="SweetwaterOceans" formatted="false">Sweetwater oceans</string>
+	<string name="RichSoil" formatted="false">Rich soil</string>
+	<string name="PoorSoil" formatted="false">Poor soil</string>
+	<string name="RichFauna" formatted="false">Rich fauna</string>
+	<string name="Lifeless" formatted="false">Lifeless</string>
+	<string name="WeirdMushrooms" formatted="false">Weird mushrooms</string>
+	<string name="SpecialHerbs" formatted="false">Special herbs</string>
+	<string name="ArtisticPopulace" formatted="false">Artistic populace</string>
+	<string name="WarlikePopulace" formatted="false">Warlike populace</string>
+	<string name="Absent" formatted="false">Absent</string>
+	<string name="Minimal" formatted="false">Minimal</string>
+	<string name="Few" formatted="false">Few</string>
+	<string name="Some" formatted="false">Some</string>
+	<string name="Moderate" formatted="false">Moderate</string>
+	<string name="Many" formatted="false">Many</string>
+	<string name="Abundant" formatted="false">Abundant</string>
+	<string name="Swarms" formatted="false">Swarms</string>
+	<string name="Tiny" formatted="false">Tiny</string>
+	<string name="Small" formatted="false">Small</string>
+	<string name="Medium" formatted="false">Medium</string>
+	<string name="Large" formatted="false">Large</string>
+	<string name="Huge" formatted="false">Huge</string>
+	<string name="PreAgricultural" formatted="false">Pre-agricultural</string>
+	<string name="Agricultural" formatted="false">Agricultural</string>
+	<string name="Medieval" formatted="false">Medieval</string>
+	<string name="Renaissance" formatted="false">Renaissance</string>
+	<string name="EarlyIndustrial" formatted="false">Early Industrial</string>
+	<string name="Industrial" formatted="false">Industrial</string>
+	<string name="PostIndustrial" formatted="false">Post-industrial</string>
+	<string name="HiTech" formatted="false">Hi-tech</string>
+	<string name="BuyCargo" formatted="false">Buy Cargo</string>
+	<string name="SellCargo" formatted="false">Sell Cargo</string>
+	<string name="ShipYard" formatted="false">Ship Yard</string>
+	<string name="BuyEquipment" formatted="false">Buy Equipment</string>
+	<string name="BuyCargoShort" formatted="false">B</string>
+	<string name="SellCargoShort" formatted="false">S</string>
+	<string name="ShipYardShort" formatted="false">Y</string>
+	<string name="BuyEquipmentShort" formatted="false">E</string>
+	<string name="SellEquipmentShort" formatted="false">Q</string>
+	<string name="SellEquipment" formatted="false">Sell Equipment</string>
+	<string name="PersonnelShort" formatted="false">P</string>
+	<string name="Personnel" formatted="false">Personnel</string>
+	<string name="BankShort" formatted="false">K</string>
+	<string name="Bank" formatted="false">Bank</string>
+	<string name="SystemInfoShort" formatted="false">I</string>
+	<string name="SystemInfo" formatted="false">System Info</string>
+	<string name="CommanderStatusShort" formatted="false">C</string>
+	<string name="CommanderStatus" formatted="false">Commander Status</string>
+	<string name="GalacticChartShort" formatted="false">G</string>
+	<string name="GalacticChart" formatted="false">Galactic Chart</string>
+	<string name="WarpChartShort" formatted="false">W</string>
+	<string name="WarpChart" formatted="false">Warp Chart</string>
+	<string name="CantSaveNow" formatted="false">Can\'t save now</string>
+    <string name="CantSaveInEncounter" formatted="false">You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!
 Are you sure you want to quit?</string>
-	<string formatted="false" name="ReallyStartNewGame">Really start new game?</string><string formatted="false" name="IfYouStartNewAllWillBeLost">If you start a new game your current game will be deleted!
+	<string name="ReallyStartNewGame" formatted="false">Really start new game?</string>
+    <string name="IfYouStartNewAllWillBeLost" formatted="false">If you start a new game your current game will be deleted!
 You will not be added to the high score table!</string>
-	<string formatted="false" name="Retira">Retire</string>
-	<string formatted="false" name="ReallyRetire">Do you really want to retire?</string>
-	<string formatted="false" name="Commands">Commands</string><string formatted="false" name="FollowTheDragonfly">Follow the Dragonfly to %s.
-</string><string formatted="false" name="KillTheSpaceMonsterAtAcamar">Kill the space monster at Acamar.
-</string><string formatted="false" name="GetYourLightningShieldAtZalkon">Get your lightning shield at Zalkon.
-</string><string formatted="false" name="DeliverTheAntidoteToJapori">Deliver antidote to Japori.
-</string><string formatted="false" name="DeliverTheAlienArtifact">Deliver the alien artifact to professor Berger at some hi-tech system.
-</string><string formatted="false" name="SmuggleJonathanWild">Smuggle Jonathan Wild to Kravat.
-</string><string formatted="false" name="BringJarekToDevidia">Bring ambassador Jarek to Devidia.
-</string>
-	<string formatted="false" name="InformGemulonByTomorrow">Inform Gemulon about alien invasion by tomorrow.</string>
-	<string formatted="false" name="InformGemulonWithinDays">Inform Gemulon about about the alien invasion within %d days</string><string formatted="false" name="GetFuelCompactorAtGemulon">Get your fuel compactor at Gemulon.
-</string>
-	<string formatted="false" name="StopDrFehlersExperimentTomorrow">Stop Dr. Fehler\'s experiment at Daled by tomorrow</string>
-	<string formatted="false" name="StopDrFehlersExperimentInDays">Stop Dr. Fehler\'s experiment at Daled within %d days</string><string formatted="false" name="DeliverReactorForHenryMorgan">Deliver the unstable reactor to Nix for Henry Morgan.
-</string><string formatted="false" name="DeliverReactorBeforeFuelRunsOut">Deliver the unstable reactor to Nix before it consumes all its fuel.
-</string><string formatted="false" name="GetLaserAtNix">Get your special laser at Nix.
-</string><string formatted="false" name="FindAndDestroyTheScarab">Find and destroy the Scarab (which is hiding at the exit to a wormhole).
-</string><string formatted="false" name="GetRidOfTheTribbles">Get rid of those pesky tribbles.
-</string><string formatted="false" name="ClaimYourMoonAtUtopia">Claim your moon at Utopia.
-</string><string formatted="false" name="ThereAreNoOpenQuests">There are no open quests.
-</string>
-	<string formatted="false" name="OpenQuests">Open Quests</string><string formatted="false" name="CargoAnInfestationOfTribbles">An infestation of tribbles.
-</string><string formatted="false" name="CargoNumberOfTribbles">%d cute furry %s.
-</string>
-	<string formatted="false" name="TribbleSingular">tribble</string>
-	<string formatted="false" name="TribblePlural">tribbles</string><string formatted="false" name="Cargo10BaysOfAntidote">10 bays of antidote.
-</string><string formatted="false" name="CargoAnAlienArtifact">An alien artifact.
-</string><string formatted="false" name="CargoAHagglingComputer">A haggling computer.
-</string><string formatted="false" name="CargoAnUnstableReactor">An unstable reactor taking up 5 bays.
-</string><string formatted="false" name="CargoNumberBaysOfFuel">%d %s of enriched fuel.
-</string>
-	<string formatted="false" name="BaysPlural">bays</string>
-	<string formatted="false" name="BaySingular">bay</string><string formatted="false" name="CargoAPortableSingularity">A Portable Singularity.
-</string>
-	<string formatted="false" name="CargoNoSpecialCargo">No special cargo.</string>
-	<string formatted="false" name="SpecialCargo">Special Cargo</string><string formatted="false" name="ShipInfoType">Type: %s%s
-</string>
-	<string formatted="false" name="ShipInfoWithHardenedHull">/hardened hull</string><string formatted="false" name="ShipInfoEquipment">Equipment:
-</string><string formatted="false" name="ShipInfoExtraCargoBays">%d extra cargo bays
-</string><string formatted="false" name="ShipInfoAnEscapePod">An escape pod
-</string><string formatted="false" name="ShipInfoUnfilledSlots">Unfilled:
-</string><string formatted="false" name="ShipInfoNumWeaponSlots">%d weapon slot%s
-</string><string formatted="false" name="ShipInfoNumShieldSlots">%d shield slot%s
-</string><string formatted="false" name="ShipInfoNumGadgetSlots">%d gadget slot%s
-</string>
-	<string formatted="false" name="ShipInfoTitle">Ship Status</string>
-	<string formatted="false" name="DebtTooHigh">Debt too high!</string>
-	<string formatted="false" name="YourDebtIsTooHighToGetAnotherLoan">Your debt is too high to get another loan.</string>
-	<string formatted="false" name="GetLoan">Get Loan</string><string formatted="false" name="HowMuchNewLoanDoYouWant">How much do you want?
+	<string name="Retira" formatted="false">Retire</string>
+	<string name="ReallyRetire" formatted="false">Do you really want to retire?</string>
+	<string name="Commands" formatted="false">Commands</string>
+	<string name="FollowTheDragonfly" formatted="false">Follow the Dragonfly to %s.</string>
+	<string name="KillTheSpaceMonsterAtAcamar" formatted="false">Kill the space monster at Acamar.</string>
+	<string name="GetYourLightningShieldAtZalkon" formatted="false">Get your lightning shield at Zalkon.</string>
+	<string name="DeliverTheAntidoteToJapori" formatted="false">Deliver antidote to Japori.</string>
+	<string name="DeliverTheAlienArtifact" formatted="false">Deliver the alien artifact to professor Berger at some hi-tech system.</string>
+	<string name="SmuggleJonathanWild" formatted="false">Smuggle Jonathan Wild to Kravat.</string>
+	<string name="BringJarekToDevidia" formatted="false">Bring ambassador Jarek to Devidia.</string>
+	<string name="InformGemulonByTomorrow" formatted="false">Inform Gemulon about alien invasion by tomorrow.</string>
+	<string name="InformGemulonWithinDays" formatted="false">Inform Gemulon about about the alien invasion within %d days</string>
+	<string name="GetFuelCompactorAtGemulon" formatted="false">Get your fuel compactor at Gemulon.</string>
+	<string name="StopDrFehlersExperimentTomorrow" formatted="false">Stop Dr. Fehler\'s experiment at Daled by tomorrow</string>
+	<string name="StopDrFehlersExperimentInDays" formatted="false">Stop Dr. Fehler\'s experiment at Daled within %d days</string>
+	<string name="DeliverReactorForHenryMorgan" formatted="false">Deliver the unstable reactor to Nix for Henry Morgan.</string>
+	<string name="DeliverReactorBeforeFuelRunsOut" formatted="false">Deliver the unstable reactor to Nix before it consumes all its fuel.</string>
+	<string name="GetLaserAtNix" formatted="false">Get your special laser at Nix.</string>
+	<string name="FindAndDestroyTheScarab" formatted="false">Find and destroy the Scarab (which is hiding at the exit to a wormhole).</string>
+	<string name="GetRidOfTheTribbles" formatted="false">Get rid of those pesky tribbles.</string>
+	<string name="ClaimYourMoonAtUtopia" formatted="false">Claim your moon at Utopia.</string>
+	<string name="ThereAreNoOpenQuests" formatted="false">There are no open quests.</string>
+	<string name="OpenQuests" formatted="false">Open Quests</string>
+	<string name="CargoAnInfestationOfTribbles" formatted="false">An infestation of tribbles.</string>
+	<string name="CargoNumberOfTribbles" formatted="false">%d cute furry %s.</string>
+	<string name="TribbleSingular" formatted="false">tribble</string>
+	<string name="TribblePlural" formatted="false">tribbles</string>
+	<string name="Cargo10BaysOfAntidote" formatted="false">10 bays of antidote.</string>
+	<string name="CargoAnAlienArtifact" formatted="false">An alien artifact.</string>
+	<string name="CargoAHagglingComputer" formatted="false">A haggling computer.</string>
+	<string name="CargoAnUnstableReactor" formatted="false">An unstable reactor taking up 5 bays.</string>
+	<string name="CargoNumberBaysOfFuel" formatted="false">%d %s of enriched fuel.</string>
+	<string name="BaysPlural" formatted="false">bays</string>
+	<string name="BaySingular" formatted="false">bay</string>
+	<string name="CargoAPortableSingularity" formatted="false">A Portable Singularity.</string>
+	<string name="CargoNoSpecialCargo" formatted="false">No special cargo.</string>
+	<string name="SpecialCargo" formatted="false">Special Cargo</string>
+	<string name="ShipInfoType" formatted="false">Type: %s%s</string>
+	<string name="ShipInfoWithHardenedHull" formatted="false">/hardened hull</string>
+	<string name="ShipInfoEquipment" formatted="false">Equipment:</string>
+	<string name="ShipInfoExtraCargoBays" formatted="false">%d extra cargo bays</string>
+	<string name="ShipInfoAnEscapePod" formatted="false">An escape pod</string>
+	<string name="ShipInfoUnfilledSlots" formatted="false">Unfilled:</string>
+	<string name="ShipInfoNumWeaponSlots" formatted="false">%d weapon slot%s</string>
+	<string name="ShipInfoNumShieldSlots" formatted="false">%d shield slot%s</string>
+	<string name="ShipInfoNumGadgetSlots" formatted="false">%d gadget slot%s</string>
+	<string name="ShipInfoTitle" formatted="false">Ship Status</string>
+	<string name="DebtTooHigh" formatted="false">Debt too high!</string>
+	<string name="YourDebtIsTooHighToGetAnotherLoan" formatted="false">Your debt is too high to get another loan.</string>
+	<string name="GetLoan" formatted="false">Get Loan</string>
+    <string name="HowMuchNewLoanDoYouWant" formatted="false">How much do you want?
 You can borrow up to %d credits.</string>
-	<string formatted="false" name="Credits">Credits</string>
-	<string formatted="false" name="DontGetLoan">Don\'t get loan</string><string formatted="false" name="HelpMenu">The menu consists of three main menu choices:
+	<string name="Credits" formatted="false">Credits</string>
+	<string name="DontGetLoan" formatted="false">Don\'t get loan</string>
+    <string name="HelpMenu" formatted="false">The menu consists of three main menu choices:
 \"Commands\", \"Game\", and \"Help\".
 
 \"Commands\" allows you to issue commands while you are docked at a system. You can use this to switch between the main screens.
@@ -165,5 +168,7 @@ You can borrow up to %d credits.</string>
 - \"Shortcuts\" allows you to set new preferences for the four shortcut buttons in the top right corner of many screens.
 - \"High Scores\" shows the high-score list.
 - \"Clear High Scores\" wipes the current high-score list.</string>
+	<string name="title_activity_main">MainActivity</string>
+	<string name="hello_world">Hello world!</string>
 
 </resources>

@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,18 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
+
 public class FragmentShortRangeChart extends MyFragment {
-	Main      main;
-	GameState gameState;
-
-	public FragmentShortRangeChart(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_short_range_chart, container, false);
 		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(
 			R.id.ShortRangeChart);
@@ -96,7 +90,8 @@ public class FragmentShortRangeChart extends MyFragment {
 			tv.setText(String.format("Distance to %s: %d parsec",
 				main.SolarSystemName[gameState.SolarSystem[gameState.TrackedSystem].nameIndex],
 				gameState.RealDistance(gameState.SolarSystem[gameState.Mercenary[0].curSystem],
-					gameState.SolarSystem[gameState.TrackedSystem])));
+					gameState.SolarSystem[gameState.TrackedSystem])
+			));
 		}
 		return rootView;
 	}

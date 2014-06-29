@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +25,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
+
 public class FragmentDumpCargo extends MyFragment {
-	GameState gameState;
-
-	public FragmentDumpCargo(GameState gameState) {
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_dump_cargo, container, false);
 		TextView tv;
 		Button btn;

@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,20 +26,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 public class FragmentSellEquipment extends MyFragment {
-	GameState gameState;
-
-	public FragmentSellEquipment(GameState gameState) {
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_sell_equipment, container, false);
 		TextView tv;
 		Button btn;

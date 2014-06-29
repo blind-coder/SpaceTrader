@@ -35,8 +35,6 @@ import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentEncounter extends MyFragment {
-	Main      main;
-	GameState gameState;
 	public Button btnAttack, btnFlee, btnSubmit, btnBribe, btnIgnore, btnYield, btnBoard, btnPlunder,
 		btnSurrender, btnDrink, btnMeet, btnTrade, btnInt;
 	public ProgressBar pBarEncounter;
@@ -44,14 +42,10 @@ public class FragmentEncounter extends MyFragment {
 	public TextView EncounterText;
 	public boolean  playerShipNeedsUpdate, opponentShipNeedsUpdate;
 
-	public FragmentEncounter(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_encounter, container, false);
 		Ship Ship = gameState.Ship;
 		Ship Opponent = gameState.Opponent;

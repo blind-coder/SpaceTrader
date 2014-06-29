@@ -31,17 +31,10 @@ import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentWarpSystemInformation extends MyFragment {
-	Main      main;
-	GameState gameState;
-
-	public FragmentWarpSystemInformation(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_remote_system_information, container,
 			false);
 		CrewMember COMMANDER = gameState.Mercenary[0];

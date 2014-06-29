@@ -19,7 +19,6 @@
 package de.anderdonau.spacetrader;
 
 import android.app.AlertDialog;
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +28,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.ShortcutArrayAdapter;
 
 public class FragmentShortcuts extends MyFragment {
-	Main      main;
-	GameState gameState;
-
-	public FragmentShortcuts(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//noinspection ConstantConditions
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_shortcuts, container, false);
 		//noinspection ConstantConditions
 		final ListView listView = (ListView) rootView.findViewById(R.id.listView);

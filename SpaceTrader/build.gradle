@@ -20,6 +20,8 @@
 
 
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -38,21 +40,20 @@ android {
     compileSdkVersion 14
     buildToolsVersion '19.0.3'
 
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
-    }
     buildTypes {
         release {
             debuggable false
-            runProguard false
-            proguardFile 'proguard-rules.txt'
             jniDebugBuild false
+            runProguard false
+            zipAlign true
         }
     }
     productFlavors {
         defaultFlavor {
-            proguardFile 'proguard-rules.txt'
+            packageName 'de.anderdonau.spacetrader'
+        }
+        demoFlavor {
+            packageName 'de.anderdonau.spacetrader.demo'
         }
     }
 }

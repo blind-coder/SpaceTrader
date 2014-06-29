@@ -16,25 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.anderdonau.spacetrader.DataTypes;
-
-import android.app.Activity;
-import android.app.Fragment;
+package de.anderdonau.spacetrader;
 
 import de.anderdonau.spacetrader.GameState;
-import de.anderdonau.spacetrader.Main;
 
-public class MyFragment extends Fragment {
-	public Main      main      = null;
-	public GameState gameState = null;
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		this.main = (Main) activity;
+public class STDemo {
+	public static boolean canContinue(GameState gameState){
+		return gameState.Days < 50; // Demo version valid for 50 days.
 	}
-
-	public boolean update() {
-		return false;
+	public static boolean showAds(){
+		return true;
 	}
 }

@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,20 +25,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 public class FragmentShipInfo extends MyFragment {
-	private Main               main;
-	private ShipTypes.ShipType mType;
-
-	public FragmentShipInfo(Main main, GameState gameState) {
-		this.main = main;
-		mType = ShipTypes.ShipTypes[gameState.ShipInfoId];
-	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
+		ShipTypes.ShipType mType = ShipTypes.ShipTypes[gameState.ShipInfoId];
 		final View rootView = inflater.inflate(R.layout.fragment_ship_info, container, false);
 		TextView tv;
 		ImageView img;

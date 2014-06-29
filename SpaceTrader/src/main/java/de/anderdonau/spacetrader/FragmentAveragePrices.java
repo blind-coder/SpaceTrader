@@ -31,18 +31,12 @@ import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentAveragePrices extends MyFragment {
-	Main      main;
-	GameState gameState;
 	View rootView;
-
-	public FragmentAveragePrices(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		rootView = inflater.inflate(R.layout.fragment_average_prices, container, false);
 		update();
 		return rootView;
@@ -100,13 +94,13 @@ public class FragmentAveragePrices extends MyFragment {
 					i == 3 ? R.id.txtPriceListName4 : i == 4 ? R.id.txtPriceListName5 :
 						i == 5 ? R.id.txtPriceListName6 : i == 6 ? R.id.txtPriceListName7 :
 							i == 7 ? R.id.txtPriceListName8 : i == 8 ? R.id.txtPriceListName9 :
-						                                   /*i == 9 ?*/ R.id.txtPriceListName10);
+							                                 /*i == 9 ?*/ R.id.txtPriceListName10);
 			tvprice = (TextView) rootView.findViewById(i == 0 ? R.id.txtPriceListPrice1 :
 				i == 1 ? R.id.txtPriceListPrice2 : i == 2 ? R.id.txtPriceListPrice3 :
 					i == 3 ? R.id.txtPriceListPrice4 : i == 4 ? R.id.txtPriceListPrice5 :
 						i == 5 ? R.id.txtPriceListPrice6 : i == 6 ? R.id.txtPriceListPrice7 :
 							i == 7 ? R.id.txtPriceListPrice8 : i == 8 ? R.id.txtPriceListPrice9 :
-					                                          /*i == 9 ?*/ R.id.txtPriceListPrice10);
+							                                      /*i == 9 ?*/ R.id.txtPriceListPrice10);
 
 			int Price = gameState.StandardPrice(i, main.WarpSystem.size, main.WarpSystem.techLevel,
 				main.WarpSystem.politics,

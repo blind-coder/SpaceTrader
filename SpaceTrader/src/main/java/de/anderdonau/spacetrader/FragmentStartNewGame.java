@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,16 +29,11 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
+
 @SuppressWarnings("ConstantConditions")
 public class FragmentStartNewGame extends MyFragment {
-	private Main      main;
-	private GameState gameState;
 	private View rootView = null;
-
-	public FragmentStartNewGame(Main main) {
-		this.main = main;
-		gameState = new GameState(main, "Jameson");
-	}
 
 	public GameState getGameState() {
 		SharedPreferences sp = main.getSharedPreferences("options", Context.MODE_PRIVATE);
@@ -83,6 +77,7 @@ public class FragmentStartNewGame extends MyFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		SharedPreferences sp = main.getSharedPreferences("options", Context.MODE_PRIVATE);
 
 		rootView = inflater.inflate(R.layout.fragment_start_new_game, container, false);

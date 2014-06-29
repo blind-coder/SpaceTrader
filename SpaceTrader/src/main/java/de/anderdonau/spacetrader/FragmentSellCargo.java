@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,24 +26,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FragmentSellCargo extends MyFragment {
-	GameState gameState;
-	View rootView;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 
-	public FragmentSellCargo(GameState gameState) {
-		this.gameState = gameState;
-	}
+public class FragmentSellCargo extends MyFragment {
+	View rootView;
 
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		rootView = inflater.inflate(R.layout.fragment_sell_cargo, container, false);
 		update();
 		return rootView;
 	}
 
 	@Override
-	public boolean update(){
+	public boolean update() {
 		TextView tv;
 		TextView name;
 		Button btn;
@@ -62,13 +59,13 @@ public class FragmentSellCargo extends MyFragment {
 					i == 3 ? R.id.btnSellCargoAll4 : i == 4 ? R.id.btnSellCargoAll5 :
 						i == 5 ? R.id.btnSellCargoAll6 : i == 6 ? R.id.btnSellCargoAll7 :
 							i == 7 ? R.id.btnSellCargoAll8 : i == 8 ? R.id.btnSellCargoAll9 :
-						                                  /*i == 9 ? */R.id.btnSellCargoAll10);
+							                                /*i == 9 ? */R.id.btnSellCargoAll10);
 			tv = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellCargoPrice1 :
 				i == 1 ? R.id.txtSellCargoPrice2 : i == 2 ? R.id.txtSellCargoPrice3 :
 					i == 3 ? R.id.txtSellCargoPrice4 : i == 4 ? R.id.txtSellCargoPrice5 :
 						i == 5 ? R.id.txtSellCargoPrice6 : i == 6 ? R.id.txtSellCargoPrice7 :
 							i == 7 ? R.id.txtSellCargoPrice8 : i == 8 ? R.id.txtSellCargoPrice9 :
-					                                     /*i == 9 ? */R.id.txtSellCargoPrice10);
+							                                 /*i == 9 ? */R.id.txtSellCargoPrice10);
 			name = (TextView) rootView.findViewById(i == 0 ? R.id.txtSellName1 :
 				i == 1 ? R.id.txtSellName2 : i == 2 ? R.id.txtSellName3 : i == 3 ? R.id.txtSellName4 :
 					i == 4 ? R.id.txtSellName5 : i == 5 ? R.id.txtSellName6 :

@@ -18,23 +18,19 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
+
 public class FragmentOptions extends MyFragment {
-	GameState gameState;
-
-	public FragmentOptions(GameState gameState) {
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_game_options, container, false);
 		CheckBox checkBox;
 

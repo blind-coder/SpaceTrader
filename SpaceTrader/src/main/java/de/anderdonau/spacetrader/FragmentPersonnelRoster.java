@@ -18,9 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +27,12 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 
 @SuppressWarnings("ConstantConditions")
 public class FragmentPersonnelRoster extends MyFragment {
-	View      rootView;
-	Main      main;
-	GameState gameState;
-
-	public FragmentPersonnelRoster(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
+	View rootView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +40,7 @@ public class FragmentPersonnelRoster extends MyFragment {
 		TableLayout tl;
 		TextView tv;
 		Button btn;
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		rootView = inflater.inflate(R.layout.fragment_personnel_roster, container, false);
 
 		for (i = 0; i < 2; ++i) {
@@ -97,10 +90,12 @@ public class FragmentPersonnelRoster extends MyFragment {
 			}
 
 			j = i;
-			if (gameState.WildStatus == 1)
+			if (gameState.WildStatus == 1) {
 				j--;
-			if (gameState.JarekStatus == 1)
+			}
+			if (gameState.JarekStatus == 1) {
 				j--;
+			}
 			if (gameState.Ship.crew[j + 1] < 0) {
 				tl.setVisibility(View.INVISIBLE);
 				btn.setVisibility(View.INVISIBLE);

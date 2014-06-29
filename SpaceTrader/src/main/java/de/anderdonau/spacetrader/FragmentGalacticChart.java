@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,30 +26,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 
 public class FragmentGalacticChart extends MyFragment {
-	Main      main;
-	GameState gameState;
-	View      rootView;
-
-	public FragmentGalacticChart(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
+	View rootView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//noinspection ConstantConditions
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		rootView = inflater.inflate(R.layout.fragment_galactic_chart, container, false);
 		update();
 		return rootView;
 	}
 
 	@Override
-	public boolean update(){
-		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(R.id.GalacticChart);
+	public boolean update() {
+		final NavigationChart navigationChart = (NavigationChart) rootView.findViewById(
+			R.id.GalacticChart);
 		Button button = (Button) rootView.findViewById(R.id.btnJump);
 		button.setVisibility(gameState.CanSuperWarp ? View.VISIBLE : View.INVISIBLE);
 		navigationChart.setGameState(gameState);
@@ -127,7 +123,8 @@ public class FragmentGalacticChart extends MyFragment {
 									gameState.TrackedSystem = system;
 									navigationChart.invalidate();
 								}
-							}, main.cbShowNextPopup);
+							}, main.cbShowNextPopup
+							);
 							main.addPopup(popup);
 						} else {
 							navigationChart.mSelectedSystem = system;

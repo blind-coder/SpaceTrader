@@ -38,6 +38,7 @@ import de.anderdonau.spacetrader.DataTypes.Tradeitems;
 import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 public class GameState implements Serializable {
+	public static       boolean       isValid                     = false;
 	// Add Ships, Weapons, Shields, and Gadgets that don't show up normally
 	public static final int           EXTRAWEAPONS                = 1;
 	// Number of weapons over standard
@@ -948,7 +949,9 @@ public class GameState implements Serializable {
 		this.Opponent = g.Opponent;
 		//this.Ship = g.Ship;
 		// TODO: make a real save and load game function
-		this.Ship = new Ship(g.Ship.type, g.Ship.cargo, g.Ship.weapon, g.Ship.shield, g.Ship.shieldStrength, g.Ship.gadget, g.Ship.crew, g.Ship.fuel, g.Ship.hull, g.Ship.tribbles, this);
+		this.Ship = new Ship(g.Ship.type, g.Ship.cargo, g.Ship.weapon, g.Ship.shield,
+			g.Ship.shieldStrength, g.Ship.gadget, g.Ship.crew, g.Ship.fuel, g.Ship.hull, g.Ship.tribbles,
+			this);
 		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
 			this.SolarSystem[i] = g.SolarSystem[i];
 		}

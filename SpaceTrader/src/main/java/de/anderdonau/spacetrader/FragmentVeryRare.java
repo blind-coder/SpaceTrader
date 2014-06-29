@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,16 +27,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
+
 @SuppressWarnings("ConstantConditions")
 public class FragmentVeryRare extends MyFragment {
-	GameState gameState;
-
-	public FragmentVeryRare(GameState gameState) {
-		this.gameState = gameState;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_rare_encounter_cheats, container,
 			false);
 		CheckBox checkBox;

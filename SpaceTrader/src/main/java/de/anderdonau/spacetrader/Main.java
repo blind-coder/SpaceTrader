@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -48,11 +49,13 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
@@ -71,7 +74,7 @@ import de.anderdonau.spacetrader.DataTypes.Weapons;
 
 import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
-public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Serializable {
 	public enum FRAGMENTS {
 		AVERAGE_PRICES,
 		BANK,
@@ -241,7 +244,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		 * additional check for cheatcode
 		 */
 		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
-		final boolean hideAds = settings.getBoolean("hideAds", false);
+		final boolean hideAds = settings.getBoolean("hideAds", false) || STDemo.showAds();
 		if (adView == null) {
 			adView = (AdView) findViewById(R.id.adView);
 		}
@@ -268,16 +271,30 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 
 		try {
-			FileInputStream fis = mContext.openFileInput("savegame.txt");
+			File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+			File f = new File(path, "savegame.txt");
+			FileInputStream fis = new FileInputStream(f);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			SaveGame_v110 s = (SaveGame_v110) ois.readObject();
 			gameState = new GameState(s);
+			GameState.isValid = true;
 			ois.close();
 			fis.close();
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		} catch (Exception e) {
-			gameState = new GameState(this, "Jameson");
-			changeFragment(FRAGMENTS.NEW_GAME);
+			try {
+				FileInputStream fis = mContext.openFileInput("savegame.txt");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				SaveGame_v110 s = (SaveGame_v110) ois.readObject();
+				gameState = new GameState(s);
+				GameState.isValid = true;
+				ois.close();
+				fis.close();
+				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+			} catch (Exception ee) {
+				gameState = new GameState(this, "Jameson");
+				changeFragment(FRAGMENTS.NEW_GAME);
+			}
 		}
 	}
 
@@ -428,6 +445,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					@Override
 					public void execute(Popup popup, View view) {
 						mContext.deleteFile("savegame.txt");
+						File p = new File(
+							Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+						//noinspection ResultOfMethodCallIgnored
+						p.mkdirs();
+						File f = new File(p, "savegame.txt");
+						//noinspection ResultOfMethodCallIgnored
+						f.delete();
+						GameState.isValid = false;
 						changeFragment(FRAGMENTS.NEW_GAME);
 						popupQueue.clear();
 					}
@@ -763,76 +788,81 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			transaction.show(mNavigationDrawerFragment);
 		}
 
+		Bundle args = new Bundle();
+		args.putSerializable("gamestate", gameState);
+
 		switch (fragment) {
 			case AVERAGE_PRICES:
-				currentFragment = new FragmentAveragePrices(this, gameState);
+				currentFragment = new FragmentAveragePrices();
 				break;
 			case BANK:
-				currentFragment = new FragmentBank(gameState);
+				currentFragment = new FragmentBank();
 				break;
 			case BUY_CARGO:
-				currentFragment = new FragmentBuyCargo(gameState);
+				currentFragment = new FragmentBuyCargo();
 				break;
 			case BUY_EQUIPMENT:
-				currentFragment = new FragmentBuyEquipment(gameState);
+				currentFragment = new FragmentBuyEquipment();
 				break;
 			case BUY_NEW_SHIP:
-				currentFragment = new FragmentBuyNewShip(this, gameState);
+				currentFragment = new FragmentBuyNewShip();
 				break;
 			case COMMANDER_STATUS:
-				currentFragment = new FragmentCommanderStatus(this, gameState);
+				currentFragment = new FragmentCommanderStatus();
 				break;
 			case DUMP:
-				currentFragment = new FragmentDumpCargo(gameState);
+				currentFragment = new FragmentDumpCargo();
 				break;
 			case ENCOUNTER:
-				currentFragment = new FragmentEncounter(this, gameState);
+				currentFragment = new FragmentEncounter();
 				break;
 			case GALACTIC_CHART:
-				currentFragment = new FragmentGalacticChart(this, gameState);
+				currentFragment = new FragmentGalacticChart();
 				break;
 			case NEW_GAME:
-				currentFragment = new FragmentStartNewGame(this);
+				currentFragment = new FragmentStartNewGame();
 				break;
 			case OPTIONS:
-				currentFragment = new FragmentOptions(gameState);
+				currentFragment = new FragmentOptions();
 				break;
 			case PERSONNEL_ROSTER:
-				currentFragment = new FragmentPersonnelRoster(this, gameState);
+				currentFragment = new FragmentPersonnelRoster();
 				break;
 			case PLUNDER:
-				currentFragment = new FragmentPlunderCargo(gameState);
+				currentFragment = new FragmentPlunderCargo();
 				break;
 			case SELL_CARGO:
-				currentFragment = new FragmentSellCargo(gameState);
+				currentFragment = new FragmentSellCargo();
 				break;
 			case SELL_EQUIPMENT:
-				currentFragment = new FragmentSellEquipment(gameState);
+				currentFragment = new FragmentSellEquipment();
 				break;
 			case SHIPYARD:
-				currentFragment = new FragmentShipyard(gameState);
+				currentFragment = new FragmentShipyard();
 				break;
 			case SHIP_INFO:
-				currentFragment = new FragmentShipInfo(this, gameState);
+				currentFragment = new FragmentShipInfo();
 				break;
 			case SHORTCUTS:
-				currentFragment = new FragmentShortcuts(this, gameState);
+				currentFragment = new FragmentShortcuts();
 				break;
 			case SHORT_RANGE_CHART:
-				currentFragment = new FragmentShortRangeChart(this, gameState);
+				currentFragment = new FragmentShortRangeChart();
 				break;
 			case SYSTEM_INFORMATION:
-				currentFragment = new FragmentSystemInformation(this, gameState);
+				currentFragment = new FragmentSystemInformation();
 				break;
 			case VERY_RARE_CHEAT:
-				currentFragment = new FragmentVeryRare(gameState);
+				currentFragment = new FragmentVeryRare();
 				break;
 			case WARP_SYSTEM_INFORMATION:
-				currentFragment = new FragmentWarpSystemInformation(this, gameState);
+				currentFragment = new FragmentWarpSystemInformation();
 				break;
 			default:
 				return;
 		}
+
+		currentFragment.setArguments(args);
 		transaction.replace(R.id.container, currentFragment);
 		transaction.commit();
 		currentState = fragment;
@@ -845,6 +875,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	@SuppressWarnings("UnusedParameters")
 	public void StartNewGameStartGameCallback(View view) {
 		gameState = ((FragmentStartNewGame) currentFragment).getGameState();
+		GameState.isValid = true;
 		this.saveGame();
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 	}
@@ -2219,7 +2250,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	@SuppressWarnings("UnusedParameters")
 	public void btnDoWarp(View view) {
-		DoWarp(false);
+		if (STDemo.canContinue(gameState)) {
+			DoWarp(false);
+		}
 	}
 
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {
@@ -5711,11 +5744,25 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	}
 
 	public void saveGame() {
+		if (!GameState.isValid) {
+			return;
+		}
 		SaveGame_v110 sv101 = new SaveGame_v110(gameState);
 
+		String state = Environment.getExternalStorageState();
+		if (!Environment.MEDIA_MOUNTED.equals(state)) {
+			Toast.makeText(this, "Cannot save! No medium found!", Toast.LENGTH_LONG).show();
+			return;
+		}
+
 		FileOutputStream fos = null;
+		File f;
 		try {
-			fos = mContext.openFileOutput("savegame.txt", Context.MODE_PRIVATE);
+			File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+			//noinspection ResultOfMethodCallIgnored
+			path.mkdirs();
+			f = new File(path, "savegame.txt");
+			fos = new FileOutputStream(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -5758,6 +5805,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	public void btnDestroyed() {
 		mContext.deleteFile("savegame.txt");
+		File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+		File f = new File(path, "savegame.txt");
+		//noinspection ResultOfMethodCallIgnored
+		f.delete();
+		GameState.isValid = false;
 		EndOfGame(GameState.KILLED);
 	}
 

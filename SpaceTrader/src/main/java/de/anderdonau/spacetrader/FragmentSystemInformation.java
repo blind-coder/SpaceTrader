@@ -18,7 +18,7 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +29,7 @@ import android.widget.TextView;
 import java.util.Random;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.Shields;
@@ -38,7 +39,6 @@ import de.anderdonau.spacetrader.DataTypes.SpecialEvents;
 
 public class FragmentSystemInformation extends MyFragment {
 	Main main;
-	private GameState gameState;
 	String[][] NewsPaperNames = {{"* Arsenal", "The Grassroot", "Kick It!"},    /* Anarchy */
 		{"The Daily Worker", "The People's Voice", "* Proletariat"},    /* Capitalist */
 		{"Planet News", "* Times", "Interstate Update"},      /* Communist */
@@ -94,14 +94,19 @@ public class FragmentSystemInformation extends MyFragment {
 				"Last Human Judge Retires.", "Software Bug Causes Mass Confusion."},
 			{"High Priest to Hold Special Services.", "Temple Restoration Fund at 81%.",
 				"Sacred Texts on Public Display.", "Dozen Blasphemers Excommunicated!"}};
+	private GameState gameState;
 
-	public FragmentSystemInformation(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		this.main = (Main) activity;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Bundle args = getArguments();
+		this.gameState = (GameState) args.getSerializable("gamestate");
+
 		final View rootView = inflater.inflate(R.layout.fragment_system_information, container, false);
 		SolarSystem CURSYSTEM = gameState.SolarSystem[gameState.Mercenary[0].curSystem];
 		CURSYSTEM.visited = true;
@@ -133,8 +138,8 @@ public class FragmentSystemInformation extends MyFragment {
 		if ((CURSYSTEM.special < 0) ||
 			(CURSYSTEM.special == GameState.BUYTRIBBLE && gameState.Ship.tribbles <= 0) ||
 			(CURSYSTEM.special == GameState.ERASERECORD && gameState.PoliceRecordScore >= GameState.DUBIOUSSCORE) ||
-			(CURSYSTEM.special == GameState.CARGOFORSALE && (gameState.Ship.FilledCargoBays() > gameState
-				.Ship.TotalCargoBays() - 3)) ||
+			(CURSYSTEM.special == GameState.CARGOFORSALE && (gameState.Ship
+				.FilledCargoBays() > gameState.Ship.TotalCargoBays() - 3)) ||
 			((CURSYSTEM.special == GameState.DRAGONFLY || CURSYSTEM.special == GameState.JAPORIDISEASE ||
 				CURSYSTEM.special == GameState.ALIENARTIFACT || CURSYSTEM.special == GameState.AMBASSADORJAREK ||
 				CURSYSTEM.special == GameState.EXPERIMENT) && (gameState.PoliceRecordScore < GameState.DUBIOUSSCORE)) ||
@@ -242,7 +247,8 @@ public class FragmentSystemInformation extends MyFragment {
 					public void execute(Popup popup, View view) {
 						showNewspaperPopup();
 					}
-				}, main.cbShowNextPopup);
+				}, main.cbShowNextPopup
+				);
 				main.addPopup(popup);
 			} else {
 				showNewspaperPopup();
@@ -560,7 +566,8 @@ public class FragmentSystemInformation extends MyFragment {
 					public void execute(Popup popup, View view) {
 						specialStep2();
 					}
-				}, main.cbShowNextPopup);
+				}, main.cbShowNextPopup
+			);
 			main.addPopup(popup);
 		}
 	}
@@ -602,7 +609,8 @@ public class FragmentSystemInformation extends MyFragment {
 								gameState.ReactorStatus = 1;
 								main.addPopup(popup1);
 							}
-						}, main.cbShowNextPopup);
+						}, main.cbShowNextPopup
+					);
 					main.addPopup(popup);
 					return;
 				}

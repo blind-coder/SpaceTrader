@@ -18,7 +18,6 @@
 
 package de.anderdonau.spacetrader;
 
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,22 +25,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import de.anderdonau.spacetrader.DataTypes.PoliceRecord;
 import de.anderdonau.spacetrader.DataTypes.Reputation;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 
 public class FragmentCommanderStatus extends MyFragment {
-	Main      main;
-	GameState gameState;
-
-	public FragmentCommanderStatus(Main main, GameState gameState) {
-		this.main = main;
-		this.gameState = gameState;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		this.gameState = (GameState) getArguments().getSerializable("gamestate");
 		final View rootView = inflater.inflate(R.layout.fragment_commander_status, container, false);
 		CrewMember COMMANDER = gameState.Mercenary[0];
 		Ship Ship = gameState.Ship;

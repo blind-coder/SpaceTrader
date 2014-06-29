@@ -58,7 +58,6 @@
 	<TableLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignRight="@+id/textView4"
 
 			android:layout_alignLeft="@+id/txtNameCrew1"
 			android:layout_below="@+id/txtNameCrew1"
@@ -73,10 +72,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Pilot:"
-					android:id="@+id/textView2"
-					android:layout_below="@+id/btnFireCrew1"
-					android:layout_alignParentLeft="true"
-
 					android:layout_column="0"/>
 
 			<TextView
@@ -85,8 +80,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtPilotCrew1"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -94,7 +87,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text=" "
-					android:id="@+id/textView6"
 					android:layout_column="2"/>
 
 			<TextView
@@ -102,10 +94,7 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Engineer:"
-					android:id="@+id/textView5"
 					android:layout_column="3"
-					android:layout_centerVertical="true"
-					android:layout_alignParentLeft="true"
 					/>
 
 			<TextView
@@ -114,8 +103,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtEngineerCrew1"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
@@ -129,9 +116,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Trader:"
-					android:id="@+id/textView3"
-					android:layout_below="@+id/btnFireCrew1"
-					android:layout_toLeftOf="@+id/tableLayoutCrew1"
 					/>
 
 			<TextView
@@ -140,8 +124,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtTraderCrew1"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -149,7 +131,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text=" "
-					android:id="@+id/textView7"
 					android:layout_column="2"/>
 
 			<TextView
@@ -157,9 +138,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Fighter:"
-					android:id="@+id/textView4"
-					android:layout_above="@+id/textView5"
-					android:layout_alignParentRight="true"
 
 					android:layout_column="3"/>
 
@@ -169,8 +147,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtFighterCrew1"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
@@ -202,7 +178,6 @@
 	<TableLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignRight="@+id/textView4"
 
 			android:layout_alignLeft="@+id/txtNameCrew2"
 			android:layout_below="@+id/txtNameCrew2"
@@ -217,9 +192,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Pilot:"
-					android:id="@+id/textView2"
-					android:layout_below="@+id/btnFireCrew2"
-					android:layout_alignParentLeft="true"
 
 					android:layout_column="0"/>
 
@@ -229,8 +201,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtPilotCrew2"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -238,7 +208,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text=" "
-					android:id="@+id/textView6"
 					android:layout_column="2"/>
 
 			<TextView
@@ -246,10 +215,7 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Engineer:"
-					android:id="@+id/textView5"
 					android:layout_column="3"
-					android:layout_centerVertical="true"
-					android:layout_alignParentLeft="true"
 					/>
 
 			<TextView
@@ -258,8 +224,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtEngineerCrew2"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
@@ -273,9 +237,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Trader:"
-					android:id="@+id/textView3"
-					android:layout_below="@+id/btnFireCrew2"
-					android:layout_toLeftOf="@+id/tableLayoutCrew1"
 					/>
 
 			<TextView
@@ -284,8 +245,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtTraderCrew2"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -293,7 +252,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text=" "
-					android:id="@+id/textView7"
 					android:layout_column="2"/>
 
 			<TextView
@@ -301,9 +259,6 @@
 					android:layout_height="wrap_content"
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Fighter:"
-					android:id="@+id/textView4"
-					android:layout_above="@+id/textView5"
-					android:layout_alignParentRight="true"
 
 					android:layout_column="3"/>
 
@@ -313,8 +268,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtFighterCrew2"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
@@ -345,7 +298,6 @@
 	<TableLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignRight="@+id/textView4"
 
 			android:layout_alignLeft="@+id/txtNameCrewNew"
 			android:layout_below="@+id/txtNameCrewNew"
@@ -361,8 +313,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Pilot:"
 					android:id="@+id/textView2"
-					android:layout_below="@+id/btnHireCrewNew"
-					android:layout_alignParentLeft="true"
 
 					android:layout_column="0"/>
 
@@ -372,8 +322,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtPilotCrewNew"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -391,8 +339,6 @@
 					android:text="Engineer:"
 					android:id="@+id/textView5"
 					android:layout_column="3"
-					android:layout_centerVertical="true"
-					android:layout_alignParentLeft="true"
 					/>
 
 			<TextView
@@ -401,8 +347,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtEngineerCrewNew"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
@@ -417,8 +361,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Trader:"
 					android:id="@+id/textView3"
-					android:layout_below="@+id/btnHireCrewNew"
-					android:layout_toLeftOf="@+id/tableLayoutCrew1"
 					/>
 
 			<TextView
@@ -427,8 +369,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtTraderCrewNew"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 			<TextView
@@ -445,8 +385,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="Fighter:"
 					android:id="@+id/textView4"
-					android:layout_above="@+id/textView5"
-					android:layout_alignParentRight="true"
 
 					android:layout_column="3"/>
 
@@ -456,8 +394,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="10"
 					android:id="@+id/txtFighterCrewNew"
-					android:layout_toRightOf="@+id/textView2"
-					android:layout_alignTop="@+id/textView2"
 					android:layout_column="1"/>
 
 		</TableRow>
