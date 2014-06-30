@@ -244,7 +244,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		 * additional check for cheatcode
 		 */
 		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
-		final boolean hideAds = settings.getBoolean("hideAds", false) || STDemo.showAds();
+		final boolean hideAds = settings.getBoolean("hideAds", false);
 		if (adView == null) {
 			adView = (AdView) findViewById(R.id.adView);
 		}
@@ -2260,9 +2260,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	@SuppressWarnings("UnusedParameters")
 	public void btnDoWarp(View view) {
-		if (STDemo.canContinue(gameState)) {
-			DoWarp(false);
-		}
+		DoWarp(false);
 	}
 
 	public int NextSystemWithinRange(SolarSystem Current, boolean Back) {

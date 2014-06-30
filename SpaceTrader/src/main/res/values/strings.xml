@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (c) 2014 Benjamin Schieder
   ~
@@ -18,6 +19,7 @@
   -->
 <resources>
 
+	<string name="app_name" formatted="false">SpaceTrader</string>
 	<string name="title_section1" formatted="false">Section 1</string>
 	<string name="title_section2" formatted="false">Section 2</string>
 	<string name="title_section3" formatted="false">Section 3</string>
