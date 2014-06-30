@@ -1,4 +1,12 @@
 
+Mon Jun 30 19:20:25 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.2.4
+ * Change: correctly use empty constructors for Fragments and use setArguments
+ instead.
+ * Change: Write savegame to sdcard
+ * Change: show First Steps help on first new game started
+
 Tue Jun 24 08:21:29 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de> 
  * Tag version: 1.2.1
  * Fix: buttons overlaying with text in encounter.
