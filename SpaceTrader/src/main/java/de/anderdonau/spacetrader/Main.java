@@ -5905,7 +5905,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
 				(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
 					"retired on an utopian moon")), buf, buf2
-		), "", "OK", "Tweet", cbShowNextPopup, new Popup.buttonCallback() {
+		), "", "OK", "Share", cbShowNextPopup, new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
 				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
