@@ -5908,17 +5908,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		), "", "OK", "Share", cbShowNextPopup, new Popup.buttonCallback() {
 			@Override
 			public void execute(Popup popup, View view) {
-				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-				sharingIntent.setType("text/plain");
-				sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Space Trader");
-				sharingIntent.putExtra(Intent.EXTRA_TEXT, String.format(
+				String subject = "Space Trader";
+				String body = String.format(
 						"I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50),
 						((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
 							(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
 								"retired on an utopian moon"))
-					)
 				);
-				startActivity(Intent.createChooser(sharingIntent, "Share score"));
+				onShareClick(subject, body);
 			}
 		});
 		popupQueue.push(popup);
@@ -5928,7 +5925,19 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			ViewHighScores();
 		}
 
+		GameState.isValid = false;
 		changeFragment(FRAGMENTS.NEW_GAME);
+	}
+
+	public void onShareClick(String subject, String body) {
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+
+		shareIntent.putExtra(Intent.EXTRA_TEXT, body);
+		shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+		shareIntent.setType("text/plain");
+
+		startActivity(shareIntent);
 	}
 
 	void ViewHighScores() {
