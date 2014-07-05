@@ -29,17 +29,10 @@
 
 	<!-- As the main content view, the view below consumes the entire
 			 space available using match_parent in both dimensions. -->
-	<LinearLayout
+	<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:orientation="vertical">
-
-		<com.google.android.gms.ads.AdView
-				android:id="@+id/adView"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				ads:adUnitId="ca-app-pub-2751649723763471/5536399743"
-				ads:adSize="BANNER"/>
 
 		<FrameLayout
 				android:id="@+id/container"
@@ -48,8 +41,23 @@
 				android:paddingTop="@dimen/activity_horizontal_margin"
 				android:paddingRight="@dimen/activity_vertical_margin"
 				android:paddingBottom="@dimen/activity_horizontal_margin"
-				android:paddingLeft="@dimen/activity_vertical_margin"/>
-	</LinearLayout>
+				android:paddingLeft="@dimen/activity_vertical_margin"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentRight="true"
+				android:layout_above="@+id/adView"/>
+
+		<com.google.android.gms.ads.AdView
+				android:id="@+id/adView"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				ads:adUnitId="ca-app-pub-2751649723763471/5536399743"
+				ads:adSize="BANNER"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="false"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentBottom="true"/>
+	</RelativeLayout>
 
 	<!-- android:layout_gravity="start" tells DrawerLayout to treat
 			 this as a sliding drawer on the left side for left-to-right
