@@ -115,16 +115,31 @@ public class FragmentGalacticChart extends MyFragment {
 						tv.setText(main.SolarSystemName[s.nameIndex]);
 						if (system == navigationChart.mSelectedSystem) {
 							Popup popup;
-							popup = new Popup(main, "Track system",
-								"Do you want to track the distance to " + main.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
-								"", "Yes", "No", new Popup.buttonCallback() {
-								@Override
-								public void execute(Popup popup, View view) {
-									gameState.TrackedSystem = system;
-									navigationChart.invalidate();
-								}
-							}, main.cbShowNextPopup
-							);
+
+							if (system == gameState.TrackedSystem) {
+								popup = new Popup(main, "Stop tracking system", String.format(
+									"Do you want to stop tracking the %s system?",
+									main.SolarSystemName[gameState.SolarSystem[system].nameIndex]), "", "Yes", "No",
+									new Popup.buttonCallback() {
+										@Override
+										public void execute(Popup popup, View view) {
+											gameState.TrackedSystem = -1;
+											navigationChart.invalidate();
+										}
+									}, main.cbShowNextPopup
+								);
+							} else {
+								popup = new Popup(main, "Track system",
+									"Do you want to track the distance to " + main.SolarSystemName[gameState.SolarSystem[system].nameIndex] + "?",
+									"", "Yes", "No", new Popup.buttonCallback() {
+									@Override
+									public void execute(Popup popup, View view) {
+										gameState.TrackedSystem = system;
+										navigationChart.invalidate();
+									}
+								}, main.cbShowNextPopup
+								);
+							}
 							main.addPopup(popup);
 						} else {
 							navigationChart.mSelectedSystem = system;
