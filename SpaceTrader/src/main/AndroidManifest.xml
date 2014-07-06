@@ -17,10 +17,11 @@
   ~ along with this program; if not, write to the Free Software
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.anderdonau.spacetrader"
-          android:versionCode="124"
-          android:versionName="1.2.4">
+          android:versionCode="125"
+          android:versionName="1.2.5">
 
 <uses-sdk
 			android:minSdkVersion="14"
