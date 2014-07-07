@@ -1,4 +1,20 @@
 
+Mon Jul  7 20:08:40 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.2.6
+ * Fix: force close when cycling through systems when low on fuel or only one
+   system is in range.
+ * Fix: force close when selling in-orbit via "Max" button. Travel() wasn't
+   called.
+
+Sun Jul  6 10:22:55 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.2.5
+ * Fix: When clicking on the currently tracked system, ask the player if
+ s/he wants to stop tracking the system.
+ * Change: Move adview to bottom as suggested by a few people.
+ * Change Make Ship Info screen scrollable on small devices.
+
 Mon Jun 30 19:20:25 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
 
  * Tag version: 1.2.4
