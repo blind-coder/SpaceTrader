@@ -2243,7 +2243,17 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	}
 
 	public void btnNextSystem(View view) {
-		gameState.WarpSystem = NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev);
+		int nextSystem;
+		nextSystem = NextSystemWithinRange(WarpSystem, view.getId() == R.id.btnPriceListPrev);
+		if (nextSystem < 0 || nextSystem >= gameState.SolarSystem.length) {
+			Toast.makeText(this, "Couldn't find another system within range!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (nextSystem == gameState.WarpSystem) {
+			Toast.makeText(this, "No other system in range!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		gameState.WarpSystem = nextSystem;
 		WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
 		changeFragment(FRAGMENTS.AVERAGE_PRICES);
 	}
