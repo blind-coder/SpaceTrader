@@ -3134,6 +3134,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 						Tradeitems.mTradeitems[i].name), "", "OK", cbShowNextPopup);
 					popupQueue.push(popup1);
 					showNextPopup();
+					Travel();
 				}
 			}
 			);
@@ -3162,6 +3163,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			}
 			if (gameState.BuyPrice[i] > Tradeitems.mTradeitems[i].maxTradePrice) {
 				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
+			}
+
+			if (gameState.Opponent.cargo[i] == 0){ // cop-out, yeah. Make it a TODO
+				gameState.Opponent.cargo[i] = 1+(gameState.GetRandom(10));
+				gameState.BuyPrice[i] = 1;
 			}
 
 			String buf = String.format(
