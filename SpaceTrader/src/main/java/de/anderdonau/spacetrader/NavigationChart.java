@@ -19,6 +19,7 @@
 package de.anderdonau.spacetrader;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -44,6 +45,7 @@ public class NavigationChart extends View {
 	protected boolean isShortRange    = true;
 	protected float   mCurrentX       = 0;
 	protected float   mCurrentY       = 0;
+	public int textColor = Color.BLACK;
 
 	public NavigationChart(Context context) {
 		super(context);
@@ -63,6 +65,11 @@ public class NavigationChart extends View {
 
 	public void setMain(Main main) {
 		this.main = main;
+		TypedArray themeArray = main.getTheme().obtainStyledAttributes(
+			new int[]{android.R.attr.textColor});
+		int index = 0;
+		int defaultColourValue = Color.BLACK;
+		this.textColor = themeArray.getColor(index, defaultColourValue);
 	}
 
 	public void setShortRange(boolean isShortRange) {
@@ -198,7 +205,7 @@ public class NavigationChart extends View {
 		paint.setTextAlign(Paint.Align.CENTER);
 		paint.setStyle(Paint.Style.FILL);
 
-		paint.setColor(Color.BLACK);
+		paint.setColor(this.textColor);
 		paint.setStrokeWidth(3);
 
 		if (isShortRange) {
@@ -222,9 +229,8 @@ public class NavigationChart extends View {
 			} else {
 				paint.setColor(Color.GREEN);
 			}
-			canvas.drawCircle(x, y, radius, paint);
 
-			paint.setColor(Color.BLACK);
+			paint.setColor(this.textColor);
 			canvas.drawText(main.SolarSystemName[s.nameIndex], x, y - radius, paint);
 		}
 
@@ -233,7 +239,7 @@ public class NavigationChart extends View {
 
 			x = s.x * Multiplicator;
 			y = s.y * Multiplicator;
-			paint.setColor(Color.BLACK);
+			paint.setColor(this.textColor);
 			canvas.drawCircle(x + radius * 2 + 4, y, radius, paint);
 			for (int r = radius; r >= 0; r--) {
 				paint.setARGB(255, (255 / radius) * r, (255 / radius) * r, 0);
@@ -245,7 +251,7 @@ public class NavigationChart extends View {
 			x = CURSYSTEM.x * Multiplicator;
 			y = CURSYSTEM.y * Multiplicator;
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setColor(Color.BLACK);
+			paint.setColor(this.textColor);
 			paint.setStrokeWidth(5);
 			canvas.drawCircle(x, y, mGameState.Ship.GetFuel() * Multiplicator, paint);
 			paint.setStrokeWidth(0);
@@ -256,8 +262,10 @@ public class NavigationChart extends View {
 			s = mGameState.SolarSystem[mGameState.TrackedSystem];
 			int distToTracked = mGameState.RealDistance(CURSYSTEM, s);
 			if (distToTracked > 0) {
+				paint.setStrokeWidth(3);
 				canvas.drawLine(CURSYSTEM.x * Multiplicator, CURSYSTEM.y * Multiplicator,
 					s.x * Multiplicator, s.y * Multiplicator, paint);
+				paint.setStrokeWidth(0);
 			}
 		}
 
@@ -268,7 +276,7 @@ public class NavigationChart extends View {
 			}
 			SolarSystem from = mGameState.SolarSystem[mGameState.Wormhole[wormholeFrom]];
 			SolarSystem to = mGameState.SolarSystem[mGameState.Wormhole[mDrawWormhole]];
-			paint.setColor(Color.BLACK);
+			paint.setColor(this.textColor);
 			paint.setStrokeWidth(5);
 			canvas.drawLine(from.x * Multiplicator + radius * 2 + WormholeOffset, from.y * Multiplicator,
 				to.x * Multiplicator, to.y * Multiplicator, paint);

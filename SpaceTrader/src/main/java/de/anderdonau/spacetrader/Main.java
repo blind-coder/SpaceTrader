@@ -229,6 +229,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		super.onCreate(savedInstanceState);
 		mContext = getApplicationContext();
 
+		SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		String theme = sp.getString("Theme", "Light");
+		if ("Light".equals(theme)) {
+			setTheme(R.style.AppTheme);
+		} else {
+			setTheme(R.style.AppTheme_Light);
+		}
+
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
 
@@ -423,6 +431,19 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			drawer_layout.closeDrawers();
 		}
 		switch (id) {
+			case R.id.changeTheme:
+				SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
+				SharedPreferences.Editor ed = sp.edit();
+				String theme = sp.getString("Theme", "Light");
+				if ("Light".equals(theme)) {
+					ed.putString("Theme", "Dark");
+				} else {
+					ed.putString("Theme", "Light");
+				}
+				ed.commit();
+				Toast.makeText(this, "Theme change will be applied at next restart.", Toast.LENGTH_LONG)
+					.show();
+				break;
 			case R.id.hotkey1:
 				call = Shortcuts[gameState.Shortcut1][0];
 				break;
