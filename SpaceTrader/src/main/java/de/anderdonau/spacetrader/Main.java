@@ -206,6 +206,24 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			{"Q", "Sell Equipment"}, {"P", "Personnel"}, {"K", "Bank"}, {"I", "System Info"},
 			{"C", "Commander Status"}, {"G", "Galactic Chart"}, {"W", "Warp Chart"}};
 
+	public final int[] planetsDrawableIds  =
+		new int[]{R.drawable.world01, R.drawable.world02, R.drawable.world03, R.drawable.world04,
+			R.drawable.world05, R.drawable.world06, R.drawable.world07, R.drawable.world08,
+			R.drawable.world09, R.drawable.world10, R.drawable.world11, R.drawable.world12,
+			R.drawable.world13, R.drawable.world14, R.drawable.world15, R.drawable.world16,
+			R.drawable.world17, R.drawable.world18, R.drawable.world19, R.drawable.world20};
+	public final int[] lifeLessDrawableIds =
+		new int[]{R.drawable.lifeless01, R.drawable.lifeless02, R.drawable.lifeless03,
+			R.drawable.lifeless04, R.drawable.lifeless05, R.drawable.lifeless06, R.drawable.lifeless07,
+			R.drawable.lifeless08, R.drawable.lifeless09, R.drawable.lifeless10};
+	public final int[] desertDrawableIds   =
+		new int[]{R.drawable.desert01, R.drawable.desert02, R.drawable.desert03, R.drawable.desert04,
+			R.drawable.desert05};
+
+	public Bitmap[] planetsBitmaps;
+	public Bitmap[] lifeLessBitmaps;
+	public Bitmap[] desertBitmaps;
+
 	Handler  delayHandler  = new Handler();
 	Runnable delayRunnable = new Runnable() {
 		@Override
@@ -270,6 +288,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			}
 		}
 
+		populateBitmaps();
+
 		try {
 			File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
 			File f = new File(path, "savegame.txt");
@@ -295,6 +315,21 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				gameState = new GameState(this, "Jameson");
 				changeFragment(FRAGMENTS.NEW_GAME);
 			}
+		}
+	}
+
+	public void populateBitmaps() {
+		planetsBitmaps = new Bitmap[planetsDrawableIds.length];
+		for (int i = 0; i < planetsDrawableIds.length; i++) {
+			planetsBitmaps[i] = BitmapFactory.decodeResource(getResources(), planetsDrawableIds[i]);
+		}
+		desertBitmaps = new Bitmap[desertDrawableIds.length];
+		for (int i = 0; i < desertDrawableIds.length; i++) {
+			desertBitmaps[i] = BitmapFactory.decodeResource(getResources(), desertDrawableIds[i]);
+		}
+		lifeLessBitmaps = new Bitmap[lifeLessDrawableIds.length];
+		for (int i = 0; i < lifeLessDrawableIds.length; i++) {
+			lifeLessBitmaps[i] = BitmapFactory.decodeResource(getResources(), lifeLessDrawableIds[i]);
 		}
 	}
 

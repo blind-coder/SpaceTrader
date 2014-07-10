@@ -19,9 +19,11 @@
 package de.anderdonau.spacetrader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -222,7 +224,30 @@ public class NavigationChart extends View {
 			} else {
 				paint.setColor(Color.GREEN);
 			}
-			canvas.drawCircle(x, y, radius, paint);
+
+			if (s.visited) {
+				Bitmap bitmap;
+				if (s.specialResources == GameState.DESERT) {
+					bitmap = main.desertBitmaps[i % main.desertBitmaps.length];
+				} else if (s.specialResources == GameState.LIFELESS) {
+					bitmap = main.lifeLessBitmaps[i % main.lifeLessBitmaps.length];
+				} else {
+					bitmap = main.planetsBitmaps[i % main.planetsBitmaps.length];
+				}
+				Rect src = new Rect();
+				Rect dst = new Rect();
+				src.top = 0;
+				src.left = 0;
+				src.right = bitmap.getWidth();
+				src.bottom = bitmap.getHeight();
+				dst.top = y - radius;
+				dst.bottom = y + radius;
+				dst.left = x - radius;
+				dst.right = x + radius;
+				canvas.drawBitmap(bitmap, src, dst, paint);
+			} else {
+				canvas.drawCircle(x, y, radius, paint);
+			}
 
 			paint.setColor(Color.BLACK);
 			canvas.drawText(main.SolarSystemName[s.nameIndex], x, y - radius, paint);
