@@ -20,8 +20,10 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -431,19 +433,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			drawer_layout.closeDrawers();
 		}
 		switch (id) {
-			case R.id.changeTheme:
-				SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
-				SharedPreferences.Editor ed = sp.edit();
-				String theme = sp.getString("Theme", "Light");
-				if ("Light".equals(theme)) {
-					ed.putString("Theme", "Dark");
-				} else {
-					ed.putString("Theme", "Light");
-				}
-				ed.commit();
-				Toast.makeText(this, "Theme change will be applied at next restart.", Toast.LENGTH_LONG)
-					.show();
-				break;
 			case R.id.hotkey1:
 				call = Shortcuts[gameState.Shortcut1][0];
 				break;
@@ -2382,6 +2371,44 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 	}
 
+	public void btnChangeTheme(View view) {
+		SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		SharedPreferences.Editor ed = sp.edit();
+		String theme = sp.getString("Theme", "Light");
+		if (view.getId() == R.id.btnDarkTheme) {
+			if ("Dark".equals(theme)) {
+				Toast.makeText(this, "This theme is already selected.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			ed.putString("Theme", "Dark");
+		} else {
+			if ("Light".equals(theme)) {
+				Toast.makeText(this, "This theme is already selected.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			ed.putString("Theme", "Light");
+		}
+		ed.commit();
+		Popup popup = new Popup(this, "Change Theme",
+			"Space Trader must be restarted to change the theme. Do you want to do that now?", "",
+			"Restart now", "Restart later", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				saveGame();
+				Intent mStartActivity = new Intent(getApplicationContext(), Main.class);
+				int mPendingIntentId = Math.abs(gameState.rand.nextInt());
+				PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(),
+					mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+				AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(
+					Context.ALARM_SERVICE);
+				mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+				System.exit(0);
+			}
+		}, cbShowNextPopup
+		);
+		addPopup(popup);
+		showNextPopup();
+	}
 	// FragmentPlunder
 	public void PlunderCargo(int Index, int Amount) {
 		// *************************************************************************

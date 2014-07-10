@@ -63,10 +63,11 @@ public class NavigationChart extends View {
 		this.mGameState = mGameState;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public void setMain(Main main) {
 		this.main = main;
 		TypedArray themeArray = main.getTheme().obtainStyledAttributes(
-			new int[]{android.R.attr.textColor});
+			new int[]{R.attr.navChartDrawColor});
 		int index = 0;
 		int defaultColourValue = Color.BLACK;
 		this.textColor = themeArray.getColor(index, defaultColourValue);

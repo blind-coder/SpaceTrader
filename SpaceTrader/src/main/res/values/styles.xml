@@ -18,23 +18,16 @@
 
 <resources>
 
+	<declare-styleable name="NavigationChart">
+		<attr name="navChartDrawColor" format="color"/>
+	</declare-styleable>
 	<!-- Base application theme. -->
 	<style name="AppTheme" parent="android:Theme.Holo">
-		<item name="android:textColor">#FFFFFF</item>
-		<item name="android:buttonStyle">@style/ButtonStyle</item>
+		<item name="navChartDrawColor">#FFFFFF</item>
 	</style>
 
-	<style name="AppTheme.Light" parent="android:Theme.Holo.Light">
-		<item name="android:textColor">#000000</item>
-		<item name="android:buttonStyle">@style/ButtonStyle.Light</item>
-	</style>
-
-	<style name="ButtonStyle" parent="android:Widget.Holo.Light.Button">
-		<item name="android:textColor">#FFFFFF</item>
-	</style>
-
-	<style name="ButtonStyle.Light" parent="android:Widget.Holo.Light.Button">
-		<item name="android:textColor">#000000</item>
+	<style name="AppTheme.Light" parent="android:Theme.Holo.Light.DarkActionBar">
+		<item name="navChartDrawColor">#000000</item>
 	</style>
 
 	<style name="BuySellButtons">

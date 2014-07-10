@@ -49,13 +49,8 @@
 					android:title="Clear Highscores"
 					/>
 			<item
-				android:id="@+id/menuTwitter"
-			  android:title="\@AndSpaceTrader"
-			  />
-
-			<item
-					android:id="@+id/changeTheme"
-					android:title="Change Theme"
+					android:id="@+id/menuTwitter"
+					android:title="\@AndSpaceTrader"
 					/>
 		</menu>
 	</item>
