@@ -232,9 +232,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
 		String theme = sp.getString("Theme", "Light");
 		if ("Light".equals(theme)) {
-			setTheme(R.style.AppTheme);
-		} else {
 			setTheme(R.style.AppTheme_Light);
+		} else {
+			setTheme(R.style.AppTheme);
 		}
 
 		setContentView(R.layout.activity_welcome_screen);

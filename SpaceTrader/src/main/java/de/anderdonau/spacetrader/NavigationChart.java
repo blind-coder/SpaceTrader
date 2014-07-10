@@ -230,6 +230,8 @@ public class NavigationChart extends View {
 				paint.setColor(Color.GREEN);
 			}
 
+			canvas.drawCircle(x, y, radius, paint);
+
 			paint.setColor(this.textColor);
 			canvas.drawText(main.SolarSystemName[s.nameIndex], x, y - radius, paint);
 		}
