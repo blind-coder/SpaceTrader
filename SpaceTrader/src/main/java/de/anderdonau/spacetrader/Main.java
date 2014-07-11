@@ -2397,6 +2397,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				saveGame();
 				Intent mStartActivity = new Intent(getApplicationContext(), Main.class);
 				int mPendingIntentId = Math.abs(gameState.rand.nextInt());
+				//noinspection ConstantConditions
 				PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(),
 					mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
 				AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(
