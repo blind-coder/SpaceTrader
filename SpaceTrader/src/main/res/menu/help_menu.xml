@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2014 Benjamin Schieder
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="de.anderdonau.spacetrader.Main">
+	<item
+			android:id="@+id/submenuHelp"
+			android:title="Help"
+			android:showAsAction="ifRoom|withText">
+		<menu>
+			<item
+					android:id="@+id/menuHelpCurrentScreen"
+					android:title="Current Screen"/>
+			<item
+					android:id="@+id/menuHelpMenu"
+					android:title="Menu"/>
+			<item
+					android:id="@+id/menuHelpHowToPlay"
+					android:title="How To Play"/>
+			<item
+					android:id="@+id/menuHelpTrading"
+					android:title="Trading"/>
+			<item
+					android:id="@+id/menuHelpTravelling"
+					android:title="Travelling"/>
+			<item
+					android:id="@+id/menuHelpShipEquipment"
+					android:title="Ship Equipment"/>
+			<item
+					android:id="@+id/menuHelpSkills"
+					android:title="Skill"/>
+			<item
+					android:id="@+id/menuHelpFirstSteps"
+					android:title="First Step"/>
+			<item
+					android:id="@+id/menuHelpAcknowledgements"
+					android:title="Acknowledgements"/>
+			<item
+					android:id="@+id/menuHelpCredits"
+					android:title="Credits"/>
+			<item
+					android:id="@+id/menuHelpLicense"
+					android:title="License"/>
+		</menu>
+	</item>
+</menu>
