@@ -269,9 +269,6 @@
 					android:textAppearance="?android:attr/textAppearanceMedium"
 					android:text="This system is out of range!"
 					android:id="@+id/strRemoteSysOutOfRange"
-					android:layout_below="@+id/strDescTravelCosts"
-					android:layout_alignParentLeft="true"
-
 					android:textStyle="bold"/>
 		</LinearLayout>
 	</ScrollView>
@@ -298,10 +295,6 @@
 					android:layout_height="wrap_content"
 					android:text="Price List"
 					android:id="@+id/btnRemoteSysPriceList"
-					android:layout_above="@+id/btnShortRangeChart"
-					android:layout_alignParentLeft="true"
-
-					android:layout_toLeftOf="@+id/btnRemoteSysWarp"
 					android:onClick="btnAveragePricesForm"
 					android:singleLine="true"
 					android:ellipsize="marquee"/>
@@ -312,10 +305,6 @@
 					android:text="Short Range Chart"
 					android:id="@+id/btnShortRangeChart"
 					android:onClick="btnShortRangeChart"
-					android:layout_alignParentLeft="true"
-
-					android:layout_alignParentBottom="true"
-					android:layout_toLeftOf="@+id/btnRemoteSysWarp"
 					android:singleLine="true"
 					android:ellipsize="marquee"/>
 		</LinearLayout>
@@ -329,13 +318,10 @@
 
 			<de.anderdonau.spacetrader.DataTypes.STButton
 					android:layout_width="match_parent"
-					android:layout_height="fill_parent"
+					android:layout_height="wrap_content"
 					android:text="WARP"
 					android:id="@+id/btnRemoteSysWarp"
 					android:textSize="50dp"
-					android:layout_alignParentRight="true"
-
-					android:layout_alignParentBottom="true"
 					android:onClick="btnDoWarp"
 					android:singleLine="true"
 					android:ellipsize="marquee"
