@@ -737,9 +737,17 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		} else if (call.equals("C")) {
 			changeFragment(FRAGMENTS.COMMANDER_STATUS);
 		} else if (call.equals("G")) {
-			changeFragment(FRAGMENTS.GALACTIC_CHART);
+			if (currentState == FRAGMENTS.GALACTIC_CHART) {
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			} else {
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
+			}
 		} else if (call.equals("W")) {
-			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			if (currentState == FRAGMENTS.SHORT_RANGE_CHART) {
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
+			} else {
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			}
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
