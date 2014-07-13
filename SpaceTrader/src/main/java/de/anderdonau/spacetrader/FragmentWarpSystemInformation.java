@@ -73,7 +73,14 @@ public class FragmentWarpSystemInformation extends MyFragment {
 				gameState.Debt / 10, 1) : 0) + gameState.WormholeTax(COMMANDER.curSystem, main.WarpSystem)
 		));
 
-		if (Distance > 0) {
+		if (Distance == 0) {
+			Button btn = (Button) rootView.findViewById(R.id.btnRemoteSysWarp);
+			btn.setVisibility(View.INVISIBLE);
+			btn = (Button) rootView.findViewById(R.id.btnRemoteSysPriceList);
+			btn.setVisibility(View.INVISIBLE);
+			tv = (TextView) rootView.findViewById(R.id.strRemoteSysOutOfRange);
+			tv.setVisibility(View.INVISIBLE);
+		} else {
 			if (gameState.WormholeExists(COMMANDER.curSystem,
 				main.WarpSystem) || Distance <= gameState.Ship.GetFuel()) {
 				Button btn = (Button) rootView.findViewById(R.id.btnRemoteSysWarp);
