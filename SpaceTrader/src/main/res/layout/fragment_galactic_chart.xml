@@ -72,8 +72,6 @@
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						android:text="Antedi"
 						android:id="@+id/galChartName"
-						android:layout_above="@+id/galChartDetails"
-						android:layout_alignParentLeft="true"
 						android:layout_weight="1"/>
 
 				<TextView
@@ -82,8 +80,6 @@
 						android:textAppearance="?android:attr/textAppearanceSmall"
 						android:text="52 parsecs"
 						android:id="@+id/galChartDistance"
-						android:layout_alignBottom="@+id/galChartName"
-						android:layout_alignRight="@+id/galChartDetails"
 						android:layout_weight="1"
 						android:gravity="right"/>
 			</LinearLayout>
@@ -110,8 +106,6 @@
 					android:layout_height="wrap_content"
 					android:text="J"
 					android:id="@+id/btnJump"
-					android:layout_alignBottom="@+id/galChartFind"
-					android:layout_toLeftOf="@+id/galChartFind"
 					android:onClick="SuperWarpButtonCallback"/>
 
 			<de.anderdonau.spacetrader.DataTypes.STButton
@@ -119,9 +113,6 @@
 					android:layout_height="wrap_content"
 					android:text="Find"
 					android:id="@+id/galChartFind"
-					android:layout_alignParentBottom="true"
-					android:layout_alignParentRight="true"
-
 					style="@style/BuySellButtons"
 					android:onClick="btnGalacticChartFind"
 					android:ellipsize="marquee"
