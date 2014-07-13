@@ -21,276 +21,326 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".WelcomeScreen"
+                android:orientation="vertical"
 		>
 
 	<TextView
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:text="System Information"
 			android:id="@+id/textView"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
-			android:textStyle="bold"/>
+			android:textStyle="bold"
+			android:gravity="center_horizontal"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="0dp"
+			android:layout_marginTop="0dp"/>
 
-	<TextView
-			android:layout_width="wrap_content"
+	<ScrollView
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Name:"
-			android:id="@+id/strDescName"
+			android:id="@+id/scrollView"
 			android:layout_below="@+id/textView"
+			android:layout_above="@+id/buttonGroup">
+
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+			<RelativeLayout
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Name:"
+						android:id="@+id/strDescName"
+						android:layout_below="@+id/textView"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Size:"
+						android:id="@+id/strDescSize"
+						android:layout_below="@+id/strDescName"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Tech Level:"
+						android:id="@+id/strDescTechLevel"
+						android:layout_below="@+id/strDescSize"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Government:"
+						android:id="@+id/strDescGovernment"
+						android:layout_below="@+id/strDescTechLevel"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Distance:"
+						android:id="@+id/strDescDistance"
+						android:layout_below="@+id/strDescGovernment"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Police:"
+						android:id="@+id/strDescPolice"
+						android:layout_below="@+id/strDescDistance"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Pirates:"
+						android:id="@+id/strDescPirates"
+						android:layout_below="@+id/strDescPolice"
+						android:layout_alignParentLeft="true"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Special resources:"
+						android:id="@+id/strDescResources"
+						android:layout_below="@+id/strDescPirates"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Travel costs:"
+						android:id="@+id/strDescTravelCosts"
+						android:layout_below="@+id/strDescResources"
+						android:layout_alignParentLeft="true"
+
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Acamar"
+						android:id="@+id/strRemoteSysInfoName"
+						android:layout_alignTop="@+id/strDescName"
+						android:layout_toRightOf="@+id/strDescName"
+
+
+						android:singleLine="false"
+						android:gravity="right"
+						android:layout_alignParentRight="true"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Large"
+						android:id="@+id/strRemoteSysInfoSize"
+						android:layout_alignTop="@+id/strDescSize"
+						android:layout_alignParentRight="true"
+
+						android:layout_toRightOf="@+id/strDescSize"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Hi-Tech"
+						android:id="@+id/strRemoteSysInfoTechLevel"
+						android:layout_alignParentRight="true"
+
+						android:layout_alignTop="@+id/strDescTechLevel"
+						android:layout_toRightOf="@+id/strDescTechLevel"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Fascist"
+						android:id="@+id/strRemoteSysInfoGovernment"
+						android:layout_alignTop="@+id/strDescGovernment"
+						android:layout_alignParentRight="true"
+
+						android:layout_toRightOf="@+id/strDescGovernment"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="12 parsecs"
+						android:id="@+id/strRemoteSysInfoDistance"
+						android:layout_alignParentRight="true"
+
+						android:layout_alignTop="@+id/strDescDistance"
+						android:layout_toRightOf="@+id/strDescDistance"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Minimal"
+						android:id="@+id/strRemoteSysInfoPolice"
+						android:layout_alignParentRight="true"
+
+						android:layout_alignTop="@+id/strDescPolice"
+						android:layout_toRightOf="@+id/strDescPolice"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Abundant"
+						android:id="@+id/strRemoteSysInfoPirates"
+						android:layout_alignTop="@+id/strDescPirates"
+						android:layout_alignParentRight="true"
+						android:layout_toRightOf="@+id/strDescPirates"
+						android:gravity="right"
+						/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:id="@+id/strRemoteSysInfoResources"
+						android:text="No special resources"
+						android:layout_alignTop="@id/strDescResources"
+						android:layout_alignParentRight="true"
+						android:gravity="right"
+						android:layout_toRightOf="@+id/strDescResources"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="12 cr."
+						android:id="@+id/strRemoteSysInfoCosts"
+						android:layout_alignParentRight="true"
+						android:gravity="right"
+						android:layout_toRightOf="@+id/strDescTravelCosts"
+						android:layout_alignTop="@+id/strDescTravelCosts"/>
+			</RelativeLayout>
+
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="This system is out of range!"
+					android:id="@+id/strRemoteSysOutOfRange"
+					android:layout_below="@+id/strDescTravelCosts"
+					android:layout_alignParentLeft="true"
+
+					android:textStyle="bold"/>
+		</LinearLayout>
+	</ScrollView>
+
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:baselineAligned="false"
 			android:layout_alignParentLeft="true"
-
-			android:layout_marginTop="28dp"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Size:"
-			android:id="@+id/strDescSize"
-			android:layout_below="@+id/strDescName"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Tech Level:"
-			android:id="@+id/strDescTechLevel"
-			android:layout_below="@+id/strDescSize"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Government:"
-			android:id="@+id/strDescGovernment"
-			android:layout_below="@+id/strDescTechLevel"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Distance:"
-			android:id="@+id/strDescDistance"
-			android:layout_below="@+id/strDescGovernment"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Police:"
-			android:id="@+id/strDescPolice"
-			android:layout_below="@+id/strDescDistance"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Pirates:"
-			android:id="@+id/strDescPirates"
-			android:layout_below="@+id/strDescPolice"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Special resources:"
-			android:id="@+id/strDescResources"
-			android:layout_below="@+id/strDescPirates"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Acamar"
-			android:id="@+id/strRemoteSysInfoName"
-			android:layout_alignTop="@+id/strDescName"
-			android:layout_toRightOf="@+id/strDescName"
-
-
-			android:singleLine="false"
-			android:gravity="right"
-			android:layout_alignParentRight="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Large"
-			android:id="@+id/strRemoteSysInfoSize"
-			android:layout_alignTop="@+id/strDescSize"
+			android:layout_alignParentTop="false"
 			android:layout_alignParentRight="true"
-
-			android:layout_toRightOf="@+id/strDescSize"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Hi-Tech"
-			android:id="@+id/strRemoteSysInfoTechLevel"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescTechLevel"
-			android:layout_toRightOf="@+id/strDescTechLevel"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Fascist"
-			android:id="@+id/strRemoteSysInfoGovernment"
-			android:layout_alignTop="@+id/strDescGovernment"
-			android:layout_alignParentRight="true"
-
-			android:layout_toRightOf="@+id/strDescGovernment"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="12 parsecs"
-			android:id="@+id/strRemoteSysInfoDistance"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescDistance"
-			android:layout_toRightOf="@+id/strDescGovernment"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Minimal"
-			android:id="@+id/strRemoteSysInfoPolice"
-			android:layout_alignParentRight="true"
-
-			android:layout_alignTop="@+id/strDescPolice"
-			android:layout_toRightOf="@+id/strDescPolice"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Abundant"
-			android:id="@+id/strRemoteSysInfoPirates"
-			android:layout_alignTop="@+id/strDescPirates"
-			android:layout_alignParentRight="true"
-			android:layout_toRightOf="@+id/strDescPirates"
-			android:gravity="right"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:id="@+id/strRemoteSysInfoResources"
-			android:text="No special resources"
-			android:layout_alignTop="@id/strDescResources"
-			android:layout_alignParentRight="true"
-			android:gravity="right"
-			android:layout_toRightOf="@+id/strDescResources"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Travel costs:"
-			android:id="@+id/textView2"
-			android:layout_below="@+id/strRemoteSysInfoResources"
-			android:layout_alignParentLeft="true"
-
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="12 cr."
-			android:id="@+id/strRemoteSysInfoCosts"
-			android:layout_below="@+id/strRemoteSysInfoResources"
-			android:layout_alignParentRight="true"
-			android:layout_alignLeft="@+id/strRemoteSysInfoResources"
-			android:gravity="right"
-			/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Short Range Chart"
-			android:id="@+id/button"
-			android:onClick="btnShortRangeChart"
-			android:layout_alignParentLeft="true"
-
 			android:layout_alignParentBottom="true"
-			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
-			android:singleLine="true"
-			android:ellipsize="marquee"/>
+			android:id="@+id/buttonGroup">
 
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Price List"
-			android:id="@+id/btnRemoteSysPriceList"
-			android:layout_above="@+id/button"
-			android:layout_alignParentLeft="true"
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:layout_weight="2">
 
-			android:layout_toLeftOf="@+id/btnRemoteSyWarp"
-			android:onClick="btnAveragePricesForm"
-			android:singleLine="true"
-			android:ellipsize="marquee"/>
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Price List"
+					android:id="@+id/btnRemoteSysPriceList"
+					android:layout_above="@+id/btnShortRangeChart"
+					android:layout_alignParentLeft="true"
 
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="WARP"
-			android:id="@+id/btnRemoteSyWarp"
-			android:textSize="50dp"
-			android:layout_alignParentRight="true"
+					android:layout_toLeftOf="@+id/btnRemoteSysWarp"
+					android:onClick="btnAveragePricesForm"
+					android:singleLine="true"
+					android:ellipsize="marquee"/>
 
-			android:layout_alignParentBottom="true"
-			android:onClick="btnDoWarp"
-			android:singleLine="true"
-			android:ellipsize="marquee"/>
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Short Range Chart"
+					android:id="@+id/btnShortRangeChart"
+					android:onClick="btnShortRangeChart"
+					android:layout_alignParentLeft="true"
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="This system is out of range!"
-			android:id="@+id/strRemoteSysOutOfRange"
-			android:layout_below="@+id/textView2"
-			android:layout_alignParentLeft="true"
+					android:layout_alignParentBottom="true"
+					android:layout_toLeftOf="@+id/btnRemoteSysWarp"
+					android:singleLine="true"
+					android:ellipsize="marquee"/>
+		</LinearLayout>
 
-			android:textStyle="bold"/>
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:layout_weight="3"
+				android:gravity="bottom">
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="match_parent"
+					android:layout_height="fill_parent"
+					android:text="WARP"
+					android:id="@+id/btnRemoteSysWarp"
+					android:textSize="50dp"
+					android:layout_alignParentRight="true"
+
+					android:layout_alignParentBottom="true"
+					android:onClick="btnDoWarp"
+					android:singleLine="true"
+					android:ellipsize="marquee"
+					/>
+		</LinearLayout>
+	</LinearLayout>
 
 </RelativeLayout>
