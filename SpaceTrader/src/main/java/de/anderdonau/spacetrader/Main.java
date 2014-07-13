@@ -803,9 +803,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
 		if (fragment == FRAGMENTS.NEW_GAME || fragment == FRAGMENTS.ENCOUNTER) {
-			mNavigationDrawerFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+			transaction.hide(mNavigationDrawerFragment);
 		} else {
-			mNavigationDrawerFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+			transaction.show(mNavigationDrawerFragment);
 		}
 
 		Bundle args = new Bundle();
