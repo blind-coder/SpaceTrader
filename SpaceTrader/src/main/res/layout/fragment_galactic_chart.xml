@@ -42,59 +42,91 @@
 			android:layout_alignParentRight="true"
 
 			android:layout_below="@+id/textView"
-			android:layout_above="@+id/galChartName"/>
+			android:layout_above="@+id/btnGroup"/>
 
-	<TextView
-			android:layout_width="wrap_content"
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:text="Small Hi-tech Dictatorship"
-			android:id="@+id/galChartDetails"
-			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Antedi"
-			android:id="@+id/galChartName"
-			android:layout_above="@+id/galChartDetails"
-			android:layout_alignParentLeft="true"
-			/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:text="52 parsecs"
-			android:id="@+id/galChartDistance"
-			android:layout_alignBottom="@+id/galChartName"
-			android:layout_alignRight="@+id/galChartDetails"
-			/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="100dp"
-			android:layout_height="wrap_content"
-			android:text="Find"
-			android:id="@+id/galChartFind"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
+			android:baselineAligned="false"
+			android:id="@+id/btnGroup">
 
-			style="@style/BuySellButtons"
-			android:onClick="btnGalacticChartFind"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:layout_weight="1"
+				android:gravity="bottom">
 
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			style="@style/BuySellButtons"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="J"
-			android:id="@+id/btnJump"
-			android:layout_alignBottom="@+id/galChartFind"
-			android:layout_toLeftOf="@+id/galChartFind"
-			android:onClick="SuperWarpButtonCallback"/>
+			<LinearLayout
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content">
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:text="Antedi"
+						android:id="@+id/galChartName"
+						android:layout_above="@+id/galChartDetails"
+						android:layout_alignParentLeft="true"
+						android:layout_weight="1"/>
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:text="52 parsecs"
+						android:id="@+id/galChartDistance"
+						android:layout_alignBottom="@+id/galChartName"
+						android:layout_alignRight="@+id/galChartDetails"
+						android:layout_weight="1"
+						android:gravity="right"/>
+			</LinearLayout>
+
+			<de.anderdonau.spacetrader.DataTypes.STTextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:text="Small Hi-tech Dictatorship"
+					android:id="@+id/galChartDetails"
+					android:singleLine="true"
+					android:ellipsize="marquee"/>
+		</LinearLayout>
+
+		<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:gravity="bottom|right">
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					style="@style/BuySellButtons"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="J"
+					android:id="@+id/btnJump"
+					android:layout_alignBottom="@+id/galChartFind"
+					android:layout_toLeftOf="@+id/galChartFind"
+					android:onClick="SuperWarpButtonCallback"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="100dp"
+					android:layout_height="wrap_content"
+					android:text="Find"
+					android:id="@+id/galChartFind"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentRight="true"
+
+					style="@style/BuySellButtons"
+					android:onClick="btnGalacticChartFind"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
+	</LinearLayout>
 
 </RelativeLayout>
