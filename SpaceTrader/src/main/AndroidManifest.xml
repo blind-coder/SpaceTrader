@@ -20,8 +20,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.anderdonau.spacetrader"
-          android:versionCode="126"
-          android:versionName="1.2.6">
+          android:versionCode="128"
+          android:versionName="1.2.8">
 
 <uses-sdk
 			android:minSdkVersion="14"
@@ -35,9 +35,8 @@
 	<application
 			android:allowBackup="true"
 			android:icon="@drawable/spacetrader"
-			android:label="@string/app_name"
-			android:theme="@style/AppTheme">
-		<activity
+			android:label="@string/app_name">
+	<activity
 				android:name="de.anderdonau.spacetrader.Main"
 				android:label="@string/app_name"
 				android:screenOrientation="portrait">

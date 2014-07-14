@@ -25,9 +25,9 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		tools:context="de.anderdonau.spacetrader.Main"
-		>
+		style="@style/AppTheme">
 
-	<!-- As the main content view, the view below consumes the entire
+<!-- As the main content view, the view below consumes the entire
 			 space available using match_parent in both dimensions. -->
 	<RelativeLayout
 			android:layout_width="match_parent"

@@ -208,5 +208,38 @@
 				android:checked="false"
 				android:onClick="btnSetOption"/>
 
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Select theme"
+				android:id="@+id/textView5"
+				android:layout_below="@+id/chkBoxSaveOnArrival"
+				android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+		<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/textView5"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentRight="true">
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Dark Theme"
+					android:id="@+id/btnDarkTheme"
+					android:layout_weight="1"
+					android:onClick="btnChangeTheme"/>
+
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Light Theme"
+					android:id="@+id/btnLightTheme"
+					android:layout_weight="1"
+					android:onClick="btnChangeTheme"/>
+		</LinearLayout>
+
 	</RelativeLayout>
 </ScrollView>

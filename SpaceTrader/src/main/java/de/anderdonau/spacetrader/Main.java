@@ -20,8 +20,10 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -247,6 +249,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		super.onCreate(savedInstanceState);
 		mContext = getApplicationContext();
 
+		SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		String theme = sp.getString("Theme", "Light");
+		if ("Light".equals(theme)) {
+			setTheme(R.style.AppTheme_Light);
+		} else {
+			setTheme(R.style.AppTheme);
+		}
+
 		setContentView(R.layout.activity_welcome_screen);
 		FragmentManager fragmentManager = getFragmentManager();
 
@@ -408,9 +418,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	public void restoreActionBar() {
 		ActionBar actionBar = getActionBar();
 		assert actionBar != null;
-		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle("Commands");
+		actionBar.setTitle(getString(R.string.app_name));
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -421,8 +431,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			menu.findItem(R.id.hotkey2).setTitle(Shortcuts[gameState.Shortcut2][0]);
 			menu.findItem(R.id.hotkey3).setTitle(Shortcuts[gameState.Shortcut3][0]);
 			menu.findItem(R.id.hotkey4).setTitle(Shortcuts[gameState.Shortcut4][0]);
-		} catch (Exception e) {
-			return false;
+		} catch (Exception ignored) {
 		}
 		return true;
 	}
@@ -431,8 +440,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (mNavigationDrawerFragment != null) {
 			if (!mNavigationDrawerFragment.isDrawerOpen()) {
-				if (currentState != FRAGMENTS.NEW_GAME && currentState != FRAGMENTS.ENCOUNTER) {
-					MenuInflater inflater = getMenuInflater();
+				MenuInflater inflater = getMenuInflater();
+				if (currentState == FRAGMENTS.NEW_GAME || currentState == FRAGMENTS.ENCOUNTER) {
+					inflater.inflate(R.menu.help_menu, menu);
+				} else {
 					inflater.inflate(R.menu.in_game, menu);
 				}
 				restoreActionBar();
@@ -447,9 +458,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME) {
-			return true;
-		}
 		int id = item.getItemId();
 		String call = "";
 		Popup popup;
@@ -554,6 +562,15 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 							"Tapping a system on the galactic chart shows information on that system at the bottom of the screen. Tapping on a wormhole will display a line indicating the system to which the wormhole goes, as well as the name of both systems.\nTapping a system twice will cause that system to be tracked. On the Short-Range chart, a line will indicate the direction to the tracked system. Tapping on a tracked system will turn off tracking.\nSystems you have already visited are blue, unvisited systems are green, and wormholes are black.\nThe Find button allows you to enter a system name, on which the chart will then focus; you also have the option to track the system.";
 						break;
 					case NEW_GAME:
+						helpText =
+							"Welcome, Space Trader! Please enter your name and desired level of difficulty here.\n" +
+								"Also, you have 16 skill points to spare, which you must spend on the four skills a Space Trader must have:\n" +
+								"- The Pilot skill determines how good you are at evading shots fired in your general direction and fleeing from other ships.\n" +
+								"- The Fighter skill is the opposite of the Pilot skill: it defines how good you are at hitting other ships.\n" +
+								"- The Trader skill is feared at space ports as it determines how good you are at haggling prices.\n" +
+								"- The Engineer skill determines how capable you are at keeping your ship in shape and using advanced technology like the cloaking device.\n" +
+								"After you have entered these information, you are ready to start being a Space Trader by hitting 'Start game'. If this is your first game, you will be presented with a 'First Steps' tutorial.\n\n" +
+								"Good luck and have fun!";
 						break;
 					case OPTIONS:
 						helpText =
@@ -755,9 +772,17 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		} else if (call.equals("C")) {
 			changeFragment(FRAGMENTS.COMMANDER_STATUS);
 		} else if (call.equals("G")) {
-			changeFragment(FRAGMENTS.GALACTIC_CHART);
+			if (currentState == FRAGMENTS.GALACTIC_CHART) {
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			} else {
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
+			}
 		} else if (call.equals("W")) {
-			changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			if (currentState == FRAGMENTS.SHORT_RANGE_CHART) {
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
+			} else {
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+			}
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
@@ -904,6 +929,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		transaction.replace(R.id.container, currentFragment);
 		transaction.commit();
 		currentState = fragment;
+
+		invalidateOptionsMenu();
 	}
 
 	/*
@@ -2396,6 +2423,45 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 	}
 
+	public void btnChangeTheme(View view) {
+		SharedPreferences sp = getSharedPreferences("spacetrader", MODE_PRIVATE);
+		SharedPreferences.Editor ed = sp.edit();
+		String theme = sp.getString("Theme", "Light");
+		if (view.getId() == R.id.btnDarkTheme) {
+			if ("Dark".equals(theme)) {
+				Toast.makeText(this, "This theme is already selected.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			ed.putString("Theme", "Dark");
+		} else {
+			if ("Light".equals(theme)) {
+				Toast.makeText(this, "This theme is already selected.", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			ed.putString("Theme", "Light");
+		}
+		ed.commit();
+		Popup popup = new Popup(this, "Change Theme",
+			"Space Trader must be restarted to change the theme. Do you want to do that now?", "",
+			"Restart now", "Restart later", new Popup.buttonCallback() {
+			@Override
+			public void execute(Popup popup, View view) {
+				saveGame();
+				Intent mStartActivity = new Intent(getApplicationContext(), Main.class);
+				int mPendingIntentId = Math.abs(gameState.rand.nextInt());
+				//noinspection ConstantConditions
+				PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(),
+					mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+				AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(
+					Context.ALARM_SERVICE);
+				mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+				System.exit(0);
+			}
+		}, cbShowNextPopup
+		);
+		addPopup(popup);
+		showNextPopup();
+	}
 	// FragmentPlunder
 	public void PlunderCargo(int Index, int Amount) {
 		// *************************************************************************

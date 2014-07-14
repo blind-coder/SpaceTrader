@@ -21,7 +21,6 @@ package de.anderdonau.spacetrader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import de.anderdonau.spacetrader.DataTypes.MyFragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -38,6 +37,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import de.anderdonau.spacetrader.DataTypes.MyFragment;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -110,7 +111,8 @@ public class NavigationDrawerFragment extends MyFragment {
 			android.R.layout.simple_list_item_activated_1, android.R.id.text1,
 			new String[]{"Buy Cargo", "Sell Cargo", "Shipyard", "Buy Equipment", "Sell Equipment",
 				"Personnel Roster", "Bank", "System Information", "Commander Status", "Galactic Chart",
-				"Short Range Chart"}));
+				"Short Range Chart"}
+		));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
@@ -270,6 +272,10 @@ public class NavigationDrawerFragment extends MyFragment {
 	private ActionBar getActionBar() {
 		//noinspection ConstantConditions
 		return getActivity().getActionBar();
+	}
+
+	public void setDrawerLockMode(int lockMode) {
+		mDrawerLayout.setDrawerLockMode(lockMode);
 	}
 
 	/**

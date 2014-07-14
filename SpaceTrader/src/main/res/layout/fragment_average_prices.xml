@@ -77,9 +77,9 @@
 			android:layout_below="@+id/txtPriceListSpecialResources"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentRight="true"
-			android:layout_above="@+id/btnPriceListDiffAvg">
+			android:layout_above="@+id/btnGroup">
 
-		<TableLayout
+	<TableLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:id="@+id/tableLayout"
@@ -398,70 +398,92 @@
 		</TableLayout>
 	</ScrollView>
 
-	<TextView
-			android:layout_width="wrap_content"
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Cash: 11445 cr."
-			android:id="@+id/txtPriceListCash"
-			android:layout_above="@+id/btnPriceListWarp"
-			android:layout_alignParentRight="true"/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Price Differences"
-			android:id="@+id/btnPriceListDiffAvg"
-			android:onClick="btnToggleAverageDiffPrices"
-			android:layout_above="@+id/btnPriceListSysInfo"
-			android:layout_alignRight="@+id/btnPriceListSysInfo"
-			android:layout_alignLeft="@+id/btnPriceListSysInfo"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="System Information"
-			android:id="@+id/btnPriceListSysInfo"
-			android:onClick="btnWarpSystemInformation"
-			android:layout_above="@+id/btnPriceListShortRangeChart"
-			android:layout_alignRight="@+id/btnPriceListShortRangeChart"
-			android:layout_alignLeft="@+id/btnPriceListShortRangeChart"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Short Range Chart"
-			android:id="@+id/btnPriceListShortRangeChart"
-			android:onClick="btnShortRangeChart"
 			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@+id/btnPriceListWarp"
-			android:layout_alignParentBottom="true"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
-
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Bays: 0/15"
-			android:id="@+id/txtPriceListBays"
-			android:layout_above="@+id/txtPriceListCash"
-			android:layout_alignParentRight="true"/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="WARP"
-			android:id="@+id/btnPriceListWarp"
-			android:textSize="50dp"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
-			android:onClick="btnDoWarp"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
+			android:id="@+id/btnGroup"
+			android:baselineAligned="false">
+
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="2">
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Price Differences"
+					android:id="@+id/btnPriceListDiffAvg"
+					android:onClick="btnToggleAverageDiffPrices"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="System Information"
+					android:id="@+id/btnPriceListSysInfo"
+					android:onClick="btnWarpSystemInformation"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Short Range Chart"
+					android:id="@+id/btnPriceListShortRangeChart"
+					android:onClick="btnShortRangeChart"
+					android:layout_alignParentLeft="true"
+					android:layout_toLeftOf="@+id/btnPriceListWarp"
+					android:layout_alignParentBottom="true"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
+
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="3"
+				android:layout_gravity="bottom|right">
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Bays: 0/15"
+					android:id="@+id/txtPriceListBays"
+					android:layout_above="@+id/txtPriceListCash"
+					android:layout_alignParentRight="true"
+					android:layout_gravity="right"/>
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:text="Cash: 11445 cr."
+					android:id="@+id/txtPriceListCash"
+					android:layout_above="@+id/btnPriceListWarp"
+					android:layout_alignParentRight="true"
+					android:layout_gravity="right"/>
+
+			<de.anderdonau.spacetrader.DataTypes.STButton
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="WARP"
+					android:id="@+id/btnPriceListWarp"
+					android:textSize="50dp"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentRight="true"
+					android:onClick="btnDoWarp"
+					android:ellipsize="marquee"
+					android:singleLine="true"/>
+		</LinearLayout>
+	</LinearLayout>
 
 </RelativeLayout>
