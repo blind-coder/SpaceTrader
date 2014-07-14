@@ -60,7 +60,6 @@
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						android:text="Name:"
 						android:id="@+id/strDescName"
-						android:layout_below="@+id/textView"
 						android:layout_alignParentLeft="true"
 
 						/>
