@@ -204,7 +204,6 @@
 				android:id="@+id/chkBoxSaveOnArrival"
 				android:layout_below="@+id/chkBoxDebtReminder"
 				android:layout_alignParentLeft="true"
-
 				android:checked="false"
 				android:onClick="btnSetOption"/>
 
@@ -216,11 +215,21 @@
 				android:layout_below="@+id/chkBoxSaveOnArrival"
 				android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+		<CheckBox
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Experimental graphics"
+				android:id="@+id/chkBoxBetterGfx"
+				android:layout_below="@+id/textView5"
+				android:layout_alignParentLeft="true"
+				android:checked="false"
+				android:onClick="btnSetOption"/>
+
 		<LinearLayout
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_below="@+id/textView5"
+				android:layout_below="@+id/chkBoxBetterGfx"
 				android:layout_alignParentLeft="true"
 				android:layout_alignParentRight="true">
 

@@ -278,7 +278,7 @@ public class NavigationChart extends View {
 				paint.setColor(Color.GREEN);
 			}
 
-			if (s.visited) {
+			if (s.visited && mGameState.BetterGfx) {
 				Bitmap bitmap;
 				if (s.specialResources == GameState.DESERT) {
 					bitmap = main.desertBitmaps[i % main.desertBitmaps.length];

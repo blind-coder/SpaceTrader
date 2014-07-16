@@ -73,6 +73,9 @@ public class FragmentOptions extends MyFragment {
 		checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxSaveOnArrival);
 		checkBox.setChecked(gameState.SaveOnArrival);
 
+		checkBox = (CheckBox) rootView.findViewById(R.id.chkBoxBetterGfx);
+		checkBox.setChecked(gameState.BetterGfx);
+
 		return rootView;
 	}
 }

@@ -67,6 +67,7 @@ import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
+import de.anderdonau.spacetrader.DataTypes.SaveGame_v111;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -313,9 +314,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 		} catch (Exception e) {
 			try {
-				FileInputStream fis = mContext.openFileInput("savegame.txt");
+				File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+				File f = new File(path, "savegame.txt");
+				FileInputStream fis = new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);
-				SaveGame_v110 s = (SaveGame_v110) ois.readObject();
+				SaveGame_v111 s = (SaveGame_v111) ois.readObject();
 				gameState = new GameState(s);
 				GameState.isValid = true;
 				ois.close();
@@ -2447,6 +2450,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				break;
 			case R.id.chkBoxSaveOnArrival:
 				gameState.SaveOnArrival = checkBox.isChecked();
+				break;
+			case R.id.chkBoxBetterGfx:
+				gameState.BetterGfx = checkBox.isChecked();
 				break;
 		}
 	}
@@ -5900,7 +5906,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		if (!GameState.isValid) {
 			return;
 		}
-		SaveGame_v110 sv101 = new SaveGame_v110(gameState);
+		SaveGame_v111 sv111 = new SaveGame_v111(gameState);
 
 		String state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -5923,7 +5929,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			ObjectOutputStream oos;
 			try {
 				oos = new ObjectOutputStream(fos);
-				oos.writeObject(sv101);
+				oos.writeObject(sv111);
 				oos.close();
 				fos.close();
 			} catch (Exception e) {
