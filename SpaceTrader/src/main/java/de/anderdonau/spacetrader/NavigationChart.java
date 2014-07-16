@@ -19,8 +19,8 @@
 package de.anderdonau.spacetrader;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -293,10 +293,10 @@ public class NavigationChart extends View {
 				src.left = 0;
 				src.right = bitmap.getWidth();
 				src.bottom = bitmap.getHeight();
-				dst.top = y - radius;
-				dst.bottom = y + radius;
-				dst.left = x - radius;
-				dst.right = x + radius;
+				dst.top = (int) (y - radius);
+				dst.bottom = (int) (y + radius);
+				dst.left = (int) (x - radius);
+				dst.right = (int) (x + radius);
 				canvas.drawBitmap(bitmap, src, dst, paint);
 			} else {
 				canvas.drawCircle(x, y, radius, paint);
