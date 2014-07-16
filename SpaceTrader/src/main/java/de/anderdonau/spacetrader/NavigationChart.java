@@ -21,6 +21,7 @@ package de.anderdonau.spacetrader;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,11 +43,17 @@ public class NavigationChart extends View {
 	protected       int       mDrawWormhole   = -1;
 	protected       int       mSelectedSystem = -1;
 	protected float radius;
-	protected float   mOffsetX     = 0;
-	protected float   mOffsetY     = 0;
-	protected boolean isShortRange = true;
-	protected float   mCurrentX    = 0;
-	protected float   mCurrentY    = 0;
+	protected float   mOffsetX            = 0;
+	protected float   mOffsetY            = 0;
+	protected boolean isShortRange        = true;
+	protected float   mCurrentX           = 0;
+	protected float   mCurrentY           = 0;
+	protected Bitmap  planetclassic_green = BitmapFactory.decodeResource(getResources(),
+		R.drawable.planetclassic_green);
+	protected Bitmap  planetclassic_blue  = BitmapFactory.decodeResource(getResources(),
+		R.drawable.planetclassic_blue);
+	protected Bitmap  planetclassic_red   = BitmapFactory.decodeResource(getResources(),
+		R.drawable.planetclassic_red);
 
 	public NavigationChart(Context context) {
 		super(context);
@@ -270,13 +277,15 @@ public class NavigationChart extends View {
 			s = mGameState.SolarSystem[i];
 			x = CoordToPixel(s.x);
 			y = CoordToPixel(s.y);
-			if (i == mSelectedSystem) {
-				paint.setColor(Color.RED);
-			} else if (s.visited) {
-				paint.setColor(Color.BLUE);
-			} else {
-				paint.setColor(Color.GREEN);
-			}
+
+			Rect src = new Rect();
+			Rect dst = new Rect();
+			src.top = 0;
+			src.left = 0;
+			dst.top = (int) (y - radius);
+			dst.bottom = (int) (y + radius);
+			dst.left = (int) (x - radius);
+			dst.right = (int) (x + radius);
 
 			if (s.visited && mGameState.BetterGfx) {
 				Bitmap bitmap;
@@ -287,19 +296,25 @@ public class NavigationChart extends View {
 				} else {
 					bitmap = main.planetsBitmaps[i % main.planetsBitmaps.length];
 				}
-				Rect src = new Rect();
-				Rect dst = new Rect();
-				src.top = 0;
-				src.left = 0;
 				src.right = bitmap.getWidth();
 				src.bottom = bitmap.getHeight();
-				dst.top = (int) (y - radius);
-				dst.bottom = (int) (y + radius);
-				dst.left = (int) (x - radius);
-				dst.right = (int) (x + radius);
 				canvas.drawBitmap(bitmap, src, dst, paint);
 			} else {
-				canvas.drawCircle(x, y, radius, paint);
+				Bitmap bitmap;
+				if (i == mSelectedSystem) {
+					bitmap = planetclassic_red;
+					paint.setColor(Color.RED);
+				} else if (s.visited) {
+					bitmap = planetclassic_blue;
+					paint.setColor(Color.BLUE);
+				} else {
+					bitmap = planetclassic_green;
+					paint.setColor(Color.GREEN);
+				}
+				src.right = bitmap.getWidth();
+				src.bottom = bitmap.getHeight();
+				canvas.drawBitmap(bitmap, src, dst, paint);
+				//				canvas.drawCircle(x, y, radius, paint);
 			}
 
 			//			if (isShortRange) {
