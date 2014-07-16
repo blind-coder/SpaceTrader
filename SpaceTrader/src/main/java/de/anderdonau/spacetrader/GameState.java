@@ -27,7 +27,6 @@ import java.util.Random;
 import de.anderdonau.spacetrader.DataTypes.CrewMember;
 import de.anderdonau.spacetrader.DataTypes.Gadgets;
 import de.anderdonau.spacetrader.DataTypes.Politics;
-import de.anderdonau.spacetrader.DataTypes.SaveGame;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v111;
 import de.anderdonau.spacetrader.DataTypes.Shields;
@@ -940,101 +939,6 @@ public class GameState implements Serializable {
 		Ship.tribbles = 0;
 
 		SkillPointsLeft = 16;
-	}
-
-	public GameState(SaveGame g) {
-		int i;
-		initializeBasic();
-		for (i = 0; i < GameState.MAXCREWMEMBER; i++) {
-			this.Mercenary[i] = g.Mercenary[i];
-		}
-		this.Opponent = g.Opponent;
-		//this.Ship = g.Ship;
-		// TODO: make a real save and load game function
-		this.Ship = new Ship(g.Ship.type, g.Ship.cargo, g.Ship.weapon, g.Ship.shield,
-			g.Ship.shieldStrength, g.Ship.gadget, g.Ship.crew, g.Ship.fuel, g.Ship.hull, g.Ship.tribbles,
-			this);
-		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
-			this.SolarSystem[i] = g.SolarSystem[i];
-		}
-		this.NameCommander = g.NameCommander;
-		this.AlreadyPaidForNewspaper = g.AlreadyPaidForNewspaper;
-		this.AlwaysIgnorePirates = g.AlwaysIgnorePirates;
-		this.AlwaysIgnorePolice = g.AlwaysIgnorePolice;
-		this.AlwaysIgnoreTradeInOrbit = g.AlwaysIgnoreTradeInOrbit;
-		this.AlwaysIgnoreTraders = g.AlwaysIgnoreTraders;
-		this.AlwaysInfo = g.AlwaysInfo;
-		this.ArrivedViaWormhole = g.ArrivedViaWormhole;
-		this.ArtifactOnBoard = g.ArtifactOnBoard;
-		this.AttackFleeing = g.AttackFleeing;
-		this.AutoFuel = g.AutoFuel;
-		this.AutoRepair = g.AutoRepair;
-		this.CanSuperWarp = g.CanSuperWarp;
-		this.Continuous = g.Continuous;
-		this.EscapePod = g.EscapePod;
-		this.GameLoaded = g.GameLoaded;
-		this.IdentifyStartup = g.IdentifyStartup;
-		this.Inspected = g.Inspected;
-		this.Insurance = g.Insurance;
-		this.JustLootedMarie = g.JustLootedMarie;
-		this.LitterWarning = g.LitterWarning;
-		this.MoonBought = g.MoonBought;
-		this.NewsAutoPay = g.NewsAutoPay;
-		this.PriceDifferences = g.PriceDifferences;
-		this.Raided = g.Raided;
-		this.RemindLoans = g.RemindLoans;
-		this.ReserveMoney = g.ReserveMoney;
-		this.SaveOnArrival = g.SaveOnArrival;
-		this.SharePreferences = g.SharePreferences;
-		this.ShowTrackedRange = g.ShowTrackedRange;
-		this.TextualEncounters = g.TextualEncounters;
-		this.TrackAutoOff = g.TrackAutoOff;
-		this.TribbleMessage = g.TribbleMessage;
-		this.Credits = g.Credits;
-		this.Debt = g.Debt;
-		this.MonsterHull = g.MonsterHull;
-		this.PirateKills = g.PirateKills;
-		this.PoliceKills = g.PoliceKills;
-		this.PoliceRecordScore = g.PoliceRecordScore;
-		this.ReputationScore = g.ReputationScore;
-		this.TraderKills = g.TraderKills;
-
-		this.Clicks = g.Clicks;
-		this.Days = g.Days;
-		this.DragonflyStatus = g.DragonflyStatus;
-		this.EncounterType = g.EncounterType;
-		this.ExperimentStatus = g.ExperimentStatus;
-		this.FabricRipProbability = g.FabricRipProbability;
-		this.InvasionStatus = g.InvasionStatus;
-		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
-		this.JarekStatus = g.JarekStatus;
-		this.LeaveEmpty = g.LeaveEmpty;
-		this.MonsterStatus = g.MonsterStatus;
-		this.NoClaim = g.NoClaim;
-		this.ReactorStatus = g.ReactorStatus;
-		this.ScarabStatus = g.ScarabStatus;
-		this.SelectedShipType = g.SelectedShipType;
-		this.Shortcut1 = g.Shortcut1;
-		this.Shortcut2 = g.Shortcut2;
-		this.Shortcut3 = g.Shortcut3;
-		this.Shortcut4 = g.Shortcut4;
-		this.TrackedSystem = g.TrackedSystem;
-		this.VeryRareEncounter = g.VeryRareEncounter;
-		this.WarpSystem = g.WarpSystem;
-		this.WildStatus = g.WildStatus;
-		GameState.setDifficulty(g.Difficulty);
-
-		for (i = 0; i < GameState.MAXWORMHOLE; i++) {
-			this.Wormhole[i] = g.Wormhole[i];
-		}
-		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
-			this.BuyPrice[i] = g.BuyPrice[i];
-			this.BuyingPrice[i] = g.BuyingPrice[i];
-			this.SellPrice[i] = g.SellPrice[i];
-		}
-		for (i = 0; i < GameState.MAXSHIPTYPE; i++) {
-			this.ShipPrice[i] = g.ShipPrice[i];
-		}
 	}
 
 	public GameState(SaveGame_v110 g) {
