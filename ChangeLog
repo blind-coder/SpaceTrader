@@ -1,4 +1,12 @@
 
+Wed Jul 16 13:57:36 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
+
+ * Tag version: 1.2.9
+ * Experimental Change: Add option to toggle nicer looking planet images.
+ * Change: Add nicer looking "classic" planet images, too.
+ * Change: Better utilisation of screen in ShortRange and Galactic Chart.
+ * Fix: Correctly handle Back-Button in all screens.
+ 
 Mon Jul 14 14:24:45 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
 
  * Tag version: 1.2.8
