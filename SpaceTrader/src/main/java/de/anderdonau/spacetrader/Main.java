@@ -332,6 +332,34 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				saveGame();
 				finish();
 				break;
+			case PLUNDER:
+			case DUMP:
+				break;
+			case AVERAGE_PRICES:
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+				break;
+			case BUY_NEW_SHIP:
+				changeFragment(FRAGMENTS.SHIPYARD);
+				break;
+			case SHIP_INFO:
+				changeFragment(FRAGMENTS.BUY_NEW_SHIP);
+				break;
+			case WARP_SYSTEM_INFORMATION:
+				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
+				break;
+			case BANK:
+			case BUY_CARGO:
+			case BUY_EQUIPMENT:
+			case COMMANDER_STATUS:
+			case GALACTIC_CHART:
+			case OPTIONS:
+			case PERSONNEL_ROSTER:
+			case SELL_CARGO:
+			case SELL_EQUIPMENT:
+			case SHIPYARD:
+			case SHORTCUTS:
+			case SHORT_RANGE_CHART:
+			case VERY_RARE_CHEAT:
 			default:
 				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
 				break;
