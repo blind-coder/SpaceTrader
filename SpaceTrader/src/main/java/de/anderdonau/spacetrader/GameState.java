@@ -1793,6 +1793,22 @@ public class GameState implements Serializable {
 
 		Tries = 1;
 
+		final int[] cargo = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		final int[] armament = {-1, -1, -1};
+		final int[] shielding = {-1, -1, -1};
+		final int[] shieldstrength = {0, 0, 0};
+		final int[] gadgets = {-1, -1, -1};
+		final int[] crew = {1, -1, -1};
+
+		Opponent = new Ship(1, // Gnat
+			cargo, // No cargo
+			armament, // One pulse laser
+			shielding, shieldstrength, // No shields
+			gadgets, // No gadgets
+			crew, // Alyssa on board
+			14, // Full tank
+			100, // Full hull strength
+			0, this); // No tribbles on board
 		if (Opp == FAMOUSCAPTAIN) {
 			// we just fudge for the Famous Captains' Ships...
 			Opponent.type = MAXSHIPTYPE - 1;
