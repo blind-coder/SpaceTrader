@@ -68,6 +68,7 @@ import de.anderdonau.spacetrader.DataTypes.Popup;
 import de.anderdonau.spacetrader.DataTypes.PopupQueue;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v111;
+import de.anderdonau.spacetrader.DataTypes.SaveGame_v120;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -106,7 +107,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	private AdView adView = null;
 	private Context mContext;
 	private MyFragment currentFragment = null;
-	private FRAGMENTS  currentState    = FRAGMENTS.NEW_GAME;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	public  SolarSystem              WarpSystem;
 	private GameState                gameState;
@@ -300,6 +300,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 
 		populateBitmaps();
+		boolean gameLoaded = false;
 
 		try {
 			File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
@@ -309,10 +310,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			SaveGame_v110 s = (SaveGame_v110) ois.readObject();
 			gameState = new GameState(s);
 			GameState.isValid = true;
+			gameLoaded = true;
 			ois.close();
 			fis.close();
 			changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
+		}
+
+		if (!gameLoaded) {
 			try {
 				File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
 				File f = new File(path, "savegame.txt");
@@ -321,16 +326,45 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				SaveGame_v111 s = (SaveGame_v111) ois.readObject();
 				gameState = new GameState(s);
 				GameState.isValid = true;
+				gameLoaded = true;
 				ois.close();
 				fis.close();
 				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
-			} catch (Exception ee) {
-				gameState = new GameState(this, "Jameson");
-				changeFragment(FRAGMENTS.NEW_GAME);
+			} catch (Exception ignored) {
 			}
+		}
+
+		if (!gameLoaded) {
+			try {
+				File path = new File(Environment.getExternalStorageDirectory().toString() + "/SpaceTrader");
+				File f = new File(path, "savegame.txt");
+				FileInputStream fis = new FileInputStream(f);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				SaveGame_v120 s = (SaveGame_v120) ois.readObject();
+				gameState = new GameState(s);
+				WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
+				GameState.isValid = true;
+				gameLoaded = true;
+				ois.close();
+				fis.close();
+				changeFragment(gameState.currentState);
+			} catch (Exception ignored) {
+			}
+		}
+
+		if (!gameLoaded) {
+			gameState = new GameState(this, "Jameson");
+			changeFragment(FRAGMENTS.NEW_GAME);
 		}
 	}
 
+	@Override
+	public void onPause() {
+		gameState.AutoAttack = gameState.AutoFlee = false;
+		saveGame();
+		Toast.makeText(this, "Game saved.", Toast.LENGTH_SHORT).show();
+		super.onPause();
+	}
 	public void populateBitmaps() {
 		planetsBitmaps = new Bitmap[planetsDrawableIds.length];
 		for (int i = 0; i < planetsDrawableIds.length; i++) {
@@ -348,24 +382,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	@Override
 	public void onBackPressed() {
-		switch (currentState) {
+		switch (gameState.currentState) {
 			case NEW_GAME:
 				finish();
 				break;
 			case ENCOUNTER:
-				Popup popup;
-				popup = new Popup(this, "Can't save now",
-					"You are in an encounter at the moment. During this the game cannot be saved! You will lose all your progress since the last save!\nAre you sure you want to quit?",
-					"", "Yes", "No", new Popup.buttonCallback() {
-					@Override
-					public void execute(Popup popup, View view) {
-						finish();
-					}
-				}, cbShowNextPopup
-				);
-				popupQueue.push(popup);
-				showNextPopup();
-				break;
 			case SYSTEM_INFORMATION:
 				saveGame();
 				finish();
@@ -397,16 +418,18 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			case SHIPYARD:
 			case SHORTCUTS:
 			case SHORT_RANGE_CHART:
-			case VERY_RARE_CHEAT:
 			default:
 				changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
+				break;
+			case VERY_RARE_CHEAT:
+				changeFragment(FRAGMENTS.GALACTIC_CHART);
 				break;
 		}
 	}
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		if (currentState == FRAGMENTS.ENCOUNTER || currentState == FRAGMENTS.NEW_GAME || gameState == null) {
+		if (gameState.currentState == FRAGMENTS.ENCOUNTER || gameState.currentState == FRAGMENTS.NEW_GAME || gameState == null) {
 			return;
 		}
 		switch (position) {
@@ -472,7 +495,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		if (mNavigationDrawerFragment != null) {
 			if (!mNavigationDrawerFragment.isDrawerOpen()) {
 				MenuInflater inflater = getMenuInflater();
-				if (currentState == FRAGMENTS.NEW_GAME || currentState == FRAGMENTS.ENCOUNTER) {
+				if (gameState.currentState == FRAGMENTS.NEW_GAME || gameState.currentState == FRAGMENTS.ENCOUNTER) {
 					inflater.inflate(R.menu.help_menu, menu);
 				} else {
 					inflater.inflate(R.menu.in_game, menu);
@@ -558,7 +581,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				return true;
 			case R.id.menuHelpCurrentScreen:
 				String helpText = "No help available.";
-				switch (currentState) {
+				switch (gameState.currentState) {
 					case AVERAGE_PRICES:
 						helpText =
 							"This screen shows the average prices you get for goods in the target system. If the trade good is shown in a bold font, it means the average price mentioned here is better than the buying price in the current system. \nNote that these prices do take into account the system size, government and tech level. Special resources (like rich soil) are also taken into account if you know about them. Special situations (like war) are temporary and are therefore not taken into account. \nRemember that criminals can't sell their goods directly, but have to use an intermediary, who keeps 10 percent of the selling price for himself. This is also not taken into account in the calculation of the average prices. \nThe button \"Price Differences\" switches to an overview of the differences between the average prices in the target system and the buying prices in the current system. When price differences are shown, this button is replaced by an \"Absolute Prices\" button, which, if tapped, will switch back to absolute prices.\nThe buttons labeled @<- and @-> can be used to scroll through the systems which are within range.\nTo return to the target system information screen, tap the System Information button and to return to the short range chart, tap the Shot Range Chart button. You can also immediately go into warp by tapping the Warp button.";
@@ -803,13 +826,13 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		} else if (call.equals("C")) {
 			changeFragment(FRAGMENTS.COMMANDER_STATUS);
 		} else if (call.equals("G")) {
-			if (currentState == FRAGMENTS.GALACTIC_CHART) {
+			if (gameState.currentState == FRAGMENTS.GALACTIC_CHART) {
 				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
 			} else {
 				changeFragment(FRAGMENTS.GALACTIC_CHART);
 			}
 		} else if (call.equals("W")) {
-			if (currentState == FRAGMENTS.SHORT_RANGE_CHART) {
+			if (gameState.currentState == FRAGMENTS.SHORT_RANGE_CHART) {
 				changeFragment(FRAGMENTS.GALACTIC_CHART);
 			} else {
 				changeFragment(FRAGMENTS.SHORT_RANGE_CHART);
@@ -868,7 +891,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	 */
 	public void changeFragment(FRAGMENTS fragment) {
 		hide_keyboard(this);
-		if (fragment == currentState && currentFragment != null) {
+		if (fragment == gameState.currentState && currentFragment != null) {
 			if (currentFragment.update()) {
 				return;
 			}
@@ -959,7 +982,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		currentFragment.setArguments(args);
 		transaction.replace(R.id.container, currentFragment);
 		transaction.commit();
-		currentState = fragment;
+		gameState.currentState = fragment;
 
 		invalidateOptionsMenu();
 	}
@@ -2078,7 +2101,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				Amount = seekBar.getProgress();
 				if (Amount > 0) {
 					BuyCargo(Index, Amount);
-					if (currentState == FRAGMENTS.AVERAGE_PRICES) {
+					if (gameState.currentState == FRAGMENTS.AVERAGE_PRICES) {
 						changeFragment(FRAGMENTS.AVERAGE_PRICES);
 					} else {
 						changeFragment(FRAGMENTS.BUY_CARGO);
@@ -2089,7 +2112,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			@Override
 			public void execute(Popup popup, View view) {
 				BuyCargo(Index, popup.max);
-				if (currentState == FRAGMENTS.AVERAGE_PRICES) {
+				if (gameState.currentState == FRAGMENTS.AVERAGE_PRICES) {
 					changeFragment(FRAGMENTS.AVERAGE_PRICES);
 				} else {
 					changeFragment(FRAGMENTS.BUY_CARGO);
@@ -2677,7 +2700,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		} else {
 			SellCargo(Index, 999, GameState.JETTISONCARGO);
 		}
-		changeFragment(currentState);
+		changeFragment(gameState.currentState);
 	}
 
 	public void btnDumpCargoQty(View view) {
@@ -2726,14 +2749,14 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 					int Amount = seekBar.getProgress();
 					if (Amount > 0) {
 						SellCargo(idx, Amount, GameState.JETTISONCARGO);
-						changeFragment(currentState);
+						changeFragment(gameState.currentState);
 					}
 				}
 			}, cbShowNextPopup, new Popup.buttonCallback() {
 				@Override
 				public void execute(Popup popup, View view) {
 					SellCargo(idx, popup.max, GameState.JETTISONCARGO);
-					changeFragment(currentState);
+					changeFragment(gameState.currentState);
 				}
 			}
 			);
@@ -5876,7 +5899,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 								}
 								gameState.addNewsEvent(GameState.CAUGHTLITTERING);
 							}
-							changeFragment(currentState);
+							changeFragment(gameState.currentState);
 						}
 					}
 				}, cbShowNextPopup
@@ -5906,7 +5929,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		if (!GameState.isValid) {
 			return;
 		}
-		SaveGame_v111 sv111 = new SaveGame_v111(gameState);
+		SaveGame_v120 sv120 = new SaveGame_v120(gameState);
 
 		String state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -5929,7 +5952,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			ObjectOutputStream oos;
 			try {
 				oos = new ObjectOutputStream(fos);
-				oos.writeObject(sv111);
+				oos.writeObject(sv120);
 				oos.close();
 				fos.close();
 			} catch (Exception e) {

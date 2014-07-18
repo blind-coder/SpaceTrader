@@ -29,6 +29,7 @@ import de.anderdonau.spacetrader.DataTypes.Gadgets;
 import de.anderdonau.spacetrader.DataTypes.Politics;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v110;
 import de.anderdonau.spacetrader.DataTypes.SaveGame_v111;
+import de.anderdonau.spacetrader.DataTypes.SaveGame_v120;
 import de.anderdonau.spacetrader.DataTypes.Shields;
 import de.anderdonau.spacetrader.DataTypes.Ship;
 import de.anderdonau.spacetrader.DataTypes.ShipTypes;
@@ -511,9 +512,11 @@ public class GameState implements Serializable {
 	public String       NameCommander;
 	public Random rand = new Random();
 	CrewMember[] CrewMember;
-	Ship         SpaceMonster;
-	Ship         Scarab;
-	Ship         Dragonfly;
+	public Ship SpaceMonster;
+	public Ship Scarab;
+	public Ship Dragonfly;
+	public Main.FRAGMENTS currentState = Main.FRAGMENTS.NEW_GAME;
+
 
 	////////////////////////////////////////////////////
 	// Helper functions for Newspaper
@@ -1147,6 +1150,128 @@ public class GameState implements Serializable {
 		this.WarpSystem = g.WarpSystem;
 		this.WildStatus = g.WildStatus;
 		GameState.setDifficulty(g.Difficulty);
+
+		for (i = 0; i < GameState.MAXWORMHOLE; i++) {
+			this.Wormhole[i] = g.Wormhole[i];
+		}
+		for (i = 0; i < GameState.MAXTRADEITEM; i++) {
+			this.BuyPrice[i] = g.BuyPrice[i];
+			this.BuyingPrice[i] = g.BuyingPrice[i];
+			this.SellPrice[i] = g.SellPrice[i];
+		}
+		for (i = 0; i < GameState.MAXSHIPTYPE; i++) {
+			this.ShipPrice[i] = g.ShipPrice[i];
+		}
+	}
+
+	public GameState(SaveGame_v120 g) {
+		int i;
+		initializeBasic();
+		for (i = 0; i < GameState.MAXCREWMEMBER; i++) {
+			this.Mercenary[i] = new CrewMember(g.Mercenary[i].nameIndex, g.Mercenary[i].pilot,
+				g.Mercenary[i].fighter, g.Mercenary[i].trader, g.Mercenary[i].engineer,
+				g.Mercenary[i].curSystem);
+		}
+		this.Opponent = new Ship(g.Opponent.type, g.Opponent.cargo.clone(), g.Opponent.weapon.clone(),
+			g.Opponent.shield.clone(), g.Opponent.shieldStrength.clone(), g.Opponent.gadget.clone(),
+			g.Opponent.crew.clone(), g.Opponent.fuel, g.Opponent.hull, g.Opponent.tribbles, this);
+		this.Scarab = new Ship(g.Scarab.type, g.Scarab.cargo.clone(), g.Scarab.weapon.clone(),
+			g.Scarab.shield.clone(), g.Scarab.shieldStrength.clone(), g.Scarab.gadget.clone(),
+			g.Scarab.crew.clone(), g.Scarab.fuel, g.Scarab.hull, g.Scarab.tribbles, this);
+		this.Dragonfly = new Ship(g.Ship.type, g.Ship.cargo.clone(), g.Ship.weapon.clone(),
+			g.Ship.shield.clone(), g.Ship.shieldStrength.clone(), g.Ship.gadget.clone(),
+			g.Ship.crew.clone(), g.Ship.fuel, g.Ship.hull, g.Ship.tribbles, this);
+		this.SpaceMonster = new Ship(g.SpaceMonster.type, g.SpaceMonster.cargo.clone(),
+			g.SpaceMonster.weapon.clone(), g.SpaceMonster.shield.clone(),
+			g.SpaceMonster.shieldStrength.clone(), g.SpaceMonster.gadget.clone(),
+			g.SpaceMonster.crew.clone(), g.SpaceMonster.fuel, g.SpaceMonster.hull,
+			g.SpaceMonster.tribbles, this);
+		this.Ship = new Ship(g.Ship.type, g.Ship.cargo.clone(), g.Ship.weapon.clone(),
+			g.Ship.shield.clone(), g.Ship.shieldStrength.clone(), g.Ship.gadget.clone(),
+			g.Ship.crew.clone(), g.Ship.fuel, g.Ship.hull, g.Ship.tribbles, this);
+		for (i = 0; i < GameState.MAXSOLARSYSTEM; i++) {
+			this.SolarSystem[i] = new SolarSystem();
+			this.SolarSystem[i].nameIndex = g.SolarSystem[i].nameIndex;
+			this.SolarSystem[i].techLevel = g.SolarSystem[i].techLevel;
+			this.SolarSystem[i].politics = g.SolarSystem[i].politics;
+			this.SolarSystem[i].status = g.SolarSystem[i].status;
+			this.SolarSystem[i].x = g.SolarSystem[i].x;
+			this.SolarSystem[i].y = g.SolarSystem[i].y;
+			this.SolarSystem[i].specialResources = g.SolarSystem[i].specialResources;
+			this.SolarSystem[i].size = g.SolarSystem[i].size;
+			this.SolarSystem[i].qty = g.SolarSystem[i].qty.clone();
+			this.SolarSystem[i].countDown = g.SolarSystem[i].countDown;
+			this.SolarSystem[i].visited = g.SolarSystem[i].visited;
+			this.SolarSystem[i].special = g.SolarSystem[i].special;
+		}
+		this.NameCommander = g.NameCommander;
+		this.AlreadyPaidForNewspaper = g.AlreadyPaidForNewspaper;
+		this.AlwaysIgnorePirates = g.AlwaysIgnorePirates;
+		this.AlwaysIgnorePolice = g.AlwaysIgnorePolice;
+		this.AlwaysIgnoreTradeInOrbit = g.AlwaysIgnoreTradeInOrbit;
+		this.AlwaysIgnoreTraders = g.AlwaysIgnoreTraders;
+		this.AlwaysInfo = g.AlwaysInfo;
+		this.ArrivedViaWormhole = g.ArrivedViaWormhole;
+		this.ArtifactOnBoard = g.ArtifactOnBoard;
+		this.AttackFleeing = g.AttackFleeing;
+		this.AutoFuel = g.AutoFuel;
+		this.AutoRepair = g.AutoRepair;
+		this.CanSuperWarp = g.CanSuperWarp;
+		this.Continuous = g.Continuous;
+		this.EscapePod = g.EscapePod;
+		this.GameLoaded = g.GameLoaded;
+		this.IdentifyStartup = g.IdentifyStartup;
+		this.Inspected = g.Inspected;
+		this.Insurance = g.Insurance;
+		this.JustLootedMarie = g.JustLootedMarie;
+		this.LitterWarning = g.LitterWarning;
+		this.MoonBought = g.MoonBought;
+		this.NewsAutoPay = g.NewsAutoPay;
+		this.PriceDifferences = g.PriceDifferences;
+		this.Raided = g.Raided;
+		this.RemindLoans = g.RemindLoans;
+		this.ReserveMoney = g.ReserveMoney;
+		this.SaveOnArrival = g.SaveOnArrival;
+		this.SharePreferences = g.SharePreferences;
+		this.ShowTrackedRange = g.ShowTrackedRange;
+		this.TextualEncounters = g.TextualEncounters;
+		this.TrackAutoOff = g.TrackAutoOff;
+		this.TribbleMessage = g.TribbleMessage;
+		this.BetterGfx = g.BetterGfx;
+		this.Credits = g.Credits;
+		this.Debt = g.Debt;
+		this.MonsterHull = g.MonsterHull;
+		this.PirateKills = g.PirateKills;
+		this.PoliceKills = g.PoliceKills;
+		this.PoliceRecordScore = g.PoliceRecordScore;
+		this.ReputationScore = g.ReputationScore;
+		this.TraderKills = g.TraderKills;
+
+		this.Clicks = g.Clicks;
+		this.Days = g.Days;
+		this.DragonflyStatus = g.DragonflyStatus;
+		this.EncounterType = g.EncounterType;
+		this.ExperimentStatus = g.ExperimentStatus;
+		this.FabricRipProbability = g.FabricRipProbability;
+		this.InvasionStatus = g.InvasionStatus;
+		this.JaporiDiseaseStatus = g.JaporiDiseaseStatus;
+		this.JarekStatus = g.JarekStatus;
+		this.LeaveEmpty = g.LeaveEmpty;
+		this.MonsterStatus = g.MonsterStatus;
+		this.NoClaim = g.NoClaim;
+		this.ReactorStatus = g.ReactorStatus;
+		this.ScarabStatus = g.ScarabStatus;
+		this.SelectedShipType = g.SelectedShipType;
+		this.Shortcut1 = g.Shortcut1;
+		this.Shortcut2 = g.Shortcut2;
+		this.Shortcut3 = g.Shortcut3;
+		this.Shortcut4 = g.Shortcut4;
+		this.TrackedSystem = g.TrackedSystem;
+		this.VeryRareEncounter = g.VeryRareEncounter;
+		this.WarpSystem = g.WarpSystem;
+		this.WildStatus = g.WildStatus;
+		GameState.setDifficulty(g.Difficulty);
+		this.currentState = g.currentState;
 
 		for (i = 0; i < GameState.MAXWORMHOLE; i++) {
 			this.Wormhole[i] = g.Wormhole[i];

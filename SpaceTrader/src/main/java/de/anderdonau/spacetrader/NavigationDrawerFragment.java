@@ -86,7 +86,7 @@ public class NavigationDrawerFragment extends MyFragment {
 			mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
 		}
 
-		selectItem(mCurrentSelectedPosition);
+		//		selectItem(mCurrentSelectedPosition);
 	}
 
 	@Override
