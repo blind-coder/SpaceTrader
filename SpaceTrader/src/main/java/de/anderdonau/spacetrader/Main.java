@@ -362,9 +362,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	public void onPause() {
 		gameState.AutoAttack = gameState.AutoFlee = false;
 		saveGame();
-		Toast.makeText(this, "Game saved.", Toast.LENGTH_SHORT).show();
 		super.onPause();
 	}
+
 	public void populateBitmaps() {
 		planetsBitmaps = new Bitmap[planetsDrawableIds.length];
 		for (int i = 0; i < planetsDrawableIds.length; i++) {
@@ -858,6 +858,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		popupQueue.push(popup);
 		showNextPopup();
 	}
+
 	/*
 	 * Popup functions must be here to be in the right context.
 	 */
@@ -2519,6 +2520,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		addPopup(popup);
 		showNextPopup();
 	}
+
 	// FragmentPlunder
 	public void PlunderCargo(int Index, int Amount) {
 		// *************************************************************************
@@ -3323,8 +3325,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				gameState.BuyPrice[i] = Tradeitems.mTradeitems[i].maxTradePrice;
 			}
 
-			if (gameState.Opponent.cargo[i] == 0){ // cop-out, yeah. Make it a TODO
-				gameState.Opponent.cargo[i] = 1+(gameState.GetRandom(10));
+			if (gameState.Opponent.cargo[i] == 0) { // cop-out, yeah. Make it a TODO
+				gameState.Opponent.cargo[i] = 1 + (gameState.GetRandom(10));
 				gameState.BuyPrice[i] = 1;
 			}
 
@@ -6082,10 +6084,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			public void execute(Popup popup, View view) {
 				String subject = "Space Trader";
 				String body = String.format(
-						"I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50),
-						((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
-							(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
-								"retired on an utopian moon"))
+					"I achieved a score of %d.%d%%. After %d Days I %s. @AndSpaceTrader", (score / 50),
+					((score % 50) / 5), gameState.Days, (EndStatus == GameState.KILLED ? "got killed" :
+						(EndStatus == GameState.RETIRED ? "retired on a barren moon" :
+							"retired on an utopian moon"))
 				);
 				onShareClick(subject, body);
 			}

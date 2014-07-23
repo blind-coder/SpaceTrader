@@ -20,10 +20,10 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.anderdonau.spacetrader"
-          android:versionCode="130"
+          android:versionCode="129"
           android:versionName="1.3.0-dev">
 
-<uses-sdk
+	<uses-sdk
 			android:minSdkVersion="14"
 			android:targetSdkVersion="19"/>
 
@@ -36,7 +36,7 @@
 			android:allowBackup="true"
 			android:icon="@drawable/spacetrader"
 			android:label="@string/app_name">
-	<activity
+		<activity
 				android:name="de.anderdonau.spacetrader.Main"
 				android:label="@string/app_name"
 				android:screenOrientation="portrait">
