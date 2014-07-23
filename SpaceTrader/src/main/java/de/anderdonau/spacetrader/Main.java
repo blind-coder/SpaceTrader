@@ -360,7 +360,9 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 	@Override
 	public void onPause() {
-		gameState.AutoAttack = gameState.AutoFlee = false;
+		if (gameState.currentState == FRAGMENTS.ENCOUNTER) {
+			EncounterButtonIntCallback(null);
+		}
 		saveGame();
 		super.onPause();
 	}
