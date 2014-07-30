@@ -120,7 +120,7 @@ public class FragmentEncounter extends MyFragment {
 				gameState.EncounterType != GameState.BOTTLEOLDENCOUNTER && gameState.EncounterType != GameState.BOTTLEGOODENCOUNTER) {
 				buf += ShipTypes.ShipTypes[Opponent.type].name;
 			}
-			buf += ".\n";
+			buf += ".\n\n";
 			buf += EncounterText.getText().toString();
 
 			EncounterText.setText(buf);
@@ -279,7 +279,7 @@ public class FragmentEncounter extends MyFragment {
 			if (gameState.Ship.isCloakedTo(gameState.Opponent)) {
 				EncounterText.setText("It doesn't notice you.");
 			} else {
-				EncounterText.setText("it ignores you.");
+				EncounterText.setText("It ignores you.");
 			}
 		} else if (gameState.EncounterType == GameState.TRADERSELL || gameState.EncounterType == GameState.TRADERBUY) {
 			EncounterText.setText("You are hailed with an offer to trade goods.");
