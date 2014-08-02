@@ -25,6 +25,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -109,10 +110,9 @@ public class RenderShip extends View {
 			int hull = rand.nextInt(200);
 			int tribbles = 0;
 			Ship s = new Ship(ShipTypes.BEETLE, cargo, weapon, shield, shieldStrength, gadget, crew, fuel,
-			                  hull, tribbles, gameState
-			);
+				hull, tribbles, gameState);
 			this.setShip(s);
-			this.setRotate(true);
+			this.setRotate(this.getId() == R.id.EncounterPlayerOpponent);
 		}
 
 		if (gameState == null) {
@@ -128,16 +128,34 @@ public class RenderShip extends View {
 		}
 
 		if (shieldPercent > 0) {
-			src.top = 0;
-			src.bottom = bitmap_shield.getHeight();
-			src.left = 0;
-			src.right = bitmap_shield.getWidth() * shieldPercent / 100;
+			if (this.rotate) {
+				int width;
+				width = (int) Math.floor(bitmap_shield.getWidth() * shieldPercent / 100.0);
+				src.top = 0;
+				src.bottom = bitmap_shield.getHeight();
+				src.left = 0;
+				src.right = bitmap_shield.getWidth();
 
-			dst.top = getHeight() / 2 - bitmap_shield.getHeight() / 2;
-			dst.bottom = dst.top + (src.bottom - src.top);
-			dst.left = getWidth() / 2 - bitmap_shield.getWidth() / 2;
-			dst.right = dst.left + (src.right - src.left);
-			canvas.drawBitmap(bitmap_shield, src, dst, paint);
+				dst.top = getHeight() / 2 - bitmap_shield.getHeight() / 2;
+				dst.bottom = dst.top + (src.bottom - src.top);
+				dst.left = getWidth() / 2 - bitmap_shield.getWidth() / 2;
+				dst.right = dst.left + (src.right - src.left);
+
+				canvas.clipRect(dst.right - width, 0, getWidth(), getHeight(), Region.Op.REPLACE);
+				canvas.drawBitmap(bitmap_shield, src, dst, paint);
+				canvas.clipRect(0, 0, getWidth(), getHeight(), Region.Op.REPLACE);
+			} else {
+				src.top = 0;
+				src.bottom = bitmap_shield.getHeight();
+				src.left = 0;
+				src.right = bitmap_shield.getWidth() * shieldPercent / 100;
+
+				dst.top = getHeight() / 2 - bitmap_shield.getHeight() / 2;
+				dst.bottom = dst.top + (src.bottom - src.top);
+				dst.left = getWidth() / 2 - bitmap_shield.getWidth() / 2;
+				dst.right = dst.left + (src.right - src.left);
+				canvas.drawBitmap(bitmap_shield, src, dst, paint);
+			}
 		}
 
 		src.top = 0;
@@ -145,22 +163,40 @@ public class RenderShip extends View {
 		src.left = 0;
 		src.right = bitmap_damaged.getWidth();
 
-		dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
+		dst.top = getHeight() / 2 - bitmap_damaged.getHeight() / 2;
 		dst.bottom = dst.top + (src.bottom - src.top);
-		dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
+		dst.left = getWidth() / 2 - bitmap_damaged.getWidth() / 2;
 		dst.right = dst.left + (src.right - src.left);
 		canvas.drawBitmap(bitmap_damaged, src, dst, paint);
 
-		src.top = 0;
-		src.bottom = bitmap.getHeight();
-		src.left = 0;
-		src.right = bitmap.getWidth() * dmgPercent / 100;
+		if (this.rotate) {
+			int width;
+			width = (int) Math.floor(bitmap.getWidth() * dmgPercent / 100.0);
+			src.top = 0;
+			src.bottom = bitmap.getHeight();
+			src.left = 0;
+			src.right = bitmap.getWidth();
 
-		dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
-		dst.bottom = dst.top + (src.bottom - src.top);
-		dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
-		dst.right = dst.left + (src.right - src.left);
-		canvas.drawBitmap(bitmap, src, dst, paint);
+			dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
+			dst.bottom = dst.top + (src.bottom - src.top);
+			dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
+			dst.right = dst.left + (src.right - src.left);
+
+			canvas.clipRect(dst.right - width, 0, getWidth(), getHeight(), Region.Op.REPLACE);
+			canvas.drawBitmap(bitmap, src, dst, paint);
+			canvas.clipRect(0, 0, getWidth(), getHeight(), Region.Op.REPLACE);
+		} else {
+			src.top = 0;
+			src.bottom = bitmap.getHeight();
+			src.left = 0;
+			src.right = bitmap.getWidth() * dmgPercent / 100;
+
+			dst.top = getHeight() / 2 - bitmap.getHeight() / 2;
+			dst.bottom = dst.top + (src.bottom - src.top);
+			dst.left = getWidth() / 2 - bitmap.getWidth() / 2;
+			dst.right = dst.left + (src.right - src.left);
+			canvas.drawBitmap(bitmap, src, dst, paint);
+		}
 	}
 
 	@Override
