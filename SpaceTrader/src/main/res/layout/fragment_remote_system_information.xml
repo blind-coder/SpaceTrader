@@ -38,11 +38,31 @@
 			android:layout_marginLeft="0dp"
 			android:layout_marginTop="0dp"/>
 
+	<de.anderdonau.spacetrader.DataTypes.STButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="&#x2192;"
+			android:id="@+id/btnPriceListNext"
+			android:layout_below="@+id/textView"
+			android:onClick="btnNextSystem"
+			android:layout_alignParentRight="true"
+			style="@style/BuySellButtons"/>
+
+	<de.anderdonau.spacetrader.DataTypes.STButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="&#x2190;"
+			android:id="@+id/btnPriceListPrev"
+			android:onClick="btnNextSystem"
+			android:layout_toLeftOf="@+id/btnPriceListNext"
+			android:layout_alignTop="@+id/btnPriceListNext"
+			style="@style/BuySellButtons"/>
+
 	<ScrollView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/scrollView"
-			android:layout_below="@+id/textView"
+			android:layout_below="@+id/btnPriceListNext"
 			android:layout_above="@+id/buttonGroup">
 
 		<LinearLayout

@@ -2374,7 +2374,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		}
 		gameState.WarpSystem = nextSystem;
 		WarpSystem = gameState.SolarSystem[gameState.WarpSystem];
-		changeFragment(FRAGMENTS.AVERAGE_PRICES);
+		changeFragment(gameState.currentState);
 	}
 
 	@SuppressWarnings("UnusedParameters")
