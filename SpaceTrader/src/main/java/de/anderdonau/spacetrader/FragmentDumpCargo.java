@@ -28,11 +28,19 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.MyFragment;
 
 public class FragmentDumpCargo extends MyFragment {
+	View rootView;
+
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.gameState = (GameState) getArguments().getSerializable("gamestate");
-		final View rootView = inflater.inflate(R.layout.fragment_dump_cargo, container, false);
+		rootView = inflater.inflate(R.layout.fragment_dump_cargo, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update() {
 		TextView tv;
 		Button btn;
 		int i;
@@ -50,6 +58,6 @@ public class FragmentDumpCargo extends MyFragment {
 		tv.setText(String.format("%d/%d", gameState.Ship.FilledCargoBays(),
 			gameState.Ship.TotalCargoBays()));
 
-		return rootView;
+		return true;
 	}
 }

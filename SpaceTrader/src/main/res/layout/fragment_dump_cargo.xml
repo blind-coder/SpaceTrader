@@ -39,9 +39,9 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentRight="true"
 			android:layout_below="@+id/textView"
-			android:layout_above="@+id/btnDumpDone">
+			android:layout_above="@+id/btnGroup">
 
-		<TableLayout
+	<TableLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 
@@ -442,29 +442,41 @@
 		</TableLayout>
 	</ScrollView>
 
-	<TextView
-			android:layout_width="wrap_content"
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="Bays: 0/15"
-			android:id="@+id/txtDumpCargoBays"
-			android:layout_column="0"
-			android:layout_span="2"
-			android:layout_alignParentBottom="true"
+			android:id="@+id/btnGroup"
 			android:layout_alignParentLeft="true"
-			/>
-
-	<de.anderdonau.spacetrader.DataTypes.STButton
-			style="?android:attr/buttonStyleSmall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Done"
-			android:id="@+id/btnDumpDone"
 			android:layout_alignParentBottom="true"
-			android:layout_alignParentRight="true"
+			android:layout_alignParentRight="true">
 
-			android:onClick="btnDumpDone"
-			android:ellipsize="marquee"
-			android:singleLine="true"/>
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:text="Bays: 0/15"
+				android:id="@+id/txtDumpCargoBays"
+				android:layout_column="0"
+				android:layout_span="2"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentLeft="true"
+				android:layout_weight="1"
+				android:layout_gravity="bottom"/>
+
+		<de.anderdonau.spacetrader.DataTypes.STButton
+				style="?android:attr/buttonStyleSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Done"
+				android:id="@+id/btnDumpDone"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+
+				android:onClick="btnDumpDone"
+				android:ellipsize="marquee"
+				android:singleLine="true"
+				android:layout_weight="1"/>
+	</LinearLayout>
 
 </RelativeLayout>

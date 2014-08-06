@@ -28,11 +28,19 @@ import android.widget.TextView;
 import de.anderdonau.spacetrader.DataTypes.MyFragment;
 
 public class FragmentPlunderCargo extends MyFragment {
+	public View rootView;
+
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.gameState = (GameState) getArguments().getSerializable("gamestate");
-		final View rootView = inflater.inflate(R.layout.fragment_plunder_cargo, container, false);
+		rootView = inflater.inflate(R.layout.fragment_plunder_cargo, container, false);
+		update();
+		return rootView;
+	}
+
+	@Override
+	public boolean update() {
 		TextView tv;
 		Button btn;
 		int i;
@@ -51,6 +59,6 @@ public class FragmentPlunderCargo extends MyFragment {
 		tv.setText(String.format("%d/%d", gameState.Ship.FilledCargoBays(),
 			gameState.Ship.TotalCargoBays()));
 
-		return rootView;
+		return true;
 	}
 }
