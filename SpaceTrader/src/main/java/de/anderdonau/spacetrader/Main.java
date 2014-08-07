@@ -895,6 +895,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	public void changeFragment(FRAGMENTS fragment) {
 		hide_keyboard(this);
 		if (fragment == gameState.currentState && currentFragment != null) {
+			// Sometimes this seems to be unset. Try to workaround it.
+			currentFragment.gameState = gameState;
 			if (currentFragment.update()) {
 				return;
 			}
