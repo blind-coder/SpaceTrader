@@ -84,10 +84,10 @@ public class FragmentEncounter extends MyFragment {
 		//EncounterDisplayShips();
 		EncounterDisplayNextAction(true);
 
+		String buf;
 		if (gameState.EncounterType == GameState.POSTMARIEPOLICEENCOUNTER) {
-			EncounterText.setText("You encounter the Customs Police.");
+			buf = "You encounter the Customs Police.\n\n";
 		} else {
-			String buf;
 			buf = String.format("At %d click%s from %s you encounter ", gameState.Clicks,
 				gameState.Clicks == 1 ? "" : "s", main.SolarSystemName[main.WarpSystem.nameIndex]);
 			if (gameState.ENCOUNTERPOLICE(gameState.EncounterType)) {
@@ -121,10 +121,9 @@ public class FragmentEncounter extends MyFragment {
 				buf += ShipTypes.ShipTypes[Opponent.type].name;
 			}
 			buf += ".\n\n";
-			buf += EncounterText.getText().toString();
-
-			EncounterText.setText(buf);
 		}
+		buf += EncounterText.getText().toString();
+		EncounterText.setText(buf);
 
 		Bitmap tribble = BitmapFactory.decodeResource(main.getResources(), R.drawable.tribble);
 		d = (int) Math.ceil(Math.sqrt(Ship.tribbles / 250));
