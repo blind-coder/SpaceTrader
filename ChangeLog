@@ -1,4 +1,12 @@
 
+Fri Aug  8 09:37:29 CEST 2014 Benjamin 'blindCoder' Schieder
+<benjamin@anderdonau.de>
+
+ * Tag version: 1.3.3
+ * Fix: Fix a force close at the end of the Marie Celeste quest.
+ * Fix: Potential fix for a force close that sometimes happens on screen
+ update.
+
 Wed Aug  6 19:31:01 CEST 2014 Benjamin 'blindCoder' Schieder <benjamin@anderdonau.de>
 
  * Tag version: 1.3.2
