@@ -140,9 +140,7 @@
 				android:id="@+id/numCheatRareEncounter"
 				android:layout_toRightOf="@+id/textView4"
 				android:hint="x/1000"
-				android:layout_below="@+id/textView3"
-
-				android:onClick="numVeryRareChanceCallback"/>
+				android:layout_below="@+id/textView3"/>
 
 		<TextView
 				android:layout_width="wrap_content"
@@ -166,8 +164,7 @@
 				android:layout_alignParentRight="true"
 
 				android:layout_alignLeft="@+id/numCheatRareEncounter"
-				android:hint="x/1000"
-				android:onClick="numVeryRareChanceCallback"/>
+				android:hint="x/1000"/>
 
 	</RelativeLayout>
 </ScrollView>

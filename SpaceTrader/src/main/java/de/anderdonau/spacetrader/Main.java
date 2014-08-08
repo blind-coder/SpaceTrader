@@ -4133,6 +4133,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			);
 			popupQueue.push(popup);
 			showNextPopup();
+			return;
 		}
 		EncounterButtonFleeCallbackStartFleeing();
 	}
