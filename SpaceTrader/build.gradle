@@ -61,5 +61,4 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.android.support:support-v4:+'
-    compile 'com.google.android.gms:play-services:+'
 }

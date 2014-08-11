@@ -46,18 +46,8 @@
 				android:layout_alignParentLeft="true"
 				android:layout_alignParentTop="true"
 				android:layout_alignParentRight="true"
-				android:layout_above="@+id/adView"/>
-
-		<com.google.android.gms.ads.AdView
-				android:id="@+id/adView"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				ads:adUnitId="ca-app-pub-2751649723763471/5536399743"
-				ads:adSize="BANNER"
-				android:layout_alignParentLeft="true"
-				android:layout_alignParentTop="false"
-				android:layout_alignParentRight="true"
 				android:layout_alignParentBottom="true"/>
+
 	</RelativeLayout>
 
 	<!-- android:layout_gravity="start" tells DrawerLayout to treat

@@ -47,10 +47,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,8 +71,6 @@ import de.anderdonau.spacetrader.DataTypes.ShipTypes;
 import de.anderdonau.spacetrader.DataTypes.SolarSystem;
 import de.anderdonau.spacetrader.DataTypes.Tradeitems;
 import de.anderdonau.spacetrader.DataTypes.Weapons;
-
-import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
 
 public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Serializable {
 	public enum FRAGMENTS {
@@ -104,7 +98,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		WARP_SYSTEM_INFORMATION
 	}
 
-	private AdView adView = null;
 	private Context mContext;
 	private MyFragment currentFragment = null;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -267,37 +260,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 			R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawer_layout);
 		fragmentManager.beginTransaction().hide(mNavigationDrawerFragment).commit();
-
-		/**
-		 * Check for possibility of displaying ads
-		 * additional check for cheatcode
-		 */
-		SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
-		final boolean hideAds = settings.getBoolean("hideAds", false);
-		if (adView == null) {
-			adView = (AdView) findViewById(R.id.adView);
-		}
-		if (adView != null) {
-			adView.setVisibility(View.GONE);
-			if (!hideAds) {
-				int check = isGooglePlayServicesAvailable(this);
-				if (check != 0) {
-					GooglePlayServicesUtil.getErrorDialog(check, this, 0).show();
-				} else {
-
-					if (!hideAds) {
-						adView.setVisibility(View.VISIBLE);
-						// Initiate a generic request.
-						AdRequest adRequest = new AdRequest.Builder().addTestDevice(
-							AdRequest.DEVICE_ID_EMULATOR).addTestDevice("FE95DA7F3FE40606FA7F49DCE9E93A84")
-							.build();
-
-						// Load the adView with the ad request.
-						adView.loadAd(adRequest);
-					}
-				}
-			}
-		}
 
 		populateBitmaps();
 		boolean gameLoaded = false;
@@ -2811,21 +2773,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
 				}
 				if (gameState.CheatCounter >= 3) {
-					if (buf.equals("UUDDLRLRBA")) {
-						SharedPreferences settings = getSharedPreferences("spacetrader", MODE_PRIVATE);
-						boolean hideAds = !settings.getBoolean("hideAds", false);
-						SharedPreferences.Editor ed = settings.edit();
-						ed.putBoolean("hideAds", hideAds);
-						ed.commit();
-						if (hideAds) {
-							findViewById(R.id.adView).setVisibility(View.GONE);
-						}
-						Popup popup1 = new Popup(popup.context, "Ads toggled",
-							"The display of ads has been toggled. If they have been enabled, they will be visible when you start the app next time.",
-							"", "OK", cbShowNextPopup);
-						popupQueue.push(popup1);
-						showNextPopup();
-					} else if (buf.equals("Moolah")) {
+					if (buf.equals("Moolah")) {
 						gameState.Credits += 100000;
 						return;
 					} else if (buf.startsWith("Go ") && buf.length() > 3) {
