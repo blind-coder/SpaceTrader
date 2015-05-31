@@ -275,7 +275,8 @@
 						android:layout_column="0"
 						style="@style/BuySellButtons"
 						android:ellipsize="marquee"
-						android:singleLine="true"/>
+						android:singleLine="true"
+						android:onClick="btnSellEquipmentOnClick"/>
 
 				<TextView
 						android:layout_width="wrap_content"

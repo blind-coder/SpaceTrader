@@ -1377,7 +1377,7 @@ public class GameState implements Serializable {
 	}
 
 	public int GetRandom(int a) {
-		return (rand.nextInt(a));
+		return (rand.nextInt(Math.max(1, a)));
 	}
 
 	public int SQR(int a) {
