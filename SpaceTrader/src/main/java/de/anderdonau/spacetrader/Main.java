@@ -1337,7 +1337,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		MaxFuel = (gameState.Ship.GetFuelTanks() - gameState.Ship.GetFuel()) * gameState.Ship
 			.getType().costOfFuel;
 		amount = Math.min(amount, MaxFuel);
-		amount = Math.min(amount, gameState.Credits);
+		amount = Math.max(0, Math.min(amount, gameState.Credits));
 
 		Parsecs = amount / gameState.Ship.getType().costOfFuel;
 
@@ -1388,7 +1388,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 		MaxRepairs = (gameState.Ship.GetHullStrength() - gameState.Ship.hull) * gameState.Ship
 			.getType().repairCosts;
 		amount = Math.min(amount, MaxRepairs);
-		amount = Math.min(amount, gameState.Credits);
+		amount = Math.max(0, Math.min(amount, gameState.Credits));
 
 		Percentage = amount / gameState.Ship.getType().repairCosts;
 
@@ -3316,6 +3316,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 				@Override
 				public void execute(Popup popup, View view) {
 					int Amount = popup.max;
+                    Amount = Math.max(0, Math.min(gameState.Opponent.cargo[i], Amount));
+                    Amount = Math.min(Amount, (gameState.Credits / gameState.BuyPrice[i]));
 					if (Amount > 0) {
 						gameState.Ship.cargo[i] += Amount;
 						gameState.Opponent.cargo[i] -= Amount;
