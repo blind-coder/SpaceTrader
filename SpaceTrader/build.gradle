@@ -27,7 +27,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 apply plugin: 'android'
@@ -38,22 +38,22 @@ repositories {
 
 android {
     compileSdkVersion 14
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     buildTypes {
         release {
             debuggable false
-            jniDebugBuild false
-            runProguard false
-            zipAlign true
+//            jniDebugBuild false
+//            runProguard false
+//            zipAlign true
         }
     }
     productFlavors {
         defaultFlavor {
-            packageName 'de.anderdonau.spacetrader'
+            applicationId 'de.anderdonau.spacetrader'
         }
         demoFlavor {
-            packageName 'de.anderdonau.spacetrader.demo'
+            applicationId 'de.anderdonau.spacetrader.demo'
         }
     }
 }

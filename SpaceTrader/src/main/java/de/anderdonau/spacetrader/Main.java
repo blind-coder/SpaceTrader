@@ -961,6 +961,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 	@SuppressWarnings("UnusedParameters")
 	public void StartNewGameStartGameCallback(View view) {
 		gameState = ((FragmentStartNewGame) currentFragment).getGameState();
+		if (gameState.Mercenary[0].pilot + gameState.Mercenary[0].fighter +
+				gameState.Mercenary[0].engineer + gameState.Mercenary[0].trader > 20){
+			return;
+		}
 		GameState.isValid = true;
 		this.saveGame();
 		changeFragment(FRAGMENTS.SYSTEM_INFORMATION);
