@@ -16,29 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-
-
-
-
+apply plugin: 'com.android.application'
 
 buildscript {
     repositories {
-        mavenCentral()
+//        mavenCentral()
+        jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:4.1.0'
     }
-}
-apply plugin: 'android'
-
-repositories {
-    mavenCentral()
 }
 
 android {
-    compileSdkVersion 14
-    buildToolsVersion '19.1.0'
+//    signingConfigs {
+//        debug {
+//            storeFile file('/home/blindcoder/Projects/androidkeystore')
+//            storePassword var
+//            keyPassword var
+//        }
+//    }
+    compileSdkVersion 26
 
     buildTypes {
         release {
@@ -48,17 +47,32 @@ android {
 //            zipAlign true
         }
     }
+    flavorDimensions "version"
     productFlavors {
         defaultFlavor {
+            dimension "version"
             applicationId 'de.anderdonau.spacetrader'
         }
         demoFlavor {
+            dimension "version"
             applicationId 'de.anderdonau.spacetrader.demo'
         }
+    }
+    defaultConfig {
+        targetSdkVersion 26
+        minSdkVersion 14
+        signingConfig signingConfigs.debug
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.android.support:support-v4:+'
+    api 'com.android.support:appcompat-v7:26.1.0'
+    api 'com.android.support:support-v4:'
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
 }

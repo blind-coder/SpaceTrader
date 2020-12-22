@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SpaceTrader.iml" filepath="$PROJECT_DIR$/SpaceTrader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SpaceTrader/SpaceTrader-SpaceTrader.iml" filepath="$PROJECT_DIR$/SpaceTrader/SpaceTrader-SpaceTrader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpaceTrader.iml" filepath="$PROJECT_DIR$/.idea/modules/SpaceTrader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpaceTrader/SpaceTrader.SpaceTrader.iml" filepath="$PROJECT_DIR$/.idea/modules/SpaceTrader/SpaceTrader.SpaceTrader.iml" />
     </modules>
   </component>
 </project>
