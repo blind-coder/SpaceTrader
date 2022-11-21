@@ -21,8 +21,9 @@ package de.anderdonau.spacetrader.DataTypes;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import android.support.v7.widget.AppCompatTextView;
 
-public class STTextView extends TextView {
+public class STTextView extends AppCompatTextView {
 	public STTextView(Context context) {
 		super(context);
 	}

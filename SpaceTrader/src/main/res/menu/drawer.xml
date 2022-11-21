@@ -18,11 +18,12 @@
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:yourapp="http://schemas.android.com/apk/res-auto">
 	<item
 			android:id="@+id/submenuGame"
 			android:title="Game"
-			android:showAsAction="ifRoom|withText">
+			yourapp:showAsAction="ifRoom|withText">
 		<menu>
 			<item
 					android:id="@+id/menuNewGame"
@@ -57,7 +58,7 @@
 	<item
 			android:id="@+id/submenuHelp"
 			android:title="Help"
-			android:showAsAction="ifRoom|withText">
+			yourapp:showAsAction="ifRoom|withText">
 		<menu>
 			<item
 					android:id="@+id/menuHelpCurrentScreen"

@@ -18,21 +18,22 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
+			xmlns:yourapp="http://schemas.android.com/apk/res-auto"
       tools:context="de.anderdonau.spacetrader.Main">
 	<item
 			android:id="@+id/hotkey1"
 			android:title="1"
-			android:showAsAction="always"/>
+			yourapp:showAsAction="always"/>
 	<item
 			android:id="@+id/hotkey2"
 			android:title="2"
-			android:showAsAction="always"/>
+			yourapp:showAsAction="always"/>
 	<item
 			android:id="@+id/hotkey3"
 			android:title="3"
-			android:showAsAction="always"/>
+			yourapp:showAsAction="always"/>
 	<item
 			android:id="@+id/hotkey4"
 			android:title="4"
-			android:showAsAction="always"/>
+			yourapp:showAsAction="always"/>
 </menu>
