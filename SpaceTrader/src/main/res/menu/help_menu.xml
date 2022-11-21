@@ -17,12 +17,13 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="de.anderdonau.spacetrader.Main">
+			xmlns:tools="http://schemas.android.com/tools"
+			tools:context="de.anderdonau.spacetrader.Main"
+			xmlns:yourapp="http://schemas.android.com/apk/res-auto">
 	<item
 			android:id="@+id/submenuHelp"
 			android:title="Help"
-			android:showAsAction="ifRoom|withText">
+			yourapp:showAsAction="ifRoom|withText">
 		<menu>
 			<item
 					android:id="@+id/menuHelpCurrentScreen"

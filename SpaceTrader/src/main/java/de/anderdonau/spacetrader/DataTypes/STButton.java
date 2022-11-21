@@ -21,8 +21,9 @@ package de.anderdonau.spacetrader.DataTypes;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
 
-public class STButton extends Button {
+public class STButton extends AppCompatButton {
 	public STButton(Context context) {
 		super(context);
 	}
